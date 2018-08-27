@@ -33,7 +33,7 @@ Alternatively, you can also start the application using the command::
 
   $ gunicorn server:app
 
-In this case, the address will be http://localhost:8000/
+In this case, the address will be http://localhost:8000/.
 
 **Database**
 
@@ -69,6 +69,24 @@ as an environment variable, so here's an example of how you can run it::
 
   $ DATABASE_URL="postgres://itucs:itucspw@localhost:32775/itucsdb" python dbinit.py
 
+**Deploying to Heroku**
+
+Use the button below to deploy your application to Heroku (*ITU students*:
+only one team member needs to do this).
+
 .. image:: https://www.herokucdn.com/deploy/button.svg
    :alt: Deploy to Heroku
    :target: https://heroku.com/deploy
+
+As "App name" enter your team name, and click the "Deploy app" button.
+Now when you click the "View" button you should access your application
+under the address http://itucsdb18NN.herokuapp.com/.
+
+Lastly we want to set up our project so that whenever commits are pushed
+to the GitHub repo the application will be automatically deployed to Heroku.
+For this, click the "Manage app" button and choose the "Deploy" tab.
+Here, for deployment method, choose "GitHub (Connect to GitHub)"
+and under its options choose "Automatic deploys from GitHub".
+For this operation you will need to allow Heroku to access your repositories.
+Then choose your repository, click the "Connect" button, and then
+click the "Enable automatic deploys" button.
