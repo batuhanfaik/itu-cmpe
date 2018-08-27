@@ -6,14 +6,16 @@ and the PostgreSQL database.
 How to use this repository
 --------------------------
 
-*ITU students*: Create a GitHub organization for your team using the name
-that was assigned to your team (in the form ``itucsdb18NN`` where ``NN``
-is your team number) and fork this repository into that organization.
-Rename your repository so that it will have the same name as the team.
-Then every team member has to clone the repository to their local
-machines::
+.. important:: 
 
-  git clone git@github.com:itucsdb18NN/itucsdbNN.git
+   *ITU students*: Create a GitHub organization for your team using the name
+   that was assigned to your team (in the form ``itucsdb18NN`` where ``NN``
+   is your team number) and fork this repository into that organization.
+   Rename your repository so that it will have the same name as the team.
+   Then every team member has to clone the repository to their local
+   machines::
+
+     git clone git@github.com:itucsdb18NN/itucsdbNN.git
 
 Run the following command to install the dependencies::
 
