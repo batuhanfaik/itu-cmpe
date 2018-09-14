@@ -90,3 +90,17 @@ and under its options choose "Automatic deploys from GitHub".
 For this operation you will need to allow Heroku to access your repositories.
 Then choose your repository, click the "Connect" button, and then
 click the "Enable automatic deploys" button.
+
+**Deploying Documentation**
+
+Documentation is located in `docs/source` directory.
+You should change `ITUCSDB18NN` in `conf.py` file to match your team name.
+
+Travis-CI will be used to automatically publish Sphinx documentation in Github Pages.
+
+- Create a token by visiting https://github.com/settings/tokens page and clicking on "Generate new token".
+- Select `public_repo` permission, generate the token and copy it to clipboard.
+- Enable your project in https://travis-ci.org (*ITU students*: only one team member needs to do this).
+- In project settings (in Travis-CI) add your token in "Environment Variables" section.
+- Set variable name as `GH_TOKEN` and paste your token to the value. "Display value in build log" should be `off`.
+- After pushing anything to the `master` branch, your documentation will become visible at https://itucsdb18NN.github.io/itucsdb18NN/
