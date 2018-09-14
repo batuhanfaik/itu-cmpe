@@ -6,3 +6,6 @@ __pycache__
 .pydevproject
 .idea
 .code
+
+venv/
+docs/build/
