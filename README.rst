@@ -9,7 +9,7 @@ How to use this repository
 **ITU students**
 
 - Create a GitHub organization for your team using the name that was assigned
-to your team (in the form ``itucsdb18NN`` where ``NN`` is your team number).
+  to your team (in the form ``itucsdb18NN`` where ``NN`` is your team number).
 
 - Fork this repository *into that organization*.
 
@@ -21,7 +21,7 @@ to your team (in the form ``itucsdb18NN`` where ``NN`` is your team number).
 
 Run the following command to install the dependencies::
 
-  $ pip install -r requirements.txt
+  $ python -m pip install -r requirements.txt
 
 You can now start the application using the command::
 
@@ -39,11 +39,11 @@ In this case, the address will be ``http://localhost:8000/``.
 **Deploying to Heroku**
 
 - Use the button below to deploy your application to Heroku.
-  (*ITU students*: only one team member needs to do this.)
+  (*ITU students*: Only one team member needs to do this.)
 
-.. image:: https://www.herokucdn.com/deploy/button.svg
-   :alt: Deploy to Heroku
-   :target: https://heroku.com/deploy
+  .. image:: https://www.herokucdn.com/deploy/button.svg
+     :alt: Deploy to Heroku
+     :target: https://heroku.com/deploy
 
 - As "App name" enter your team name, and click the "Deploy app" button.
 
