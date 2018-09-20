@@ -65,6 +65,11 @@ to the GitHub repo the application will be automatically deployed to Heroku.
 - Choose your repository, click the "Connect" button, and then
   click the "Enable automatic deploys" button.
 
+In your code, change the "Hello, world!" message, and commit and push
+your change to GitHub. A while later the application on Heroku should
+display the new message. You can use the activity tab on Heroku to see
+how deployments are going.
+
 **Database**
 
 By default, the project is meant to be used with a PostgreSQL server.
