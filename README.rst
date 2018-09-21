@@ -103,3 +103,17 @@ your database. This script requires that you provide the database URL
 as an environment variable, so here's an example of how you can run it::
 
   $ DATABASE_URL="postgres://itucs:itucspw@localhost:32775/itucsdb" python dbinit.py
+
+**Deploying Documentation**
+
+Documentation is located in `docs/source` directory.
+You should change `ITUCSDB18NN` in `conf.py` file to match your team name.
+
+Travis-CI will be used to automatically publish Sphinx documentation in Github Pages.
+
+- Create a token by visiting https://github.com/settings/tokens page and clicking on "Generate new token".
+- Select `public_repo` permission, generate the token and copy it to clipboard.
+- Enable your project in https://travis-ci.org (*ITU students*: only one team member needs to do this).
+- In project settings (in Travis-CI) add your token in "Environment Variables" section.
+- Set variable name as `GH_TOKEN` and paste your token to the value. "Display value in build log" should be `off`.
+- After pushing anything to the `master` branch, your documentation will become visible at https://itucsdb18NN.github.io/itucsdb18NN/
