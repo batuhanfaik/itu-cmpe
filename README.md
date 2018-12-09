@@ -14,4 +14,4 @@ You may need to be a member of the organisation to which this repository belongs
 
 Instructions about this are in the PDF.
 
-[![Website]The website can be accessed by clicking here.](https://blg101e-a2.herokuapp.com/)
+The website can be accessed by clicking [here](https://blg101e-a2.herokuapp.com/).
