@@ -9,7 +9,7 @@ from hashlib import sha256
 
 commentList = []
 
-def htmlifyIndex(comments):
+def htmlifyIndex():
     html = """<!DOCTYPE html>
             <html lang="en">
               <head>
@@ -131,7 +131,7 @@ def htmlifyIndex(comments):
                 {}
               </body>
             </html>
-            """.format(comments)
+            """.format(htmlify_ulist(commentList))
     return html
 
 def htmlify_ulist(list):
@@ -155,7 +155,7 @@ password_hash = "7ca6e264880d73246ffc076f15b42a2aa5857021e4f3beb06c3c83332ce5972
 
 @get('/')
 def login():
-    return htmlifyIndex(htmlify_ulist(commentList))
+    return htmlifyIndex()
 
 @post('/')
 def do_login():
@@ -163,9 +163,9 @@ def do_login():
     password = request.forms.get('password')
     if create_hash(password) == password_hash:
         commentList.append(comment)
-        return htmlifyIndex(htmlify_ulist(commentList))
+        return htmlifyIndex()
     else:
-        return htmlifyIndex(htmlify_ulist(commentList))
+        return htmlifyIndex()
 
 #HTML Routing
 @route('/basics_of_sailing/<htmlPath>')
