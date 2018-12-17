@@ -1,3 +1,6 @@
+# Link to Website
+The website can be accessed by clicking [here](https://blg101e-a2.herokuapp.com/).
+
 # Your Assignment Repository
 
 This is the skeleton code for your assignment repository. See the assignment PDF for more details.
@@ -13,5 +16,3 @@ Later you will need to "connect" GitHub to Heroku so that any new changes in Git
 You may need to be a member of the organisation to which this repository belongs - we should have sent you an invite.
 
 Instructions about this are in the PDF.
-
-The website can be accessed by clicking [here](https://blg101e-a2.herokuapp.com/).
