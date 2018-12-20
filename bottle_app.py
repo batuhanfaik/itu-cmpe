@@ -174,10 +174,10 @@ def do_login():
     password = request.forms.get('password')
     if anon == "on":
         nick = "Anonymous"
-    nickList.append(nick)
+    nickList.insert(0, nick)
     if create_hash(password) == password_hash:
-        commentList.append(comment)
-    return htmlifyIndex()
+        commentList.insert(0, comment)
+    redirect('/')
 
 
 #HTML Routing
