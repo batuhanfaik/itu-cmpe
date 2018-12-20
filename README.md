@@ -1,7 +1,7 @@
 # Link to Website
-The website can be accessed by clicking [here](https://blg101e-a2.herokuapp.com/).
+The website can be accessed by clicking [here](https://a2-batuhanfaik.herokuapp.com/).
 
-# Your Assignment Repository
+## Your Assignment Repository
 
 This is the skeleton code for your assignment repository. See the assignment PDF for more details.
 
