@@ -4,10 +4,11 @@
 ### The landing page for assignment 3 should be at /
 #####################################################################
 
-from bottle import route, run, default_app, debug, static_file, post, request, get
+from bottle import route, run, default_app, debug, static_file, post, request, get, redirect
 from hashlib import sha256
 
 commentList = []
+nickList = []
 
 def htmlifyIndex():
     html = """<!DOCTYPE html>
@@ -124,20 +125,26 @@ def htmlifyIndex():
                   <a href="https://validator.w3.org/nu/?doc=https%3A%2F%2Fituis18.github.io%2Fa1-batuhanfaik%2Findex.html" target="_blank"><img src="img/valid_html.jpg" alt="Valid HTML" title="Is This a Valid HTML?"/></a>
                 </div>
                 <form action="/" method="post">
+                    Nickname: <input name="nick" type="text" />
+                    Anonymous: <input name="anon" type="checkbox" />
+                    <br /><br />
                     Comment: <input name="comment" type="text" />
                     Password: <input name="password" type="password" />
-                    <input value="Login" type="submit" />
+                    <input value="Submit" type="submit" />
                 </form>
+                <h2>Comments</h2>
                 {}
               </body>
             </html>
-            """.format(htmlify_ulist(commentList))
+            """.format(htmlify_ulist(nickList, commentList))
     return html
 
-def htmlify_ulist(list):
+def htmlify_ulist(nickList, commentList):
     listString = "<ul>"
-    for listItem in list:
-        listString += "<li>{}</li>".format(listItem)
+    nickCount = 0
+    for listItem in commentList:
+        listString += "<li>{}: {}</li>".format(nickList[nickCount], listItem)
+        nickCount += 1
     listString += "</ul>"
     return listString
 
@@ -149,23 +156,25 @@ def create_hash(password):
 #My password: batuhan
 password_hash = "7ca6e264880d73246ffc076f15b42a2aa5857021e4f3beb06c3c83332ce59722"
 
-# @route('/') #same thing with --> route('/', 'GET', index)
-# def index():
-#     return htmlifyIndex()
-
 @get('/')
 def login():
     return htmlifyIndex()
 
 @post('/')
 def do_login():
+    global commentList
+    global nickList
+    nick = request.forms.get('nick')
+    anon = request.forms.get('anon')
     comment = request.forms.get('comment')
     password = request.forms.get('password')
+    if anon == "on":
+        nick = "Anonymous"
+    nickList.append(nick)
     if create_hash(password) == password_hash:
         commentList.append(comment)
-        return htmlifyIndex()
-    else:
-        return htmlifyIndex()
+    return htmlifyIndex()
+
 
 #HTML Routing
 @route('/basics_of_sailing/<htmlPath>')
