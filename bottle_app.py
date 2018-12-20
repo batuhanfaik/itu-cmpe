@@ -156,8 +156,12 @@ def create_hash(password):
 #My password: batuhan
 password_hash = "7ca6e264880d73246ffc076f15b42a2aa5857021e4f3beb06c3c83332ce59722"
 
-@get('/')
-def login():
+# @get('/')
+# def login():
+#     return htmlifyIndex()
+
+@route('/')
+def index():
     return htmlifyIndex()
 
 @post('/')
