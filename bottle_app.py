@@ -153,7 +153,7 @@ def create_hash(password):
     pw_bytestring = password.encode()
     return sha256(pw_bytestring).hexdigest()
 
-#My password: batuhan
+#My password stored as hash
 password_hash = "7ca6e264880d73246ffc076f15b42a2aa5857021e4f3beb06c3c83332ce59722"
 
 # @get('/')
