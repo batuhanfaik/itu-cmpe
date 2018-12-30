@@ -121,8 +121,8 @@ def htmlifyIndex():
                   </li>
                 </ol>
                 <div class="is_this">
-                  <a href="https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fituis18.github.io%2Fa1-batuhanfaik%2Findex.html&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en" target="_blank"><img src="img/valid_css.jpg" alt="Valid CSS" title="Is This a Valid CSS?"/></a>
-                  <a href="https://validator.w3.org/nu/?doc=https%3A%2F%2Fituis18.github.io%2Fa1-batuhanfaik%2Findex.html" target="_blank"><img src="img/valid_html.jpg" alt="Valid HTML" title="Is This a Valid HTML?"/></a>
+                  <a href="https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fa2-batuhanfaik.herokuapp.com%2F&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en" target="_blank"><img src="img/valid_css.jpg" alt="Valid CSS" title="Is This a Valid CSS?"/></a>
+                  <a href="https://validator.w3.org/nu/?doc=https%3A%2F%2Fa2-batuhanfaik.herokuapp.com%2F" target="_blank"><img src="img/valid_html.jpg" alt="Valid HTML" title="Is This a Valid HTML?"/></a>
                 </div>
                 <form action="/" method="post">
                     Nickname: <input name="nick" type="text" />
