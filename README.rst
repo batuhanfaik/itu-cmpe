@@ -73,71 +73,55 @@ how deployments are going.
 **Database**
 
 By default, the project is meant to be used with a PostgreSQL server.
-You can use any PostgreSQL installation but a Dockerfile is provided
-for convenience. Docker will host the PostgreSQL client under the hood.
-Docker is a container for your programs which allows 
-you to unify development/testing/production environments.
+You can use a local installation or a hosted service like
+`ElephantSQL <https://www.elephantsql.com/>`_ (they have a free plan),
+but we recommend that you use `Docker <https://www.docker.com/>`_::
 
-In MacOS, you can install Docker from its official website
-https://www.docker.com/products/docker-desktop
+  $ docker pull postgres
 
-Many Linux distributions has Docker in its official package repositories.
-https://docs.docker.com/install
+In order to make changes to your database persistent, you have to set up
+a folder that will be shared between your regular operating system and
+the Docker container. Create the folder, e.g.::
 
-Before running Docker, you may need to start Docker service in Linux. This can be done by many ways,
-one is explained below:
-https://docs.docker.com/install/linux/linux-postinstall
-It is quite advanced for new Linux user but it is manageble.
-
-Another options is to start Docker Daemon manually, 
-Which can be achieved by one of following commands:
-
-* $ ``sudo systemctl start docker``
-* $ ``sudo service docker start``
-* $ ``sudo dockerd``
-
-After making sure that Docker daemon is up and running, you are ready to build/start containers.
-
-To build the container, run:: (You may need to have root privelege for using Docker depending on Docker Daemon. If it is the case, add ``sudo`` to commands.)
-
-  $ docker build -t itucsdb .
+  $ mkdir -p $HOME/docker/volumes/postgres
 
 The command for running the container is::
 
-  $ docker run -P --name postgres itucsdb
+  $ docker run --rm --name pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres
 
-If you have a PostgreSQL client you can connect to the server using
-the username ``itucs``, the password ``itucspw`` and the database
-``itucsdb``. The server will be accessible through the host ``localhost``
-but you have to figure out the port number::
+This will start a PostgreSQL server that runs on the host ``localhost``,
+on port 5432. The username is ``postgres``, the password is ``docker``,
+and the database name is ``postgres``. You can use the following command
+to connect to it::
 
-  $ docker ps
-  CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                     NAMES    
-  d58b35f6503b        itucsdb             "/usr/lib/postgresql…"   8 minutes ago       Up 8 minutes        0.0.0.0:32775->5432/tcp   postgres
-
-In this example, under the ``PORTS`` column, you can see that the port number
-is ``32775``.
-
-If you don't have a PostgreSQL client, you can use another docker instance::
-
-  $ docker run -it --rm --link postgres:postgres postgres psql -h postgres -U itucs itucsdb
+  $ psql -h localhost -U postgres -d postgres
 
 You should arrange the ``dbinit.py`` script to properly initialize
 your database. This script requires that you provide the database URL
 as an environment variable, so here's an example of how you can run it::
 
-  $ DATABASE_URL="postgres://itucs:itucspw@localhost:32775/itucsdb" python dbinit.py
+  $ DATABASE_URL="postgres://postgres:docker@localhost:5432/postgres" python dbinit.py
 
-**Deploying Documentation**
+**Documentation**
 
-Documentation is located in `docs/source` directory.
-You should change `ITUCSDB18NN` in `conf.py` file to match your team name.
+The documentation template is located under the ``docs/source`` folder.
+Change the project name "ITUCSDB18NN" in the ``conf.py`` file to match
+your team name.
 
-Travis-CI will be used to automatically publish Sphinx documentation in Github Pages.
+`Travis-CI <https://travis-ci.org/>`_ will be used to automatically
+publish your Sphinx documentation on Github Pages:
 
-- Create a token by visiting https://github.com/settings/tokens page and clicking on "Generate new token".
-- Select `public_repo` permission, generate the token and copy it to clipboard.
-- Enable your project in https://travis-ci.org (*ITU students*: only one team member needs to do this).
-- In project settings (in Travis-CI) add your token in "Environment Variables" section.
-- Set variable name as `GH_TOKEN` and paste your token to the value. "Display value in build log" should be `off`.
-- After pushing anything to the `master` branch, your documentation will become visible at https://itucsdb18NN.github.io/itucsdb18NN/
+- Visit the https://github.com/settings/tokens page and click on
+  "Generate new token". Select the ``public_repo`` permission,
+  generate the token, and copy it to the clipboard.
+
+- Enable your project on Travis. (*ITU students*: only one team member
+  needs to do this).
+
+- In the Travis-CI project settings, create a new environment variable
+  in the "Environment Variables" section. Set the variable name as
+  ``GH_TOKEN`` and paste your token as the value. The option
+  "Display value in build log" should be ``off``.
+
+- After pushing your changes to the ``master`` branch, your documentation
+  will become updated on ``https://itucsdb18NN.github.io/itucsdb18NN/``
