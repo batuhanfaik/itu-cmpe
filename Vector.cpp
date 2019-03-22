@@ -42,6 +42,6 @@ const void Vector::print() {
 
 // Destructor
 Vector::~Vector(){
-    --vectors_created;
+//    --vectors_created;
 //    delete[] value_array;
 }
