@@ -9,7 +9,20 @@
 
 
 class Vector {
-
+    int size;
+    int* value_array;
+    int vector_no;
+    static int vectors_created;
+public:
+    // Default constructor
+    Vector();
+    // Constructor
+    Vector(int, int*);
+    // Temporary print
+    const void print();
+    // Clear vector counter
+    static void clear_counter(){vectors_created = 0;};
+    ~Vector();
 };
 
 
