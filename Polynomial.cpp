@@ -35,11 +35,11 @@ Polynomial::Polynomial(int degree, int * coef_arr):degree(degree) {
 
 // Temporary print function
 const void Polynomial::print() {
-    cout << "Polynomial# " << polynomial_no << endl;
-    for (int i = 1; i < degree; ++i) {
+//    cout << "Polynomial# " << polynomial_no << endl;
+    for (int i = 0; i < (degree - 1); ++i) {
         if(coef_array[i] != 0) {
-            if (coef_array[i] == 1) { cout << "x^" << (degree - i) << " + "; }
-            else { cout << coef_array[i] << "x^" << (degree - i) << " + "; }
+            if (coef_array[i] == 1) { cout << "x^" << (degree - i - 1) << " + "; }
+            else { cout << coef_array[i] << "x^" << (degree - i - 1) << " + "; }
         }
     }
     // Print last coefficient if not 0

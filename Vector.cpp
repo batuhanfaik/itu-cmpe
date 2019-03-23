@@ -33,11 +33,12 @@ Vector::Vector(int size, int * value_arr):size(size) {
 
 // Temporary print function
 const void Vector::print() {
-    cout << "Vector# " << vector_no << endl << "( ";
-    for (int i = 0; i < size; ++i) {
-        cout << value_array[i] << " ";
+//    cout << "Vector# " << vector_no << endl << "(";
+    cout << "(";
+    for (int i = 0; i < (size - 1); ++i) {
+        cout << value_array[i] << ", ";
     }
-    cout << ")" << endl;
+    cout << value_array[size - 1] << ")" << endl;
 }
 
 // Destructor

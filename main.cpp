@@ -20,6 +20,8 @@ using namespace std;
 // tie, tuple and make_tuple: https://stackoverflow.com/questions/35098211/how-do-i-return-two-values-from-a-function
 tuple <int,Vector*> read_vectors();
 tuple <int,Polynomial*> read_polynomials();
+const void list_polynomials(const int&, Polynomial* const);
+const void list_vectors(const int&, Vector* const);
 
 int main(){
     int polynomial_amount = 0, vector_amount = 0;
@@ -32,15 +34,11 @@ int main(){
     // Read vectors
     tie(vector_amount, vectors) = read_vectors();
 
+    // List polynomials
+    list_polynomials(polynomial_amount, polynomials);
 
-    // Print polynomials
-    for(int i=0; i < polynomial_amount; ++i){
-        polynomials[i].print();
-    }
-    // Print vectors
-    for(int i=0; i < vector_amount; ++i){
-        vectors[i].print();
-    }
+    // List vectors
+    list_vectors(vector_amount, vectors);
 
     return 0;
 }
@@ -174,4 +172,26 @@ tuple <int,Polynomial*> read_polynomials(){
         // Return the polynomial object array with its size
         return make_tuple(polynomial_amount, polynomial_array);
     }
+}
+
+const void list_polynomials(const int& polynomial_amount, Polynomial* const polynomials){
+    cout << "Polynomials:" << endl;
+
+    // Print polynomials
+    for(int i=0; i < polynomial_amount; ++i){
+        cout << (i+1) << ". ";
+        polynomials[i].print();
+    }
+    cout << endl;
+}
+
+const void list_vectors(const int& vector_amount, Vector* const vectors){
+    cout << "Vectors:" << endl;
+
+    // Print polynomials
+    for(int i=0; i < vector_amount; ++i){
+        cout << (i+1) << ". ";
+        vectors[i].print();
+    }
+    cout << endl;
 }
