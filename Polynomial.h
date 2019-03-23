@@ -9,7 +9,20 @@
 
 
 class Polynomial {
-
+    int degree;
+    int* coef_array;
+    int polynomial_no;
+    static int polynomials_created;
+public:
+    // Default constructor
+    Polynomial();
+    // Constructor
+    Polynomial(int, int*);
+    // Temporary print
+    const void print();
+    // Clear polynomial counter
+    static void clear_counter(){polynomials_created = 0;};
+    ~Polynomial();
 };
 
 
