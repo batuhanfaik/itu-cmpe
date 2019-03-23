@@ -20,10 +20,12 @@ using namespace std;
 // tie, tuple and make_tuple: https://stackoverflow.com/questions/35098211/how-do-i-return-two-values-from-a-function
 tuple <int,Vector*> read_vectors();
 tuple <int,Polynomial*> read_polynomials();
+const void print_help();
 const void list_polynomials(const int&, Polynomial* const);
 const void list_vectors(const int&, Vector* const);
 
 int main(){
+    int operation_selection = 4;
     int polynomial_amount = 0, vector_amount = 0;
     // Pointers of polynomials and vectors
     Polynomial* polynomials;
@@ -34,13 +36,108 @@ int main(){
     // Read vectors
     tie(vector_amount, vectors) = read_vectors();
 
-    // List polynomials
-    list_polynomials(polynomial_amount, polynomials);
+    // Run the program as long as the user doesn't end it
+    while (operation_selection != 0){
+        switch(operation_selection) {
+            case 1: {
+                // List polynomials
+                list_polynomials(polynomial_amount, polynomials);
 
-    // List vectors
-    list_vectors(vector_amount, vectors);
+                // List vectors
+                list_vectors(vector_amount, vectors);
+                break;
+            }
+            case 2: {
+                // Do a poly op
+            }
+            case 3: {
+                // Do a vector op
+            }
+            case 4: {
+                print_help();
+                break;
+            }
+            default: // Input not recognized
+                cout << "Input not recognized." << endl
+                << "Please enter a valid action." << endl;
+                break;
+        }
+        // Read the operation selector
+        cout << "Enter an option: ";
+        cin >> operation_selection;
+    }
 
+    cout << "Exiting the program..." << endl;
     return 0;
+}
+
+tuple <int,Polynomial*> read_polynomials(){
+    // Stores lines
+    string line;
+
+    // Start read stream and open file
+    ifstream polynomial_file;
+    polynomial_file.open("../Polynomial.txt");
+
+    if(!polynomial_file.is_open()){
+        cout << "Error opening the polynomial file" << endl;
+    } else{
+        // Find the amount of polynomials and store
+        getline(polynomial_file, line);
+        // string is casted to int
+        int polynomial_amount = std::stoi(line);
+
+        // Create Vector object array
+        Polynomial* polynomial_array;
+        // Allocate memory to the vector array
+        polynomial_array = new Polynomial[polynomial_amount];
+
+        // Reset vector counter
+        Polynomial::clear_counter();
+
+        // For every polynomial in the file
+        for (int i = 0; i < polynomial_amount; ++i) {
+            if (polynomial_file.good()) {                // As long as the line is readable
+                getline(polynomial_file, line);          // Read the i'th line
+
+                // Used to split string around spaces.
+                istringstream ss(line);
+                // Reads the amount of coefficients
+                string coefficient_str;
+                ss >> coefficient_str;
+                // Store the amount of coefficients
+                int coefficient_amount = std::stoi(coefficient_str);
+                // Coefficient amount is incremented because we read the degree from the file
+                // Coefficient amount is always one higher than the degree
+                coefficient_amount++;
+
+                // Create the array to store coefficients of the polynomial
+                int* coefficients_array;
+                // Reserve memory for the value array
+                coefficients_array = new int[coefficient_amount];
+
+                // Go through all coefficients and store them in the vector value array
+                for (int coefficient_index = 0; coefficient_index < coefficient_amount; ++coefficient_index){
+                    // Read a coefficient
+                    ss >> coefficient_str;
+                    // Append it to the value array
+                    coefficients_array[coefficient_index] = std::stoi(coefficient_str);
+                }
+                // Required for getting rid of end of the line
+                ss >> coefficient_str;
+
+                // Create a Vector object with the given values
+                polynomial_array[i] = Polynomial(coefficient_amount, coefficients_array);
+
+                // Release the memory for coefficients array
+                delete[] coefficients_array;
+            }
+        }
+        // Polynomials are read successfully
+        cout << "Polynomials are read successfully!" << endl;
+        // Return the polynomial object array with its size
+        return make_tuple(polynomial_amount, polynomial_array);
+    }
 }
 
 tuple <int,Vector*> read_vectors(){
@@ -52,7 +149,7 @@ tuple <int,Vector*> read_vectors(){
     vector_file.open("../Vector.txt");
 
     if(!vector_file.is_open()){
-        cout << "Error opening the file" << endl;
+        cout << "Error opening the vector file" << endl;
     } else{
         // Find the amount of vectors and store
         getline(vector_file, line);
@@ -102,76 +199,20 @@ tuple <int,Vector*> read_vectors(){
                 delete[] vector_values;
              }
          }
+        // Vectors are read successfully
+        cout << "Vectors are read successfully!" << endl;
         // Return the vector object array with its size
         return make_tuple(vector_amount, vector_array);
     }
 }
 
-tuple <int,Polynomial*> read_polynomials(){
-    // Stores lines
-    string line;
-
-    // Start read stream and open file
-    ifstream polynomial_file;
-    polynomial_file.open("../Polynomial.txt");
-
-    if(!polynomial_file.is_open()){
-        cout << "Error opening the file" << endl;
-    } else{
-        // Find the amount of polynomials and store
-        getline(polynomial_file, line);
-        // string is casted to int
-        int polynomial_amount = std::stoi(line);
-
-        // Create Vector object array
-        Polynomial* polynomial_array;
-        // Allocate memory to the vector array
-        polynomial_array = new Polynomial[polynomial_amount];
-
-        // Reset vector counter
-        Polynomial::clear_counter();
-
-        // For every polynomial in the file
-        for (int i = 0; i < polynomial_amount; ++i) {
-             if (polynomial_file.good()) {                // As long as the line is readable
-                 getline(polynomial_file, line);          // Read the i'th line
-
-                 // Used to split string around spaces.
-                istringstream ss(line);
-                 // Reads the amount of coefficients
-                string coefficient_str;
-                ss >> coefficient_str;
-                // Store the amount of coefficients
-                int coefficient_amount = std::stoi(coefficient_str);
-                // Coefficient amount is incremented because we read the degree from the file
-                // Coefficient amount is always one higher than the degree
-                coefficient_amount++;
-
-                // Create the array to store coefficients of the polynomial
-                int* coefficients_array;
-                // Reserve memory for the value array
-                coefficients_array = new int[coefficient_amount];
-
-                // Go through all coefficients and store them in the vector value array
-                 for (int coefficient_index = 0; coefficient_index < coefficient_amount; ++coefficient_index){
-                    // Read a coefficient
-                    ss >> coefficient_str;
-                    // Append it to the value array
-                    coefficients_array[coefficient_index] = std::stoi(coefficient_str);
-                }
-                 // Required for getting rid of end of the line
-                 ss >> coefficient_str;
-
-                // Create a Vector object with the given values
-                polynomial_array[i] = Polynomial(coefficient_amount, coefficients_array);
-
-                // Release the memory for coefficients array
-                delete[] coefficients_array;
-             }
-         }
-        // Return the polynomial object array with its size
-        return make_tuple(polynomial_amount, polynomial_array);
-    }
+const void print_help(){
+    cout << endl << "Possible Actions:" << endl
+    << "1. Print Polynomial and Vector lists" << endl
+    << "2. Do a polynomial operation" << endl
+    << "3. Do a vector operation" << endl
+    << "Help: Print possible actions" << endl
+    << "0. Exit the program" << endl << endl;
 }
 
 const void list_polynomials(const int& polynomial_amount, Polynomial* const polynomials){
