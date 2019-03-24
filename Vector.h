@@ -24,6 +24,10 @@ public:
     int getVectorNo() const;
     // Operator overload +
     Vector operator+(const Vector&) const;
+    // Operator overload * (Dot product)
+    int operator*(const Vector&) const;
+    // Operator overload * (Scalar multiplication)
+    Vector operator*(const int) const;
     // Copy constructor
     Vector(const Vector&);
     // Temporary print
