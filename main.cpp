@@ -332,7 +332,7 @@ const Vector vector_op(const string& user_op, const Vector* vectors){
         // Decrement indexes by one (arrays start at 0 :) )
         first_vector--;
         second_vector--;
-        int dot_product = vectors[first_vector] * vectors[second_vector];
+        float dot_product = vectors[first_vector] * vectors[second_vector];
         cout << "Result: " << dot_product << endl << endl;
         return Vector(0, nullptr);
     } else {
