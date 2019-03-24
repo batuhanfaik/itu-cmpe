@@ -35,54 +35,86 @@ Polynomial::Polynomial(const int degree,const int * coef_arr):degree(degree) {
 
 // Copy constructor
 Polynomial::Polynomial(const Polynomial& polynomial_in) {
-    degree = polynomial_in.degree;
+    degree = polynomial_in.getDegree();
     // Allocate memory for the new array
     coef_array = new int[degree];
     // Copy the values over
     for (int i = 0; i < degree; ++i) {
-        coef_array[i] = polynomial_in.coef_array[i];
+        coef_array[i] = polynomial_in.getCoefArray(i);
     }
+}
+
+// Getter methods
+int Polynomial::getDegree() const{
+    return degree;
+}
+int Polynomial::getCoefArray(int i) const{
+    return coef_array[i];
+}
+int Polynomial::getPolyNo() const{
+    return polynomial_no;
 }
 
 // Operator overload +
 Polynomial Polynomial::operator+(const Polynomial& polynomial_in) const{
+    // Total degree is the largest of two
     int new_degree = 0;
     // Create a new coefficient array
     int* new_coef_array;
 
     // Assign values of the new array
     // If the left value has higher degree
-    if (degree >= polynomial_in.degree){
-        new_degree = degree;
+    if (getDegree() >= polynomial_in.getDegree()){
+        new_degree = getDegree();
         new_coef_array = new int[new_degree];
         // Assign the larger degree coefficients first
-        for (int i = 0; i < (new_degree - polynomial_in.degree); ++i) {
-            new_coef_array[i] = coef_array[i];
+        for (int i = 0; i < (new_degree - polynomial_in.getDegree()); ++i) {
+            new_coef_array[i] = getCoefArray(i);
         }
         // Then assign the remaining coefficients
-        for (int i = (polynomial_in.degree - 1); i < degree; ++i) {
-            new_coef_array[i] = coef_array[i] + polynomial_in.coef_array[i - polynomial_in.degree + 1];
+        for (int i = (polynomial_in.getDegree() - 1); i < getDegree(); ++i) {
+            new_coef_array[i] = getCoefArray(i) + polynomial_in.getCoefArray(i - polynomial_in.getDegree() + 1);
         }
         // If the right value has higher degree
     } else {
-        new_degree = polynomial_in.degree;
+        new_degree = polynomial_in.getDegree();
         new_coef_array = new int[new_degree];
         // Assign the larger degree coefficients first
-        for (int i = 0; i < (new_degree - degree); ++i) {
-            new_coef_array[i] = polynomial_in.coef_array[i];
+        for (int i = 0; i < (new_degree - getDegree()); ++i) {
+            new_coef_array[i] = polynomial_in.getCoefArray(i);
         }
         // Then assign the remaining coefficients
-        for (int i = (degree - 1); i < degree; ++i) {
-            new_coef_array[i] = coef_array[i - degree + 1] + polynomial_in.coef_array[i];
+        for (int i = (getDegree() - 1); i < polynomial_in.getDegree(); ++i) {
+            new_coef_array[i] = getCoefArray(i - getDegree() + 1) + polynomial_in.getCoefArray(i);
         }
     }
 
+    // Create and return the desired polynomial
     return Polynomial(new_degree, new_coef_array);
 }
 
 // Operator overload *
 Polynomial Polynomial::operator*(const Polynomial& polynomial_in) const{
+    // Total degree is the sum of both degrees
+    // -1 is necessary because degrees actually denote coefficient amount not the degree itself
+    int new_degree = getDegree() + polynomial_in.getDegree() - 1;
+    // Create a new ptr for the coef array
+    int * new_coef_array;
+    new_coef_array = new int[new_degree];
+    // Clear the new coefficient array
+    for (int i = 0; i < new_degree; ++i) {
+        new_coef_array[i] = 0;
+    }
 
+    // Do the multiplication
+    for (int i = 0; i < getDegree(); ++i) {
+        for (int j = 0; j < polynomial_in.getDegree(); ++j) {
+            new_coef_array[i+j] = new_coef_array[i+j] + getCoefArray(i) * polynomial_in.getCoefArray(j);
+        }
+    }
+
+    // Create and return the desired polynomial
+    return Polynomial(new_degree, new_coef_array);
 }
 
 // Temporary print function

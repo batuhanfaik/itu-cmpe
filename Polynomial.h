@@ -20,6 +20,10 @@ public:
     Polynomial(const int,const int*);
     // Copy constructor
     Polynomial(const Polynomial&);
+    // Getter methods
+    int getDegree() const;
+    int getCoefArray(int) const;
+    int getPolyNo() const;
     // Operator overload +
     Polynomial operator+(const Polynomial&) const;
     // Operator overload *
