@@ -17,7 +17,15 @@ public:
     // Default constructor
     Vector();
     // Constructor
-    Vector(int, int*);
+    Vector(const int,const int*);
+    // Getter methods
+    int getSize() const;
+    int getValueArray(int) const;
+    int getVectorNo() const;
+    // Operator overload +
+    Vector operator+(const Vector&) const;
+    // Copy constructor
+    Vector(const Vector&);
     // Temporary print
     const void print();
     // Clear vector counter

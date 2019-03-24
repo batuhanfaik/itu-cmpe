@@ -18,7 +18,7 @@ Vector::Vector():size(0),value_array(nullptr){
 }
 
 // Constructor
-Vector::Vector(int size, int * value_arr):size(size) {
+Vector::Vector(const int size,const int * value_arr):size(size) {
     // Vector counter
     vector_no = ++vectors_created;
 
@@ -28,6 +28,48 @@ Vector::Vector(int size, int * value_arr):size(size) {
     // Copy values of the array
     for (int i = 0; i < size; ++i) {
         value_array[i] = value_arr[i];
+    }
+}
+
+// Copy constructor
+Vector::Vector(const Vector& vector_in) {
+    size = vector_in.size;
+    // Allocate memory for the new array
+    value_array = new int[size];
+    // Copy the values over
+    for (int i = 0; i < size; ++i) {
+        value_array[i] = vector_in.value_array[i];
+    }
+}
+
+// Getter methods
+int Vector::getSize() const{
+    return size;
+}
+int Vector::getValueArray(int i) const{
+    return value_array[i];
+}
+int Vector::getVectorNo() const{
+    return vector_no;
+}
+
+// Opereator overload +
+Vector Vector::operator+(const Vector& vector_in) const{
+    // If sizes match
+    if (getSize() == vector_in.getSize()){
+        int* new_value_array;
+        new_value_array = new int[getSize()];
+        // Do the addition
+        for (int i = 0; i < getSize(); ++i) {
+            new_value_array[i] = getValueArray(i) + vector_in.getValueArray(i);
+        }
+        // Return the resulting vector
+        return Vector(getSize(), new_value_array);
+    // If sizes don't match
+    } else {
+        cout << "Vector sizes don't match" << endl;
+        // Return an empty vector
+        return Vector(0,nullptr);
     }
 }
 
