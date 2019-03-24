@@ -103,7 +103,7 @@ tuple <int,Polynomial*> read_polynomials(){
 
     // Start read stream and open file
     ifstream polynomial_file;
-    polynomial_file.open("../Polynomial.txt");
+    polynomial_file.open("Polynomial.txt");
 
     if(!polynomial_file.is_open()){
         cout << "Error opening the polynomial file" << endl;
@@ -167,14 +167,13 @@ tuple <int,Polynomial*> read_polynomials(){
         return make_tuple(polynomial_amount, polynomial_array);
     }
 }
-
 tuple <int,Vector*> read_vectors(){
     // Stores lines
     string line;
 
     // Start read stream and open file
     ifstream vector_file;
-    vector_file.open("../Vector.txt");
+    vector_file.open("Vector.txt");
 
     if(!vector_file.is_open()){
         cout << "Error opening the vector file" << endl;
@@ -235,7 +234,6 @@ tuple <int,Vector*> read_vectors(){
         return make_tuple(vector_amount, vector_array);
     }
 }
-
 const void print_help(){
     cout << endl << "Possible Actions:" << endl
     << "1. Print Polynomial and Vector lists" << endl
@@ -244,7 +242,6 @@ const void print_help(){
     << "4. Help: Print possible actions" << endl
     << "0. Exit the program" << endl << endl;
 }
-
 const void list_polynomials(int polynomial_amount, const Polynomial* const polynomials){
     cout << "Polynomials:" << endl;
 
@@ -255,7 +252,6 @@ const void list_polynomials(int polynomial_amount, const Polynomial* const polyn
     }
     cout << endl;
 }
-
 const void list_vectors(int vector_amount, const Vector* const vectors){
     cout << "Vectors:" << endl;
 
@@ -266,7 +262,6 @@ const void list_vectors(int vector_amount, const Vector* const vectors){
     }
     cout << endl;
 }
-
 const Polynomial polynomial_op(const string& user_op, const Polynomial* polynomials){
     // Find which operator is used
     size_t add_op_found = user_op.find("+");
@@ -300,7 +295,6 @@ const Polynomial polynomial_op(const string& user_op, const Polynomial* polynomi
         return Polynomial(0, nullptr);
     }
 }
-
 const Vector vector_op(const string& user_op, const Vector* vectors){
     // Find which operator is used
     size_t add_op_found = user_op.find("+");
