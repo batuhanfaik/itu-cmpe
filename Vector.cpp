@@ -9,18 +9,18 @@
 using namespace std;
 
 // Set created vector amount to 0
-int Vector::vectors_created;
+//int Vector::vectors_created;
 
 // Default constructor
 Vector::Vector():size(0),value_array(nullptr){
     // Vector counter
-    vector_no = ++vectors_created;
+//    vector_no = ++vectors_created;
 }
 
 // Constructor
-Vector::Vector(const int size,const int * value_arr):size(size) {
+Vector::Vector(int size,const int * value_arr):size(size) {
     // Vector counter
-    vector_no = ++vectors_created;
+//    vector_no = ++vectors_created;
 
     // Allocate memory
     value_array = new int[size];
@@ -49,9 +49,9 @@ int Vector::getSize() const{
 int Vector::getValueArray(int i) const{
     return value_array[i];
 }
-int Vector::getVectorNo() const{
-    return vector_no;
-}
+//int Vector::getVectorNo() const{
+//    return vector_no;
+//}
 
 // Operator overload +
 Vector Vector::operator+(const Vector& vector_in) const{
@@ -108,8 +108,14 @@ Vector Vector::operator*(const int scalar) const{
     return Vector(getSize(), new_value_array);
 }
 
-// Temporary print function
-const void Vector::print() {
+// Operator overload <<
+ostream& operator<<(ostream& stream, const Vector& vector_in){
+    vector_in.print();
+    return stream;
+}
+
+// Print function
+const void Vector::print() const{
 //    cout << "Vector# " << vector_no << endl << "(";
     cout << "(";
     for (int i = 0; i < (size - 1); ++i) {

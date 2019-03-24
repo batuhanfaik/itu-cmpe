@@ -21,8 +21,10 @@ using namespace std;
 tuple <int,Vector*> read_vectors();
 tuple <int,Polynomial*> read_polynomials();
 const void print_help();
-const void list_polynomials(const int&, Polynomial* const);
-const void list_vectors(const int&, Vector* const);
+const void list_polynomials(const int, Polynomial* const);
+const void list_vectors(const int, Vector* const);
+const Polynomial polynomial_op(const string&, const Polynomial*);
+const Vector vector_op(const string&, const Vector*);
 
 int main(){
     int operation_selection = 4;
@@ -42,18 +44,42 @@ int main(){
             case 1: {
                 // List polynomials
                 list_polynomials(polynomial_amount, polynomials);
-
                 // List vectors
                 list_vectors(vector_amount, vectors);
                 break;
             }
             case 2: {
+                // Read user input
+                string user_op;
+                cout << "+: Polynomial addition" << endl
+                << "*: Polynomial multiplication" << endl
+                << "Enter operation: ";
+                cin >> user_op;
                 // Do a poly op
+                Polynomial result = polynomial_op(user_op, polynomials);
+                if (result.getDegree() != 0){
+                    cout << "Result: " << result << endl;
+                }
+                break;
             }
             case 3: {
+                // Read user input
+                string user_op;
+                cout << "+: Vector addition" << endl
+                << "*: Scalar multiplication" << endl
+                << ".: Dot product" << endl
+                << "Enter operation: ";
+                cin >> user_op;
                 // Do a vector op
+                Vector result = vector_op(user_op, vectors);
+                // Print only if returned value is non-empty object
+                if (result.getSize() != 0){
+                    cout << "Result: " << result << endl;
+                }
+                break;
             }
             case 4: {
+                // Print help
                 print_help();
                 break;
             }
@@ -85,7 +111,7 @@ tuple <int,Polynomial*> read_polynomials(){
         // Find the amount of polynomials and store
         getline(polynomial_file, line);
         // string is casted to int
-        int polynomial_amount = std::stoi(line);
+        int polynomial_amount = stoi(line);
 
         // Create Vector object array
         Polynomial* polynomial_array;
@@ -93,7 +119,7 @@ tuple <int,Polynomial*> read_polynomials(){
         polynomial_array = new Polynomial[polynomial_amount];
 
         // Reset vector counter
-        Polynomial::clear_counter();
+//        Polynomial::clear_counter();
 
         // For every polynomial in the file
         for (int i = 0; i < polynomial_amount; ++i) {
@@ -106,7 +132,7 @@ tuple <int,Polynomial*> read_polynomials(){
                 string coefficient_str;
                 ss >> coefficient_str;
                 // Store the amount of coefficients
-                int coefficient_amount = std::stoi(coefficient_str);
+                int coefficient_amount = stoi(coefficient_str);
                 // Coefficient amount is incremented because we read the degree from the file
                 // Coefficient amount is always one higher than the degree
                 coefficient_amount++;
@@ -154,7 +180,7 @@ tuple <int,Vector*> read_vectors(){
         // Find the amount of vectors and store
         getline(vector_file, line);
         // string is casted to int
-        int vector_amount = std::stoi(line);
+        int vector_amount = stoi(line);
 
         // Create Vector object array
         Vector* vector_array;
@@ -162,7 +188,7 @@ tuple <int,Vector*> read_vectors(){
         vector_array = new Vector[vector_amount];
 
         // Reset vector counter
-        Vector::clear_counter();
+//        Vector::clear_counter();
 
         // For every vector in the file
         for (int i = 0; i < vector_amount; ++i) {
@@ -175,7 +201,7 @@ tuple <int,Vector*> read_vectors(){
                 string coefficient_str;
                 ss >> coefficient_str;
                 // Store the amount of coefficients
-                int coefficient_amount = std::stoi(coefficient_str);
+                int coefficient_amount = stoi(coefficient_str);
 
                 // Create the array to store values of the vector
                 int* vector_values;
@@ -211,11 +237,11 @@ const void print_help(){
     << "1. Print Polynomial and Vector lists" << endl
     << "2. Do a polynomial operation" << endl
     << "3. Do a vector operation" << endl
-    << "Help: Print possible actions" << endl
+    << "4. Help: Print possible actions" << endl
     << "0. Exit the program" << endl << endl;
 }
 
-const void list_polynomials(const int& polynomial_amount, Polynomial* const polynomials){
+const void list_polynomials(const int polynomial_amount, Polynomial* const polynomials){
     cout << "Polynomials:" << endl;
 
     // Print polynomials
@@ -226,7 +252,7 @@ const void list_polynomials(const int& polynomial_amount, Polynomial* const poly
     cout << endl;
 }
 
-const void list_vectors(const int& vector_amount, Vector* const vectors){
+const void list_vectors(const int vector_amount, Vector* const vectors){
     cout << "Vectors:" << endl;
 
     // Print polynomials
@@ -235,4 +261,84 @@ const void list_vectors(const int& vector_amount, Vector* const vectors){
         vectors[i].print();
     }
     cout << endl;
+}
+
+const Polynomial polynomial_op(const string& user_op, const Polynomial* polynomials){
+    // Find which operator is used
+    size_t add_op_found = user_op.find("+");
+    size_t mult_op_found = user_op.find("*");
+
+    // Do the operation accordingly
+    // If the operation is addition
+    if(add_op_found != string::npos){
+        // Get the index of the first polynomial expression
+        int first_poly = stoi(user_op.substr(0,add_op_found));
+        // Get the index of the second polynomial expression
+        int second_poly = stoi(user_op.substr(add_op_found + 1, user_op.length()));
+        // Decrement indexes by one (arrays start at 0 :) )
+        first_poly--;
+        second_poly--;
+        // Return the addition
+        return (polynomials[first_poly]+polynomials[second_poly]);
+    // If the operation is multiplication
+    } else if(mult_op_found != string::npos){
+        // Get the index of the first polynomial expression
+        int first_poly = stoi(user_op.substr(0,mult_op_found));
+        // Get the index of the second polynomial expression
+        int second_poly = stoi(user_op.substr(mult_op_found + 1, user_op.length()));
+        // Decrement indexes by one (arrays start at 0 :) )
+        first_poly--;
+        second_poly--;
+        // Return the multiplication
+        return (polynomials[first_poly]*polynomials[second_poly]);
+    } else {
+        cout << "Unknown operator.";
+        return Polynomial(0, nullptr);
+    }
+}
+
+const Vector vector_op(const string& user_op, const Vector* vectors){
+    // Find which operator is used
+    size_t add_op_found = user_op.find("+");
+    size_t mult_op_found = user_op.find("*");
+    size_t dot_op_found = user_op.find(".");
+
+    // Do the operation accordingly
+    // If the operation is addition
+    if(add_op_found != string::npos){
+        // Get the index of the first vector
+        int first_vector = stoi(user_op.substr(0,add_op_found));
+        // Get the index of the second vector
+        int second_vector = stoi(user_op.substr(add_op_found + 1, user_op.length()));
+        // Decrement indexes by one (arrays start at 0 :) )
+        first_vector--;
+        second_vector--;
+        // Return the addition
+        return (vectors[first_vector]+vectors[second_vector]);
+    // If the operation is multiplication
+    } else if(mult_op_found != string::npos){
+        // Get the index of the vector
+        int vector = stoi(user_op.substr(0,mult_op_found));
+        // Get the scalar number
+        int scalar = stoi(user_op.substr(mult_op_found + 1, user_op.length()));
+        // Decrement the index by one (arrays start at 0 :) )
+        vector--;
+        // Return the multiplication
+        return (vectors[vector]*scalar);
+    // If the operation is dot product
+    } else if(dot_op_found != string::npos){
+        // Get the index of the first vector
+        int first_vector = stoi(user_op.substr(0,dot_op_found));
+        // Get the index of the second vector
+        int second_vector = stoi(user_op.substr(dot_op_found + 1, user_op.length()));
+        // Decrement indexes by one (arrays start at 0 :) )
+        first_vector--;
+        second_vector--;
+        int dot_product = vectors[first_vector] * vectors[second_vector];
+        cout << "Result: " << dot_product << endl << endl;
+        return Vector(0, nullptr);
+    } else {
+        cout << "Unknown operator.";
+        return Vector(0, nullptr);
+    }
 }
