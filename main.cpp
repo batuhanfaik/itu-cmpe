@@ -140,21 +140,21 @@ tuple <int,Polynomial*> read_polynomials(){
                 coefficient_amount++;
 
                 // Create the array to store coefficients of the polynomial
-                int* coefficients_array;
+                float* coefficients_array;
                 // Reserve memory for the value array
-                coefficients_array = new int[coefficient_amount];
+                coefficients_array = new float[coefficient_amount];
 
                 // Go through all coefficients and store them in the vector value array
                 for (int coefficient_index = 0; coefficient_index < coefficient_amount; ++coefficient_index){
                     // Read a coefficient
                     ss >> coefficient_str;
                     // Append it to the value array
-                    coefficients_array[coefficient_index] = std::stoi(coefficient_str);
+                    coefficients_array[coefficient_index] = stoi(coefficient_str);
                 }
                 // Required for getting rid of end of the line
                 ss >> coefficient_str;
 
-                // Create a Vector object with the given values
+                // Create a Polynomial object with the given values
                 polynomial_array[i] = Polynomial(coefficient_amount, coefficients_array);
 
                 // Release the memory for coefficients array
@@ -207,16 +207,16 @@ tuple <int,Vector*> read_vectors(){
                 int coefficient_amount = stoi(coefficient_str);
 
                 // Create the array to store values of the vector
-                int* vector_values;
+                float* vector_values;
                 // Reserve memory for the value array
-                vector_values = new int[coefficient_amount];
+                vector_values = new float[coefficient_amount];
 
                 // Go through all coefficients and store them in the vector value array
                  for (int coefficient_index = 0; coefficient_index < coefficient_amount; ++coefficient_index){
                     // Read a coefficient
                     ss >> coefficient_str;
                     // Append it to the value array
-                    vector_values[coefficient_index] = std::stoi(coefficient_str);
+                    vector_values[coefficient_index] = stoi(coefficient_str);
                 }
                  // Required for getting rid of end of the line
                  ss >> coefficient_str;

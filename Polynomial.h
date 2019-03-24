@@ -12,7 +12,7 @@ using namespace std;
 
 class Polynomial {
     int degree;
-    int* coef_array;
+    float* coef_array;
 public:
     // Default constructor
     Polynomial():degree(0),coef_array(nullptr){}
@@ -20,9 +20,9 @@ public:
     // Constructor
     // FOR SIMPLIFICATION, DEGREE DENOTES THE NUMBER OF COEFFICIENTS
     // THAT THE PARTICULAR POLYNOMIAL CAN HAVE, NOT THE ACTUAL DEGREE
-    Polynomial(int degree,const int * coef_arr):degree(degree) {
+    Polynomial(int degree,const float * coef_arr):degree(degree) {
         // Allocate memory for the coefficient array
-        coef_array = new int[degree];
+        coef_array = new float[degree];
 
         // Copy values of coefficients
         for (int i = 0; i < degree; ++i) {
@@ -34,7 +34,7 @@ public:
     Polynomial(const Polynomial& polynomial_in) {
         degree = polynomial_in.getDegree();
         // Allocate memory for the new array
-        coef_array = new int[degree];
+        coef_array = new float[degree];
         // Copy the values over
         for (int i = 0; i < degree; ++i) {
             coef_array[i] = polynomial_in.getCoefArray(i);
@@ -45,7 +45,7 @@ public:
     int getDegree() const{
         return degree;
     }
-    int getCoefArray(int i) const{
+    float getCoefArray(int i) const{
         return coef_array[i];
     }
     //int getPolyNo() const{
@@ -57,13 +57,13 @@ public:
         // Total degree is the largest of two
         int new_degree = 0;
         // Create a new coefficient array
-        int* new_coef_array;
+        float* new_coef_array;
 
         // Assign values of the new array
         // If the left value has higher degree
         if (degree >= polynomial_in.degree){
             new_degree = degree;
-            new_coef_array = new int[new_degree];
+            new_coef_array = new float[new_degree];
             // Assign the larger degree coefficients first
             for (int i = 0; i < (new_degree - polynomial_in.degree); ++i) {
                 new_coef_array[i] = coef_array[i];
@@ -75,7 +75,7 @@ public:
             // If the right value has higher degree
         } else {
             new_degree = polynomial_in.degree;
-            new_coef_array = new int[new_degree];
+            new_coef_array = new float[new_degree];
             // Assign the larger degree coefficients first
             for (int i = 0; i < (new_degree - degree); ++i) {
                 new_coef_array[i] = polynomial_in.coef_array[i];
@@ -96,8 +96,8 @@ public:
         // -1 is necessary because degrees actually denote coefficient amount not the degree itself
         int new_degree = degree + polynomial_in.degree - 1;
         // Create a new ptr for the coefficient array
-        int * new_coef_array;
-        new_coef_array = new int[new_degree];
+        float * new_coef_array;
+        new_coef_array = new float[new_degree];
         // Clear the new coefficient array
         for (int i = 0; i < new_degree; ++i) {
             new_coef_array[i] = 0;

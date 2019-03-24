@@ -12,15 +12,15 @@ using namespace std;
 
 class Vector {
     int size;
-    int* value_array;
+    float* value_array;
 public:
     // Default constructor
     Vector():size(0),value_array(nullptr){}
 
     // Constructor
-    Vector(int size,const int * value_arr):size(size) {
+    Vector(int size,const float * value_arr):size(size) {
         // Allocate memory
-        value_array = new int[size];
+        value_array = new float[size];
 
         // Copy values of the array
         for (int i = 0; i < size; ++i) {
@@ -32,7 +32,7 @@ public:
     Vector(const Vector& vector_in) {
         size = vector_in.size;
         // Allocate memory for the new array
-        value_array = new int[size];
+        value_array = new float[size];
         // Copy the values over
         for (int i = 0; i < size; ++i) {
             value_array[i] = vector_in.value_array[i];
@@ -43,22 +43,22 @@ public:
     int getSize() const{
         return size;
     }
-    int getValueArray(int i) const{
+    float getValueArray(int i) const{
         return value_array[i];
     }
 
     // Operator overload +
     Vector operator+(const Vector& vector_in) const{
         // If sizes match
-        if (getSize() == vector_in.getSize()){
-            int* new_value_array;
-            new_value_array = new int[getSize()];
+        if (size == vector_in.size){
+            float* new_value_array;
+            new_value_array = new float[size];
             // Do the addition
-            for (int i = 0; i < getSize(); ++i) {
-                new_value_array[i] = getValueArray(i) + vector_in.getValueArray(i);
+            for (int i = 0; i < size; ++i) {
+                new_value_array[i] = value_array[i] + vector_in.value_array[i];
             }
             // Return the resulting vector
-            return Vector(getSize(), new_value_array);
+            return Vector(size, new_value_array);
         // If sizes don't match
         } else {
             cout << "Vector sizes don't match" << endl;
@@ -68,15 +68,15 @@ public:
     }
 
     // Operator overload * (Dot product)
-    int operator*(const Vector& vector_in) const{
+    float operator*(const Vector& vector_in) const{
         // If sizes match
-        if (getSize() == vector_in.getSize()){
-            int* new_value_array;
-            new_value_array = new int[getSize()];
+        if (size == vector_in.size){
+            float* new_value_array;
+            new_value_array = new float[size];
             // Do the addition
-            int sum = 0;
-            for (int i = 0; i < getSize(); ++i) {
-                new_value_array[i] = getValueArray(i) * vector_in.getValueArray(i);
+            float sum = 0;
+            for (int i = 0; i < size; ++i) {
+                new_value_array[i] = value_array[i] * vector_in.value_array[i];
                 sum += new_value_array[i];
             }
             // Return the resulting vector
@@ -92,14 +92,14 @@ public:
     // Operator overload * (Scalar multiplication)
     Vector operator*(const int scalar) const{
         // Create a new value array
-        int* new_value_array;
-        new_value_array = new int[getSize()];
+        float* new_value_array;
+        new_value_array = new float[getSize()];
         // Multiply values by the scalar
-        for (int i = 0; i < getSize(); ++i) {
-            new_value_array[i] = getValueArray(i)*scalar;
+        for (int i = 0; i < size; ++i) {
+            new_value_array[i] = value_array[i]*scalar;
         }
         // Return the new vector
-        return Vector(getSize(), new_value_array);
+        return Vector(size, new_value_array);
     }
 
     // Operator overload <<
