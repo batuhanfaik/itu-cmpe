@@ -17,7 +17,13 @@ public:
     // Default constructor
     Polynomial();
     // Constructor
-    Polynomial(int, int*);
+    Polynomial(const int,const int*);
+    // Copy constructor
+    Polynomial(const Polynomial&);
+    // Operator overload +
+    Polynomial operator+(const Polynomial&) const;
+    // Operator overload *
+    Polynomial operator*(const Polynomial&) const;
     // Temporary print
     const void print();
     // Clear polynomial counter

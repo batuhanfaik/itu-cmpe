@@ -20,7 +20,7 @@ Polynomial::Polynomial():degree(0),coef_array(nullptr){
 // Constructor
 // FOR SIMPLIFICATION, DEGREE DENOTES THE NUMBER OF COEFFICIENTS
 // THAT THE PARTICULAR POLYNOMIAL CAN HAVE, NOT THE ACTUAL DEGREE
-Polynomial::Polynomial(int degree, int * coef_arr):degree(degree) {
+Polynomial::Polynomial(const int degree,const int * coef_arr):degree(degree) {
     // Polynomial counter
     polynomial_no = ++polynomials_created;
 
@@ -31,6 +31,58 @@ Polynomial::Polynomial(int degree, int * coef_arr):degree(degree) {
     for (int i = 0; i < degree; ++i) {
         coef_array[i] = coef_arr[i];
     }
+}
+
+// Copy constructor
+Polynomial::Polynomial(const Polynomial& polynomial_in) {
+    degree = polynomial_in.degree;
+    // Allocate memory for the new array
+    coef_array = new int[degree];
+    // Copy the values over
+    for (int i = 0; i < degree; ++i) {
+        coef_array[i] = polynomial_in.coef_array[i];
+    }
+}
+
+// Operator overload +
+Polynomial Polynomial::operator+(const Polynomial& polynomial_in) const{
+    int new_degree = 0;
+    // Create a new coefficient array
+    int* new_coef_array;
+
+    // Assign values of the new array
+    // If the left value has higher degree
+    if (degree >= polynomial_in.degree){
+        new_degree = degree;
+        new_coef_array = new int[new_degree];
+        // Assign the larger degree coefficients first
+        for (int i = 0; i < (new_degree - polynomial_in.degree); ++i) {
+            new_coef_array[i] = coef_array[i];
+        }
+        // Then assign the remaining coefficients
+        for (int i = (polynomial_in.degree - 1); i < degree; ++i) {
+            new_coef_array[i] = coef_array[i] + polynomial_in.coef_array[i - polynomial_in.degree + 1];
+        }
+        // If the right value has higher degree
+    } else {
+        new_degree = polynomial_in.degree;
+        new_coef_array = new int[new_degree];
+        // Assign the larger degree coefficients first
+        for (int i = 0; i < (new_degree - degree); ++i) {
+            new_coef_array[i] = polynomial_in.coef_array[i];
+        }
+        // Then assign the remaining coefficients
+        for (int i = (degree - 1); i < degree; ++i) {
+            new_coef_array[i] = coef_array[i - degree + 1] + polynomial_in.coef_array[i];
+        }
+    }
+
+    return Polynomial(new_degree, new_coef_array);
+}
+
+// Operator overload *
+Polynomial Polynomial::operator*(const Polynomial& polynomial_in) const{
+
 }
 
 // Temporary print function
