@@ -29,7 +29,7 @@ public:
     // Operator overload * (Dot product)
     int operator*(const Vector&) const;
     // Operator overload * (Scalar multiplication)
-    Vector operator*(const int) const;
+    Vector operator*(int) const;
     // Operator overload <<
     friend ostream& operator<<(ostream&, const Vector&);
     // Copy constructor

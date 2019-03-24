@@ -21,8 +21,8 @@ using namespace std;
 tuple <int,Vector*> read_vectors();
 tuple <int,Polynomial*> read_polynomials();
 const void print_help();
-const void list_polynomials(const int, Polynomial* const);
-const void list_vectors(const int, Vector* const);
+const void list_polynomials(int, const Polynomial*);
+const void list_vectors(int, const Vector*);
 const Polynomial polynomial_op(const string&, const Polynomial*);
 const Vector vector_op(const string&, const Vector*);
 
@@ -107,6 +107,8 @@ tuple <int,Polynomial*> read_polynomials(){
 
     if(!polynomial_file.is_open()){
         cout << "Error opening the polynomial file" << endl;
+        // Return empty tuple
+        return make_tuple(0, nullptr);
     } else{
         // Find the amount of polynomials and store
         getline(polynomial_file, line);
@@ -176,6 +178,8 @@ tuple <int,Vector*> read_vectors(){
 
     if(!vector_file.is_open()){
         cout << "Error opening the vector file" << endl;
+        // Return empty tuple
+        return make_tuple(0, nullptr);
     } else{
         // Find the amount of vectors and store
         getline(vector_file, line);
@@ -241,7 +245,7 @@ const void print_help(){
     << "0. Exit the program" << endl << endl;
 }
 
-const void list_polynomials(const int polynomial_amount, Polynomial* const polynomials){
+const void list_polynomials(int polynomial_amount, const Polynomial* const polynomials){
     cout << "Polynomials:" << endl;
 
     // Print polynomials
@@ -252,7 +256,7 @@ const void list_polynomials(const int polynomial_amount, Polynomial* const polyn
     cout << endl;
 }
 
-const void list_vectors(const int vector_amount, Vector* const vectors){
+const void list_vectors(int vector_amount, const Vector* const vectors){
     cout << "Vectors:" << endl;
 
     // Print polynomials
