@@ -71,13 +71,10 @@ public:
     float operator*(const Vector& vector_in) const{
         // If sizes match
         if (size == vector_in.size){
-            float* new_value_array;
-            new_value_array = new float[size];
             // Do the addition
             float sum = 0;
             for (int i = 0; i < size; ++i) {
-                new_value_array[i] = value_array[i] * vector_in.value_array[i];
-                sum += new_value_array[i];
+                sum += value_array[i] * vector_in.value_array[i];
             }
             // Return the resulting vector
             return sum;
