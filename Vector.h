@@ -119,8 +119,7 @@ public:
 
     // Destructor
     ~Vector(){
-    //    --vectors_created;
-    //    delete[] value_array;
+//        delete [] value_array;
     }
 };
 

@@ -95,7 +95,13 @@ int main(){
         cin >> operation_selection;
     }
 
+    // Exit message
     cout << "Exiting the program..." << endl;
+
+    // Freeing allocated memory
+    delete [] polynomials;
+    delete [] vectors;
+
     return 0;
 }
 
@@ -121,9 +127,6 @@ tuple <int,Polynomial*> read_polynomials(){
         Polynomial* polynomial_array;
         // Allocate memory to the vector array
         polynomial_array = new Polynomial[polynomial_amount];
-
-        // Reset vector counter
-//        Polynomial::clear_counter();
 
         // For every polynomial in the file
         for (int i = 0; i < polynomial_amount; ++i) {
@@ -192,9 +195,6 @@ tuple <int,Vector*> read_vectors(){
         // Allocate memory to the vector array
         vector_array = new Vector[vector_amount];
 
-        // Reset vector counter
-//        Vector::clear_counter();
-
         // For every vector in the file
         for (int i = 0; i < vector_amount; ++i) {
              if (vector_file.good()) {                // As long as the line is readable
@@ -225,7 +225,6 @@ tuple <int,Vector*> read_vectors(){
 
                 // Create a Vector object with the given values
                 vector_array[i] = Vector(coefficient_amount, vector_values);
-
                 // Release the memory for vector value array
                 delete[] vector_values;
              }
@@ -277,7 +276,7 @@ const Polynomial polynomial_op(const string& user_op, int polynomial_amount, con
         // Get the index of the second polynomial expression
         int second_poly = stoi(user_op.substr(add_op_found + 1, user_op.length()));
         // Check if indexes are valid
-        if (first_poly < polynomial_amount && second_poly < polynomial_amount){
+        if (first_poly <= polynomial_amount && second_poly <= polynomial_amount){
            // Decrement indexes by one (arrays start at 0 :) )
             first_poly--;
             second_poly--;
@@ -294,7 +293,7 @@ const Polynomial polynomial_op(const string& user_op, int polynomial_amount, con
         // Get the index of the second polynomial expression
         int second_poly = stoi(user_op.substr(mult_op_found + 1, user_op.length()));
         // Check if indexes are valid
-        if (first_poly < polynomial_amount && second_poly < polynomial_amount){
+        if (first_poly <= polynomial_amount && second_poly <= polynomial_amount){
             // Decrement indexes by one (arrays start at 0 :) )
             first_poly--;
             second_poly--;
@@ -323,7 +322,7 @@ const Vector vector_op(const string& user_op, int vector_amount, const Vector* v
         // Get the index of the second vector
         int second_vector = stoi(user_op.substr(add_op_found + 1, user_op.length()));
         // Check if indexes are valid
-        if (first_vector < vector_amount && second_vector < vector_amount){
+        if (first_vector <= vector_amount && second_vector <= vector_amount){
            // Decrement indexes by one (arrays start at 0 :) )
             first_vector--;
             second_vector--;
@@ -340,7 +339,7 @@ const Vector vector_op(const string& user_op, int vector_amount, const Vector* v
         // Get the scalar number
         float scalar = stoi(user_op.substr(mult_op_found + 1, user_op.length()));
         // Check if the index is valid
-        if (vector < vector_amount){
+        if (vector <= vector_amount){
             // Decrement the index by one (arrays start at 0 :) )
             vector--;
             // Return the multiplication
@@ -356,7 +355,7 @@ const Vector vector_op(const string& user_op, int vector_amount, const Vector* v
         // Get the index of the second vector
         int second_vector = stoi(user_op.substr(dot_op_found + 1, user_op.length()));
         // Check if indexes are valid
-        if (first_vector < vector_amount && second_vector < vector_amount){
+        if (first_vector <= vector_amount && second_vector <= vector_amount){
             // Decrement indexes by one (arrays start at 0 :) )
             first_vector--;
             second_vector--;

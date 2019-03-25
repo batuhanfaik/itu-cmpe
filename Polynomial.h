@@ -48,9 +48,6 @@ public:
     float getCoefArray(int i) const{
         return coef_array[i];
     }
-    //int getPolyNo() const{
-    //    return polynomial_no;
-    //}
 
     // Operator overload +
     Polynomial operator+(const Polynomial& polynomial_in) const{
@@ -142,7 +139,7 @@ public:
 
     // Destructor
     ~Polynomial() {
-
+//        delete[] coef_array;
     }
 };
 
