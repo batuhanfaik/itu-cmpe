@@ -90,10 +90,10 @@ public:
     }
 
     // Operator overload * (Scalar multiplication)
-    Vector operator*(const int scalar) const{
+    Vector operator*(const float scalar) const{
         // Create a new value array
         float* new_value_array;
-        new_value_array = new float[getSize()];
+        new_value_array = new float[size];
         // Multiply values by the scalar
         for (int i = 0; i < size; ++i) {
             new_value_array[i] = value_array[i]*scalar;
