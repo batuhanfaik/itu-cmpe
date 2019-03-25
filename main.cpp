@@ -23,8 +23,8 @@ tuple <int,Polynomial*> read_polynomials();
 const void print_help();
 const void list_polynomials(int, const Polynomial*);
 const void list_vectors(int, const Vector*);
-const Polynomial polynomial_op(const string&, const Polynomial*);
-const Vector vector_op(const string&, const Vector*);
+const Polynomial polynomial_op(const string&, int, const Polynomial*);
+const Vector vector_op(const string&, int, const Vector*);
 
 int main(){
     int operation_selection = 4;
@@ -53,10 +53,11 @@ int main(){
                 string user_op;
                 cout << "+: Polynomial addition" << endl
                 << "*: Polynomial multiplication" << endl
+                << "(Operations should be entered without spaces)" << endl
                 << "Enter operation: ";
                 cin >> user_op;
                 // Do a poly op
-                Polynomial result = polynomial_op(user_op, polynomials);
+                Polynomial result = polynomial_op(user_op, polynomial_amount, polynomials);
                 if (result.getDegree() != 0){
                     cout << "Result: " << result << endl;
                 }
@@ -68,10 +69,11 @@ int main(){
                 cout << "+: Vector addition" << endl
                 << "*: Scalar multiplication" << endl
                 << ".: Dot product" << endl
+                << "(Operations should be entered without spaces)" << endl
                 << "Enter operation: ";
                 cin >> user_op;
                 // Do a vector op
-                Vector result = vector_op(user_op, vectors);
+                Vector result = vector_op(user_op, vector_amount, vectors);
                 // Print only if returned value is non-empty object
                 if (result.getSize() != 0){
                     cout << "Result: " << result << endl;
@@ -262,7 +264,7 @@ const void list_vectors(int vector_amount, const Vector* const vectors){
     }
     cout << endl;
 }
-const Polynomial polynomial_op(const string& user_op, const Polynomial* polynomials){
+const Polynomial polynomial_op(const string& user_op, int polynomial_amount, const Polynomial* polynomials){
     // Find which operator is used
     size_t add_op_found = user_op.find("+");
     size_t mult_op_found = user_op.find("*");
@@ -274,28 +276,40 @@ const Polynomial polynomial_op(const string& user_op, const Polynomial* polynomi
         int first_poly = stoi(user_op.substr(0,add_op_found));
         // Get the index of the second polynomial expression
         int second_poly = stoi(user_op.substr(add_op_found + 1, user_op.length()));
-        // Decrement indexes by one (arrays start at 0 :) )
-        first_poly--;
-        second_poly--;
-        // Return the addition
-        return (polynomials[first_poly]+polynomials[second_poly]);
+        // Check if indexes are valid
+        if (first_poly < polynomial_amount && second_poly < polynomial_amount){
+           // Decrement indexes by one (arrays start at 0 :) )
+            first_poly--;
+            second_poly--;
+            // Return the addition
+            return (polynomials[first_poly]+polynomials[second_poly]);
+        } else { // If indexes are not valid
+            cout << "Indexes are not in range." << endl;
+            return Polynomial(0, nullptr);
+        }
     // If the operation is multiplication
     } else if(mult_op_found != string::npos){
         // Get the index of the first polynomial expression
         int first_poly = stoi(user_op.substr(0,mult_op_found));
         // Get the index of the second polynomial expression
         int second_poly = stoi(user_op.substr(mult_op_found + 1, user_op.length()));
-        // Decrement indexes by one (arrays start at 0 :) )
-        first_poly--;
-        second_poly--;
-        // Return the multiplication
-        return (polynomials[first_poly]*polynomials[second_poly]);
+        // Check if indexes are valid
+        if (first_poly < polynomial_amount && second_poly < polynomial_amount){
+            // Decrement indexes by one (arrays start at 0 :) )
+            first_poly--;
+            second_poly--;
+            // Return the multiplication
+            return (polynomials[first_poly]*polynomials[second_poly]);
+        } else { // If indexes are not valid
+            cout << "Indexes are not in range." << endl;
+            return Polynomial(0, nullptr);
+        }
     } else {
-        cout << "Unknown operator.";
+        cout << "Unknown operator." << endl;
         return Polynomial(0, nullptr);
     }
 }
-const Vector vector_op(const string& user_op, const Vector* vectors){
+const Vector vector_op(const string& user_op, int vector_amount, const Vector* vectors){
     // Find which operator is used
     size_t add_op_found = user_op.find("+");
     size_t mult_op_found = user_op.find("*");
@@ -308,35 +322,52 @@ const Vector vector_op(const string& user_op, const Vector* vectors){
         int first_vector = stoi(user_op.substr(0,add_op_found));
         // Get the index of the second vector
         int second_vector = stoi(user_op.substr(add_op_found + 1, user_op.length()));
-        // Decrement indexes by one (arrays start at 0 :) )
-        first_vector--;
-        second_vector--;
-        // Return the addition
-        return (vectors[first_vector]+vectors[second_vector]);
+        // Check if indexes are valid
+        if (first_vector < vector_amount && second_vector < vector_amount){
+           // Decrement indexes by one (arrays start at 0 :) )
+            first_vector--;
+            second_vector--;
+            // Return the addition
+            return (vectors[first_vector]+vectors[second_vector]);
+        } else { // If indexes are not valid
+            cout << "Indexes are not in range." << endl;
+            return Vector(0, nullptr);
+        }
     // If the operation is multiplication
     } else if(mult_op_found != string::npos){
         // Get the index of the vector
         int vector = stoi(user_op.substr(0,mult_op_found));
         // Get the scalar number
-        int scalar = stoi(user_op.substr(mult_op_found + 1, user_op.length()));
-        // Decrement the index by one (arrays start at 0 :) )
-        vector--;
-        // Return the multiplication
-        return (vectors[vector]*scalar);
+        float scalar = stoi(user_op.substr(mult_op_found + 1, user_op.length()));
+        // Check if the index is valid
+        if (vector < vector_amount){
+            // Decrement the index by one (arrays start at 0 :) )
+            vector--;
+            // Return the multiplication
+            return (vectors[vector]*scalar);
+        } else { // If indexes are not valid
+            cout << "Indexes are not in range." << endl;
+            return Vector(0, nullptr);
+        }
     // If the operation is dot product
     } else if(dot_op_found != string::npos){
         // Get the index of the first vector
         int first_vector = stoi(user_op.substr(0,dot_op_found));
         // Get the index of the second vector
         int second_vector = stoi(user_op.substr(dot_op_found + 1, user_op.length()));
-        // Decrement indexes by one (arrays start at 0 :) )
-        first_vector--;
-        second_vector--;
-        float dot_product = vectors[first_vector] * vectors[second_vector];
-        cout << "Result: " << dot_product << endl << endl;
+        // Check if indexes are valid
+        if (first_vector < vector_amount && second_vector < vector_amount){
+            // Decrement indexes by one (arrays start at 0 :) )
+            first_vector--;
+            second_vector--;
+            float dot_product = vectors[first_vector] * vectors[second_vector];
+            cout << "Result: " << dot_product << endl << endl;
+        } else { // If indexes are not valid
+            cout << "Indexes are not in range." << endl;
+        }
         return Vector(0, nullptr);
     } else {
-        cout << "Unknown operator.";
+        cout << "Unknown operator." << endl;
         return Vector(0, nullptr);
     }
 }
