@@ -680,7 +680,6 @@
     <wire from="(420,130)" to="(420,150)"/>
     <wire from="(480,430)" to="(480,450)"/>
     <wire from="(460,420)" to="(500,420)"/>
-    <wire from="(540,440)" to="(560,440)"/>
     <wire from="(600,260)" to="(620,260)"/>
     <wire from="(350,280)" to="(380,280)"/>
     <wire from="(380,400)" to="(400,400)"/>
@@ -692,6 +691,7 @@
     <wire from="(140,280)" to="(210,280)"/>
     <wire from="(70,90)" to="(460,90)"/>
     <wire from="(80,100)" to="(450,100)"/>
+    <wire from="(540,440)" to="(560,440)"/>
     <comp lib="7" loc="(235,400)" name="Text">
       <a name="text" val="MSB B"/>
       <a name="font" val="Dialog plain 12"/>
@@ -701,8 +701,8 @@
       <a name="tristate" val="false"/>
       <a name="label" val="B"/>
     </comp>
-    <comp lib="1" loc="(590,430)" name="OR Gate"/>
     <comp lib="1" loc="(490,460)" name="NOT Gate"/>
+    <comp lib="1" loc="(590,430)" name="OR Gate"/>
     <comp lib="4" loc="(420,270)" name="Adder"/>
     <comp lib="0" loc="(290,400)" name="Splitter">
       <a name="fanout" val="1"/>
