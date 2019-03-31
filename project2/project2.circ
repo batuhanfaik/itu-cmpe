@@ -5,7 +5,24 @@
   <lib desc="#Wiring" name="0">
     <tool name="Splitter">
       <a name="facing" val="south"/>
+      <a name="fanout" val="2"/>
+      <a name="incoming" val="16"/>
       <a name="appear" val="right"/>
+      <a name="bit1" val="0"/>
+      <a name="bit2" val="0"/>
+      <a name="bit3" val="0"/>
+      <a name="bit4" val="0"/>
+      <a name="bit5" val="0"/>
+      <a name="bit6" val="0"/>
+      <a name="bit7" val="0"/>
+      <a name="bit8" val="1"/>
+      <a name="bit9" val="1"/>
+      <a name="bit10" val="1"/>
+      <a name="bit11" val="1"/>
+      <a name="bit12" val="1"/>
+      <a name="bit13" val="1"/>
+      <a name="bit14" val="1"/>
+      <a name="bit15" val="1"/>
     </tool>
     <tool name="Clock">
       <a name="facing" val="north"/>
@@ -63,7 +80,7 @@
       <a name="valign" val="base"/>
     </tool>
   </lib>
-  <lib desc="file#/home/faati/Desktop/blg222e_project/project1/project1.circ" name="8"/>
+  <lib desc="file#/home/batuhanfaik/git/blg222e_project/project1/project1.circ" name="8"/>
   <main name="ALU"/>
   <options>
     <a name="gateUndefined" val="ignore"/>
@@ -268,68 +285,9 @@
     <wire from="(690,460)" to="(980,460)"/>
     <wire from="(390,550)" to="(790,550)"/>
     <wire from="(670,510)" to="(670,1040)"/>
-    <comp lib="7" loc="(626,356)" name="Text">
-      <a name="font" val="Dialog plain 9"/>
-    </comp>
-    <comp lib="0" loc="(750,600)" name="Splitter">
-      <a name="facing" val="south"/>
-      <a name="fanout" val="2"/>
-      <a name="bit0" val="none"/>
-      <a name="bit1" val="none"/>
-      <a name="bit2" val="0"/>
-      <a name="bit3" val="1"/>
-    </comp>
-    <comp lib="0" loc="(1250,490)" name="Pin">
-      <a name="facing" val="west"/>
-      <a name="output" val="true"/>
-      <a name="width" val="8"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="OutALU"/>
-    </comp>
-    <comp lib="6" loc="(40,140)" name="Hex Digit Display"/>
-    <comp lib="7" loc="(816,811)" name="Text">
-      <a name="text" val="Carry From Shifting Unit"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="7" loc="(927,990)" name="Text">
-      <a name="text" val="Overflow Selector"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="7" loc="(649,339)" name="Text">
-      <a name="text" val="B"/>
-      <a name="font" val="Dialog plain 9"/>
-    </comp>
-    <comp lib="6" loc="(40,310)" name="Hex Digit Display"/>
-    <comp lib="1" loc="(760,650)" name="NOT Gate">
-      <a name="facing" val="south"/>
-    </comp>
-    <comp lib="0" loc="(1220,720)" name="Splitter">
-      <a name="facing" val="north"/>
-    </comp>
-    <comp lib="1" loc="(610,210)" name="AND Gate">
-      <a name="width" val="8"/>
-    </comp>
-    <comp lib="7" loc="(1285,593)" name="Text">
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp loc="(1180,540)" name="ZeroChecker">
-      <a name="facing" val="south"/>
-    </comp>
-    <comp lib="7" loc="(867,1031)" name="Text">
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
     <comp lib="7" loc="(649,246)" name="Text">
       <a name="text" val="A OR B"/>
       <a name="font" val="Dialog plain 9"/>
-    </comp>
-    <comp lib="7" loc="(648,305)" name="Text">
-      <a name="text" val="A XOR B"/>
-      <a name="font" val="Dialog plain 9"/>
-    </comp>
-    <comp lib="0" loc="(290,120)" name="Pin">
-      <a name="facing" val="south"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="Cin"/>
     </comp>
     <comp lib="0" loc="(1300,720)" name="Pin">
       <a name="facing" val="west"/>
@@ -338,141 +296,26 @@
       <a name="tristate" val="false"/>
       <a name="label" val="OutFlag ZCNO Register"/>
     </comp>
-    <comp lib="6" loc="(100,490)" name="Hex Digit Display"/>
-    <comp lib="7" loc="(851,536)" name="Text">
-      <a name="text" val="Shift Operations"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
     <comp lib="0" loc="(390,120)" name="Pin">
       <a name="facing" val="south"/>
       <a name="width" val="8"/>
       <a name="tristate" val="false"/>
       <a name="label" val="A"/>
     </comp>
-    <comp lib="1" loc="(610,360)" name="NOT Gate">
-      <a name="width" val="8"/>
-      <a name="size" val="30"/>
-    </comp>
-    <comp lib="7" loc="(678,232)" name="Text">
-      <a name="font" val="Dialog plain 9"/>
-    </comp>
-    <comp lib="0" loc="(240,100)" name="Pin">
-      <a name="width" val="4"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="FunSel"/>
-    </comp>
-    <comp lib="7" loc="(819,1018)" name="Text">
-      <a name="text" val="Overflow From Shifting Unit"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="7" loc="(766,1036)" name="Text">
-      <a name="text" val="Overflow From Arithmetic Unit"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="7" loc="(648,277)" name="Text">
-      <a name="text" val="NOT A"/>
-      <a name="font" val="Dialog plain 9"/>
-    </comp>
-    <comp lib="7" loc="(758,827)" name="Text">
-      <a name="text" val="Carry From Arithmetic Unit"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="7" loc="(1315,596)" name="Text">
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp loc="(850,560)" name="Shift Unit"/>
-    <comp lib="3" loc="(1030,490)" name="Multiplexer">
-      <a name="select" val="4"/>
-      <a name="width" val="8"/>
-      <a name="enable" val="false"/>
-    </comp>
-    <comp lib="0" loc="(560,540)" name="Splitter">
-      <a name="facing" val="north"/>
-      <a name="fanout" val="1"/>
-      <a name="bit1" val="0"/>
-      <a name="bit2" val="none"/>
-      <a name="bit3" val="none"/>
-    </comp>
-    <comp lib="7" loc="(648,358)" name="Text">
-      <a name="text" val="NOT B"/>
-      <a name="font" val="Dialog plain 9"/>
-    </comp>
-    <comp lib="7" loc="(69,68)" name="Text">
-      <a name="text" val="A"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
     <comp lib="7" loc="(699,582)" name="Text">
       <a name="text" val="FunSel"/>
       <a name="font" val="Dialog plain 12"/>
     </comp>
-    <comp lib="3" loc="(940,1030)" name="Multiplexer">
-      <a name="selloc" val="tr"/>
-      <a name="enable" val="false"/>
-    </comp>
-    <comp loc="(630,470)" name="Arithmetic Unit"/>
-    <comp lib="7" loc="(918,780)" name="Text">
-      <a name="text" val="Carry Selector"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="6" loc="(90,140)" name="Hex Digit Display"/>
-    <comp lib="7" loc="(272,114)" name="Text">
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="7" loc="(1230,540)" name="Text">
-      <a name="text" val="Negative Checker"/>
-      <a name="font" val="Dialog plain 6"/>
-    </comp>
-    <comp lib="7" loc="(79,418)" name="Text">
-      <a name="text" val="OutALU"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="7" loc="(629,356)" name="Text">
-      <a name="font" val="Dialog plain 9"/>
-    </comp>
-    <comp lib="3" loc="(930,820)" name="Multiplexer">
-      <a name="selloc" val="tr"/>
-      <a name="enable" val="false"/>
-    </comp>
-    <comp lib="1" loc="(770,730)" name="AND Gate">
+    <comp loc="(1180,540)" name="ZeroChecker">
       <a name="facing" val="south"/>
-    </comp>
-    <comp lib="7" loc="(648,205)" name="Text">
-      <a name="text" val="A AND B"/>
-      <a name="font" val="Dialog plain 9"/>
-    </comp>
-    <comp lib="1" loc="(610,280)" name="NOT Gate">
-      <a name="width" val="8"/>
-      <a name="size" val="30"/>
-    </comp>
-    <comp lib="0" loc="(80,190)" name="Splitter">
-      <a name="facing" val="north"/>
-      <a name="fanout" val="2"/>
-      <a name="incoming" val="8"/>
-      <a name="bit1" val="0"/>
-      <a name="bit2" val="0"/>
-      <a name="bit3" val="0"/>
-      <a name="bit4" val="1"/>
-      <a name="bit5" val="1"/>
-      <a name="bit6" val="1"/>
-      <a name="bit7" val="1"/>
-    </comp>
-    <comp lib="0" loc="(490,120)" name="Pin">
-      <a name="facing" val="south"/>
-      <a name="width" val="8"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="B"/>
-    </comp>
-    <comp lib="6" loc="(90,310)" name="Hex Digit Display"/>
-    <comp lib="1" loc="(610,250)" name="OR Gate">
-      <a name="width" val="8"/>
     </comp>
     <comp lib="1" loc="(620,310)" name="XOR Gate">
       <a name="width" val="8"/>
     </comp>
-    <comp lib="7" loc="(601,337)" name="Text">
-      <a name="font" val="Dialog plain 9"/>
+    <comp lib="7" loc="(851,536)" name="Text">
+      <a name="text" val="Shift Operations"/>
+      <a name="font" val="Dialog plain 12"/>
     </comp>
-    <comp lib="6" loc="(50,490)" name="Hex Digit Display"/>
     <comp lib="0" loc="(1210,510)" name="Splitter">
       <a name="facing" val="south"/>
       <a name="fanout" val="1"/>
@@ -487,21 +330,18 @@
       <a name="bit6" val="none"/>
       <a name="bit7" val="0"/>
     </comp>
-    <comp lib="7" loc="(69,238)" name="Text">
-      <a name="text" val="B"/>
+    <comp lib="7" loc="(927,990)" name="Text">
+      <a name="text" val="Overflow Selector"/>
       <a name="font" val="Dialog plain 12"/>
     </comp>
-    <comp lib="0" loc="(80,380)" name="Splitter">
-      <a name="facing" val="north"/>
-      <a name="fanout" val="2"/>
-      <a name="incoming" val="8"/>
-      <a name="bit1" val="0"/>
-      <a name="bit2" val="0"/>
-      <a name="bit3" val="0"/>
-      <a name="bit4" val="1"/>
-      <a name="bit5" val="1"/>
-      <a name="bit6" val="1"/>
-      <a name="bit7" val="1"/>
+    <comp lib="7" loc="(648,358)" name="Text">
+      <a name="text" val="NOT B"/>
+      <a name="font" val="Dialog plain 9"/>
+    </comp>
+    <comp loc="(850,560)" name="Shift Unit"/>
+    <comp lib="7" loc="(819,1018)" name="Text">
+      <a name="text" val="Overflow From Shifting Unit"/>
+      <a name="font" val="Dialog plain 12"/>
     </comp>
     <comp lib="0" loc="(90,560)" name="Splitter">
       <a name="facing" val="north"/>
@@ -515,9 +355,186 @@
       <a name="bit6" val="1"/>
       <a name="bit7" val="1"/>
     </comp>
+    <comp lib="7" loc="(1230,540)" name="Text">
+      <a name="text" val="Negative Checker"/>
+      <a name="font" val="Dialog plain 6"/>
+    </comp>
+    <comp lib="0" loc="(240,100)" name="Pin">
+      <a name="width" val="4"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="FunSel"/>
+    </comp>
+    <comp lib="0" loc="(560,540)" name="Splitter">
+      <a name="facing" val="north"/>
+      <a name="fanout" val="1"/>
+      <a name="bit1" val="0"/>
+      <a name="bit2" val="none"/>
+      <a name="bit3" val="none"/>
+    </comp>
+    <comp lib="7" loc="(79,418)" name="Text">
+      <a name="text" val="OutALU"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="7" loc="(69,68)" name="Text">
+      <a name="text" val="A"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="1" loc="(770,730)" name="AND Gate">
+      <a name="facing" val="south"/>
+    </comp>
+    <comp lib="0" loc="(1250,490)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="width" val="8"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="OutALU"/>
+    </comp>
+    <comp lib="1" loc="(760,650)" name="NOT Gate">
+      <a name="facing" val="south"/>
+    </comp>
+    <comp lib="7" loc="(1285,593)" name="Text">
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="7" loc="(629,356)" name="Text">
+      <a name="font" val="Dialog plain 9"/>
+    </comp>
+    <comp lib="1" loc="(610,250)" name="OR Gate">
+      <a name="width" val="8"/>
+    </comp>
+    <comp lib="7" loc="(758,827)" name="Text">
+      <a name="text" val="Carry From Arithmetic Unit"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="0" loc="(1220,720)" name="Splitter">
+      <a name="facing" val="north"/>
+    </comp>
+    <comp lib="7" loc="(867,1031)" name="Text">
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="7" loc="(648,277)" name="Text">
+      <a name="text" val="NOT A"/>
+      <a name="font" val="Dialog plain 9"/>
+    </comp>
+    <comp lib="7" loc="(601,337)" name="Text">
+      <a name="font" val="Dialog plain 9"/>
+    </comp>
+    <comp lib="7" loc="(69,238)" name="Text">
+      <a name="text" val="B"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="7" loc="(626,356)" name="Text">
+      <a name="font" val="Dialog plain 9"/>
+    </comp>
+    <comp lib="7" loc="(648,305)" name="Text">
+      <a name="text" val="A XOR B"/>
+      <a name="font" val="Dialog plain 9"/>
+    </comp>
+    <comp lib="1" loc="(610,360)" name="NOT Gate">
+      <a name="width" val="8"/>
+      <a name="size" val="30"/>
+    </comp>
+    <comp lib="3" loc="(940,1030)" name="Multiplexer">
+      <a name="selloc" val="tr"/>
+      <a name="enable" val="false"/>
+    </comp>
+    <comp lib="7" loc="(817,806)" name="Text">
+      <a name="text" val="Carry From Shifting Unit"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="6" loc="(100,490)" name="Hex Digit Display"/>
+    <comp loc="(630,470)" name="Arithmetic Unit"/>
+    <comp lib="6" loc="(40,140)" name="Hex Digit Display"/>
+    <comp lib="6" loc="(90,310)" name="Hex Digit Display"/>
+    <comp lib="1" loc="(610,210)" name="AND Gate">
+      <a name="width" val="8"/>
+    </comp>
+    <comp lib="0" loc="(290,120)" name="Pin">
+      <a name="facing" val="south"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="Cin"/>
+    </comp>
     <comp lib="7" loc="(633,422)" name="Text">
       <a name="text" val="Arithmethic Operations"/>
       <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="0" loc="(80,190)" name="Splitter">
+      <a name="facing" val="north"/>
+      <a name="fanout" val="2"/>
+      <a name="incoming" val="8"/>
+      <a name="bit1" val="0"/>
+      <a name="bit2" val="0"/>
+      <a name="bit3" val="0"/>
+      <a name="bit4" val="1"/>
+      <a name="bit5" val="1"/>
+      <a name="bit6" val="1"/>
+      <a name="bit7" val="1"/>
+    </comp>
+    <comp lib="6" loc="(90,140)" name="Hex Digit Display"/>
+    <comp lib="0" loc="(750,600)" name="Splitter">
+      <a name="facing" val="south"/>
+      <a name="fanout" val="2"/>
+      <a name="bit0" val="none"/>
+      <a name="bit1" val="none"/>
+      <a name="bit2" val="0"/>
+      <a name="bit3" val="1"/>
+    </comp>
+    <comp lib="7" loc="(1315,596)" name="Text">
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="3" loc="(1030,490)" name="Multiplexer">
+      <a name="select" val="4"/>
+      <a name="width" val="8"/>
+      <a name="enable" val="false"/>
+    </comp>
+    <comp lib="6" loc="(50,490)" name="Hex Digit Display"/>
+    <comp lib="7" loc="(649,339)" name="Text">
+      <a name="text" val="B"/>
+      <a name="font" val="Dialog plain 9"/>
+    </comp>
+    <comp lib="7" loc="(648,205)" name="Text">
+      <a name="text" val="A AND B"/>
+      <a name="font" val="Dialog plain 9"/>
+    </comp>
+    <comp lib="7" loc="(766,1036)" name="Text">
+      <a name="text" val="Overflow From Arithmetic Unit"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="3" loc="(930,820)" name="Multiplexer">
+      <a name="selloc" val="tr"/>
+      <a name="enable" val="false"/>
+    </comp>
+    <comp lib="1" loc="(610,280)" name="NOT Gate">
+      <a name="width" val="8"/>
+      <a name="size" val="30"/>
+    </comp>
+    <comp lib="7" loc="(918,780)" name="Text">
+      <a name="text" val="Carry Selector"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="0" loc="(490,120)" name="Pin">
+      <a name="facing" val="south"/>
+      <a name="width" val="8"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="B"/>
+    </comp>
+    <comp lib="0" loc="(80,380)" name="Splitter">
+      <a name="facing" val="north"/>
+      <a name="fanout" val="2"/>
+      <a name="incoming" val="8"/>
+      <a name="bit1" val="0"/>
+      <a name="bit2" val="0"/>
+      <a name="bit3" val="0"/>
+      <a name="bit4" val="1"/>
+      <a name="bit5" val="1"/>
+      <a name="bit6" val="1"/>
+      <a name="bit7" val="1"/>
+    </comp>
+    <comp lib="6" loc="(40,310)" name="Hex Digit Display"/>
+    <comp lib="7" loc="(272,114)" name="Text">
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="7" loc="(678,232)" name="Text">
+      <a name="font" val="Dialog plain 9"/>
     </comp>
   </circuit>
   <circuit name="ZeroChecker">
@@ -565,15 +582,15 @@
       <a name="fanout" val="8"/>
       <a name="incoming" val="8"/>
     </comp>
-    <comp lib="1" loc="(250,260)" name="OR Gate">
-      <a name="facing" val="south"/>
-      <a name="inputs" val="8"/>
-    </comp>
     <comp lib="1" loc="(290,290)" name="NOT Gate"/>
     <comp lib="0" loc="(110,160)" name="Pin">
       <a name="width" val="8"/>
       <a name="tristate" val="false"/>
       <a name="label" val="Input"/>
+    </comp>
+    <comp lib="1" loc="(250,260)" name="OR Gate">
+      <a name="facing" val="south"/>
+      <a name="inputs" val="8"/>
     </comp>
   </circuit>
   <circuit name="Arithmetic Unit">
@@ -692,18 +709,6 @@
     <wire from="(70,90)" to="(460,90)"/>
     <wire from="(80,100)" to="(450,100)"/>
     <wire from="(540,440)" to="(560,440)"/>
-    <comp lib="7" loc="(235,400)" name="Text">
-      <a name="text" val="MSB B"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="0" loc="(250,340)" name="Pin">
-      <a name="width" val="8"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="B"/>
-    </comp>
-    <comp lib="1" loc="(490,460)" name="NOT Gate"/>
-    <comp lib="1" loc="(590,430)" name="OR Gate"/>
-    <comp lib="4" loc="(420,270)" name="Adder"/>
     <comp lib="0" loc="(290,400)" name="Splitter">
       <a name="fanout" val="1"/>
       <a name="incoming" val="8"/>
@@ -717,8 +722,64 @@
       <a name="bit6" val="none"/>
       <a name="bit7" val="0"/>
     </comp>
+    <comp lib="1" loc="(400,220)" name="OR Gate">
+      <a name="facing" val="south"/>
+    </comp>
+    <comp lib="1" loc="(530,410)" name="AND Gate"/>
+    <comp lib="0" loc="(290,510)" name="Splitter">
+      <a name="facing" val="north"/>
+      <a name="fanout" val="1"/>
+      <a name="incoming" val="8"/>
+      <a name="bit0" val="none"/>
+      <a name="bit1" val="none"/>
+      <a name="bit2" val="none"/>
+      <a name="bit3" val="none"/>
+      <a name="bit4" val="none"/>
+      <a name="bit5" val="none"/>
+      <a name="bit6" val="none"/>
+      <a name="bit7" val="0"/>
+    </comp>
+    <comp lib="0" loc="(250,340)" name="Pin">
+      <a name="width" val="8"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="B"/>
+    </comp>
+    <comp lib="1" loc="(490,460)" name="NOT Gate"/>
+    <comp lib="7" loc="(230,453)" name="Text">
+      <a name="text" val="Substraction / Addition"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="1" loc="(530,450)" name="AND Gate">
+      <a name="inputs" val="3"/>
+    </comp>
     <comp lib="1" loc="(330,290)" name="XOR Gate">
       <a name="width" val="8"/>
+    </comp>
+    <comp lib="3" loc="(580,260)" name="Multiplexer">
+      <a name="selloc" val="tr"/>
+      <a name="select" val="2"/>
+      <a name="width" val="8"/>
+      <a name="enable" val="false"/>
+    </comp>
+    <comp lib="1" loc="(380,400)" name="XOR Gate"/>
+    <comp lib="0" loc="(650,370)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="label" val="Overflow"/>
+    </comp>
+    <comp lib="0" loc="(470,200)" name="Splitter">
+      <a name="facing" val="north"/>
+      <a name="fanout" val="2"/>
+      <a name="incoming" val="2"/>
+    </comp>
+    <comp lib="7" loc="(235,400)" name="Text">
+      <a name="text" val="MSB B"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="0" loc="(250,220)" name="Pin">
+      <a name="width" val="8"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="A"/>
     </comp>
     <comp lib="0" loc="(620,260)" name="Pin">
       <a name="facing" val="west"/>
@@ -727,21 +788,9 @@
       <a name="tristate" val="false"/>
       <a name="label" val="Output"/>
     </comp>
-    <comp lib="0" loc="(140,130)" name="Pin">
-      <a name="tristate" val="false"/>
-      <a name="label" val="Carry In"/>
-    </comp>
-    <comp lib="7" loc="(230,453)" name="Text">
-      <a name="text" val="Substraction / Addition"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="1" loc="(530,410)" name="AND Gate"/>
+    <comp lib="1" loc="(590,430)" name="OR Gate"/>
     <comp lib="7" loc="(298,527)" name="Text">
       <a name="text" val="MSB Output"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="7" loc="(294,376)" name="Text">
-      <a name="text" val="MSB A"/>
       <a name="font" val="Dialog plain 12"/>
     </comp>
     <comp lib="0" loc="(650,320)" name="Pin">
@@ -750,8 +799,12 @@
       <a name="tristate" val="false"/>
       <a name="label" val="Carry Out"/>
     </comp>
-    <comp lib="1" loc="(410,180)" name="AND Gate">
-      <a name="facing" val="south"/>
+    <comp lib="1" loc="(450,460)" name="XOR Gate"/>
+    <comp lib="1" loc="(450,400)" name="NOR Gate"/>
+    <comp lib="0" loc="(550,160)" name="Pin">
+      <a name="width" val="2"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="FunSel"/>
     </comp>
     <comp lib="0" loc="(290,380)" name="Splitter">
       <a name="fanout" val="1"/>
@@ -766,62 +819,26 @@
       <a name="bit6" val="none"/>
       <a name="bit7" val="0"/>
     </comp>
+    <comp lib="4" loc="(420,270)" name="Adder"/>
+    <comp lib="0" loc="(140,130)" name="Pin">
+      <a name="tristate" val="false"/>
+      <a name="label" val="Carry In"/>
+    </comp>
+    <comp lib="7" loc="(294,376)" name="Text">
+      <a name="text" val="MSB A"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="1" loc="(410,180)" name="AND Gate">
+      <a name="facing" val="south"/>
+    </comp>
     <comp lib="0" loc="(250,280)" name="Bit Extender">
       <a name="in_width" val="1"/>
       <a name="out_width" val="8"/>
     </comp>
-    <comp lib="1" loc="(450,400)" name="NOR Gate"/>
-    <comp lib="1" loc="(530,450)" name="AND Gate">
-      <a name="inputs" val="3"/>
-    </comp>
-    <comp lib="0" loc="(470,200)" name="Splitter">
-      <a name="facing" val="north"/>
-      <a name="fanout" val="2"/>
-      <a name="incoming" val="2"/>
-    </comp>
-    <comp lib="1" loc="(380,400)" name="XOR Gate"/>
-    <comp lib="1" loc="(450,460)" name="XOR Gate"/>
     <comp lib="1" loc="(120,280)" name="AND Gate"/>
-    <comp lib="0" loc="(290,510)" name="Splitter">
-      <a name="facing" val="north"/>
-      <a name="fanout" val="1"/>
-      <a name="incoming" val="8"/>
-      <a name="bit0" val="none"/>
-      <a name="bit1" val="none"/>
-      <a name="bit2" val="none"/>
-      <a name="bit3" val="none"/>
-      <a name="bit4" val="none"/>
-      <a name="bit5" val="none"/>
-      <a name="bit6" val="none"/>
-      <a name="bit7" val="0"/>
-    </comp>
-    <comp lib="0" loc="(550,160)" name="Pin">
-      <a name="width" val="2"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="FunSel"/>
-    </comp>
-    <comp lib="1" loc="(400,220)" name="OR Gate">
-      <a name="facing" val="south"/>
-    </comp>
-    <comp lib="3" loc="(580,260)" name="Multiplexer">
-      <a name="selloc" val="tr"/>
-      <a name="select" val="2"/>
-      <a name="width" val="8"/>
-      <a name="enable" val="false"/>
-    </comp>
     <comp lib="7" loc="(275,439)" name="Text">
       <a name="text" val="_________"/>
       <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="0" loc="(250,220)" name="Pin">
-      <a name="width" val="8"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="A"/>
-    </comp>
-    <comp lib="0" loc="(650,370)" name="Pin">
-      <a name="facing" val="west"/>
-      <a name="output" val="true"/>
-      <a name="label" val="Overflow"/>
     </comp>
   </circuit>
   <circuit name="Shift Unit">
@@ -993,9 +1010,19 @@
     <wire from="(120,490)" to="(180,490)"/>
     <wire from="(120,700)" to="(180,700)"/>
     <wire from="(530,200)" to="(660,200)"/>
-    <comp lib="7" loc="(605,194)" name="Text">
-      <a name="text" val="OutSU"/>
+    <comp lib="7" loc="(239,381)" name="Text">
+      <a name="text" val="Arithmetic Shift Right"/>
       <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="0" loc="(180,700)" name="Splitter">
+      <a name="facing" val="south"/>
+      <a name="fanout" val="8"/>
+      <a name="incoming" val="8"/>
+    </comp>
+    <comp lib="0" loc="(280,190)" name="Splitter">
+      <a name="facing" val="north"/>
+      <a name="fanout" val="8"/>
+      <a name="incoming" val="8"/>
     </comp>
     <comp lib="7" loc="(581,192)" name="Text">
       <a name="font" val="Dialog plain 12"/>
@@ -1005,111 +1032,56 @@
       <a name="fanout" val="8"/>
       <a name="incoming" val="8"/>
     </comp>
-    <comp lib="0" loc="(80,130)" name="Pin">
-      <a name="width" val="4"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="FunSel"/>
-    </comp>
-    <comp lib="1" loc="(160,830)" name="XOR Gate">
-      <a name="facing" val="south"/>
-    </comp>
-    <comp lib="0" loc="(310,70)" name="Constant">
-      <a name="facing" val="south"/>
-      <a name="value" val="0x0"/>
-    </comp>
-    <comp lib="0" loc="(260,290)" name="Constant">
-      <a name="facing" val="south"/>
-      <a name="value" val="0x0"/>
-    </comp>
-    <comp lib="7" loc="(613,633)" name="Text">
-      <a name="text" val="Carry Selector"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="0" loc="(180,390)" name="Splitter">
-      <a name="facing" val="south"/>
-      <a name="fanout" val="8"/>
-      <a name="incoming" val="8"/>
-    </comp>
-    <comp lib="0" loc="(480,330)" name="Constant">
-      <a name="facing" val="south"/>
-      <a name="value" val="0x0"/>
-    </comp>
     <comp lib="0" loc="(320,120)" name="Splitter">
       <a name="facing" val="north"/>
       <a name="fanout" val="8"/>
       <a name="incoming" val="8"/>
     </comp>
-    <comp lib="0" loc="(260,440)" name="Splitter">
-      <a name="facing" val="north"/>
-      <a name="fanout" val="8"/>
-      <a name="incoming" val="8"/>
-    </comp>
-    <comp lib="3" loc="(530,200)" name="Multiplexer">
-      <a name="select" val="3"/>
-      <a name="width" val="8"/>
-      <a name="enable" val="false"/>
-    </comp>
-    <comp lib="0" loc="(180,490)" name="Splitter">
-      <a name="facing" val="south"/>
-      <a name="fanout" val="8"/>
-      <a name="incoming" val="8"/>
-    </comp>
-    <comp lib="0" loc="(260,760)" name="Splitter">
-      <a name="facing" val="north"/>
-      <a name="fanout" val="8"/>
-      <a name="incoming" val="8"/>
-    </comp>
-    <comp lib="0" loc="(270,310)" name="Splitter">
-      <a name="facing" val="north"/>
-      <a name="fanout" val="8"/>
-      <a name="incoming" val="8"/>
-    </comp>
-    <comp lib="0" loc="(690,640)" name="Pin">
-      <a name="facing" val="west"/>
-      <a name="output" val="true"/>
-      <a name="label" val="Carry"/>
-    </comp>
     <comp lib="7" loc="(224,692)" name="Text">
       <a name="text" val="Circular Shift Right"/>
       <a name="font" val="Dialog plain 12"/>
     </comp>
-    <comp lib="1" loc="(170,340)" name="XOR Gate">
-      <a name="facing" val="south"/>
-    </comp>
-    <comp lib="0" loc="(170,230)" name="Splitter">
-      <a name="facing" val="south"/>
-      <a name="fanout" val="8"/>
-      <a name="incoming" val="8"/>
-    </comp>
-    <comp lib="0" loc="(190,170)" name="Constant">
-      <a name="facing" val="south"/>
-      <a name="value" val="0x0"/>
-    </comp>
-    <comp lib="7" loc="(239,381)" name="Text">
-      <a name="text" val="Arithmetic Shift Right"/>
+    <comp lib="7" loc="(239,230)" name="Text">
+      <a name="text" val="Arithmetic Shift Left"/>
       <a name="font" val="Dialog plain 12"/>
     </comp>
-    <comp lib="0" loc="(100,70)" name="Pin">
-      <a name="width" val="8"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="A"/>
+    <comp lib="7" loc="(207,480)" name="Text">
+      <a name="text" val="Circular Shift Left"/>
+      <a name="font" val="Dialog plain 12"/>
     </comp>
-    <comp lib="3" loc="(530,640)" name="Multiplexer">
-      <a name="select" val="3"/>
-      <a name="enable" val="false"/>
+    <comp lib="0" loc="(260,290)" name="Constant">
+      <a name="facing" val="south"/>
+      <a name="value" val="0x0"/>
     </comp>
     <comp lib="0" loc="(690,410)" name="Pin">
       <a name="facing" val="west"/>
       <a name="output" val="true"/>
       <a name="label" val="Overflow"/>
     </comp>
-    <comp lib="7" loc="(613,402)" name="Text">
-      <a name="text" val="Overflow Selector"/>
+    <comp lib="7" loc="(257,146)" name="Text">
+      <a name="text" val="Logical Shift Right"/>
       <a name="font" val="Dialog plain 12"/>
     </comp>
-    <comp lib="7" loc="(207,480)" name="Text">
-      <a name="text" val="Circular Shift Left"/>
+    <comp lib="3" loc="(530,410)" name="Multiplexer">
+      <a name="select" val="3"/>
+      <a name="enable" val="false"/>
+    </comp>
+    <comp lib="7" loc="(247,70)" name="Text">
+      <a name="text" val="Logical Shift Left"/>
       <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="0" loc="(690,640)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="label" val="Carry"/>
+    </comp>
+    <comp lib="0" loc="(190,170)" name="Constant">
+      <a name="facing" val="south"/>
+      <a name="value" val="0x0"/>
+    </comp>
+    <comp lib="0" loc="(480,330)" name="Constant">
+      <a name="facing" val="south"/>
+      <a name="value" val="0x0"/>
     </comp>
     <comp lib="0" loc="(660,200)" name="Pin">
       <a name="facing" val="west"/>
@@ -1117,11 +1089,34 @@
       <a name="width" val="8"/>
       <a name="label" val="OutSU"/>
     </comp>
-    <comp lib="3" loc="(530,410)" name="Multiplexer">
-      <a name="select" val="3"/>
-      <a name="enable" val="false"/>
+    <comp lib="0" loc="(260,760)" name="Splitter">
+      <a name="facing" val="north"/>
+      <a name="fanout" val="8"/>
+      <a name="incoming" val="8"/>
+    </comp>
+    <comp lib="0" loc="(80,130)" name="Pin">
+      <a name="width" val="4"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="FunSel"/>
+    </comp>
+    <comp lib="1" loc="(170,340)" name="XOR Gate">
+      <a name="facing" val="south"/>
+    </comp>
+    <comp lib="0" loc="(470,110)" name="Constant">
+      <a name="facing" val="south"/>
+      <a name="width" val="8"/>
+      <a name="value" val="0x0"/>
+    </comp>
+    <comp lib="7" loc="(605,194)" name="Text">
+      <a name="text" val="OutSU"/>
+      <a name="font" val="Dialog plain 12"/>
     </comp>
     <comp lib="0" loc="(220,80)" name="Splitter">
+      <a name="facing" val="south"/>
+      <a name="fanout" val="8"/>
+      <a name="incoming" val="8"/>
+    </comp>
+    <comp lib="0" loc="(180,490)" name="Splitter">
       <a name="facing" val="south"/>
       <a name="fanout" val="8"/>
       <a name="incoming" val="8"/>
@@ -1131,23 +1126,6 @@
       <a name="fanout" val="8"/>
       <a name="incoming" val="8"/>
     </comp>
-    <comp lib="7" loc="(247,70)" name="Text">
-      <a name="text" val="Logical Shift Left"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="0" loc="(180,700)" name="Splitter">
-      <a name="facing" val="south"/>
-      <a name="fanout" val="8"/>
-      <a name="incoming" val="8"/>
-    </comp>
-    <comp lib="0" loc="(470,110)" name="Constant">
-      <a name="facing" val="south"/>
-      <a name="width" val="8"/>
-      <a name="value" val="0x0"/>
-    </comp>
-    <comp lib="1" loc="(180,600)" name="XOR Gate">
-      <a name="facing" val="south"/>
-    </comp>
     <comp lib="0" loc="(540,750)" name="Splitter">
       <a name="facing" val="north"/>
       <a name="fanout" val="1"/>
@@ -1156,18 +1134,57 @@
       <a name="bit2" val="0"/>
       <a name="bit3" val="none"/>
     </comp>
-    <comp lib="0" loc="(280,190)" name="Splitter">
+    <comp lib="0" loc="(270,310)" name="Splitter">
       <a name="facing" val="north"/>
       <a name="fanout" val="8"/>
       <a name="incoming" val="8"/>
     </comp>
-    <comp lib="7" loc="(257,146)" name="Text">
-      <a name="text" val="Logical Shift Right"/>
+    <comp lib="0" loc="(100,70)" name="Pin">
+      <a name="width" val="8"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="A"/>
+    </comp>
+    <comp lib="0" loc="(260,440)" name="Splitter">
+      <a name="facing" val="north"/>
+      <a name="fanout" val="8"/>
+      <a name="incoming" val="8"/>
+    </comp>
+    <comp lib="3" loc="(530,640)" name="Multiplexer">
+      <a name="select" val="3"/>
+      <a name="enable" val="false"/>
+    </comp>
+    <comp lib="1" loc="(180,600)" name="XOR Gate">
+      <a name="facing" val="south"/>
+    </comp>
+    <comp lib="0" loc="(180,390)" name="Splitter">
+      <a name="facing" val="south"/>
+      <a name="fanout" val="8"/>
+      <a name="incoming" val="8"/>
+    </comp>
+    <comp lib="1" loc="(160,830)" name="XOR Gate">
+      <a name="facing" val="south"/>
+    </comp>
+    <comp lib="0" loc="(310,70)" name="Constant">
+      <a name="facing" val="south"/>
+      <a name="value" val="0x0"/>
+    </comp>
+    <comp lib="7" loc="(613,633)" name="Text">
+      <a name="text" val="Carry Selector"/>
       <a name="font" val="Dialog plain 12"/>
     </comp>
-    <comp lib="7" loc="(239,230)" name="Text">
-      <a name="text" val="Arithmetic Shift Left"/>
+    <comp lib="3" loc="(530,200)" name="Multiplexer">
+      <a name="select" val="3"/>
+      <a name="width" val="8"/>
+      <a name="enable" val="false"/>
+    </comp>
+    <comp lib="7" loc="(613,402)" name="Text">
+      <a name="text" val="Overflow Selector"/>
       <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="0" loc="(170,230)" name="Splitter">
+      <a name="facing" val="south"/>
+      <a name="fanout" val="8"/>
+      <a name="incoming" val="8"/>
     </comp>
   </circuit>
   <circuit name="ALU System">
@@ -1254,15 +1271,77 @@
     <wire from="(330,220)" to="(330,340)"/>
     <wire from="(380,320)" to="(380,360)"/>
     <wire from="(400,340)" to="(400,360)"/>
-    <wire from="(420,320)" to="(420,360)"/>
     <wire from="(440,320)" to="(440,360)"/>
-    <comp lib="0" loc="(670,650)" name="Pin">
+    <wire from="(420,320)" to="(420,350)"/>
+    <wire from="(420,350)" to="(420,360)"/>
+    <comp lib="0" loc="(400,710)" name="Pin">
+      <a name="width" val="2"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="FunSel"/>
+      <a name="labelfont" val="Dialog plain 7"/>
+    </comp>
+    <comp lib="0" loc="(110,900)" name="Pin">
+      <a name="tristate" val="false"/>
+      <a name="label" val="Enable"/>
+    </comp>
+    <comp lib="0" loc="(650,650)" name="Pin">
       <a name="facing" val="north"/>
       <a name="tristate" val="false"/>
+    </comp>
+    <comp lib="8" loc="(170,180)" name="Register file"/>
+    <comp lib="6" loc="(380,360)" name="LED">
+      <a name="facing" val="north"/>
+    </comp>
+    <comp loc="(410,310)" name="Flag Register"/>
+    <comp lib="0" loc="(690,680)" name="Clock">
+      <a name="facing" val="north"/>
+    </comp>
+    <comp lib="0" loc="(110,860)" name="Pin">
+      <a name="tristate" val="false"/>
+      <a name="label" val="L/H"/>
+    </comp>
+    <comp lib="5" loc="(760,590)" name="RAM">
+      <a name="bus" val="separate"/>
+    </comp>
+    <comp lib="0" loc="(120,340)" name="Pin">
+      <a name="width" val="2"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="FunSel"/>
+      <a name="labelfont" val="Dialog plain 7"/>
     </comp>
     <comp lib="7" loc="(583,582)" name="Text">
       <a name="text" val="Address"/>
       <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="8" loc="(240,900)" name="IR Register"/>
+    <comp lib="0" loc="(120,300)" name="Pin">
+      <a name="width" val="2"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="OutBSel"/>
+      <a name="labelfont" val="Dialog plain 7"/>
+    </comp>
+    <comp lib="7" loc="(160,1004)" name="Text">
+      <a name="text" val="IR(0-7)"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="0" loc="(320,660)" name="Pin">
+      <a name="width" val="2"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="MuxBSel"/>
+    </comp>
+    <comp lib="0" loc="(320,990)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="width" val="8"/>
+      <a name="label" val="IR(8-15)"/>
+    </comp>
+    <comp lib="0" loc="(670,650)" name="Pin">
+      <a name="facing" val="north"/>
+      <a name="tristate" val="false"/>
+    </comp>
+    <comp lib="0" loc="(710,650)" name="Pin">
+      <a name="facing" val="north"/>
+      <a name="tristate" val="false"/>
     </comp>
     <comp lib="0" loc="(140,380)" name="Pin">
       <a name="width" val="4"/>
@@ -1270,14 +1349,44 @@
       <a name="label" val="RegSel"/>
       <a name="labelfont" val="Dialog plain 7"/>
     </comp>
-    <comp lib="0" loc="(690,680)" name="Clock">
+    <comp lib="0" loc="(400,670)" name="Pin">
+      <a name="width" val="2"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="OutCSel"/>
+      <a name="labelfont" val="Dialog plain 7"/>
+    </comp>
+    <comp lib="6" loc="(400,360)" name="LED">
       <a name="facing" val="north"/>
     </comp>
-    <comp lib="8" loc="(460,590)" name="Address Registers"/>
+    <comp lib="0" loc="(410,750)" name="Pin">
+      <a name="width" val="3"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="RegSel"/>
+      <a name="labelfont" val="Dialog plain 7"/>
+    </comp>
     <comp lib="0" loc="(400,260)" name="Pin">
       <a name="width" val="4"/>
       <a name="tristate" val="false"/>
       <a name="label" val="FunSel"/>
+    </comp>
+    <comp lib="7" loc="(310,145)" name="Text">
+      <a name="text" val="OutA"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
+    <comp lib="8" loc="(460,590)" name="Address Registers"/>
+    <comp lib="3" loc="(350,590)" name="Multiplexer">
+      <a name="select" val="2"/>
+      <a name="width" val="8"/>
+      <a name="enable" val="false"/>
+    </comp>
+    <comp lib="6" loc="(440,360)" name="LED">
+      <a name="facing" val="north"/>
+    </comp>
+    <comp loc="(420,180)" name="ALU">
+      <a name="facing" val="north"/>
+    </comp>
+    <comp lib="6" loc="(420,360)" name="LED">
+      <a name="facing" val="north"/>
     </comp>
     <comp lib="0" loc="(110,940)" name="Pin">
       <a name="width" val="2"/>
@@ -1289,83 +1398,14 @@
       <a name="tristate" val="false"/>
       <a name="label" val="MuxASel"/>
     </comp>
-    <comp lib="0" loc="(110,860)" name="Pin">
-      <a name="tristate" val="false"/>
-      <a name="label" val="L/H"/>
-    </comp>
-    <comp loc="(420,180)" name="ALU">
-      <a name="facing" val="north"/>
-    </comp>
-    <comp lib="8" loc="(170,180)" name="Register file"/>
-    <comp lib="3" loc="(350,590)" name="Multiplexer">
-      <a name="select" val="2"/>
-      <a name="width" val="8"/>
-      <a name="enable" val="false"/>
-    </comp>
-    <comp lib="6" loc="(440,360)" name="LED">
-      <a name="facing" val="north"/>
-    </comp>
-    <comp lib="0" loc="(120,300)" name="Pin">
-      <a name="width" val="2"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="OutBSel"/>
-      <a name="labelfont" val="Dialog plain 7"/>
-    </comp>
     <comp lib="3" loc="(110,460)" name="Multiplexer">
       <a name="facing" val="west"/>
       <a name="select" val="2"/>
       <a name="width" val="8"/>
       <a name="enable" val="false"/>
     </comp>
-    <comp lib="0" loc="(710,650)" name="Pin">
-      <a name="facing" val="north"/>
-      <a name="tristate" val="false"/>
-    </comp>
-    <comp lib="0" loc="(110,900)" name="Pin">
-      <a name="tristate" val="false"/>
-      <a name="label" val="Enable"/>
-    </comp>
-    <comp lib="6" loc="(380,360)" name="LED">
-      <a name="facing" val="north"/>
-    </comp>
     <comp lib="7" loc="(307,195)" name="Text">
       <a name="text" val="OutB"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="0" loc="(650,650)" name="Pin">
-      <a name="facing" val="north"/>
-      <a name="tristate" val="false"/>
-    </comp>
-    <comp lib="0" loc="(400,710)" name="Pin">
-      <a name="width" val="2"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="FunSel"/>
-      <a name="labelfont" val="Dialog plain 7"/>
-    </comp>
-    <comp lib="0" loc="(120,340)" name="Pin">
-      <a name="width" val="2"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="FunSel"/>
-      <a name="labelfont" val="Dialog plain 7"/>
-    </comp>
-    <comp lib="5" loc="(760,590)" name="RAM">
-      <a name="bus" val="separate"/>
-    </comp>
-    <comp lib="6" loc="(400,360)" name="LED">
-      <a name="facing" val="north"/>
-    </comp>
-    <comp lib="7" loc="(310,145)" name="Text">
-      <a name="text" val="OutA"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="8" loc="(240,900)" name="IR Register"/>
-    <comp lib="0" loc="(320,660)" name="Pin">
-      <a name="width" val="2"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="MuxBSel"/>
-    </comp>
-    <comp lib="7" loc="(160,1004)" name="Text">
-      <a name="text" val="IR(0-7)"/>
       <a name="font" val="Dialog plain 12"/>
     </comp>
     <comp lib="0" loc="(120,260)" name="Pin">
@@ -1377,28 +1417,6 @@
     <comp lib="0" loc="(730,650)" name="Pin">
       <a name="facing" val="north"/>
       <a name="tristate" val="false"/>
-    </comp>
-    <comp lib="0" loc="(400,670)" name="Pin">
-      <a name="width" val="2"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="OutCSel"/>
-      <a name="labelfont" val="Dialog plain 7"/>
-    </comp>
-    <comp lib="6" loc="(420,360)" name="LED">
-      <a name="facing" val="north"/>
-    </comp>
-    <comp lib="0" loc="(410,750)" name="Pin">
-      <a name="width" val="3"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="RegSel"/>
-      <a name="labelfont" val="Dialog plain 7"/>
-    </comp>
-    <comp loc="(410,310)" name="Flag Register"/>
-    <comp lib="0" loc="(320,990)" name="Pin">
-      <a name="facing" val="west"/>
-      <a name="output" val="true"/>
-      <a name="width" val="8"/>
-      <a name="label" val="IR(8-15)"/>
     </comp>
   </circuit>
   <circuit name="Flag Register">
@@ -1445,6 +1463,30 @@
     <comp lib="0" loc="(260,530)" name="Clock">
       <a name="facing" val="north"/>
     </comp>
+    <comp lib="5" loc="(340,440)" name="D Flip-Flop"/>
+    <comp lib="0" loc="(380,340)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="label" val="C"/>
+    </comp>
+    <comp lib="0" loc="(200,130)" name="Splitter">
+      <a name="facing" val="south"/>
+    </comp>
+    <comp lib="0" loc="(150,130)" name="Pin">
+      <a name="width" val="4"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="InFlag"/>
+    </comp>
+    <comp lib="0" loc="(380,140)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="label" val="O"/>
+    </comp>
+    <comp lib="5" loc="(340,240)" name="D Flip-Flop"/>
+    <comp lib="7" loc="(320,109)" name="Text">
+      <a name="text" val="LSB"/>
+      <a name="font" val="Dialog plain 12"/>
+    </comp>
     <comp lib="0" loc="(380,440)" name="Pin">
       <a name="facing" val="west"/>
       <a name="output" val="true"/>
@@ -1456,34 +1498,10 @@
       <a name="label" val="N"/>
     </comp>
     <comp lib="5" loc="(340,140)" name="D Flip-Flop"/>
-    <comp lib="5" loc="(340,240)" name="D Flip-Flop"/>
-    <comp lib="0" loc="(380,140)" name="Pin">
-      <a name="facing" val="west"/>
-      <a name="output" val="true"/>
-      <a name="label" val="O"/>
-    </comp>
-    <comp lib="5" loc="(340,440)" name="D Flip-Flop"/>
     <comp lib="5" loc="(340,340)" name="D Flip-Flop"/>
-    <comp lib="7" loc="(320,109)" name="Text">
-      <a name="text" val="LSB"/>
-      <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="0" loc="(200,130)" name="Splitter">
-      <a name="facing" val="south"/>
-    </comp>
-    <comp lib="0" loc="(380,340)" name="Pin">
-      <a name="facing" val="west"/>
-      <a name="output" val="true"/>
-      <a name="label" val="C"/>
-    </comp>
     <comp lib="7" loc="(321,514)" name="Text">
       <a name="text" val="MSB"/>
       <a name="font" val="Dialog plain 12"/>
-    </comp>
-    <comp lib="0" loc="(150,130)" name="Pin">
-      <a name="width" val="4"/>
-      <a name="tristate" val="false"/>
-      <a name="label" val="InFlag"/>
     </comp>
   </circuit>
 </project>
