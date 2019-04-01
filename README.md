@@ -1,6 +1,15 @@
-# BLG222E Prject
+# BLG222E Project
+
+How to clone and use Logisim
+First you have to have Java installed. (See below)
+```
+git clone https://github.com/batuhanfaik/blg222e_project.git
+cd blg222e_project
+java -jar Logisim.jar
+```
 
 Please use OpenJDK v11
 ```
 sudo apt-get install openjdk-11-jre-headless -y
+
 ```
