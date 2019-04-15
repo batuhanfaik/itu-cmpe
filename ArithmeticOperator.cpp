@@ -11,7 +11,7 @@
 using namespace std;
 
 ArithmeticOperator::ArithmeticOperator(int x, int y, int size, char sign):Operator(x,y,size) {
-    if (sign == '+' || sign == '-' || sign == '*' || sign == '/'){
+    if (sign == '+' || sign == '-' || sign == 'x' || sign == '/'){
         this->sign = sign;
     }
     else {
