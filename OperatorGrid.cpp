@@ -254,11 +254,16 @@ bool OperatorGrid::place_operator(ArithmeticOperator *current_operator) {
         //If there are not any errors, place the operator
         if (border_error == 0 && is_empty == 1){
             for (int i = 0; i < current_operator->get_size(); ++i) {
-                grid[current_operator->get_y() - i - 1][current_operator->get_x() + i - 1] = 'x';     //Direction: Northeast
-                grid[current_operator->get_y() + i - 1][current_operator->get_x() - i - 1] = 'x';     //Direction: Southwest
+                grid[current_operator->get_y() - i - 1][current_operator->get_x() + i - 1] = '/';     //Direction: Northeast
+                grid[current_operator->get_y() + i - 1][current_operator->get_x() - i - 1] = '/';     //Direction: Southwest
             }
             return true; //Successfully placed
         } else {
             return false; //Placement wasn't successful
         }    }
+}
+
+//Move the placed operator
+bool OperatorGrid::move_operator(int x, int y, char direction, int move_by) {
+
 }
