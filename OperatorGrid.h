@@ -15,7 +15,7 @@ class OperatorGrid{
     char **grid;
 
     int num_operators;
-    ArithmeticOperator *operators[MAX_OPERATION_SIZE];
+    ArithmeticOperator *operators;
 public:
     OperatorGrid(int rows, int cols); //Default constructor
     ~OperatorGrid();

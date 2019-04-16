@@ -7,8 +7,6 @@
 #ifndef OOP_HW2_OPERATOR_H
 #define OOP_HW2_OPERATOR_H
 
-#include "ArithmeticOperator.h"
-
 class Operator{
     int center_x;
     int center_y;

@@ -5,6 +5,7 @@
 // on 4/15/19.
 //
 #include "OperatorGrid.h"
+#include "ArithmeticOperator.h"
 #include <iostream>
 
 using namespace std;
@@ -26,6 +27,9 @@ OperatorGrid::OperatorGrid(int rows, int cols) {
             grid[i][j] = '\0';
         }
     }
+
+    operators = new ArithmeticOperator[10];
+    num_operators = 0;
 }
 
 //Destructor of the OperatorGrid
@@ -37,7 +41,7 @@ OperatorGrid::~OperatorGrid() {
     delete[] grid;
     cout << "DESTRUCTOR: GIVE BACK[" << grid_rows << "," << grid_cols << "] chars." << endl;
     //Delete the operators array
-    delete[] operators;
+//    delete[] operators;
     cout << "DESTRUCTOR: GIVE BACK[" << num_operators << "] Operators." << endl;
 }
 
@@ -82,23 +86,25 @@ bool OperatorGrid::place_operator(ArithmeticOperator *current_operator) {
             }
         }
         if (border_error == 1){ //If there is a border error, print out the statement
-            cout << "BORDER ERROR: Operator sign with size" << current_operator->get_size() << "can not be placed on ("
+            cout << "BORDER ERROR: Operator sign with size" << current_operator->get_size() << " can not be placed on ("
             << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
         }
         // If there is a conflict error, print out the statement
         if (is_empty == 0){ //Meaning that at least one location that we want to place the operator on top is occupied
-            cout << "CONFLICT ERROR: Operator sign with size" << current_operator->get_size() << "can not be placed on ("
+            cout << "CONFLICT ERROR: Operator sign with size" << current_operator->get_size() << " can not be placed on ("
             << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
         }
         //If there are not any errors, place the operator
         if (border_error == 0 && is_empty == 1){
-            for (int i = 0; i < current_operator->get_size(); ++i) {
+            for (int i = 0; i < current_operator->get_size() + 1; ++i) {
                 grid[current_operator->get_y() - i - 1][current_operator->get_x() - 1] = '+';     //Direction: North
                 grid[current_operator->get_y() - 1][current_operator->get_x() + i - 1] = '+';     //Direction: East
                 grid[current_operator->get_y() + i - 1][current_operator->get_x() - 1] = '+';     //Direction: South
                 grid[current_operator->get_y() - 1][current_operator->get_x() - i - 1] = '+';     //Direction: West
             }
-            operators[num_operators] = current_operator;    //Append the successful placement in to the operators array
+            operators[num_operators] = *current_operator;    //Append the successful placement in to the operators array
+            cout << "SUCCESS: Operator sign with size" << current_operator->get_size() << " is placed on ("
+            << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
             num_operators++;
             return true; //Successfully placed
         } else {
@@ -134,21 +140,23 @@ bool OperatorGrid::place_operator(ArithmeticOperator *current_operator) {
             }
         }
         if (border_error == 1){ //If there is a border error, print out the statement
-            cout << "BORDER ERROR: Operator sign with size" << current_operator->get_size() << "can not be placed on ("
+            cout << "BORDER ERROR: Operator sign with size" << current_operator->get_size() << " can not be placed on ("
             << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
         }
         // If there is a conflict error, print out the statement
         if (is_empty == 0){ //Meaning that at least one location that we want to place the operator on top is occupied
-            cout << "CONFLICT ERROR: Operator sign with size" << current_operator->get_size() << "can not be placed on ("
+            cout << "CONFLICT ERROR: Operator sign with size" << current_operator->get_size() << " can not be placed on ("
             << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
         }
         //If there are not any errors, place the operator
         if (border_error == 0 && is_empty == 1){
-            for (int i = 0; i < current_operator->get_size(); ++i) {
+            for (int i = 0; i < current_operator->get_size() + 1; ++i) {
                 grid[current_operator->get_y() - 1][current_operator->get_x() + i - 1] = '-';     //Direction: East
                 grid[current_operator->get_y() - 1][current_operator->get_x() - i - 1] = '-';     //Direction: West
             }
-            operators[num_operators] = current_operator;    //Append the successful placement in to the operators array
+            operators[num_operators] = *current_operator;    //Append the successful placement in to the operators array
+            cout << "SUCCESS: Operator sign with size" << current_operator->get_size() << " is placed on ("
+            << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
             num_operators++;
             return true; //Successfully placed
         } else {
@@ -196,23 +204,25 @@ bool OperatorGrid::place_operator(ArithmeticOperator *current_operator) {
             }
         }
         if (border_error == 1){ //If there is a border error, print out the statement
-            cout << "BORDER ERROR: Operator sign with size" << current_operator->get_size() << "can not be placed on ("
+            cout << "BORDER ERROR: Operator sign with size" << current_operator->get_size() << " can not be placed on ("
             << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
         }
         // If there is a conflict error, print out the statement
         if (is_empty == 0){ //Meaning that at least one location that we want to place the operator on top is occupied
-            cout << "CONFLICT ERROR: Operator sign with size" << current_operator->get_size() << "can not be placed on ("
+            cout << "CONFLICT ERROR: Operator sign with size" << current_operator->get_size() << " can not be placed on ("
             << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
         }
         //If there are not any errors, place the operator
         if (border_error == 0 && is_empty == 1){
-            for (int i = 0; i < current_operator->get_size(); ++i) {
+            for (int i = 0; i < current_operator->get_size() + 1; ++i) {
                 grid[current_operator->get_y() - i - 1][current_operator->get_x() + i - 1] = 'x';     //Direction: Northeast
                 grid[current_operator->get_y() + i - 1][current_operator->get_x() + i - 1] = 'x';     //Direction: Southeast
                 grid[current_operator->get_y() + i - 1][current_operator->get_x() - i - 1] = 'x';     //Direction: Southwest
                 grid[current_operator->get_y() - i - 1][current_operator->get_x() - i - 1] = 'x';     //Direction: Northwest
             }
-            operators[num_operators] = current_operator;    //Append the successful placement in to the operators array
+            operators[num_operators] = *current_operator;    //Append the successful placement in to the operators array
+            cout << "SUCCESS: Operator sign with size" << current_operator->get_size() << " is placed on ("
+            << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
             num_operators++;
             return true; //Successfully placed
         } else {
@@ -249,26 +259,31 @@ bool OperatorGrid::place_operator(ArithmeticOperator *current_operator) {
             }
         }
         if (border_error == 1){ //If there is a border error, print out the statement
-            cout << "BORDER ERROR: Operator sign with size" << current_operator->get_size() << "can not be placed on ("
+            cout << "BORDER ERROR: Operator sign with size" << current_operator->get_size() << " can not be placed on ("
             << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
         }
         // If there is a conflict error, print out the statement
         if (is_empty == 0){ //Meaning that at least one location that we want to place the operator on top is occupied
-            cout << "CONFLICT ERROR: Operator sign with size" << current_operator->get_size() << "can not be placed on ("
+            cout << "CONFLICT ERROR: Operator sign with size" << current_operator->get_size() << " can not be placed on ("
             << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
         }
         //If there are not any errors, place the operator
         if (border_error == 0 && is_empty == 1){
-            for (int i = 0; i < current_operator->get_size(); ++i) {
+            for (int i = 0; i < current_operator->get_size() + 1; ++i) {
                 grid[current_operator->get_y() - i - 1][current_operator->get_x() + i - 1] = '/';     //Direction: Northeast
                 grid[current_operator->get_y() + i - 1][current_operator->get_x() - i - 1] = '/';     //Direction: Southwest
             }
-            operators[num_operators] = current_operator;    //Append the successful placement in to the operators array
+            operators[num_operators] = *current_operator;    //Append the successful placement in to the operators array
+            cout << "SUCCESS: Operator sign with size" << current_operator->get_size() << " is placed on ("
+            << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
             num_operators++;
             return true; //Successfully placed
         } else {
             return false; //Placement wasn't successful
-        }    }
+        }
+    } else {
+        return false;
+    }
 }
 
 //Move the placed operator
@@ -726,11 +741,20 @@ bool OperatorGrid::move_operator(int x, int y, char direction, int move_by) {
             }
         }
     }
+    cout << "hello" << endl;
+    return false;
 }
 
 //Print method of the operators
 void OperatorGrid::print_operators() {
     for (int i = 0; i < num_operators; ++i) {
-        operators[i]->print_operator();
+        operators[i].print_operator();
+    }
+
+    for (int j = 0; j < grid_rows; ++j) {
+        for (int i = 0; i < grid_cols; ++i) {
+            cout << grid[j][i] << "  ";
+        }
+        cout << endl;
     }
 }
