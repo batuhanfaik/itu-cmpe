@@ -9,10 +9,12 @@
 
 #include "Operator.h"
 
-class ArithmeticOperator: public Operator{
+class ArithmeticOperator: public Operator {
     char sign;
 public:
-    ArithmeticOperator(int x, int y, int size, char sign); //Default constructor
+    ArithmeticOperator(); //Default constructor
+
+    ArithmeticOperator(int x, int y, int size, char sign); //Constructor
 
     char get_sign(); //Getter method of the sign
 

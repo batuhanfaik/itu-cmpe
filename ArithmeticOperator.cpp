@@ -10,6 +10,8 @@
 
 using namespace std;
 
+ArithmeticOperator::ArithmeticOperator():Operator(0,0,0),sign('\0') {}
+
 ArithmeticOperator::ArithmeticOperator(int x, int y, int size, char sign):Operator(x,y,size) {
     if (sign == '+' || sign == '-' || sign == 'x' || sign == '/'){
         this->sign = sign;
