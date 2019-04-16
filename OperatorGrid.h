@@ -13,6 +13,8 @@ class OperatorGrid{
     int grid_rows;
     int grid_cols;
     char **grid;
+    ArithmeticOperator* **aop_ptr_grid;
+    int MAX_OPERATOR_SIZE = 10;
 
     int num_operators;
     ArithmeticOperator *operators;
