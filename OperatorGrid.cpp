@@ -1119,14 +1119,14 @@ void OperatorGrid::print_operators() {
     for (int i = 0; i < num_operators; ++i) {
         operators[i].print_operator();
     }
-
-    for (int j = 0; j < grid_rows; ++j) {
-        for (int i = 0; i < grid_cols; ++i) {
-            cout << grid[j][i] << "  ";
-        }
-        cout << endl;
-    }
-
+//     //Print the char grid
+//    for (int j = 0; j < grid_rows; ++j) {
+//        for (int i = 0; i < grid_cols; ++i) {
+//            cout << grid[j][i] << "  ";
+//        }
+//        cout << endl;
+//    }
+//     //Print the pointer grid
 //    for (int j = 0; j < grid_rows; ++j) {
 //        for (int i = 0; i < grid_cols; ++i) {
 //            cout << aop_ptr_grid[j][i] << "  ";
