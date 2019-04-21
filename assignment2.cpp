@@ -2,13 +2,137 @@
 // Created by;
 // Batuhan Faik Derinbay 
 // 150180705
-// on 4/15/19.
+// on 4/21/19.
 //
-#include "OperatorGrid.h"
-#include "ArithmeticOperator.h"
+
 #include <iostream>
+#include <string>
+
+#define MAX_OPERATOR_SIZE 1028
 
 using namespace std;
+
+//CLASS DECLARATIONS
+class Operator{
+    int center_x;
+    int center_y;
+    int op_size;
+    int op_num;
+    static int total_op_num;
+public:
+    Operator(int x, int y, int size); //Default constructor
+
+    void reset(int new_x, int new_y, int new_size); //Reset position
+
+    void set_x(int new_x); //Setter of position x
+    int get_x(); //Getter of position x
+
+    void set_y(int new_y); //Setter of position y
+    int get_y(); //Getter of position y
+
+    void set_size(int new_size); //Setter of the operator size
+    int get_size(); //Getter of the operator size
+
+    static void set_totalnum(); //Reset the total number of operators
+    void set_num(int); //Setter of the op_num
+    int get_num(); //Getter of the op_num
+};
+
+class ArithmeticOperator: public Operator {
+    char sign;
+public:
+    ArithmeticOperator(); //Default constructor
+
+    ArithmeticOperator(int x, int y, int size, char sign); //Constructor
+
+    char get_sign(); //Getter method of the sign
+
+    void print_operator(); //Prints out operator's center location, size and sign character
+};
+
+class OperatorGrid{
+    int grid_rows;
+    int grid_cols;
+    char **grid;
+    ArithmeticOperator* **aop_ptr_grid;
+
+    int num_operators;
+    ArithmeticOperator *operators;
+public:
+    OperatorGrid(int rows, int cols); //Default constructor
+    ~OperatorGrid();
+
+    bool place_operator(ArithmeticOperator *); //Places an operator
+    bool move_operator(int x, int y, char direction, int move_by); //Moves the operator
+    void print_operators(); //Prints the operator
+};
+
+//CLASS DEFINITIONS
+Operator::Operator(int x, int y, int size) {
+    center_x = x;
+    center_y = y;
+    op_size = size;
+    op_num = total_op_num;
+    total_op_num++;
+}
+int Operator::total_op_num = 0;
+void Operator::reset(int new_x, int new_y, int new_size) {
+    //Reassign all values
+    center_x = new_x;
+    center_y = new_y;
+    op_size = new_size;
+}
+
+void Operator::set_x(int new_x) { //Setter of x
+    center_x = new_x;
+}
+int Operator::get_x() { //Getter of x
+    return center_x;
+}
+
+void Operator::set_y(int new_y) { //Setter of y
+    center_y = new_y;
+}
+int Operator::get_y() { //Getter of y
+    return center_y;
+}
+
+void Operator::set_size(int new_size) { //Setter of size
+    op_size = new_size;
+}
+int Operator::get_size() { //Getter of size
+    return op_size;
+}
+
+void Operator::set_totalnum(){
+    total_op_num = 0;
+}
+void Operator::set_num(int num) {
+    op_num = num;
+}
+int Operator::get_num(){
+    return op_num;
+}
+
+ArithmeticOperator::ArithmeticOperator():Operator(0,0,0),sign('\0') {}
+
+ArithmeticOperator::ArithmeticOperator(int x, int y, int size, char sign):Operator(x,y,size) {
+    if (sign == '+' || sign == '-' || sign == 'x' || sign == '/'){
+        this->sign = sign;
+    }
+    else {
+        cout << "SIGN parameter is invalid!" << endl;
+    }
+}
+
+char ArithmeticOperator::get_sign() { //Getter of the sign
+    return sign;
+}
+
+void ArithmeticOperator::print_operator() {
+    cout << "ARITHMETIC_OPERATOR[" << sign << "], CENTER_LOCATION[" << get_x() << "," << get_y()
+    << "], SIZE[" << get_size() << "]" << endl;
+}
 
 //Default constructor of the OperatorGrid
 OperatorGrid::OperatorGrid(int rows, int cols) {
@@ -29,6 +153,7 @@ OperatorGrid::OperatorGrid(int rows, int cols) {
 
     operators = new ArithmeticOperator[MAX_OPERATOR_SIZE];     //REQUIRES DYNAMIC MEMORY ALLOCATION
     num_operators = 0;
+    Operator::set_totalnum(); //Reset the operator counter
 }
 
 //Destructor of the OperatorGrid
@@ -110,6 +235,7 @@ bool OperatorGrid::place_operator(ArithmeticOperator *current_operator) {
                 aop_ptr_grid[current_operator->get_x() - 1][current_operator->get_y() - i - 1] = current_operator;
             }
             operators[num_operators] = *current_operator;    //Append the successful placement in to the operators array
+            current_operator->set_num(num_operators); //Change the number of the operator
             cout << "SUCCESS: Operator " << current_operator->get_sign() << " with size " << current_operator->get_size() << " is placed on ("
             << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
             num_operators++;
@@ -167,6 +293,7 @@ bool OperatorGrid::place_operator(ArithmeticOperator *current_operator) {
                 aop_ptr_grid[current_operator->get_x() - 1][current_operator->get_y() - i - 1] = current_operator;
             }
             operators[num_operators] = *current_operator;    //Append the successful placement in to the operators array
+            current_operator->set_num(num_operators); //Change the number of the operator
             cout << "SUCCESS: Operator " << current_operator->get_sign() << " with size " << current_operator->get_size() << " is placed on ("
             << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
             num_operators++;
@@ -241,6 +368,7 @@ bool OperatorGrid::place_operator(ArithmeticOperator *current_operator) {
                 aop_ptr_grid[current_operator->get_x() - i - 1][current_operator->get_y() - i - 1] = current_operator;
             }
             operators[num_operators] = *current_operator;    //Append the successful placement in to the operators array
+            current_operator->set_num(num_operators); //Change the number of the operator
             cout << "SUCCESS: Operator " << current_operator->get_sign() << " with size " << current_operator->get_size() << " is placed on ("
             << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
             num_operators++;
@@ -300,6 +428,7 @@ bool OperatorGrid::place_operator(ArithmeticOperator *current_operator) {
                 aop_ptr_grid[current_operator->get_x() + i - 1][current_operator->get_y() - i - 1] = current_operator;
             }
             operators[num_operators] = *current_operator;    //Append the successful placement in to the operators array
+            current_operator->set_num(num_operators); //Change the number of the operator
             cout << "SUCCESS: Operator " << current_operator->get_sign() << " with size " << current_operator->get_size() << " is placed on ("
             << current_operator->get_x() << "," << current_operator->get_y() << ")." << endl;
             num_operators++;
@@ -445,6 +574,7 @@ bool OperatorGrid::move_operator(int x, int y, char direction, int move_by) {
                 << mid_x << "," << mid_y << ") to (" << new_mid_x << "," << new_mid_y << ")." << endl;
                 current_operator->set_x(new_mid_x); //Set the new values
                 current_operator->set_y(new_mid_y);
+                operators[current_operator->get_num()] = *current_operator; //Replace the current operators address
                 return true; //Movement was successful
             } else {  //Replace the old operator
                 for (int i = 0; i < current_op_size + 1; i++) {
@@ -511,6 +641,7 @@ bool OperatorGrid::move_operator(int x, int y, char direction, int move_by) {
                 << mid_x << "," << mid_y << ") to (" << new_mid_x << "," << new_mid_y << ")." << endl;
                 current_operator->set_x(new_mid_x); //Set the new values
                 current_operator->set_y(new_mid_y);
+                operators[current_operator->get_num()] = *current_operator; //Replace the current operators address
                 return true; //Movement was successful
             } else { //Replace the old operator
                 for (int i = 0; i < current_op_size + 1; i++) {
@@ -590,6 +721,7 @@ bool OperatorGrid::move_operator(int x, int y, char direction, int move_by) {
                 << mid_x << "," << mid_y << ") to (" << new_mid_x << "," << new_mid_y << ")." << endl;
                 current_operator->set_x(new_mid_x); //Set the new values
                 current_operator->set_y(new_mid_y);
+                operators[current_operator->get_num()] = *current_operator; //Replace the current operators address
                 return true; //Movement was successful
             } else { //Replace the old operator
                 for (int i = 0; i < current_op_size + 1; i++) {
@@ -602,7 +734,7 @@ bool OperatorGrid::move_operator(int x, int y, char direction, int move_by) {
                     grid[mid_x - i - 1][mid_y - i - 1] = 'x';     //Direction: Northwest
                     aop_ptr_grid[mid_x - i - 1][mid_y - i - 1] = current_operator;
                 }
-                return false; //Movement was unseccessful
+                return false; //Movement was unsuccessful
             }
         } else if (current_op_sign == '/'){        //Case sign = '/'
             //Initialize errors and indexing variables
@@ -658,6 +790,7 @@ bool OperatorGrid::move_operator(int x, int y, char direction, int move_by) {
                 << mid_x << "," << mid_y << ") to (" << new_mid_x << "," << new_mid_y << ")." << endl;
                 current_operator->set_x(new_mid_x); //Set the new values
                 current_operator->set_y(new_mid_y);
+                operators[current_operator->get_num()] = *current_operator; //Replace the current operators address
                 return true; //Movement was successful
             } else { //Replace the old operator
                 for (int i = 0; i < current_op_size + 1; i++) {
@@ -666,7 +799,7 @@ bool OperatorGrid::move_operator(int x, int y, char direction, int move_by) {
                     grid[mid_x + i - 1][mid_y - i - 1] = '/';     //Direction: Southwest
                     aop_ptr_grid[mid_x + i - 1][mid_y - i - 1] = current_operator;
                 }
-                return false; //Movement was unseccessful
+                return false; //Movement was unsuccessful
             }
         } else {
             return false;
@@ -679,18 +812,4 @@ void OperatorGrid::print_operators() {
     for (int i = 0; i < num_operators; ++i) {
         operators[i].print_operator();
     }
-//     //Print the char grid
-//    for (int j = 0; j < grid_rows; ++j) {
-//        for (int i = 0; i < grid_cols; ++i) {
-//            cout << grid[j][i] << "  ";
-//        }
-//        cout << endl;
-//    }
-//     //Print the pointer grid
-//    for (int j = 0; j < grid_rows; ++j) {
-//        for (int i = 0; i < grid_cols; ++i) {
-//            cout << aop_ptr_grid[j][i] << "  ";
-//        }
-//        cout << endl;
-//    }
 }
