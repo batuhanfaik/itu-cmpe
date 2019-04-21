@@ -18,7 +18,6 @@ class Operator{
     int center_y;
     int op_size;
     int op_num;
-    static int total_op_num;
 public:
     Operator(int x, int y, int size); //Default constructor
 
@@ -33,7 +32,6 @@ public:
     void set_size(int new_size); //Setter of the operator size
     int get_size(); //Getter of the operator size
 
-    static void set_totalnum(); //Reset the total number of operators
     void set_num(int); //Setter of the op_num
     int get_num(); //Getter of the op_num
 };
@@ -72,10 +70,8 @@ Operator::Operator(int x, int y, int size) {
     center_x = x;
     center_y = y;
     op_size = size;
-    op_num = total_op_num;
-    total_op_num++;
+    op_num = -1;
 }
-int Operator::total_op_num = 0;
 void Operator::reset(int new_x, int new_y, int new_size) {
     //Reassign all values
     center_x = new_x;
@@ -104,9 +100,6 @@ int Operator::get_size() { //Getter of size
     return op_size;
 }
 
-void Operator::set_totalnum(){
-    total_op_num = 0;
-}
 void Operator::set_num(int num) {
     op_num = num;
 }
@@ -153,7 +146,6 @@ OperatorGrid::OperatorGrid(int rows, int cols) {
 
     operators = new ArithmeticOperator[MAX_OPERATOR_SIZE];     //REQUIRES DYNAMIC MEMORY ALLOCATION
     num_operators = 0;
-    Operator::set_totalnum(); //Reset the operator counter
 }
 
 //Destructor of the OperatorGrid
