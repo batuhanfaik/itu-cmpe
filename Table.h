@@ -16,7 +16,8 @@ class Table {
     string* orders;
     int* orders_amount;
 public:
-    void print();
+    Table():people_amount(0),orders(nullptr),orders_amount(nullptr){} //Default constructor
+    void print() const;
 };
 
 

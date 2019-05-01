@@ -6,6 +6,6 @@
 */
 #include "Table.h"
 
-void Table::print() {
+void Table::print() const{
 
 }
