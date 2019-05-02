@@ -20,11 +20,11 @@ public:
 };
 
 class Type1: public Ingredient{
-    float item_weight;
+    int item_weight;
     float price_per_gram;
 public:
     Type1():Ingredient(),item_weight(0),price_per_gram(0){};
-    Type1(string& name, float item_weight, float price_per_gram):
+    Type1(string& name, int item_weight, float price_per_gram):
     Ingredient(name),item_weight(item_weight),price_per_gram(price_per_gram){};
     void print() const;
 };
@@ -40,11 +40,11 @@ public:
 };
 
 class Type3: public Ingredient{
-    float milliliter;
+    int milliliter;
     float price_per_milliliter;
 public:
     Type3():Ingredient(),milliliter(0),price_per_milliliter(0){};
-    Type3(string& name, float milliliter, float price_per_milliliter):
+    Type3(string& name, int milliliter, float price_per_milliliter):
     Ingredient(name),milliliter(milliliter),price_per_milliliter(price_per_milliliter){};
     void print() const;
 };
