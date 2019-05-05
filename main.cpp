@@ -23,7 +23,11 @@ int const count_ingredients(string&);
 void const read_stock(Ingredient**);
 void const read_menu(Product*);
 void const read_tables(Table*);
+
+//See the source information below for split functions
 vector<string> split(string, char);
+vector<string> split(string, string);
+
 
 int main(){
     //Fill the stock
@@ -96,6 +100,10 @@ int const count_ingredients(string& line){
     return ingredient_amount;
 }
 
+//Title: How to Split a string using a char as delimiter
+//Author: Varun
+//Date: 26.01.2018
+//Availability: https://thispointer.com/how-to-split-a-string-in-c
 vector<string> split(string line, char delimiter){
     stringstream ss(line);
     string desired_data;
@@ -106,6 +114,28 @@ vector<string> split(string line, char delimiter){
     }
 
     return split_strings;
+}
+
+//Title: How to split a string by another string as delimiter
+//Author: Varun
+//Date: 26.01.2018
+//Availability: https://thispointer.com/how-to-split-a-string-in-c
+vector<string> split(string string_to_be_split, string delimeter){
+    vector<string> split_string;
+    int start_index = 0;
+    int  end_index = 0;
+    while( (end_index = string_to_be_split.find(delimeter, start_index)) < string_to_be_split.size() )
+    {
+        string val = string_to_be_split.substr(start_index, end_index - start_index);
+        split_string.push_back(val);
+        start_index = end_index + delimeter.size();
+    }
+    if(start_index < string_to_be_split.size())
+    {
+        string val = string_to_be_split.substr(start_index);
+        split_string.push_back(val);
+    }
+    return split_string;
 }
 
 void const read_stock(Ingredient** stock_list){
@@ -165,49 +195,42 @@ void const read_menu(Product* product_list){
     while (getline(menu_file, line)) { //Read line by line
         vector<string> split_strings = split(line, '\t'); //Extract the name and ingredients
         product_name = split_strings[0];
-        vector<string> all_ingredients = split(split_strings[1], ','); //Split the ingredients
+        vector<string> all_ingredients = split(split_strings[1], ", "); //Split the ingredients
 
         ingredient_count = all_ingredients.size(); //Assign the number of ingredients
         ingredient_list = new Ingredient*[ingredient_count];
 
         for (int i = 0; i < ingredient_count; ++i) {
-            regex amount_regex("[0-9]");
-            regex_search(all_ingredients[i], ingredient_match, amount_regex);
-            ingredient_amount = stoi(ingredient_match[0]); //Extracted value is the ingredient amount
             vector<string> ingredient_split = split(all_ingredients[i], ' '); //Split the ingredient further
+            if(ingredient_split[0] == "N/A\r" || ingredient_split[0] == "N/A"){ //If the menu item is not made up of ingredients
+                ingredient_list[i] = new Ingredient(ingredient_name);
+            } else {
+                ingredient_count = stoi(ingredient_split[0]); //First value is the amount
 
-            string type1_str = " gram ";
-            string type3_str = " ml ";
-            if (all_ingredients[i].find(type1_str) != string::npos){ //If "gram" is in the ingredient desc.
-                ingredient_type = 1;
-                ingredient_name = ingredient_split[2]; //Append the name of the ingredient
-                for (int j = 3; j < ingredient_split.size(); ++j) { //For more than one word names, append the rest
-                    ingredient_name.append(" ");
-                    ingredient_name.append(ingredient_split[j]);
+                string type1_str = " gram ";
+                string type3_str = " ml ";
+                if (all_ingredients[i].find(type1_str) != string::npos){ //If "gram" is in the ingredient desc.
+                    ingredient_name = ingredient_split[2]; //Append the name of the ingredient
+                    for (int j = 3; j < ingredient_split.size(); ++j) { //For more than one word names, append the rest
+                        ingredient_name.append(" ");
+                        ingredient_name.append(ingredient_split[j]);
+                    }
+                    ingredient_list[i] = new Type1(ingredient_name, ingredient_count); //Append to the list
+                } else if(all_ingredients[i].find(type3_str) != string::npos){ //If "ml" is in the ingredient desc.
+                    ingredient_name = ingredient_split[2]; //Append the name of the ingredient
+                    for (int j = 3; j < ingredient_split.size(); ++j) { //For more than one word names, append the rest
+                        ingredient_name.append(" ");
+                        ingredient_name.append(ingredient_split[j]);
+                    }
+                    ingredient_list[i] = new Type3(ingredient_name, ingredient_count); //Append to the list
+                } else{
+                    ingredient_name = ingredient_split[1]; //Append the name of the ingredient
+                    for (int j = 2; j < ingredient_split.size(); ++j) { //For more than one word names, append the rest
+                        ingredient_name.append(" ");
+                        ingredient_name.append(ingredient_split[j]);
+                    }
+                    ingredient_list[i] = new Type2(ingredient_name, ingredient_count); //Append to the list
                 }
-            } else if(all_ingredients[i].find(type3_str) != string::npos){ //If "ml" is in the ingredient desc.
-                ingredient_type = 3;
-                ingredient_name = ingredient_split[2]; //Append the name of the ingredient
-                for (int j = 3; j < ingredient_split.size(); ++j) { //For more than one word names, append the rest
-                    ingredient_name.append(" ");
-                    ingredient_name.append(ingredient_split[j]);
-                }
-            } else{
-                ingredient_type = 2;
-                ingredient_name = ingredient_split[1]; //Append the name of the ingredient
-                for (int j = 2; j < ingredient_split.size(); ++j) { //For more than one word names, append the rest
-                    ingredient_name.append(" ");
-                    ingredient_name.append(ingredient_split[j]);
-                }
-            }
-
-            //Fill the ingredient_list
-            if(ingredient_type == 1){ //Type1
-                ingredient_list[i] = new Type1(ingredient_name, ingredient_count); //Append to the list
-            } else if(ingredient_type == 2){ //Type2
-                ingredient_list[i] = new Type2(ingredient_name, ingredient_count); //Append to the list
-            } else if(ingredient_type == 3){ //Type3
-                ingredient_list[i] = new Type3(ingredient_name, ingredient_count); //Append to the list
             }
         }
     }
