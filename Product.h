@@ -8,14 +8,19 @@
 #define OOP_HW3_PRODUCT_H
 
 #include <string>
+#include "Ingredient.h"
 
 using namespace std;
 
 class Product {
     string name;
-    string* ingredient;
-    int* ingredient_amount;
+    int ingredient_amount;
+    Ingredient* ingredient_list;
     float total_price;
+public:
+    Product():name(""),ingredient_amount(0),ingredient_list(nullptr),total_price(0){};
+    Product(string name, int ingredient_amount, Ingredient* ingredient_list, float total_price):
+    name(name),ingredient_amount(0),ingredient_list(ingredient_list),total_price(total_price){};
 };
 
 

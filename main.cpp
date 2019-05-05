@@ -10,6 +10,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <regex>
 #include "Ingredient.h"
 #include "Product.h"
 #include "Table.h"
@@ -17,7 +18,10 @@
 using namespace std;
 
 int const count_stock();
+int const count_menu();
+int const count_ingredients(string&);
 void const read_stock(Ingredient**);
+void const read_menu(Product*);
 void const read_tables(Table*);
 vector<string> split(string, char);
 
@@ -33,6 +37,18 @@ int main(){
     Ingredient** stock_list;
     stock_list = new Ingredient*[stock_ingredient_amount]; //Allocate memory for the stock_list
     read_stock(stock_list);
+
+    //Get the menu ready
+    int product_amount;
+    try{
+        product_amount = count_menu();
+    } catch(const char* err_msg){
+        cout << err_msg << endl;
+        return EXIT_FAILURE;
+    }
+    Product* product_list;
+    product_list = new Product[product_amount]; //Allocate memory for the menu_list
+    read_menu(product_list);
 
     //Set the tables up
     Table tables[5];
@@ -55,6 +71,29 @@ int const count_stock(){
         stock_amount++;
 
     return stock_amount-1; //Return 1 less because first line is ignored
+}
+
+int const count_menu(){
+    int product_amount = 0;
+    string line;
+    ifstream menu_file; //Start input stream
+    menu_file.open("menu.txt"); //Open the file
+
+    if (!menu_file.is_open()) throw "Error opening the \"menu.txt\" file!";
+
+    while (getline(menu_file, line)) //If there is a line, increase the stock amount
+        product_amount++;
+
+    return product_amount-1; //Return 1 less because first line is ignored
+}
+
+int const count_ingredients(string& line){
+    int ingredient_amount = 1;
+    for(char& comma : line) { //Look for commas in the ingredients
+        if(comma == ',') //If comma is found there is an ingredient
+            ingredient_amount++;
+    }
+    return ingredient_amount;
 }
 
 vector<string> split(string line, char delimiter){
@@ -95,16 +134,82 @@ void const read_stock(Ingredient** stock_list){
         } else if(ingredient_type == 3){ //Type3
             stock_list[stock_count] = new Type3(ingredient_name, ingredient_count, ingredient_price); //Append to the list
         } else{ //Type doesn't exist
-            cout << "Stock type is not recognized!" << endl;
+            cout << "Stock type of an item is not recognized!" << endl;
             stock_count--;
         }
 
         stock_count++; //Next item please :)
     }
 
-    //Print the stock
-    for (int i = 0; i < stock_count; ++i) {
-        stock_list[i]->print();
+//    //Print the stock
+//    for (int i = 0; i < stock_count; ++i) {
+//        stock_list[i]->print();
+//    }
+}
+
+void const read_menu(Product* product_list){
+    int product_count = 0;
+    string product_name;
+    string ingredient_name;
+    int ingredient_count;
+    Ingredient** ingredient_list;
+    smatch ingredient_match; //Needed for string matching using regex
+    int ingredient_amount;
+    int ingredient_type;
+
+    //Parse the lines in stock.txt
+    string line;
+    ifstream menu_file("menu.txt"); //Open input stream
+    getline(menu_file, line); //Ignore the first line
+
+    while (getline(menu_file, line)) { //Read line by line
+        vector<string> split_strings = split(line, '\t'); //Extract the name and ingredients
+        product_name = split_strings[0];
+        vector<string> all_ingredients = split(split_strings[1], ','); //Split the ingredients
+
+        ingredient_count = all_ingredients.size(); //Assign the number of ingredients
+        ingredient_list = new Ingredient*[ingredient_count];
+
+        for (int i = 0; i < ingredient_count; ++i) {
+            regex amount_regex("[0-9]");
+            regex_search(all_ingredients[i], ingredient_match, amount_regex);
+            ingredient_amount = stoi(ingredient_match[0]); //Extracted value is the ingredient amount
+            vector<string> ingredient_split = split(all_ingredients[i], ' '); //Split the ingredient further
+
+            string type1_str = " gram ";
+            string type3_str = " ml ";
+            if (all_ingredients[i].find(type1_str) != string::npos){ //If "gram" is in the ingredient desc.
+                ingredient_type = 1;
+                ingredient_name = ingredient_split[2]; //Append the name of the ingredient
+                for (int j = 3; j < ingredient_split.size(); ++j) { //For more than one word names, append the rest
+                    ingredient_name.append(" ");
+                    ingredient_name.append(ingredient_split[j]);
+                }
+            } else if(all_ingredients[i].find(type3_str) != string::npos){ //If "ml" is in the ingredient desc.
+                ingredient_type = 3;
+                ingredient_name = ingredient_split[2]; //Append the name of the ingredient
+                for (int j = 3; j < ingredient_split.size(); ++j) { //For more than one word names, append the rest
+                    ingredient_name.append(" ");
+                    ingredient_name.append(ingredient_split[j]);
+                }
+            } else{
+                ingredient_type = 2;
+                ingredient_name = ingredient_split[1]; //Append the name of the ingredient
+                for (int j = 2; j < ingredient_split.size(); ++j) { //For more than one word names, append the rest
+                    ingredient_name.append(" ");
+                    ingredient_name.append(ingredient_split[j]);
+                }
+            }
+
+            //Fill the ingredient_list
+            if(ingredient_type == 1){ //Type1
+                ingredient_list[i] = new Type1(ingredient_name, ingredient_count); //Append to the list
+            } else if(ingredient_type == 2){ //Type2
+                ingredient_list[i] = new Type2(ingredient_name, ingredient_count); //Append to the list
+            } else if(ingredient_type == 3){ //Type3
+                ingredient_list[i] = new Type3(ingredient_name, ingredient_count); //Append to the list
+            }
+        }
     }
 }
 
