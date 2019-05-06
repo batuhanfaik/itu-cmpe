@@ -79,16 +79,22 @@ int main(){
     read_tables(tables, product_list);
 
     //Get the orders
-    for (int i = 0; i < table_amount; ++i) {
-
+    int tax_rate = 8;
+    int tip_percentage = 15;
+    for (int i = 0; i < table_amount; ++i) { //Go through all the tables
+        float table_cooking_cost = 0;
+        float table_total_cost = 0;
+        cout << "Table" << i + 1 << " ordered:" << endl;
+        for (int j = 0; j < tables[i].get_order_amount(); ++j) { //Place orders for each product
+            table_cooking_cost += order(tables[i].get_product_list()[j], tables[i].get_product_amount_list()[j], product_list, stock_list);
+        }
+        //Calculate the total cost
+        table_total_cost = table_cooking_cost + table_cooking_cost*tax_rate/100 + table_cooking_cost*tip_percentage/100;
+        cout << "Total cost: " << table_total_cost << endl;
     }
 
-    float myreturn = 0;
-    myreturn = order(product_list[9],1,product_list,stock_list);
-    cout << myreturn << endl;
-
     //Bloopers
-    cout << "I AM ALIVE" << endl;
+    cout << "\nI AM ALIVE" << endl;
     return 0;
 }
 
@@ -447,7 +453,7 @@ float const order(Product& product_in, int order_amount, Product* menu_list, Ing
                 ingredient_index++; //Get the next ingredient
             }
             //Now place the order (Subtract from the stock)
-            if(new_order_amount > 0){
+            if(new_order_amount > 0 && new_order_amount <= order_amount){
                 for (int i = 0; i < menu_list[product_index].get_ingredient_count(); ++i) {
                     //Find the ingredient in the stock list
                     int stock_index = 0;
@@ -466,10 +472,10 @@ float const order(Product& product_in, int order_amount, Product* menu_list, Ing
                 }
                 cooking_price += menu_list[product_index].get_price()*new_order_amount;
                 if(new_order_amount != order_amount){
-                    cout << "Sorry, we didn't have enough ingredients to cook " << order_amount << " "
+                    cout << "Sorry, we didn't have enough ingredients to make " << order_amount << " "
                     << product_in.get_name() << endl << "Instead, we served " << new_order_amount << "." << endl;
                 }
-                cout << new_order_amount << product_in.get_name() << " cost: " << cooking_price << endl;
+                cout << new_order_amount << " " << product_in.get_name() << " cost: " << cooking_price << endl;
             } else {
                 cout << "We don't have enough ingredients to make " << product_in.get_name() << endl;
             }

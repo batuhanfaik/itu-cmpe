@@ -24,6 +24,9 @@ public:
         table_number(table_number),order_amount(order_amount),product_list(product_list),
         product_amount_list(product_amount_list),total_price(total_price){};
     void print() const;
+    int get_order_amount();
+    Product* get_product_list();
+    int* get_product_amount_list();
 };
 
 

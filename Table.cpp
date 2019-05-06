@@ -24,3 +24,15 @@ void Table::print() const{
         cout << product_amount_list[j] << endl;
     }
 }
+
+int Table::get_order_amount() {
+    return order_amount;
+}
+
+Product* Table::get_product_list() {
+    return product_list;
+}
+
+int* Table::get_product_amount_list() {
+    return product_amount_list;
+}
