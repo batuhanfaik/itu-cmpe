@@ -20,6 +20,8 @@ public:
     virtual void print() const;
     virtual float get_price() const;
     virtual void const set_price(float){};
+    virtual int get_item_count() const{};
+    virtual void const set_item_count(int){};
 };
 
 class Type1: public Ingredient{
@@ -34,6 +36,8 @@ public:
     void print() const;
     float get_price() const;
     void const set_price(float);
+    int get_item_count() const;
+    void const set_item_count(int);
 };
 
 class Type2: public Ingredient{
@@ -48,6 +52,8 @@ public:
     void print() const;
     float get_price() const;
     void const set_price(float);
+    int get_item_count() const;
+    void const set_item_count(int);
 };
 
 class Type3: public Ingredient{
@@ -62,6 +68,8 @@ public:
     void print() const;
     float get_price() const;
     void const set_price(float);
+    int get_item_count() const;
+    void const set_item_count(int);
 };
 
 #endif //OOP_HW3_INGREDIENT_H

@@ -1,6 +1,6 @@
 /* @Author
  *
- * Student Name: Batuhan Faik Derinbay 
+ * Student Name: Batuhan Faik Derinbay
  * Student ID: 150180705
  * Date: 01/05/19
 */
@@ -61,4 +61,28 @@ void const Type2::set_price(float x){
 
 void const Type3::set_price(float x){
     price_per_milliliter = x;
+}
+
+int Type1::get_item_count() const {
+    return item_weight;
+}
+
+int Type2::get_item_count() const {
+    return number;
+}
+
+int Type3::get_item_count() const {
+    return milliliter;
+}
+
+void const Type1::set_item_count(int x) {
+    item_weight -= x;
+}
+
+void const Type2::set_item_count(int x) {
+    number -= x;
+}
+
+void const Type3::set_item_count(int x) {
+    milliliter -= x;
 }

@@ -19,3 +19,19 @@ void Product::print() {
     }
     cout << "Price of the product: " << total_price << endl;
 }
+
+string Product::get_name() {
+    return name;
+}
+
+float Product::get_price() {
+    return total_price;
+}
+
+int Product::get_ingredient_count() {
+    return ingredient_count;
+}
+
+Ingredient** Product::get_ingredient_list() {
+    return ingredient_list;
+}

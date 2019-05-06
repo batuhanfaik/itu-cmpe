@@ -21,10 +21,12 @@ using namespace std;
 void fix_file(string);
 int const count_stock();
 int const count_menu();
+int const count_tables();
 int const count_ingredients(string&);
 void const read_stock(Ingredient**);
 void const read_menu(Product*, Ingredient**);
 void const read_tables(Table*, Product*);
+float const order(Product&, int, Product*, Ingredient**);
 
 //See the source information below for split functions
 vector<string> split(string, char);
@@ -67,7 +69,23 @@ int main(){
 
     //Set the tables up
     Table tables[5];
+    int table_amount = 0;
+    try{
+        table_amount = count_tables();
+    } catch(const char* err_msg){
+        cout << err_msg << endl;
+        return EXIT_FAILURE;
+    }
     read_tables(tables, product_list);
+
+    //Get the orders
+    for (int i = 0; i < table_amount; ++i) {
+
+    }
+
+    float myreturn = 0;
+    myreturn = order(product_list[9],1,product_list,stock_list);
+    cout << myreturn << endl;
 
     //Bloopers
     cout << "I AM ALIVE" << endl;
@@ -136,6 +154,23 @@ int const count_menu(){
         product_amount++;
 
     return product_amount-1; //Return 1 less because first line is ignored
+}
+
+int const count_tables(){
+    int table_amount = 0;
+    string line;
+    ifstream order_file; //Start input stream
+    order_file.open("order.txt"); //Open the file
+
+    if (!order_file.is_open()) throw "Error opening the \"order.txt\" file!";
+
+        while (getline(order_file, line)) { //If there is a line containing Table<int>, increase the table amount
+            if (line.find("Table") != string::npos) { //If we hit a table
+                table_amount++;
+            }
+        }
+
+    return table_amount;
 }
 
 int const count_ingredients(string& line){
@@ -361,4 +396,108 @@ void const read_tables(Table* tables, Product* menu_list){
 //    for (int k = 0; k < table_number; ++k) {
 //        tables[k].print();
 //    }
+}
+
+float const order(Product& product_in, int order_amount, Product* menu_list, Ingredient** stock_list){
+    //Find the product in the menu
+    int product_index = 0;
+    int product_count = count_menu();
+    int new_order_amount = order_amount;
+    float cooking_price = 0;
+    bool product_found = true;
+
+    while (product_index < product_count && menu_list[product_index].get_name() != product_in.get_name()){
+        product_index++;
+    }
+    if(product_index >= product_count){ //If not found in the menu
+        cout << "Trying to order but product can't be found in the menu." << endl;
+        product_found = false;
+    }
+
+    if (product_found){ //Continue if the product is found
+        if(menu_list[product_index].get_ingredient_count() > 1){ //If the product is made up of different ingredients
+            int ingredient_index = 0;
+            while (ingredient_index < menu_list[product_index].get_ingredient_count()){
+                //Find the ingredient in the stock list
+                int stock_index = 0;
+                int stock_count = count_stock();
+                //Look for the ingredient with the matching name in the stock and find out how many can be ordered with the given stock
+                while (stock_index < stock_count && stock_list[stock_index]->get_name() !=
+                    menu_list[product_index].get_ingredient_list()[ingredient_index]->get_name()){
+                    stock_index++;
+                }
+                if(stock_index < stock_count){ //If found in the stock
+                    if(stock_list[stock_index]->get_item_count() -
+                        menu_list[product_index].get_ingredient_list()[ingredient_index]->get_item_count()*order_amount < 0){ //If not enough in the stock
+                        cout << "Sorry! Only " << stock_list[stock_index]->get_item_count() << " of " <<
+                        product_in.get_name() << " is left." << endl;
+                        //Find out how many products the stock can afford with the limited ingredients
+                        int temp_order_amount = 0;
+                        while(stock_list[stock_index]->get_item_count() -
+                        menu_list[product_index].get_ingredient_list()[ingredient_index]->get_item_count()*temp_order_amount >= 0){
+                            temp_order_amount++;
+                        }
+                        if(temp_order_amount < new_order_amount){
+                            new_order_amount = temp_order_amount;
+                        }
+                    }
+                } else{ //Can't find in the stock
+                    cout << "Ingredient can't be found in the stock." << endl;
+                }
+                ingredient_index++; //Get the next ingredient
+            }
+            //Now place the order (Subtract from the stock)
+            if(new_order_amount > 0){
+                for (int i = 0; i < menu_list[product_index].get_ingredient_count(); ++i) {
+                    //Find the ingredient in the stock list
+                    int stock_index = 0;
+                    int stock_count = count_stock();
+                    //Look for the ingredient with the matching name in the stock and find out how many can be ordered with the given stock
+                    while (stock_index < stock_count && stock_list[stock_index]->get_name() !=
+                    menu_list[product_index].get_ingredient_list()[i]->get_name()){
+                        stock_index++;
+                    }
+                    if(stock_index < stock_count){ //If found in the stock
+                        stock_list[stock_index]->set_item_count(stock_list[stock_index]->get_item_count() -
+                        menu_list[product_index].get_ingredient_list()[i]->get_item_count()*new_order_amount);
+                    } else{ //Can't find in the stock
+                        cout << "Ingredient can't be found in the stock." << endl;
+                    }
+                }
+                cooking_price += menu_list[product_index].get_price()*new_order_amount;
+                if(new_order_amount != order_amount){
+                    cout << "Sorry, we didn't have enough ingredients to cook " << order_amount << " "
+                    << product_in.get_name() << endl << "Instead, we served " << new_order_amount << "." << endl;
+                }
+                cout << new_order_amount << product_in.get_name() << " cost: " << cooking_price << endl;
+            } else {
+                cout << "We don't have enough ingredients to make " << product_in.get_name() << endl;
+            }
+        } else { //If the product is an item
+            //Find it in the stock list
+            int stock_index = 0;
+            int stock_count = count_stock();
+            //Look for the ingredient with the matching name in the stock
+            while (stock_index < stock_count && stock_list[stock_index]->get_name() != product_in.get_name()){
+                stock_index++;
+            }
+            if(stock_index < stock_count){ //If found in the stock
+                if(stock_list[stock_index]->get_item_count() - order_amount < 0){ //If there is not enough in the stock
+                    cout << "Sorry! Only " << stock_list[stock_index]->get_item_count() << " of " <<
+                        product_in.get_name() << " is left. I'll serve the remaining." << endl;
+                    cooking_price += stock_list[stock_index]->get_item_count()*stock_list[stock_index]->get_price();
+                    stock_list[stock_index]->set_item_count(0);
+                } else{ //Subtract the ordered amount from the stock
+                    stock_list[stock_index]->set_item_count(stock_list[stock_index]->get_item_count() - order_amount);
+                    cooking_price += stock_list[stock_index]->get_price()*order_amount;
+                    stock_list[stock_index]->set_item_count(stock_list[stock_index]->get_item_count() - order_amount);
+                }
+            } else{
+                cout << "Ingredient can't be found in the stock." << endl;
+            }
+            cout << order_amount << " " << product_in.get_name() << " cost: " << cooking_price << endl;
+        }
+    }
+
+    return cooking_price;
 }
