@@ -19,6 +19,7 @@ public:
     string get_name() const;
     virtual void print() const;
     virtual float get_price() const;
+    virtual void const set_price(float){};
 };
 
 class Type1: public Ingredient{
@@ -32,6 +33,7 @@ public:
         Ingredient(name),item_weight(item_weight),price_per_gram(price_per_gram){};
     void print() const;
     float get_price() const;
+    void const set_price(float);
 };
 
 class Type2: public Ingredient{
@@ -45,6 +47,7 @@ public:
         Ingredient(name),number(number),price_per_unit(price_per_unit){};
     void print() const;
     float get_price() const;
+    void const set_price(float);
 };
 
 class Type3: public Ingredient{
@@ -58,6 +61,7 @@ public:
         Ingredient(name),milliliter(milliliter),price_per_milliliter(price_per_milliliter){};
     void print() const;
     float get_price() const;
+    void const set_price(float);
 };
 
 #endif //OOP_HW3_INGREDIENT_H

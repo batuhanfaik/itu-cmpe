@@ -50,3 +50,15 @@ float Type2::get_price() const {
 float Type3::get_price() const {
     return price_per_milliliter;
 }
+
+void const Type1::set_price(float x){
+    price_per_gram = x;
+}
+
+void const Type2::set_price(float x){
+    price_per_unit = x;
+}
+
+void const Type3::set_price(float x){
+    price_per_milliliter = x;
+}
