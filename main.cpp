@@ -24,7 +24,7 @@ int const count_menu();
 int const count_ingredients(string&);
 void const read_stock(Ingredient**);
 void const read_menu(Product*, Ingredient**);
-void const read_tables(Table*);
+void const read_tables(Table*, Product*);
 
 //See the source information below for split functions
 vector<string> split(string, char);
@@ -67,7 +67,7 @@ int main(){
 
     //Set the tables up
     Table tables[5];
-    read_tables(tables);
+    read_tables(tables, product_list);
 
     //Bloopers
     cout << "I AM ALIVE" << endl;
@@ -232,7 +232,7 @@ void const read_menu(Product* product_list, Ingredient** stock_list){
     int ingredient_amount; //Amount of the ingredient
     Ingredient** ingredient_list;
 
-    //Parse the lines in stock.txt
+    //Parse the lines in menu.txt
     string line;
     ifstream menu_file("menu.txt"); //Open input stream
     getline(menu_file, line); //Ignore the first line
@@ -250,8 +250,9 @@ void const read_menu(Product* product_list, Ingredient** stock_list){
             vector<string> ingredient_split = split(all_ingredients[i], ' '); //Split the ingredient further
 
             if(ingredient_split[0] == "N/A"){ //If the menu item is not made up of ingredients
-                ingredient_amount = 1;
+                ingredient_name = product_name;
                 ingredient_list[i] = new Ingredient(ingredient_name);
+                ingredient_amount = 1;
             } else {
                 ingredient_amount = stoi(ingredient_split[0]); //First value is the amount
                 string type1_str = " gram ";
@@ -299,12 +300,65 @@ void const read_menu(Product* product_list, Ingredient** stock_list){
         product_count++; //Increase the number of products
     }
 
-    //Print the product list
-    for (int k = 0; k < product_count; ++k) {
-        product_list[k].print();
-    }
+//    //Print the product list
+//    for (int k = 0; k < product_count; ++k) {
+//        product_list[k].print();
+//    }
 }
 
-void const read_tables(Table* tables){
+void const read_tables(Table* tables, Product* menu_list){
+    //Parse the lines in menu.txt
+    string line;
+    ifstream order_file("order.txt"); //Open input stream
+    int table_number = 0;
 
+    while (getline(order_file, line)) { //Read each Table<int> line
+        int order_amount = 0;
+        float total_price = 0;
+        if (line.find("Table") != string::npos) { //If we hit a table
+            table_number++;
+        }
+        getline(order_file, line); //Read the number of orders
+        order_amount = stoi(line);
+
+        int* product_amount_list; //Allocate memory for the necessary lists
+        product_amount_list = new int[order_amount];
+        Product* product_list;
+        product_list = new Product[order_amount];
+
+        for (int i = 0; i < order_amount; ++i) { //For every order
+            getline(order_file, line); //Read orders of the table
+            int product_amount = 0;
+            string product_name;
+            vector<string> split_strings = split(line, ' '); //Extract the name and ingredients
+            product_amount = stoi(split_strings[0]);
+            product_name = split_strings[1]; //Assign the first word of the name
+            for (int j = 2; j < split_strings.size(); ++j) { //Assign the remaining product name
+                product_name += " " + split_strings[j];
+            }
+            product_amount_list[i] = product_amount; //Append the product_amount
+
+            //Price calculations for the product and table
+            int product_index = 0;
+            int product_count = count_menu();
+            float product_price = 0;
+            //Look for the product with the matching name in the menu
+            while (product_index < product_count && menu_list[product_index].get_name() != product_name){
+                product_index++;
+            }
+            if(product_index < product_count){ //If in found in the menu
+                product_price = menu_list[product_index].get_price()*product_amount; //Calculate the prices
+                total_price += product_price;
+            } else{
+                cout << "Product can't be found in the menu." << endl;
+            }
+            product_list[i] = Product(product_name, product_price);
+        }
+        tables[table_number-1] = Table(table_number, order_amount, product_list, product_amount_list, total_price);
+    }
+
+//    //Print the tables
+//    for (int k = 0; k < table_number; ++k) {
+//        tables[k].print();
+//    }
 }
