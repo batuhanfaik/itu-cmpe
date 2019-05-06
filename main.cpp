@@ -248,12 +248,12 @@ void const read_menu(Product* product_list, Ingredient** stock_list){
 
         for (int i = 0; i < ingredient_count; ++i) {
             vector<string> ingredient_split = split(all_ingredients[i], ' '); //Split the ingredient further
+
             if(ingredient_split[0] == "N/A"){ //If the menu item is not made up of ingredients
-                ingredient_list[i] = new Ingredient(ingredient_name);
                 ingredient_amount = 1;
+                ingredient_list[i] = new Ingredient(ingredient_name);
             } else {
                 ingredient_amount = stoi(ingredient_split[0]); //First value is the amount
-
                 string type1_str = " gram ";
                 string type3_str = " ml ";
                 if (all_ingredients[i].find(type1_str) != string::npos){ //If "gram" is in the ingredient desc.
@@ -279,14 +279,18 @@ void const read_menu(Product* product_list, Ingredient** stock_list){
                     ingredient_list[i] = new Type2(ingredient_name, ingredient_amount); //Append to the list
                 }
             }
+            //Price calculations
             int stock_index = 0;
             int stock_count = count_stock();
+            float ingredient_price = 0;
             //Look for the ingredient with the matching name in the stock
             while (stock_index < stock_count && stock_list[stock_index]->get_name() != ingredient_name){
                 stock_index++;
             }
             if(stock_index < stock_count){ //If in found in the stock
                 total_price += stock_list[stock_index]->get_price()*ingredient_amount;
+                ingredient_price = stock_list[stock_index]->get_price()*ingredient_amount;
+                ingredient_list[i]->set_price(ingredient_price);
             } else{
                 cout << "Ingredient can't be found in the stock." << endl;
             }
