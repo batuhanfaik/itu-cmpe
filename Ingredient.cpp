@@ -30,3 +30,23 @@ void Type3::print() const{
     cout << "Amount available: " << milliliter << " ml" << endl;
     cout << "Price: " << price_per_milliliter << " TL" << endl;
 }
+
+string Ingredient::get_name() const {
+    return name;
+}
+
+float Ingredient::get_price() const {
+    return 0;
+}
+
+float Type1::get_price() const {
+    return price_per_gram;
+}
+
+float Type2::get_price() const {
+    return price_per_unit;
+}
+
+float Type3::get_price() const {
+    return price_per_milliliter;
+}
