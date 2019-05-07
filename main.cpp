@@ -520,6 +520,7 @@ float const place_order(Product& product_in, int order_amount, Product* menu_lis
                         cout << "Only " << stock_list[stock_index]->get_item_count() << " " <<
                              product_in.get_name() << " is left. I'll serve the remaining." << endl;
                         cooking_price += stock_list[stock_index]->get_item_count()*stock_list[stock_index]->get_price();
+                        order_amount = stock_list[stock_index]->get_item_count();
                         stock_list[stock_index]->set_item_count(0);
                     } else{ //Subtract the ordered amount from the stock
                         cooking_price += stock_list[stock_index]->get_price()*order_amount;
