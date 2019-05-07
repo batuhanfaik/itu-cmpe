@@ -100,8 +100,9 @@ int main(){
     }
 
     //Update the stock.txt after the orders
-//    update_stock(stock_list);
+    update_stock(stock_list);
 
+    //Deallocate the memory before exiting
     for (int dest = 0; dest < stock_ingredient_amount; ++dest) { //Destruct the ingredients in stock_list
         delete stock_list[dest];
     }
@@ -477,11 +478,6 @@ float const place_order(Product& product_in, int order_amount, Product* menu_lis
                 }
                 ingredient_index++; //Get the next ingredient
             }
-            //If the restaurant can't serve every product notify the table
-            if(new_order_amount > 0 && new_order_amount != order_amount){
-                cout << "Only " << new_order_amount << " " <<
-                     product_in.get_name() << " are/is left." << endl;
-            }
             //Now place the order (Subtract from the stock)
             if(new_order_amount > 0 && new_order_amount <= order_amount){
                 for (int i = 0; i < menu_list[product_index].get_ingredient_count(); i++) {
@@ -503,12 +499,12 @@ float const place_order(Product& product_in, int order_amount, Product* menu_lis
                 }
                 cooking_price += menu_list[product_index].get_price()*new_order_amount;
                 if(new_order_amount != order_amount){
-                    cout << "Sorry, we didn't have enough ingredients to make " << order_amount << " "
+                    cout << "We dont't have enough ingredients to make " << order_amount << " "
                     << product_in.get_name() << endl << "Instead, we served " << new_order_amount << "." << endl;
                 }
                 cout << new_order_amount << " " << product_in.get_name() << " cost: " << cooking_price << endl;
             } else {
-                cout << "We don't have enough ingredients to make " << product_in.get_name() << endl;
+                cout << "We don't have enough " << product_in.get_name() << endl;
             }
         } else { //If the product is an item
             //Find it in the stock list
