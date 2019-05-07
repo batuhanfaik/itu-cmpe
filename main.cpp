@@ -18,6 +18,7 @@
 
 using namespace std;
 
+//FUNCTION DECLARATIONS
 void fix_file(string);
 int const count_stock();
 int const count_menu();
@@ -26,7 +27,8 @@ int const count_ingredients(string&);
 void const read_stock(Ingredient**);
 void const read_menu(Product*, Ingredient**);
 void const read_tables(Table*, Product*);
-float const order(Product&, int, Product*, Ingredient**);
+float const place_order(Product&, int, Product*, Ingredient**);
+void const update_stock(Ingredient**);
 
 //See the source information below for split functions
 vector<string> split(string, char);
@@ -87,7 +89,7 @@ int main(){
         float tip_cost = 0;
         cout << "Table" << i + 1 << " ordered:" << endl;
         for (int j = 0; j < tables[i].get_order_amount(); ++j) { //Place orders for each product
-            table_cooking_cost += order(tables[i].get_product_list()[j], tables[i].get_product_amount_list()[j], product_list, stock_list);
+            table_cooking_cost += place_order(tables[i].get_product_list()[j], tables[i].get_product_amount_list()[j], product_list, stock_list);
         }
         //Calculate the costs
         tip_cost = table_cooking_cost*tip_percentage/100;
@@ -96,13 +98,16 @@ int main(){
         cout << "Total cost: " << table_total_cost << " TL" << endl;
     }
 
+    //Update the stock.txt after the orders
+    update_stock(stock_list);
+
     //Bloopers
     cout << "\nI AM ALIVE" << endl;
     return 0;
 }
 
-void find_replace(string& subject, const string& search,
-                          const string& replace) {
+//FUNCTION DEFINITIONS
+void find_replace(string& subject, const string& search, const string& replace) {
     size_t pos = 0;
     while ((pos = subject.find(search, pos)) != string::npos) {
         subject.replace(pos, search.length(), replace);
@@ -243,10 +248,17 @@ void const read_stock(Ingredient** stock_list){
 
     while (getline(stock_file, line)) { //Read line by line
         vector<string> split_strings = split(line, '\t'); //Values to variables
-        ingredient_name = split_strings[0];
-        ingredient_type = stoi(split_strings[1]);
-        ingredient_count = stoi(split_strings[2]);
-        ingredient_price = stof(split_strings[3]);
+        if(split_strings.size()>1){ //If parsed correctly
+            ingredient_name = split_strings[0];
+            ingredient_type = stoi(split_strings[1]);
+            ingredient_count = stoi(split_strings[2]);
+            ingredient_price = stof(split_strings[3]);
+        } else { //Create dummy ingredient
+            ingredient_name = "N/A";
+            ingredient_type = 2;
+            ingredient_count = 0;
+            ingredient_price = 0;
+        }
 
         if(ingredient_type == 1){ //Type1
             stock_list[stock_count] = new Type1(ingredient_name, ingredient_count, ingredient_price); //Append to the list
@@ -407,7 +419,7 @@ void const read_tables(Table* tables, Product* menu_list){
 //    }
 }
 
-float const order(Product& product_in, int order_amount, Product* menu_list, Ingredient** stock_list){
+float const place_order(Product& product_in, int order_amount, Product* menu_list, Ingredient** stock_list){
     //Find the product in the menu
     int product_index = 0;
     int product_count = count_menu();
@@ -447,21 +459,25 @@ float const order(Product& product_in, int order_amount, Product* menu_list, Ing
                         if(temp_order_amount - 1 < new_order_amount){
                             new_order_amount = temp_order_amount - 1;
                         }
-                        cout << "Sorry! Only " << new_order_amount << " " <<
-                            product_in.get_name() << " are/is left." << endl;
                     }
                 } else{ //Can't find in the stock
                     cout << "Ingredient can't be found in the stock." << endl;
                 }
                 ingredient_index++; //Get the next ingredient
             }
+            //If the restaurant can't serve every product notify the table
+            if(new_order_amount > 0 && new_order_amount != order_amount){
+                cout << "Only " << new_order_amount << " " <<
+                     product_in.get_name() << " are/is left." << endl;
+            }
             //Now place the order (Subtract from the stock)
             if(new_order_amount > 0 && new_order_amount <= order_amount){
-                for (int i = 0; i < menu_list[product_index].get_ingredient_count(); ++i) {
+                for (int i = 0; i < menu_list[product_index].get_ingredient_count(); i++) {
                     //Find the ingredient in the stock list
                     int stock_index = 0;
                     int stock_count = count_stock();
-                    //Look for the ingredient with the matching name in the stock and find out how many can be ordered with the given stock
+                    //Look for the ingredient with the matching name in the stock and
+                    //find out how many can be ordered with the given stock
                     while (stock_index < stock_count && stock_list[stock_index]->get_name() !=
                     menu_list[product_index].get_ingredient_list()[i]->get_name()){
                         stock_index++;
@@ -509,4 +525,27 @@ float const order(Product& product_in, int order_amount, Product* menu_list, Ing
     }
 
     return cooking_price;
+}
+
+void const update_stock(Ingredient** stock_list){
+    string str_temp;
+    int stock_count = count_stock();
+
+    ifstream input_file; //Start input stream
+    ofstream output_file("temp_stock.txt"); //Temporary output file
+    input_file.open("stock.txt"); //Open the stock file
+
+    if(!input_file.is_open() || !output_file) throw ("Error updating the \"stock.txt\" file!");
+
+    output_file << "Name\tType\tItemCount\tPrice\n"; //Append the first line
+    for (int i = 0; i < stock_count; ++i) {
+        str_temp = stock_list[i]->get_name() + '\t';
+        str_temp += to_string(stock_list[i]->get_type()) + '\t';
+        str_temp += to_string(stock_list[i]->get_item_count()) + '\t';
+        str_temp += to_string(stock_list[i]->get_price()) + '\n';
+        output_file << str_temp;
+    }
+
+    rename("temp_stock.txt", "stock.txt"); //Rename the output file to match the input file name
+    input_file.close();
 }

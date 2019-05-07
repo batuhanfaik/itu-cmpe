@@ -76,13 +76,17 @@ int Type3::get_item_count() const {
 }
 
 void const Type1::set_item_count(int x) {
-    item_weight -= x;
+    item_weight = x;
 }
 
 void const Type2::set_item_count(int x) {
-    number -= x;
+    number = x;
 }
 
 void const Type3::set_item_count(int x) {
-    milliliter -= x;
+    milliliter = x;
+}
+
+int Ingredient::get_type() {
+    return ingredient_type;
 }
