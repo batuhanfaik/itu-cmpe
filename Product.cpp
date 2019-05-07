@@ -35,10 +35,3 @@ int Product::get_ingredient_count() {
 Ingredient** Product::get_ingredient_list() {
     return ingredient_list;
 }
-
-Product::~Product() {
-//    for (int i = 0; i < ingredient_count; ++i) {
-//        delete[] ingredient_list[i];
-//    }
-//    delete[] ingredient_list;
-}

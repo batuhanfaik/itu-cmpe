@@ -36,8 +36,3 @@ Product* Table::get_product_list() {
 int* Table::get_product_amount_list() {
     return product_amount_list;
 }
-
-Table::~Table() {
-//    delete[] product_amount_list;
-//    delete[] product_list;
-}

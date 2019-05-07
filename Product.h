@@ -23,12 +23,31 @@ public:
         name(name),total_price(total_price),ingredient_count(0),ingredient_list(nullptr){};
     Product(string name, int ingredient_count, Ingredient** ingredient_list, float total_price):
         name(name),ingredient_count(ingredient_count),ingredient_list(ingredient_list),total_price(total_price){};
-    void print();
-    string get_name();
-    float get_price();
-    int get_ingredient_count();
-    Ingredient** get_ingredient_list();
-    ~Product();
+    void print() {
+        cout << "Product name: " << name << endl;
+        cout << "Number of ingredients: " << ingredient_count << endl;
+        for (int i = 0; i < ingredient_count; ++i) {
+            cout << "   Ingredient " << i+1 << ": " << endl;
+            ingredient_list[i]->print();
+        }
+        cout << "Price of the product: " << total_price << endl;
+    }
+    
+    string get_name() {
+        return name;
+    }
+    
+    float get_price() {
+        return total_price;
+    }
+    
+    int get_ingredient_count() {
+        return ingredient_count;
+    }
+    
+    Ingredient** get_ingredient_list() {
+        return ingredient_list;
+    }
 };
 
 
