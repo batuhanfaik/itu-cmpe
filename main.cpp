@@ -515,20 +515,23 @@ float const place_order(Product& product_in, int order_amount, Product* menu_lis
                 stock_index++;
             }
             if(stock_index < stock_count){ //If found in the stock
-                if(stock_list[stock_index]->get_item_count() - order_amount < 0){ //If there is not enough in the stock
-                    cout << "Sorry! Only " << stock_list[stock_index]->get_item_count() << " of " <<
-                        product_in.get_name() << " is left. I'll serve the remaining." << endl;
-                    cooking_price += stock_list[stock_index]->get_item_count()*stock_list[stock_index]->get_price();
-                    stock_list[stock_index]->set_item_count(0);
-                } else{ //Subtract the ordered amount from the stock
-                    stock_list[stock_index]->set_item_count(stock_list[stock_index]->get_item_count() - order_amount);
-                    cooking_price += stock_list[stock_index]->get_price()*order_amount;
-                    stock_list[stock_index]->set_item_count(stock_list[stock_index]->get_item_count() - order_amount);
+                if(stock_list[stock_index]->get_item_count() > 0){ //If there is item in the stock
+                    if(stock_list[stock_index]->get_item_count() - order_amount < 0){ //If there is not enough in the stock
+                        cout << "Only " << stock_list[stock_index]->get_item_count() << " " <<
+                             product_in.get_name() << " is left. I'll serve the remaining." << endl;
+                        cooking_price += stock_list[stock_index]->get_item_count()*stock_list[stock_index]->get_price();
+                        stock_list[stock_index]->set_item_count(0);
+                    } else{ //Subtract the ordered amount from the stock
+                        cooking_price += stock_list[stock_index]->get_price()*order_amount;
+                        stock_list[stock_index]->set_item_count(stock_list[stock_index]->get_item_count() - order_amount);
+                    }
+                    cout << order_amount << " " << product_in.get_name() << " cost: " << cooking_price << endl;
+                } else { //If there are no items left in the stock
+                    cout << "We don't have enough " << product_in.get_name() << endl;
                 }
             } else{
                 cout << "Ingredient can't be found in the stock." << endl;
             }
-            cout << order_amount << " " << product_in.get_name() << " cost: " << cooking_price << endl;
         }
     }
 
