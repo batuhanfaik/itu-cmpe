@@ -84,13 +84,16 @@ int main(){
     for (int i = 0; i < table_amount; ++i) { //Go through all the tables
         float table_cooking_cost = 0;
         float table_total_cost = 0;
+        float tip_cost = 0;
         cout << "Table" << i + 1 << " ordered:" << endl;
         for (int j = 0; j < tables[i].get_order_amount(); ++j) { //Place orders for each product
             table_cooking_cost += order(tables[i].get_product_list()[j], tables[i].get_product_amount_list()[j], product_list, stock_list);
         }
-        //Calculate the total cost
+        //Calculate the costs
+        tip_cost = table_cooking_cost*tip_percentage/100;
         table_total_cost = table_cooking_cost + table_cooking_cost*tax_rate/100 + table_cooking_cost*tip_percentage/100;
-        cout << "Total cost: " << table_total_cost << endl;
+        cout << "Tip: " << tip_cost << " TL" << endl;
+        cout << "Total cost: " << table_total_cost << " TL" << endl;
     }
 
     //Bloopers
@@ -435,17 +438,17 @@ float const order(Product& product_in, int order_amount, Product* menu_list, Ing
                 if(stock_index < stock_count){ //If found in the stock
                     if(stock_list[stock_index]->get_item_count() -
                         menu_list[product_index].get_ingredient_list()[ingredient_index]->get_item_count()*order_amount < 0){ //If not enough in the stock
-                        cout << "Sorry! Only " << stock_list[stock_index]->get_item_count() << " of " <<
-                        product_in.get_name() << " is left." << endl;
                         //Find out how many products the stock can afford with the limited ingredients
                         int temp_order_amount = 0;
                         while(stock_list[stock_index]->get_item_count() -
                         menu_list[product_index].get_ingredient_list()[ingredient_index]->get_item_count()*temp_order_amount >= 0){
                             temp_order_amount++;
                         }
-                        if(temp_order_amount < new_order_amount){
-                            new_order_amount = temp_order_amount;
+                        if(temp_order_amount - 1 < new_order_amount){
+                            new_order_amount = temp_order_amount - 1;
                         }
+                        cout << "Sorry! Only " << new_order_amount << " " <<
+                            product_in.get_name() << " are/is left." << endl;
                     }
                 } else{ //Can't find in the stock
                     cout << "Ingredient can't be found in the stock." << endl;
