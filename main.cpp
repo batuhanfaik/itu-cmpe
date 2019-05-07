@@ -96,13 +96,25 @@ int main(){
         table_total_cost = table_cooking_cost + table_cooking_cost*tax_rate/100 + table_cooking_cost*tip_percentage/100;
         cout << "Tip: " << tip_cost << " TL" << endl;
         cout << "Total cost: " << table_total_cost << " TL" << endl;
+        cout << "***************" << endl;
     }
 
     //Update the stock.txt after the orders
-    update_stock(stock_list);
+//    update_stock(stock_list);
 
-    //Bloopers
-    cout << "\nI AM ALIVE" << endl;
+    for (int dest = 0; dest < stock_ingredient_amount; ++dest) { //Destruct the ingredients in stock_list
+        delete stock_list[dest];
+    }
+    delete[] stock_list; //Destruct the stock_list
+    for (int dest = 0; dest < product_amount; ++dest) { //Destruct ingredient_lists of the products
+        delete[] product_list[dest].get_ingredient_list();
+    }
+    delete[] product_list; //Destruct the product_list
+    for (int dest = 0; dest < table_amount; ++dest) { //Destructs the lists in tables
+        delete[] tables[dest].get_product_amount_list();
+        delete[] tables[dest].get_product_list();
+    }
+
     return 0;
 }
 

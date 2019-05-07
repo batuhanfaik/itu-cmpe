@@ -27,6 +27,7 @@ public:
     int get_order_amount();
     Product* get_product_list();
     int* get_product_amount_list();
+    ~Table();
 };
 
 

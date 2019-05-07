@@ -28,6 +28,7 @@ public:
     float get_price();
     int get_ingredient_count();
     Ingredient** get_ingredient_list();
+    ~Product();
 };
 
 

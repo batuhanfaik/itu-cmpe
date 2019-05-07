@@ -17,7 +17,7 @@ class Ingredient {
 public:
     Ingredient():name(""),ingredient_type(0){};
     Ingredient(string& name):name(name),ingredient_type(0){};
-    Ingredient(int ingredient_type):ingredient_type(ingredient_type){};
+    Ingredient(int ingredient_type):name(""),ingredient_type(ingredient_type){};
     Ingredient(string& name, int ingredient_type):name(name),ingredient_type(ingredient_type){};
     string get_name() const;
     virtual void print() const;
@@ -26,6 +26,7 @@ public:
     virtual int get_item_count() const{};
     virtual void const set_item_count(int){};
     int get_type();
+    virtual ~Ingredient(){};
 };
 
 class Type1: public Ingredient{
@@ -43,6 +44,7 @@ public:
     int get_item_count() const;
     void const set_item_count(int);
     int get_type();
+    ~Type1(){};
 };
 
 class Type2: public Ingredient{
@@ -60,6 +62,7 @@ public:
     int get_item_count() const;
     void const set_item_count(int);
     int get_type();
+    ~Type2(){};
 };
 
 class Type3: public Ingredient{
@@ -77,6 +80,7 @@ public:
     int get_item_count() const;
     void const set_item_count(int);
     int get_type();
+    ~Type3(){};
 };
 
 #endif //OOP_HW3_INGREDIENT_H
