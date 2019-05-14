@@ -7894,10 +7894,6 @@
     <comp lib="1" loc="(2270,3620)" name="OR Gate">
       <a name="facing" val="south"/>
     </comp>
-    <comp lib="7" loc="(3783,3880)" name="Text">
-      <a name="text" val="RF TO RF"/>
-      <a name="font" val="Dialog plain 20"/>
-    </comp>
     <comp lib="1" loc="(320,3230)" name="NOT Gate">
       <a name="facing" val="south"/>
     </comp>
@@ -7997,6 +7993,10 @@
     <comp lib="0" loc="(2140,3180)" name="Tunnel">
       <a name="width" val="3"/>
       <a name="label" val="DESTREG"/>
+    </comp>
+    <comp lib="7" loc="(3804,3885)" name="Text">
+      <a name="text" val="RF TO RF"/>
+      <a name="font" val="Dialog plain 20"/>
     </comp>
     <comp lib="1" loc="(2200,2810)" name="Controlled Buffer">
       <a name="width" val="2"/>
