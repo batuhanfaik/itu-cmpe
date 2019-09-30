@@ -13,7 +13,14 @@ L1			dec.w	#R15 ; Decrement R15
 SetupP2		mov.b 	#FFh, &P1DIR ;Enable lights
 			mov.b	#FFh, &P2DIR ;Enable second column of lights
 Reset		mov.b	#01h, &P1OUT ;1st step
+			jmp Wait ;Jump to wait?
 			mov.b	#80h, &P2OUT ;1st step second column
+
+			;	Enable if the line above does not work
+;Wait		mov.w 	#250000, R15 ; Delay to R15
+;L1			dec.w	#R15 ; Decrement R15
+			;jnz L1; Delay over?
+
 Mainloop	rla.b	P1OUT ;
 			add.b 	#01h, &P1OUT ;add 1
 			rra.b	P2OUT ; rotate arithmetic right 
@@ -22,5 +29,8 @@ L1			dec.w	#R15 ; Decrement R15
 			jnz L1; Delay over?
 			cmp.b	#FFh, P2OUT; check if p2out is FF (all lights are on)
 			jnz Reset ;Jump to reset
-			jmp Mainloop; Again			
+			jmp Mainloop; Again	
 			
+
+; PART 3
+SetupP3		mov.b	#
