@@ -6,3 +6,9 @@ Wait		mov.w 	#050000, R15 ; Delay to R15
 L1			dec.w	#R15 ; Decrement R15
 			jnz L1; Delay over?
 			jmp Mainloop; Again
+			
+
+
+; PART 2
+SetupP2		bis.b 	#FFh, #P1DIR ;Enable lights
+Mainloop
