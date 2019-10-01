@@ -3,7 +3,7 @@
 SetupP1		bis.b 	#00h, &P1DIR ;P1.0 output
 Mainloop	xor.b	#001h, &P1OUT ; Toggle P1.0
 Wait		mov.w 	#250000, R15 ; Delay to R15
-L1			dec.w	#R15 ; Decrement R15
+L1			dec.w	R15 ; Decrement R15
 			jnz L1; Delay over?
 			jmp Mainloop; Again
 			
