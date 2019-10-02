@@ -1,5 +1,5 @@
 ;				PART 1
-SetupP1		bis.b 	#00h,	&P1DIR 	; P1.0 output
+SetupP1		bis.b 	#001h,	&P1DIR 	; P1.0 output
 Mainloop	xor.b	#001h,	&P1OUT 	; Toggle P1.0
 Wait		mov.w 	#250000,R15		; Delay to R15
 L1			dec.w	R15 			; Decrement R15
@@ -47,7 +47,7 @@ L1			dec.w	R15 ; Decrement R15
 SetupF		mov.b	#033h,	&P1DIR	; Enabling only the leds that'll light up
 			mov.b	#0CCh,	&P2DIR	; Enabling only the leds that'll light up
 			jmp 	Reset			; Start main loop
-SetupB		cmp.b	#033h,	&P1DIR	; Check if going backwards 
+SetupB		cmp.b	#033h,	&P2DIR	; Check if going backwards 
 			jz		SetupF			; If yes -> SetupF
 			mov.b	#0CCh,	&P1DIR	; Enabling only the leds that'll light up
 			mov.b	#033h,	&P2DIR	; Enabling only the leds that'll light up
@@ -59,7 +59,7 @@ Wait		mov.w 	#250000,R15 	; Delay to R15
 L1			dec.w	R15 			; Decrement R15
 			jnz 	L1				; Delay over?
 			cmp.b	#000h,	R14		; Check if p2out is FF (all lights are on)
-			jz 		SetupF			; Jump to reset
+			jz 		SetupB			; Jump to reset
 			jmp 	Main			; Again
 
 
