@@ -34,6 +34,8 @@ Setup3		mov.b	#0FFh,		&P1DIR
 
 Main		bit.b	#0002h,		&P2IFG
 			jnz 	increment
+			bit.b	#0004h,		&P2IFG
+			jnz		complement
 			jmp		Main
 
 section 	.data
