@@ -110,19 +110,18 @@ void Stock::sort() {
     }
 
     // If head node is not the smallest swap the head and min_node
-    Node* tmp_node;
-    Node* tmp_next;
     if (min_node != head){
-        tmp_node = head;
-        tmp_next = head->next;
+        if (prev_node != nullptr){
+            prev_node->next = min_node->next;
+        }
+        min_node->next = head;
         head = min_node;
-        min_node = tmp_node;
-        head->next = min_node->next;
-        min_node->next = tmp_next;
+        cout << "New Head: " << min_node << endl;
     }
-
+    cout << "MIN_SIZE: " << min_size << "    HEAD_NEXT: " << head->next << endl;
     // Bubble sort
     current_node = head->next;
+    prev_node = head;
     Node* next_node;
     if (current_node != nullptr){
         next_node = current_node->next;
@@ -130,18 +129,19 @@ void Stock::sort() {
         next_node = current_node;
     }
     while (next_node != nullptr){
-        while (current_node->next != nullptr){
+        while (current_node != next_node && current_node != nullptr){
+            cout << "Before swap: " << prev_node->size << ":" << current_node->size << ":" << next_node->size << endl;
             if (current_node->size > next_node->size){
-                tmp_node = current_node;
-                tmp_next = next_node->next;
-                current_node = next_node;
-                next_node = tmp_node;
                 current_node->next = next_node->next;
-                next_node->next = tmp_next;
+                next_node->next = current_node;
+                prev_node->next = next_node;
+                cout << "After swap: " << prev_node->size << ":" << current_node->size << ":" << next_node->size << endl;
             }
+            cout << "THEN I AM HERE: " << prev_node->size << ":" << current_node->size << ":" << next_node->size << endl;
             current_node = current_node->next;
         }
-        next_node = current_node->next;
+        prev_node = prev_node->next;
+        next_node = next_node->next;
     }
 }
 
