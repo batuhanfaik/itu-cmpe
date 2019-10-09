@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -51,6 +52,7 @@ void Stock::add_stock(int shoe_info) {
             Node* new_entry = new Node;
             new_entry->size = shoe_info;
             new_entry->quantity = 1;
+            new_entry->next = nullptr;
             end_node->next = new_entry;
         } else {    // There exists such shoe size, so update the quantity
             matching_node->quantity++;
@@ -114,7 +116,12 @@ void Stock::sort() {
 
     // Bubble sort
     current_node = head->next;
-    Node* next_node = current_node->next;
+    Node* next_node;
+    if (current_node != nullptr){
+        next_node = current_node->next;
+    } else {
+        next_node = current_node;
+    }
     while (next_node != nullptr){
         while (current_node->next != nullptr){
             if (current_node->size > next_node->size){
@@ -148,13 +155,21 @@ int main() {
     int no_of_operations = 0;
     ifstream stock_file("input.txt");
     if (stock_file.is_open()) {
-        while (getline(stock_file, shoe_info, ' ')) {
-            no_of_operations++;
+        while (getline(stock_file, shoe_info)) {
+            stringstream ss(shoe_info);
+            while (getline(ss, shoe_info, ' ')){
+                no_of_operations++;
+            }
         }
         operation_list = new int[no_of_operations];
         int index = 0;
-        while (getline(stock_file, shoe_info, ' ')) {
-            operation_list[index++] = stoi(shoe_info);
+        stock_file.clear();     // clear fail and eof bits
+        stock_file.seekg(0, ios::beg);      // back to the start!
+        while (getline(stock_file, shoe_info)) {
+            stringstream ss(shoe_info);
+            while (getline(ss, shoe_info, ' ')) {
+                operation_list[index++] = stoi(shoe_info);
+            }
         }
         stock_file.close();
     } else {
