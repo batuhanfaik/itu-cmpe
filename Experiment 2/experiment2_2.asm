@@ -40,7 +40,7 @@ Swap		cmp.b	#00000100b,	&P2OUT
 			jmp		ResetIFG
 Light3		mov.b	#00000100b,	&P2OUT
 			jmp		ResetIFG
-ResetIFG	bic.b	#00100000b,	&P1IES
+ResetIFG	bic.b	#00010000b,	&P1IES
 			jmp Main
 
 ;-------------------------------------------------------------------------------
