@@ -15,7 +15,7 @@ struct Stock {
     Node *head;
     void create();
     void add_stock(int);
-    void sort();
+//    void sort();
     void sell(int);
     void current_stock();
     void clear();
@@ -36,6 +36,7 @@ void Stock::add_stock(int shoe_info) {
         // Find a node with matching shoe_info
         Node* matching_node = head;
         Node* end_node = head->next;
+        Node* prev_node = nullptr;
         bool matching_node_found = false;
         while (!matching_node_found && matching_node != nullptr){
             if (matching_node->size == shoe_info){
@@ -49,11 +50,29 @@ void Stock::add_stock(int shoe_info) {
             }
         }
         if (!matching_node_found){  // Create a new shoe node
-            Node* new_entry = new Node;
-            new_entry->size = shoe_info;
-            new_entry->quantity = 1;
-            new_entry->next = nullptr;
-            end_node->next = new_entry;
+            // Look for the smallest shoe size that is smaller than current and insert new node before
+            matching_node = head;
+            while (matching_node != nullptr && matching_node->size < shoe_info) {
+                prev_node = matching_node;
+                matching_node = matching_node->next;
+            }
+            if (matching_node != nullptr) {
+                Node* new_entry = new Node;
+                new_entry->size = shoe_info;
+                new_entry->quantity = 1;
+                new_entry->next = matching_node;
+                if (prev_node == nullptr){      // If there is no prev node, this is the head node
+                    head = new_entry;
+                } else {
+                    prev_node->next = new_entry;
+                }
+            } else {    // Insert to the end because it's the largest shoe size
+                Node* new_entry = new Node;
+                new_entry->size = shoe_info;
+                new_entry->quantity = 1;
+                new_entry->next = nullptr;
+                end_node->next = new_entry;
+            }
         } else {    // There exists such shoe size, so update the quantity
             matching_node->quantity++;
         }
@@ -94,56 +113,56 @@ void Stock::current_stock() {
     }
 }
 
-void Stock::sort() {
-    int min_size = 99999;
-    Node* current_node = head;
-    Node* min_node = head;
-    Node* prev_node = nullptr;
-    // Find the smallest shoe size given
-    while (current_node != nullptr){
-        if (current_node->size < min_size){
-            min_size = current_node->size;
-            min_node = current_node;
-        }
-        prev_node = current_node;
-        current_node = current_node->next;
-    }
-
-    // If head node is not the smallest swap the head and min_node
-    if (min_node != head){
-        if (prev_node != nullptr){
-            prev_node->next = min_node->next;
-        }
-        min_node->next = head;
-        head = min_node;
-        cout << "New Head: " << min_node << endl;
-    }
-    cout << "MIN_SIZE: " << min_size << "    HEAD_NEXT: " << head->next << endl;
-    // Bubble sort
-    current_node = head->next;
-    prev_node = head;
-    Node* next_node;
-    if (current_node != nullptr){
-        next_node = current_node->next;
-    } else {
-        next_node = current_node;
-    }
-    while (next_node != nullptr){
-        while (current_node != next_node && current_node != nullptr){
-            cout << "Before swap: " << prev_node->size << ":" << current_node->size << ":" << next_node->size << endl;
-            if (current_node->size > next_node->size){
-                current_node->next = next_node->next;
-                next_node->next = current_node;
-                prev_node->next = next_node;
-                cout << "After swap: " << prev_node->size << ":" << current_node->size << ":" << next_node->size << endl;
-            }
-            cout << "THEN I AM HERE: " << prev_node->size << ":" << current_node->size << ":" << next_node->size << endl;
-            current_node = current_node->next;
-        }
-        prev_node = prev_node->next;
-        next_node = next_node->next;
-    }
-}
+//void Stock::sort() {
+//    int min_size = 99999;
+//    Node* next_node;
+//    Node* current_node = head;
+//    Node* min_node = head;
+//    Node* prev_node = nullptr;
+//    // Find the smallest shoe size given
+//    while (current_node != nullptr){
+//        if (current_node->size < min_size){
+//            min_size = current_node->size;
+//            min_node = current_node;
+//        }
+//        prev_node = current_node;
+//        current_node = current_node->next;
+//    }
+//
+//    // If head node is not the smallest swap the head and min_node
+//    if (min_node != head){
+//        if (prev_node != nullptr){
+//            prev_node->next = min_node->next;
+//        }
+//        min_node->next = head;
+//        head = min_node;
+//        cout << "New Head: " << min_node << endl;
+//    }
+//    cout << "MIN_SIZE: " << min_size << "    HEAD_NEXT: " << head->next << endl;
+//    // Bubble sort
+//    current_node = head->next;
+//    prev_node = head;
+//    if (current_node != nullptr){
+//        next_node = current_node->next;
+//    } else {
+//        next_node = current_node;
+//    }
+//    while (next_node != nullptr){
+//        while (current_node != next_node && current_node != nullptr){
+//            cout << "Before swap: " << prev_node->size << ":" << current_node->size << ":" << next_node->size << endl;
+//            if (current_node->size > next_node->size){
+//                current_node->next = next_node->next;
+//                next_node->next = current_node;
+//                prev_node->next = next_node;
+//                cout << "After swap: " << prev_node->size << ":" << current_node->size << ":" << next_node->size << endl;
+//            }
+//            cout << "THEN I AM HERE: " << prev_node->size << ":" << current_node->size << ":" << next_node->size << endl;
+//            current_node = current_node->next;
+//        }
+//        prev_node = prev_node->next;
+//        next_node = next_node->next;
+//    }
+//}
 
 void Stock::clear() {
     // Go through all the nodes and delete
@@ -174,7 +193,7 @@ int main() {
         operation_list = new int[no_of_operations];
         int index = 0;
         stock_file.clear();     // clear fail and eof bits
-        stock_file.seekg(0, ios::beg);      // back to the start!
+        stock_file.seekg(0, ios::beg);      // back to the start
         while (getline(stock_file, shoe_info)) {
             stringstream ss(shoe_info);
             while (getline(ss, shoe_info, ' ')) {
@@ -195,7 +214,6 @@ int main() {
         for (int i = 0; i < no_of_operations; ++i) {
             if (operation_list[i] > 0) {
                 my_stock.add_stock(operation_list[i]);
-                my_stock.sort();
             } else if (operation_list[i] < 0){
                 my_stock.sell(-operation_list[i]);
             } else if (operation_list[i] == 0){
