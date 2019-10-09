@@ -38,19 +38,27 @@ void Stock::add_stock(int shoe_info) {
     } else {
         // Find a node with matching shoe_info
         Node* matching_node = head;
-        bool node_found = false;
+        Node* end_node = head->next;
+        bool matching_node_found = false;
         int node_index = 0;
-        while (!node_found && matching_node != nullptr){
+        while (!matching_node_found && matching_node != nullptr){
             node_index++;
             if (matching_node->size == shoe_info){
-                node_found = true;
+                matching_node_found = true;
             } else {
+                // Find the end node for later use
+                if (matching_node->next == nullptr){
+                    end_node = matching_node;
+                }
                 matching_node = matching_node->next;
             }
         }
-        if (!node_found){
+        if (!matching_node_found){  // Create a new shoe node
             Node* new_entry = new Node;
-        } else {
+            new_entry->size = shoe_info;
+            new_entry->quantity = 1;
+            end_node->next = new_entry;
+        } else {    // There exists such shoe size, so update the quantity
             matching_node->quantity++;
         }
     }
