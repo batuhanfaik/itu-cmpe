@@ -27,21 +27,67 @@ StopWDT     mov.w   #WDTPW|WDTHOLD,&WDTCTL  ; Stop watchdog timer
 ;			Part 2
 SetupLED	mov.b	#000Ch,		&P2DIR
 			bic.b	#0020h,		&P1DIR
-			mov.b	#0020h,		&P1IE
-			bic.b	#0020h,		&P1IES
-			mov.b	#0000h,		&P1IFG
-			mov.b	#00000100b, &P2OUT
-Main		bit.b	#00010000b,	&P1IFG
-			jnz		Swap
-			jmp 	Main
-Swap		cmp.b	#00000100b,	&P2OUT
-			jz		Light3
 			mov.b	#00000100b,	&P2OUT
-			jmp		ResetIFG
-Light3		mov.b	#00000100b,	&P2OUT
-			jmp		ResetIFG
-ResetIFG	bic.b	#00010000b,	&P1IES
-			jmp Main
+ButtonLoop	bit.b	#00100000b,	&P1IN
+			jz		ButtonLoop
+			xor.b	#001100b,	&P2OUT
+PressLoop	bit.b	#00100000b,	&P1IN
+			jnz		PressLoop
+Wait		mov.w	#250000,	R15
+L1			dec.w	R15
+			jnz		L1
+			jmp		ButtonLoop
+
+;			Part 3
+SetupLED	mov.b	#00FFh,		&P1DIR
+			bic.b	#0002h,		&P2DIR
+			mov.b	#00000000b,	&P1OUT
+ButtonLoop	bit.b	#00000010b,	&P2IN
+			jz		ButtonLoop
+			inc.b	Counter
+			mov.b	Counter,	&P1OUT
+PressLoop	bit.b	#00000010b,	&P2IN
+			jnz		PressLoop
+Wait		mov.w	#250000,	R15
+L1			dec.w	R15
+			jnz		L1
+			jmp		ButtonLoop
+
+			.data
+Counter		.word	0
+
+;			Part 4
+SetupLED	mov.b	#00FFh,		&P1DIR
+			bic.b	#00001110b,	&P2DIR
+			mov.b	#00000000b,	&P1OUT
+ButtonLoop	bit.b	#00000010b,	&P2IN
+			jnz		Increment
+			bit.b	#00000100b,	&P2IN
+			jnz		Complement
+			bit.b	#00001000b,	&P2IN
+			jnz		Reset
+			jz		ButtonLoop
+Reset		mov.b	#0000h,		&P1OUT
+			mov.b	#0000h,		Counter
+			jmp		PressLoop
+Complement	xor.b	#0FFh,		Counter
+			mov.b	Counter,	&P1OUT
+			jmp		PressLoop
+Increment	inc.b	Counter
+			mov.b	Counter,	&P1OUT
+PressLoop	bit.b	#00000100b,	&P2IN
+			jnz		PressLoop
+			bit.b	#00000010b,	&P2IN
+			jnz		PressLoop
+			bit.b	#00001000b,	&P2IN
+			jnz		PressLoop
+Wait		mov.w	#250000,	R15
+L1			dec.w	R15
+			jnz		L1
+			jmp		ButtonLoop
+
+			.data
+Counter		.word	0
 
 ;-------------------------------------------------------------------------------
 ; Stack Pointer definition
