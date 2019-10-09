@@ -1,3 +1,8 @@
+/* @Author
+Student Name: Batuhan Faik Derinbay
+Student ID: 150180705
+Date: 10.10.2019 */
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -102,6 +107,9 @@ void Stock::sell(int shoe_info) {
     } else {    // There exists such shoe size, so update the quantity
         if (matching_node->quantity > 0) {
             matching_node->quantity--;
+        } else if (matching_node->quantity == 0) {
+            delete matching_node;
+            cout << "NO_STOCK" << endl;
         } else cout << "NO_STOCK" << endl;
     }
 }
