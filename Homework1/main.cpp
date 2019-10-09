@@ -87,7 +87,9 @@ void Stock::current_stock() {
     // Go through all of the nodes and print
     Node* matching_node = head;
     while (matching_node != nullptr){
-        cout << matching_node->size << ':' << matching_node->quantity << endl;
+        if (matching_node->quantity != 0){
+            cout << matching_node->size << ':' << matching_node->quantity << endl;
+        }
         matching_node = matching_node->next;
     }
 }
@@ -106,13 +108,18 @@ void Stock::sort() {
         prev_node = current_node;
         current_node = current_node->next;
     }
-    // Swap the head and min_node
-    Node* tmp_node = head;
-    Node* tmp_next = head->next;
-    head = min_node;
-    min_node = tmp_node;
-    head->next = min_node->next;
-    min_node->next = tmp_next;
+
+    // If head node is not the smallest swap the head and min_node
+    Node* tmp_node;
+    Node* tmp_next;
+    if (min_node != head){
+        tmp_node = head;
+        tmp_next = head->next;
+        head = min_node;
+        min_node = tmp_node;
+        head->next = min_node->next;
+        min_node->next = tmp_next;
+    }
 
     // Bubble sort
     current_node = head->next;
@@ -141,7 +148,10 @@ void Stock::sort() {
 void Stock::clear() {
     // Go through all the nodes and delete
     Node* matching_node = head;
-    while (matching_node != nullptr){
+    Node* tmp_next = head;
+    while (tmp_next != nullptr){
+        matching_node = tmp_next;
+        tmp_next = tmp_next->next;
         delete matching_node;
     }
 }
@@ -187,7 +197,7 @@ int main() {
                 my_stock.add_stock(operation_list[i]);
                 my_stock.sort();
             } else if (operation_list[i] < 0){
-                my_stock.sell(operation_list[i]);
+                my_stock.sell(-operation_list[i]);
             } else if (operation_list[i] == 0){
                 my_stock.current_stock();
             } else {
