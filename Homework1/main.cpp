@@ -12,15 +12,11 @@ struct Node {
 
 struct Stock {
     Node *head;
-
     void create();
-
     void add_stock(int);
-
+    void sort();
     void sell(int);
-
     void current_stock();
-
     void clear();
 };
 
@@ -40,9 +36,7 @@ void Stock::add_stock(int shoe_info) {
         Node* matching_node = head;
         Node* end_node = head->next;
         bool matching_node_found = false;
-        int node_index = 0;
         while (!matching_node_found && matching_node != nullptr){
-            node_index++;
             if (matching_node->size == shoe_info){
                 matching_node_found = true;
             } else {
@@ -62,13 +56,91 @@ void Stock::add_stock(int shoe_info) {
             matching_node->quantity++;
         }
     }
+}
 
-    Node* new_entry = new Node;
-    new_entry->size
+void Stock::sell(int shoe_info) {
+    // Find a node with matching shoe_info
+    Node* matching_node = head;
+    Node* prev_node = nullptr;
+    bool matching_node_found = false;
+    while (!matching_node_found && matching_node != nullptr){
+        if (matching_node->size == shoe_info){
+            matching_node_found = true;
+        } else {
+            // Find the end node for later use
+            prev_node = matching_node;
+            matching_node = matching_node->next;
+        }
+    }
+    if (!matching_node_found){  // If no node is available, there aren't any left in the stock
+        cout << "NO_STOCK" << endl;
+    } else {    // There exists such shoe size, so update the quantity
+        if (matching_node->quantity > 0){
+            matching_node->quantity--;
+        } else cout << "NO_STOCK" << endl;
+    }
+}
+
+void Stock::current_stock() {
+    // Go through all of the nodes and print
+    Node* matching_node = head;
+    while (matching_node != nullptr){
+        cout << matching_node->size << ':' << matching_node->quantity << endl;
+        matching_node = matching_node->next;
+    }
+}
+
+void Stock::sort() {
+    int min_size = 99999;
+    Node* current_node = head;
+    Node* min_node = head;
+    Node* prev_node = nullptr;
+    // Find the smallest shoe size given
+    while (current_node != nullptr){
+        if (current_node->size < min_size){
+            min_size = current_node->size;
+            min_node = current_node;
+        }
+        prev_node = current_node;
+        current_node = current_node->next;
+    }
+    // Swap the head and min_node
+    Node* tmp_node = head;
+    Node* tmp_next = head->next;
+    head = min_node;
+    min_node = tmp_node;
+    head->next = min_node->next;
+    min_node->next = tmp_next;
+
+    // Bubble sort
+    current_node = head->next;
+    Node* next_node = current_node->next;
+    while (next_node != nullptr){
+        while (current_node->next != nullptr){
+            if (current_node->size > next_node->size){
+                tmp_node = current_node;
+                tmp_next = next_node->next;
+                current_node = next_node;
+                next_node = tmp_node;
+                current_node->next = next_node->next;
+                next_node->next = tmp_next;
+            }
+            current_node = current_node->next;
+        }
+        next_node = current_node->next;
+    }
+}
+
+void Stock::clear() {
+    // Go through all the nodes and delete
+    Node* matching_node = head;
+    while (matching_node != nullptr){
+        delete matching_node;
+    }
 }
 
 int main() {
-    Stock my_stock;
+    Stock my_stock{};
 
     // Read the input file and append operations to a list
     string shoe_info;
@@ -98,15 +170,18 @@ int main() {
         for (int i = 0; i < no_of_operations; ++i) {
             if (operation_list[i] > 0) {
                 my_stock.add_stock(operation_list[i]);
+                my_stock.sort();
             } else if (operation_list[i] < 0){
-
+                my_stock.sell(operation_list[i]);
             } else if (operation_list[i] == 0){
-
+                my_stock.current_stock();
             } else {
                 cout << "Unknown operation" << endl;
             }
         }
     }
 
+    my_stock.clear();
+    delete[] operation_list;
     return 0;
 }
