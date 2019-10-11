@@ -1,11 +1,11 @@
-Welcome to itucsdbNN's documentation!
+Welcome to ITU Databees's documentation!
 =====================================
 
-:Team: Team Name
+:Team: ITUCSDB1922
 
 :Members:
 
-   * Member 1
+   * Batuhan Faik Derinbay
    * Member 2
    * Member 3
    * Member 4
