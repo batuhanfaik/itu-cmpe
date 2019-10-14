@@ -102,27 +102,39 @@ void Stock::sell(int shoe_info) {
             matching_node = matching_node->next;
         }
     }
+    ofstream outfile;
+    outfile.open("output.txt", ios_base::app);
     if (!matching_node_found) {  // If no node is available, there aren't any left in the stock
         cout << "NO_STOCK" << endl;
+        outfile << "NO_STOCK" << endl;
     } else {    // There exists such shoe size, so update the quantity
         if (matching_node->quantity > 0) {
             matching_node->quantity--;
         } else if (matching_node->quantity == 0) {
             delete matching_node;
             cout << "NO_STOCK" << endl;
-        } else cout << "NO_STOCK" << endl;
+            outfile << "NO_STOCK" << endl;
+        } else {
+            cout << "NO_STOCK" << endl;
+            outfile << "NO_STOCK" << endl;
+        }
     }
+    outfile.close();
 }
 
 void Stock::current_stock() {
     // Go through all of the nodes and print
     Node *matching_node = head;
+    ofstream outfile;
+    outfile.open("output.txt", ios_base::app);
     while (matching_node != nullptr) {
         if (matching_node->quantity != 0) {
             cout << matching_node->size << ':' << matching_node->quantity << endl;
+            outfile << matching_node->size << ':' << matching_node->quantity << endl;
         }
         matching_node = matching_node->next;
     }
+    outfile.close();
 }
 
 void Stock::clear() {
@@ -166,6 +178,8 @@ int main() {
         cout << "Unable to open file";
         operation_list = nullptr;
     }
+    // Delete the existing output.txt file so the program won't append at the end of it
+    remove("./output.txt");
 
     my_stock.create();
 
