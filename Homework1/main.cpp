@@ -148,14 +148,14 @@ void Stock::clear() {
     }
 }
 
-int main() {
+int main(int argc, char** argv) {
     Stock my_stock{};
-
+    string input_file_name = argv[1];
     // Read the input file and append operations to a list
     string shoe_info;
     int *operation_list;
     int no_of_operations = 0;
-    ifstream stock_file("input.txt");
+    ifstream stock_file(input_file_name);
     if (stock_file.is_open()) {
         while (getline(stock_file, shoe_info)) {
             stringstream ss(shoe_info);
