@@ -30,7 +30,7 @@ StopWDT     mov.w   #WDTPW|WDTHOLD,&WDTCTL  ; Stop watchdog timer
 			mov		#2, R6
 			mov		#2, R7
 
-main		cmp		#0, 100(R4)
+main		cmp		#0, 98(R4)
 			jne		exit
 			mov		R6, R10
 			mov		R7, R11
@@ -45,6 +45,7 @@ append		cmp		#0 ,R13
 			jmp		main
 
 addition	inc		R7
+			mov		R7,	R11
 			jmp		modulus
 
 add_prime   mov		R6, 0(R5)
@@ -54,11 +55,11 @@ add_prime   mov		R6, 0(R5)
 			jmp		main
 
 modulus		mov		R11, R12
-			mov		R12, R13
+			mov		R10, R13
 			mov 	R10, R8
 
-cLEthan		rra		R8
-			cmp		R12, R8
+			rra		R8
+cLEthan		cmp		R12, R8
 			jge		multiply
 			jmp		bLEthan
 
@@ -81,8 +82,6 @@ exit		jmp		exit
 
 			.data
 primes		.space	100
-array1		.space	100
-array2		.space	100
 
 ;-------------------------------------------------------------------------------
 ; Stack Pointer definition

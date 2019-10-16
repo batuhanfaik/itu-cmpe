@@ -29,10 +29,10 @@ initial		mov		#151, R10
 
 main		mov		R11, R12
 			mov		R10, R13
-			mov 	R10, R4
+			mov 	R10, R9
 
-cLEthan		rra		R4
-			cmp		R12, R4
+			rra		R4
+cLEthan		cmp		R12, R9
 			jge		multiply
 			jmp		bLEthan
 
