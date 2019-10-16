@@ -153,8 +153,8 @@ void Stock::clear() {
 
 int main(int argc, char** argv) {
     Stock my_stock{};
-//    string input_file_name = argv[1];
-    string input_file_name = "input2.txt";
+    string input_file_name = argv[1];
+//    string input_file_name = "input2.txt";
     // Read the input file and append operations to a list
     string shoe_info;
     int *operation_list;
