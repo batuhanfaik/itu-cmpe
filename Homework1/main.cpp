@@ -111,6 +111,9 @@ void Stock::sell(int shoe_info) {
         if (matching_node->quantity > 0) {
             matching_node->quantity--;
         } else if (matching_node->quantity == 0) {
+            if (prev_node != nullptr){
+                prev_node->next = matching_node->next;
+            } else head = matching_node->next;
             delete matching_node;
             cout << "NO_STOCK" << endl;
             outfile << "NO_STOCK" << endl;
@@ -150,7 +153,8 @@ void Stock::clear() {
 
 int main(int argc, char** argv) {
     Stock my_stock{};
-    string input_file_name = argv[1];
+//    string input_file_name = argv[1];
+    string input_file_name = "input2.txt";
     // Read the input file and append operations to a list
     string shoe_info;
     int *operation_list;
