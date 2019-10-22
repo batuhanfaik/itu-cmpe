@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Person page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../static/css/bootstrap.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div class="container">
+    <h1>This Person</h1>
+    <br>
+    {% if person %}
+        <table class="table is-striped is-fullwidth">
+            <tr>
+                <td>
+                    {{ person.name }} {{ person.surname }}
+                </td>
+            </tr>
+        </table>
+    {% endif %}
+</div>
+</body>
+</html>

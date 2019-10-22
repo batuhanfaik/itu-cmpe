@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>People page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../static/css/bootstrap.css" rel="stylesheet" media="screen">
+</head>
+<body>
+<div class="container">
+    <h1>People List</h1>
+    <br>
+    {% if people %}
+        <table class="table is-striped is-fullwidth">
+            {% for tr_id, person in people %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for("person_page", tr_id=tr_id) }}">{{ tr_id }}</a>
+                    </td>
+                    <td>
+                        {{ person.name }} {{ person.surname }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+</div>
+</body>
+</html>
