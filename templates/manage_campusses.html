@@ -1,0 +1,49 @@
+<html>
+    <head>
+
+    </head>
+    <form action="" method="POST" name="addcampus">
+        <input name="campusname">
+        <input name="campuslocation">
+        <input type="submit" id="add_campus" name="add_campus" value="Add Campus">
+    </form>
+    <br><br>
+    <form action="" method="POST" name="deletecampus">
+        <input name="campusid" value="Campus id">
+        <input type="submit" id="delete_campus" name='delete_campus' value="Delete Campus">
+    </form>
+    <br><br>
+    <form action="" method="POST" name="editcampus">
+        <input name="campusname">
+        <input name="campuslocation">
+        <input name="campusid" value="Campus id">
+        <input type="submit" id="edit_campus" name="edit_campus" value="Edit Campus">
+    </form>
+
+    <br>
+    <body>
+        {% block title %}Campusses List{% endblock %}
+        {% block content %}
+        {% if campusses %}
+        <table class="table-responsive">
+            <thead>
+                <tr>
+                    <th>Campus Name</th>
+                    <th>Campus Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in (campusses) %}
+                <tr>
+                   <td>{{i.name}}</td>
+                   <td>{{i.location}}</td>
+                </tr>
+                {% endfor %}                
+
+            </tbody>
+        </table>
+        {% endif %}
+        {% endblock %}
+    </body>
+
+</html>
