@@ -31,7 +31,7 @@ main		mov		R11, R12
 			mov		R10, R13
 			mov 	R10, R9
 
-			rra		R4
+			rra		R9
 cLEthan		cmp		R12, R9
 			jge		multiply
 			jmp		bLEthan
