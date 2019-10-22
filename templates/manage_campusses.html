@@ -2,45 +2,45 @@
     <head>
 
     </head>
-    <form action="" method="POST" name="addcampus">
-        <input name="campusname">
-        <input name="campuslocation">
+    <form action="" method="POST" name="addCampus">
+        <input name="campus_name">
+        <input name="campus_location">
         <input type="submit" id="add_campus" name="add_campus" value="Add Campus">
     </form>
     <br><br>
-    <form action="" method="POST" name="deletecampus">
-        <input name="campusid" value="Campus id">
+    <form action="" method="POST" name="deleteCampus">
+        <input name="campus_id" value="Campus id">
         <input type="submit" id="delete_campus" name='delete_campus' value="Delete Campus">
     </form>
     <br><br>
-    <form action="" method="POST" name="editcampus">
-        <input name="campusname">
-        <input name="campuslocation">
-        <input name="campusid" value="Campus id">
+    <form action="" method="POST" name="editCampus">
+        <input name="campus_name">
+        <input name="campus_location">
+        <input name="campus_id" value="Campus id">
         <input type="submit" id="edit_campus" name="edit_campus" value="Edit Campus">
     </form>
     <br><br>
 
-    <form action="" method="POST" name="addfaculty">
-        <input name="campusid">
-        <input name="facultyName">
-        <input name="facultyShortenedName">
+    <form action="" method="POST" name="addFaculty">
+        <input name="campus_id">
+        <input name="faculty_name">
+        <input name="faculty_shortened_name">
         <input type="submit" id="add_faculty" name="add_faculty" value="Add Faculty">
     </form>
     <br><br>
 
-    <form action="" method="POST" name="editfaculty">
-        <input name="facultyName">
-        <input name="facultyShortenedName">
-        <input name="campusid" value="Campus id">
-        <input name="facultyid" value="Faculty id">
+    <form action="" method="POST" name="editFaculty">
+        <input name="faculty_name">
+        <input name="faculty_shortened_name">
+        <input name="campus_id" value="Campus id">
+        <input name="faculty_id" value="Faculty id">
         <input type="submit" id="edit_faculty" name="edit_faculty" value="Edit Faculty">
     </form>
     <br><br>
 
     <form action="" method="POST" name="deletefaculty">
-        <input name="campusid" value="Campus id">
-        <input name="facultyid" value="Faculty id">
+        <input name="campus_id" value="Campus id">
+        <input name="faculty_id" value="Faculty id">
         <input type="submit" id="delete_faculty" name='delete_faculty' value="Delete Faculty">
     </form>  
     <br>
@@ -71,8 +71,8 @@
                             <tbody>
                                 {% for j in (i.faculties) %}
                                 <tr>
-                                    <td>{{j.facultyName}}</td>
-                                    <td>{{j.facultyShortenedName}}</td>
+                                    <td>{{j.faculty_name}}</td>
+                                    <td>{{j.faculty_shortened_name}}</td>
                                 </tr>
                                 {% endfor %}                
                             </tbody>

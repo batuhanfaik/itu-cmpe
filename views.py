@@ -10,41 +10,41 @@ def manage_campusses():
         return render_template("manage_campusses.html", campusses=campusses)
     else:
         if 'add_campus' in request.form:
-            campusname = request.form["campusname"]
-            campuslocation = request.form["campuslocation"] 
-            db.add_campus(Campus(campusname,campuslocation,[]))  
+            campus_name = request.form["campus_name"]
+            campus_location = request.form["campus_location"] 
+            db.add_campus(Campus(campus_name,campus_location,[]))  
         elif 'edit_campus' in request.form:
-            campusid = request.form["campusid"]
-            campusname = request.form["campusname"]
-            campuslocation = request.form["campuslocation"] 
-            editedcampus = Campus(campusname,campuslocation,[])
-            editedcampus.__setcampusid__(int(campusid))   
-            db.edit_campus(editedcampus)      
+            campus_id = request.form["campus_id"]
+            campus_name = request.form["campus_name"]
+            campus_location = request.form["campus_location"] 
+            edited_campus = Campus(campus_name,campus_location,campusses.get(campus_id).faculties)
+            edited_campus.set_campus_id(int(campus_id))   
+            db.edit_campus(edited_campus)      
         elif 'delete_campus' in request.form:
             db = current_app.config["db"]
             campusses = db.get_campusses()
-            campusid = request.form["campusid"]
-            db.delete_campus(int(campusid))
+            campus_id = request.form["campus_id"]
+            db.delete_campus(int(campus_id))
         elif 'add_faculty' in request.form:
             db = current_app.config["db"]
             campusses = db.get_campusses()    
-            campusid = request.form["campusid"]
-            facultyName = request.form["facultyName"]
-            facultyShortenedName = request.form["facultyShortenedName"]
-            db.add_faculty(int(campusid),Faculty(facultyName,facultyShortenedName))
+            campus_id = request.form["campus_id"]
+            faculty_name = request.form["faculty_name"]
+            faculty_shortened_name = request.form["faculty_shortened_name"]
+            db.add_faculty(int(campus_id),Faculty(faculty_name,faculty_shortened_name))
         elif 'delete_faculty' in request.form:
             db = current_app.config["db"]
             campusses = db.get_campusses()
-            campusid = request.form["campusid"]
-            facultyid = request.form["facultyid"]
-            db.delete_faculty(int(campusid),int(facultyid))
+            campus_id = request.form["campus_id"]
+            faculty_id = request.form["faculty_id"]
+            db.delete_faculty(int(campus_id),int(faculty_id))
         elif 'edit_faculty' in request.form:
-            campusid = request.form["campusid"]
-            facultyid = request.form["facultyid"]
-            facultyName = request.form["facultyName"]
-            facultyShortenedName = request.form["facultyShortenedName"] 
-            editedfaculty = Faculty(facultyName,facultyShortenedName)
-            editedfaculty.__setfacultyid__(int(facultyid))   
-            db.edit_faculty(editedfaculty)   
+            campus_id = request.form["campus_id"]
+            faculty_id = request.form["faculty_id"]
+            faculty_name = request.form["faculty_name"]
+            faculty_shortened_name = request.form["faculty_shortened_name"] 
+            edited_faculty = Faculty(faculty_name,faculty_shortened_name)
+            edited_faculty.set_faculty_id(int(faculty_id))   
+            db.edit_faculty(edited_faculty)   
 
         return redirect(url_for("manage_campusses", campusses=campusses))
