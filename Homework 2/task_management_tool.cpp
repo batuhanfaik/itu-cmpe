@@ -89,8 +89,6 @@ void WorkPlan::add(Task *task) {
     new_task->priority = task->priority;
     task = new_task;
 
-    // TODO: Check for priorities before insertion
-
     // Check if there exists a head
     if (!head) {
         head = task;
@@ -119,7 +117,7 @@ void WorkPlan::add(Task *task) {
                 head->previous = task->previous;
             }
         } else {    // There exists a day with previous tasks
-            // Look for the time opening
+            // Look for the time opening (as failsafe as possible)
             Task *prev_ctpart = nullptr;
             Task *tmp = current_task;
             while (tmp){
@@ -132,30 +130,37 @@ void WorkPlan::add(Task *task) {
                 tmp = tmp->counterpart;
             }
 
-            if (current_task->time < 16) {   // Insert the task here, there is time available today
-                if (prev_ctpart){   // If there is a ctpart previously it's not the first entry of the day
-                    Task *tmp_ctpart = prev_ctpart->counterpart;
-                    prev_ctpart->counterpart = task;
-                    task->counterpart = tmp_ctpart;
-//                    Task *tmp_ctpart = current_task->counterpart;
-//                    current_task->counterpart = task;
-//                    task->counterpart = tmp_ctpart;
-                } else {    // It's the first entry of the day
-                    Task *tmp_prev = current_task->previous;
-                    Task *tmp_next = current_task->next;
-                    tmp_prev->next = task;
-                    tmp_next->previous = task;
-                    task->next = current_task->next;
-                    task->previous = current_task->previous;
-                    task->counterpart = current_task;
-                    current_task->next = nullptr;
-                    current_task->previous = nullptr;
+            if (current_task->time <= 16) {   // Insert the task here, there is time available today
+                // If there is an existing entry with higher priority delay it
+                if (current_task->time == task->time && current_task->priority >= task->priority) {
+                    checkAvailableNextTimesFor(task);
+                } else {
+                    if (prev_ctpart) {   // If there is a ctpart previously it's not the first entry of the day
+                        Task *tmp_ctpart = prev_ctpart->counterpart;
+                        prev_ctpart->counterpart = task;
+                        task->counterpart = tmp_ctpart;
+                    } else {    // It's the first entry of the day
+                        Task *tmp_prev = current_task->previous;
+                        Task *tmp_next = current_task->next;
+                        tmp_prev->next = task;
+                        tmp_next->previous = task;
+                        task->next = current_task->next;
+                        task->previous = current_task->previous;
+                        task->counterpart = current_task;
+                        current_task->next = nullptr;
+                        current_task->previous = nullptr;
+                    }
+
+                    // It's the first time of the first day, we found a new head
+                    if (task->day == head->day && task->time < head->time) {
+                        head = task;
+                        head->next = task->next;
+                        head->previous = task->previous;
+                    }
                 }
-                // It's the first time of the first day, we found a new head
-                if (task->day == head->day && task->time < head->time) {
-                    head = task;
-                    head->next = task->next;
-                    head->previous = task->previous;
+                if (current_task->time == task->time &&
+                    task->priority > current_task->priority) {  // If there is a task with less priority delay it
+                    checkAvailableNextTimesFor(current_task);
                 }
             } else {    // Move it to the next day
                 checkAvailableNextTimesFor(task);
@@ -166,11 +171,83 @@ void WorkPlan::add(Task *task) {
 
 Task *WorkPlan::getTask(int day, int time) {
     //THIS FUNCTION WILL BE CODED BY YOU
+    Task *search_task = head;
+
+    while (search_task->day != day) {    // Find the day
+        search_task = search_task->next;
+        if (search_task == head) {   // If it loops back to the head no day found
+            return nullptr;
+        }
+    }
+    while (search_task->time != time) {  // Find the time
+        search_task = search_task->counterpart;
+        if (!search_task) {  // If it reaches the end of counterparts no time found
+            return nullptr;
+        }
+    }
+    // Return the searched task
+    return search_task;
 }
 
 
 void WorkPlan::checkAvailableNextTimesFor(Task *delayed) {
     //THIS FUNCTION WILL BE CODED BY YOU
+    int available_day = delayed->day;
+    int available_time = delayed->time;
+    int last_day = head->previous->day;
+    bool task_is_delayed = false;
+    Task *day_holder = head;
+    while (day_holder->day != delayed->day) {
+        day_holder = day_holder->next;
+    }
+
+    while (available_day <= last_day && !task_is_delayed) {
+        while (available_time >= 8 && available_time <= 16 && !task_is_delayed) {
+            if (getTask(available_day, available_time)) {    // If there exists a task in the given time and day
+                available_time++;
+            } else {    // Delay the task
+                if (available_time == 8) {   // Insert as first task of the day
+                    int first_time_of_day = 9;
+                    Task *insert_before = nullptr;
+                    while (first_time_of_day <= 16 and !insert_before) {     // Coding as failsafe as possible
+                        insert_before = getTask(available_day, first_time_of_day);
+                        first_time_of_day++;
+                    }
+                    if (insert_before) { // If there is a task to insert before (theoretically there should be) insert
+                        delayed->previous = insert_before->previous;
+                        delayed->next = insert_before->next;
+                        delayed->counterpart = insert_before;
+                        delayed->previous->next = delayed;
+                        delayed->next->previous = delayed;
+                        delayed->day = available_day;
+                        delayed->time = available_time;
+                    } else {
+                        cout << "There are no tasks on this day!" << endl;
+                    }
+
+                } else if (available_time <= 16) {   // Insert as counterpart of an existing task
+                    Task *insert_after = getTask(available_day, (available_time - 1));
+                    Task *tmp_ctpart = insert_after->counterpart;
+                    if (tmp_ctpart == delayed) {     // Trying to add a higher priority task
+                        tmp_ctpart = delayed->counterpart;
+                    }
+                    insert_after->counterpart = delayed;
+                    delayed->counterpart = tmp_ctpart;
+                    delayed->day = available_day;
+                    delayed->time = available_time;
+                }
+
+                task_is_delayed = true;
+            }
+        }
+        available_time = 8;
+        available_day = day_holder->next->day;
+        day_holder = day_holder->next;
+    }
+
+    if (!task_is_delayed) {
+        cout << "No available time in the schedule!" << endl;
+    }
 }
 
 void WorkPlan::delayAllTasksOfDay(int day) {
