@@ -76,8 +76,8 @@ INIT_STATEMENTS = [
         language CHAR(2) NOT NULL,
         classroom_id INT NOT NULL,
         faculty_id INT NOT NULL,
-        FOREIGN KEY classroom_id REFERENCES CLASSROOM (classroom_id),
-        FOREIGN KEY faculty_id REFERENCES DEPARTMENT (id),
+        FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (classroom_id),
+        FOREIGN KEY (faculty_id) REFERENCES DEPARTMENT (id)
     );
 
     CREATE TABLE IF NOT EXISTS INSTRUCTOR(
@@ -89,9 +89,10 @@ INIT_STATEMENTS = [
         masters VARCHAR(80),
         doctorates VARCHAR(80),
         room_id CHAR(4),
-        FOREIGN KEY tr_id REFERENCES PEOPLE (tr_id),
-        FOREIGN KEY classroom_id REFERENCES CLASSROOM (classroom_id),
-        FOREIGN KEY faculty_id REFERENCES DEPARTMENT (id),
+        FOREIGN KEY (tr_id) REFERENCES PEOPLE (tr_id),
+        FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (classroom_id),
+        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
+        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id)
     );
 
     CREATE TABLE IF NOT EXISTS CLASSROOM(
@@ -103,7 +104,16 @@ INIT_STATEMENTS = [
         renewed BOOLEAN DEFAULT false,
         board_count CHAR(1),
         air_conditioner BOOLEAN DEFAULT false,
-        FOREIGN KEY faculty_id REFERENCES FACULTY (id),
+        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id)
+    );
+
+    CREATE TABLE IF NOT EXISTS TAKEN_COURSES(
+        id INT PRIMARY KEY,
+        student_id BIGINT NOT NULL,
+        crn CHAR(6) NOT NULL,
+        datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (student_id) REFERENCES STUDENT (tr_id),
+        FOREIGN KEY (crn) REFERENCES COURSE (crn) 
     );
     """
 
