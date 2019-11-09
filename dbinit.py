@@ -10,6 +10,21 @@ INIT_STATEMENTS = [
         person_category SMALLINT NOT NULL
     );
     
+
+    CREATE TABLE IF NOT EXISTS COURSE (
+        crn CHAR(6) NOT NULL PRIMARY KEY,
+        start_time TIME NOT NULL,
+        end_time TIME NOT NULL,
+        day VARCHAR(9) NOT NULL,
+        capacity INT NOT NULL,
+        enrolled INT NOT NULL,
+        credits REAL NOT NULL,
+        language CHAR(2) NOT NULL,
+        classroom_id INT NOT NULL,
+        faculty_id INT NOT NULL,
+        FOREIGN KEY classroom_id REFERENCES CLASSROOM,
+        FOREIGN KEY faculty_id REFERENCES DEPARTMENT,
+    );
     """
 
 ]
