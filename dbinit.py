@@ -22,8 +22,22 @@ INIT_STATEMENTS = [
         language CHAR(2) NOT NULL,
         classroom_id INT NOT NULL,
         faculty_id INT NOT NULL,
-        FOREIGN KEY classroom_id REFERENCES CLASSROOM,
-        FOREIGN KEY faculty_id REFERENCES DEPARTMENT,
+        FOREIGN KEY classroom_id REFERENCES CLASSROOM (classroom_id),
+        FOREIGN KEY faculty_id REFERENCES DEPARTMENT (id),
+    );
+
+    CREATE TABLE IF NOT EXISTS INSTRUCTOR(
+        tr_id BIGINT NOT NULL PRIMARY KEY,
+        department_id INT NOT NULL,
+        faculty_id INT NOT NULL,
+        specialization VARCHAR(80),
+        bachelors VARCHAR(80),
+        masters VARCHAR(80),
+        doctorates VARCHAR(80),
+        room_id CHAR(4),
+        FOREIGN KEY tr_id REFERENCES PEOPLE (tr_id),
+        FOREIGN KEY classroom_id REFERENCES CLASSROOM (classroom_id),
+        FOREIGN KEY faculty_id REFERENCES DEPARTMENT (id),
     );
     """
 
