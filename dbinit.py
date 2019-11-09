@@ -77,7 +77,7 @@ INIT_STATEMENTS = [
         classroom_id INT NOT NULL,
         faculty_id INT NOT NULL,
         FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (classroom_id),
-        FOREIGN KEY (faculty_id) REFERENCES DEPARTMENT (id)
+        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id)
     );
 
     CREATE TABLE IF NOT EXISTS INSTRUCTOR(
