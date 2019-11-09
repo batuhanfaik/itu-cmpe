@@ -1,7 +1,20 @@
 import psycopg2 as dbapi2
 
-INIT_STATEMENTS = [
+CLEAR_SCHEMA = [
     """
+    create table if not exists test ( );
+    
+    DROP SCHEMA public CASCADE;
+    CREATE SCHEMA public;
+    
+    GRANT ALL ON SCHEMA public TO postgres;
+    GRANT ALL ON SCHEMA public TO public;
+    """
+
+]
+
+INIT_STATEMENTS = [
+    """    
     CREATE TABLE IF NOT EXISTS PEOPLE (
         tr_id BIGINT PRIMARY KEY NOT NULL,
         name VARCHAR(40) NOT NULL,
@@ -124,6 +137,8 @@ INIT_STATEMENTS = [
 def initialize(url):
     with dbapi2.connect(url) as connection:
         cursor = connection.cursor()
+        for statement in CLEAR_SCHEMA:
+            cursor.execute(statement)
         for statement in INIT_STATEMENTS:
             cursor.execute(statement)
         cursor.close()
