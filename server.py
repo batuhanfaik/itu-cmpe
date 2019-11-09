@@ -24,9 +24,9 @@ def init_db():
     db.add_person(Person("11111111110", "Ahmet", "Mehmet"))
     return db
 
-
+app = create_app()
 if __name__ == "__main__":
-    app = create_app()
+    # app = create_app()
     host = app.config.get("HOST")
     port = app.config.get("PORT")
     debug = app.config.get("DEBUG")
