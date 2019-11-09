@@ -39,6 +39,18 @@ INIT_STATEMENTS = [
         FOREIGN KEY classroom_id REFERENCES CLASSROOM (classroom_id),
         FOREIGN KEY faculty_id REFERENCES DEPARTMENT (id),
     );
+
+    CREATE TABLE IF NOT EXISTS CLASSROOM(
+        classroom_id INT NOT NULL PRIMARY KEY,
+        capacity INT NOT NULL,
+        has_projection BOOLEAN NOT NULL,
+        door_number CHAR(4) NOT NULL,
+        floor VARCHAR(2) NOT NULL,
+        renewed BOOLEAN DEFAULT false,
+        board_count CHAR(1),
+        air_conditioner BOOLEAN DEFAULT false,
+        FOREIGN KEY faculty_id REFERENCES FACULTY (id),
+    );
     """
 
 ]
