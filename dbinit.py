@@ -16,7 +16,8 @@ INIT_STATEMENTS = [
         birth_city varchar(50) null,
         birth_date date not null,
         id_reg_city varchar(50) not null,
-        id_reg_district varchar(50) not null 
+        id_reg_district varchar(50) not null,
+        unique (tr_id, email)
     );
     
     CREATE domain credit as real check (
@@ -32,7 +33,8 @@ INIT_STATEMENTS = [
         grade smallint not null default 1,
         gpa real not null default 0,
         credits_taken credit not null,
-        minor boolean not null default false
+        minor boolean not null default false,
+        unique (student_id)
     );
     
     CREATE TABLE IF NOT EXISTS ASSISTANT (
@@ -46,10 +48,11 @@ INIT_STATEMENTS = [
         research_area varchar(100) not null,
         office_day varchar(9) null default 'None',
         office_hour_start time null,
-        office_hour_end time null
+        office_hour_end time null,
+        unique (assistant_id)
     );
     
-    CREATE TABLE IF NOT EXISTS PEOPLE (
+    CREATE TABLE IF NOT EXISTS COURSES_ASSISTED (
         crn char(6) primary key references COURSE(crn) not null,
         assistant_id bigint references ASSISTANT(assistant_id) not null,
         room_id int references CLASSROOM(classroom_id) not null,
