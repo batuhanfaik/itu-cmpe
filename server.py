@@ -6,7 +6,8 @@ from person import Person
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path="/")
+
     app.config.from_object("settings")
     app.add_url_rule("/", view_func=views.landing_page, methods=['GET', 'POST'])
     app.add_url_rule("/login", view_func=views.login_page, methods=['GET', 'POST'])
@@ -24,9 +25,10 @@ def init_db():
     db.add_person(Person("11111111110", "Ahmet", "Mehmet"))
     return db
 
+
 app = create_app()
+
 if __name__ == "__main__":
-    # app = create_app()
     host = app.config.get("HOST")
     port = app.config.get("PORT")
     debug = app.config.get("DEBUG")
