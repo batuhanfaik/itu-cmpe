@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>ITU - {% block title %} {% endblock %}</title>
+
+<!-- Add boottrap-->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="{{url_for('static', filename='logo.jpeg') }}" width="30"
+            class="d-inline-block align-left" alt="ituLogo">
+        </a>
+        <a class="navbar-brand" class="text-center" href="#">
+                ITU DataBees
+            </a>
+    </nav>
+    {% block body %} {% endblock %}
+</body>
+</html>
