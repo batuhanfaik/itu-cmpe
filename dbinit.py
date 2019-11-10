@@ -131,7 +131,7 @@ INIT_STATEMENTS = [
     );
 
     CREATE TABLE IF NOT EXISTS CAMPUS(
-        id		        INT			NOT NULL AUTO_INCREMENT,
+        id		        SERIAL INT			NOT NULL,
         name 		    VARCHAR(25)	NOT NULL,
         address 	    VARCHAR(40)	NOT NULL,
         city 		    VARCHAR(25),
@@ -140,7 +140,7 @@ INIT_STATEMENTS = [
     );
 
     CREATE TABLE IF NOT EXISTS FACULTY(
-        id				    INT			NOT NULL AUTO_INCREMENT,
+        id				    SERIAL INT			NOT NULL,
         name 				VARCHAR(40)	NOT NULL,
         shortened_name 		VARCHAR(6)	NOT NULL,
         address 			VARCHAR(40),
@@ -150,7 +150,7 @@ INIT_STATEMENTS = [
     );
 
     CREATE TABLE IF NOT EXISTS DEPARTMENT(
-        id				    INT			NOT NULL AUTO_INCREMENT,
+        id				    SERIAL INT			NOT NULL,
         faculty_id			INT			NOT NULL,
         name 				VARCHAR(40)	NOT NULL,
         shortened_name 		VARCHAR(6)	NOT NULL,
