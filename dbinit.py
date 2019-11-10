@@ -158,7 +158,7 @@ INIT_STATEMENTS = [
         budget			 	INT,
         foundation_date 	DATE,
         phone_number		CHAR(11),
-        PRIMARY KEY(id)
+        PRIMARY KEY(id),
         FOREIGN KEY(faculty_id) REFERENCES FACULTY(id)
     );
 
@@ -166,7 +166,7 @@ INIT_STATEMENTS = [
         tr_id           BIGINT          NOT NULL,
         faculty_id 	    INT             NOT NULL, 
         phone_number 	VARCHAR(40)	    NOT NULL,
-        FOREIGN KEY (tr_id) REFERENCES PEOPLE (tr_id)
+        FOREIGN KEY(tr_id) REFERENCES PEOPLE (tr_id)
     );
 
 
