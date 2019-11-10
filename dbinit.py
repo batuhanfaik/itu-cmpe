@@ -129,6 +129,47 @@ INIT_STATEMENTS = [
         FOREIGN KEY (student_id) REFERENCES STUDENT (tr_id),
         FOREIGN KEY (crn) REFERENCES COURSE (crn) 
     );
+
+    CREATE TABLE IF NOT EXISTS CAMPUS(
+        id		        INT			NOT NULL AUTO_INCREMENT,
+        name 		    VARCHAR(25)	NOT NULL,
+        address 	    VARCHAR(40)	NOT NULL,
+        city 		    VARCHAR(25),
+        size 		    INT,
+        PRIMARY KEY(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS FACULTY(
+        id				    INT			NOT NULL AUTO_INCREMENT,
+        name 				VARCHAR(40)	NOT NULL,
+        shortened_name 		VARCHAR(6)	NOT NULL,
+        address 			VARCHAR(40),
+        foundation_date 	DATE,
+        phone_number		CHAR(11),
+        PRIMARY KEY(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS DEPARTMENT(
+        id				    INT			NOT NULL AUTO_INCREMENT,
+        faculty_id			INT			NOT NULL,
+        name 				VARCHAR(40)	NOT NULL,
+        shortened_name 		VARCHAR(6)	NOT NULL,
+        block_number 		CHAR(1),
+        budget			 	INT,
+        foundation_date 	DATE,
+        phone_number		CHAR(11),
+        PRIMARY KEY(id)
+        FOREIGN KEY(faculty_id) REFERENCES FACULTY(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS ADMINISTRATOR(
+        tr_id           BIGINT          NOT NULL,
+        faculty_id 	    INT             NOT NULL, 
+        phone_number 	VARCHAR(40)	    NOT NULL,
+        FOREIGN KEY (tr_id) REFERENCES PEOPLE (tr_id)
+    );
+
+
     """
 
 ]
