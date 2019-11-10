@@ -200,6 +200,33 @@ void WorkPlan::checkAvailableNextTimesFor(Task *delayed) {
     while (day_holder->day != delayed->day) {
         day_holder = day_holder->next;
     }
+    // If the head is being delayed make sure to move the head
+    if (delayed == head) {
+        if (head->counterpart) {
+            head = head->counterpart;
+        } else if (head->next) {
+            head = head->next;
+        }
+    }
+
+    // If the task being delay is the first task of a day
+    if ((delayed->time == 8 || delayed->time == 25) && ((delayed->next) || delayed->previous)) {
+        if (delayed->counterpart) {  // Connect days on side the now first task
+            Task *now_first_task = delayed->counterpart;
+            now_first_task->next = delayed->next;
+            now_first_task->previous = delayed->previous;
+            delayed->next->previous = now_first_task;
+            delayed->previous->next = now_first_task;
+        } else {    // There is no counterpart, delete day
+            if (delayed->next->previous) {
+                delayed->next->previous = delayed->previous;
+            }
+            if (delayed->previous->next) {
+                delayed->previous->next = delayed->next;
+            }
+        }
+
+    }
 
     while (available_day <= last_day && !task_is_delayed) {
         while (available_time >= 8 && available_time <= 16 && !task_is_delayed) {
@@ -249,13 +276,71 @@ void WorkPlan::checkAvailableNextTimesFor(Task *delayed) {
         cout << "No available time in the schedule!" << endl;
     }
 }
+// TODO: check the bug where the first task of day 3 fails to delay
+//  as the first task of day 4 at 8
 
 void WorkPlan::delayAllTasksOfDay(int day) {
-    //THIS FUNCTION WILL BE CODED BY YOU
+    Task *to_delay = head;
+    // Find the first task of day
+    while (to_delay->day != day) {
+        to_delay = to_delay->next;
+    }
+    Task *tmp_to_delay = to_delay;
+    Task *to_delay_prev = to_delay->previous;
+    Task *to_delay_next = to_delay->next;
+    // Delay the task to next available space
+    while (to_delay) {
+        to_delay->time = 25;
+        Task *tmp_ctpart = to_delay->counterpart;
+        checkAvailableNextTimesFor(to_delay);
+        to_delay = tmp_ctpart;
+    }
+    // Connect days before and after together
+    to_delay_next->previous = to_delay_prev;
+    to_delay_prev->next = to_delay_next;
 }
 
 void WorkPlan::remove(Task *target) {
     //THIS FUNCTION WILL BE CODED BY YOU
+    Task *search_task = head;
+    Task *prev_task = nullptr;
+
+    while (search_task->day != target->day) {    // Find the day
+        search_task = search_task->next;
+        if (search_task == head) {   // If it loops back to the head no day found
+            search_task = nullptr;
+        }
+    }
+    if (search_task) {
+        while (search_task->time != target->time) {  // Find the time
+            prev_task = search_task;
+            search_task = search_task->counterpart;
+            if (!search_task) {  // If it reaches the end of counterparts no time found
+                search_task = nullptr;
+            }
+        }
+    }
+
+    // If the head is being removed assign new head
+    if (target == head) {
+        if (head->counterpart) {
+            head = head->counterpart;
+        } else if (head->next) {
+            head = head->next;
+        }
+    }
+
+    if (prev_task) {     // If not the first task of day
+        prev_task->counterpart = target->counterpart;
+    } else if (target->counterpart) {   // If first task of day and there are more tasks in the day
+        target->next->previous = target->counterpart;
+        target->previous->next = target->counterpart;
+        target->counterpart->next = target->next;
+        target->counterpart->previous = target->previous;
+    } else {    // If first task of day and there are nor any tasks in the day
+        target->next->previous = target->previous;
+        target->previous->next = target->next;
+    }
 }
 
 bool WorkPlan::checkCycledList() {
