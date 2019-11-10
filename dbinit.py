@@ -21,7 +21,7 @@ INIT_STATEMENTS = [
         surname VARCHAR(40) NOT NULL,
         phone_number varchar(20) not null,
         email VARCHAR(60) NOT NULL,
-        pass varchar(256) not null default tr_id,
+        pass varchar(256) not null,
         person_category SMALLINT NOT NULL,
         mother_fname varchar(40) null,
         father_fname varchar(40) null,
