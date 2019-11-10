@@ -82,7 +82,7 @@ void WorkPlan::add(Task *task) {
      Now I have to write a psuedo-constructor like structure for allocating new memory to such tasks
      And implement their destroyers :'( */
     Task *new_task = new Task;
-    new_task->name = new char[strlen(task->name)];
+    new_task->name = new char[strlen(task->name) + 1];
     strcpy(new_task->name, task->name);
     new_task->day = task->day;
     new_task->time = task->time;
