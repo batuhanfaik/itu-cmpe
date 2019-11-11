@@ -305,14 +305,17 @@ void WorkPlan::delayAllTasksOfDay(int day) {
     while (to_delay->day != day) {
         to_delay = to_delay->next;
     }
-    Task *to_delay_prev = to_delay->previous;
-    Task *to_delay_next = to_delay->next;
-    // Delay the task to next available space
-    while (to_delay) {
-        to_delay->time = 25;
-        Task *tmp_ctpart = to_delay->counterpart;
-        checkAvailableNextTimesFor(to_delay);
-        to_delay = tmp_ctpart;
+    // If the user is trying to delay the last day
+    if (to_delay->next == head) {
+        cout << "Sorry, can't delay the last day!" << endl;
+    } else {
+        // Delay the task to next available space
+        while (to_delay) {
+            to_delay->time = 25;
+            Task *tmp_ctpart = to_delay->counterpart;
+            checkAvailableNextTimesFor(to_delay);
+            to_delay = tmp_ctpart;
+        }
     }
 }
 
