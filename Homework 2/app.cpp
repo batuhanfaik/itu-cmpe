@@ -216,22 +216,16 @@ void delay_a_task() {
     }
 
     //get the task that you want to suspend
-    Task *oldone = new Task();
-    Task *newone = new Task();
+    Task *oldone;
     if (day > 0 and time > 0) {
         oldone = workplan.getTask(day, time);
         if (oldone != nullptr) {
-            newone->name = new char[strlen(oldone->name)];
-            newone->name = oldone->name;
-            newone->priority = oldone->priority;
+            int old_day = oldone->day;
+            int old_time = oldone->time;
             workplan.checkAvailableNextTimesFor(oldone);
-            cout << workplan.getUsableDay() << ".day and " << std::setw(2) << workplan.getUsableTime()
+            cout << oldone->day << ".day and " << std::setw(2) << oldone->time
                  << ":00 is the first available day and hour for delaying the task " << oldone->name << " that is on "
-                 << oldone->day << ".day at " << std::setw(2) << oldone->time << ":00" << endl;
-            newone->day = workplan.getUsableDay();
-            newone->time = workplan.getUsableTime();
-            workplan.remove(oldone);
-            workplan.add(newone);
+                 << old_day << ".day at " << std::setw(2) << old_time << ":00" << endl;
         }
 
     } else

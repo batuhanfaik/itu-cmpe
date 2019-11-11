@@ -30,6 +30,10 @@ struct WorkPlan{
 	Task * getTask(int day, int time);
 	bool checkCycledList();
 
+    void setUsableDay(int);
+
+    void setUsableTime(int);
+
 	
 	Task *head;
 	int usable_day;

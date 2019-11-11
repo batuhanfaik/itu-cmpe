@@ -67,15 +67,21 @@ int WorkPlan::getUsableTime() {
     return usable_time;
 }
 
+void WorkPlan::setUsableDay(int d) {
+    usable_day = d;
+}
+
+void WorkPlan::setUsableTime(int t) {
+    usable_time = t;
+}
 
 void WorkPlan::create() {
-    Task *head = nullptr;
+    // There is no need for a create function implementation
+    // Memory allocation for tasks is handled in WorkPlan::add()
 }
 
 void WorkPlan::close() {
     //THIS FUNCTION WILL BE CODED BY YOU
-    int test = 0;
-    Task *start_node = head;
     Task *this_day = head;
     Task *this_task;
 
@@ -86,8 +92,6 @@ void WorkPlan::close() {
             Task *to_delete = this_task;
             this_task = this_task->counterpart;
             remove(to_delete);
-            test++;
-            cout << "Destruction " << test << endl;
         }
         // If there is no next day, we deleted the last day
         if (this_day != next_day) {
@@ -99,10 +103,7 @@ void WorkPlan::close() {
 }
 
 void WorkPlan::add(Task *task) {
-     /* Oh assistant, my dear assistant
-     Why are you passing the same Task object rather than deleting the old one and creating a new one
-     Now I have to write a psuedo-constructor like structure for allocating new memory to such tasks
-     And implement their destroyers :'( */
+    // Allocate new memory for tasks
     Task *new_task = new Task;
     new_task->name = new char[strlen(task->name) + 1];
     strcpy(new_task->name, task->name);
@@ -133,7 +134,7 @@ void WorkPlan::add(Task *task) {
             tmp_next->previous = task;
             task->next = tmp_next;
             task->previous = current_task;
-            if (task->day < head->day){     // It's the first day, we found a new head
+            if (task->day < head->day) {     // It's the first day, we found a new head
                 head = task;
                 head->next = task->next;
                 head->previous = task->previous;
@@ -142,10 +143,10 @@ void WorkPlan::add(Task *task) {
             // Look for the time opening (as failsafe as possible)
             Task *prev_ctpart = nullptr;
             Task *tmp = current_task;
-            while (tmp){
-                if (current_task->time < task->time){
+            while (tmp) {
+                if (current_task->time < task->time) {
                     prev_ctpart = current_task;
-                    if (current_task->counterpart){
+                    if (current_task->counterpart) {
                         current_task = current_task->counterpart;
                     }
                 }
@@ -247,12 +248,13 @@ void WorkPlan::checkAvailableNextTimesFor(Task *delayed) {
                 delayed->previous->next = delayed->next;
             }
         }
-
     }
 
+    available_time++;
     while (available_day <= last_day && !task_is_delayed) {
         while (available_time >= 8 && available_time <= 16 && !task_is_delayed) {
-            if (getTask(available_day, available_time)) {    // If there exists a task in the given time and day
+            // If there exists a task in the given time and day
+            if (getTask(available_day, available_time)) {
                 available_time++;
             } else {    // Delay the task
                 if (available_time == 8) {   // Insert as first task of the day
@@ -270,6 +272,8 @@ void WorkPlan::checkAvailableNextTimesFor(Task *delayed) {
                         delayed->next->previous = delayed;
                         delayed->day = available_day;
                         delayed->time = available_time;
+                        setUsableDay(available_day);
+                        setUsableTime(available_time);
                     } else {
                         cout << "There are no tasks on this day!" << endl;
                     }
@@ -284,6 +288,8 @@ void WorkPlan::checkAvailableNextTimesFor(Task *delayed) {
                     delayed->counterpart = tmp_ctpart;
                     delayed->day = available_day;
                     delayed->time = available_time;
+                    setUsableDay(available_day);
+                    setUsableTime(available_time);
                 }
 
                 task_is_delayed = true;
