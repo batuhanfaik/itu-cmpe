@@ -298,8 +298,6 @@ void WorkPlan::checkAvailableNextTimesFor(Task *delayed) {
         cout << "No available time in the schedule!" << endl;
     }
 }
-// TODO: check the bug where the first task of day 3 fails to delay
-//  as the first task of day 4 at 8
 
 void WorkPlan::delayAllTasksOfDay(int day) {
     Task *to_delay = head;
