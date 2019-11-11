@@ -76,8 +76,7 @@ void WorkPlan::setUsableTime(int t) {
 }
 
 void WorkPlan::create() {
-    // There is no need for a create function implementation
-    // Memory allocation for tasks is handled in WorkPlan::add()
+    head = nullptr;
 }
 
 void WorkPlan::close() {
