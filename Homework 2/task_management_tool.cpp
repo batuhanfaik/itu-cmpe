@@ -74,6 +74,28 @@ void WorkPlan::create() {
 
 void WorkPlan::close() {
     //THIS FUNCTION WILL BE CODED BY YOU
+    int test = 0;
+    Task *start_node = head;
+    Task *this_day = head;
+    Task *this_task;
+
+    while (this_day) {
+        Task *next_day = this_day->next;
+        this_task = this_day;
+        while (this_task) {
+            Task *to_delete = this_task;
+            this_task = this_task->counterpart;
+            remove(to_delete);
+            test++;
+            cout << "Destruction " << test << endl;
+        }
+        // If there is no next day, we deleted the last day
+        if (this_day != next_day) {
+            this_day = next_day;
+        } else {
+            this_day = nullptr;
+        }
+    }
 }
 
 void WorkPlan::add(Task *task) {
@@ -285,7 +307,6 @@ void WorkPlan::delayAllTasksOfDay(int day) {
     while (to_delay->day != day) {
         to_delay = to_delay->next;
     }
-    Task *tmp_to_delay = to_delay;
     Task *to_delay_prev = to_delay->previous;
     Task *to_delay_next = to_delay->next;
     // Delay the task to next available space
@@ -295,9 +316,6 @@ void WorkPlan::delayAllTasksOfDay(int day) {
         checkAvailableNextTimesFor(to_delay);
         to_delay = tmp_ctpart;
     }
-    // Connect days before and after together
-    to_delay_next->previous = to_delay_prev;
-    to_delay_prev->next = to_delay_next;
 }
 
 void WorkPlan::remove(Task *target) {
@@ -341,6 +359,9 @@ void WorkPlan::remove(Task *target) {
         target->next->previous = target->previous;
         target->previous->next = target->next;
     }
+
+    delete target->name;
+    delete target;
 }
 
 bool WorkPlan::checkCycledList() {
