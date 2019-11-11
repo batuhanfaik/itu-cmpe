@@ -170,6 +170,28 @@ INIT_STATEMENTS = [
         phone_number 	VARCHAR(40)	    NOT NULL,
         FOREIGN KEY(tr_id) REFERENCES PEOPLE (tr_id)
     );
+    
+    CREATE TABLE IF NOT EXISTS FACILITY(
+        id				    INT 		NOT NULL,
+        campus_id           INT         NOT NULL,
+        name 				VARCHAR(40)	NOT NULL,
+        shortened_name 		VARCHAR(6)	NOT NULL,
+        number_of_workers	INT,
+        size             	INT         NOT NULL,
+        expenses    		INT,
+        PRIMARY KEY(id)
+        FOREIGN KEY(campus_id) REFERENCES CAMPUS (id)
+    );
+    
+    CREATE TABLE IF NOT EXISTS STAFF(
+        tr_id           BIGINT          NOT NULL,
+        faculty_id 	    INT             NOT NULL, 
+        facility_id	    INT             NOT NULL, 
+        duty         	VARCHAR(20)	    NOT NULL,
+        authority_lvl   INT             NOT NULL,
+        department      VARCHAR(20)     NOT NULL,
+        FOREIGN KEY(tr_id) REFERENCES PEOPLE (tr_id)
+    );
 
 
     """
