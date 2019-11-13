@@ -1,8 +1,25 @@
 {%extends "layout.html"%}
+
 {%block title%} Welcome {%endblock%}
+
 {% block body %}
-<h1>Hello</h1>
-<br>
-<p>Welcome to ITU Databees</p>
-<p><a href="{{ url_for("login_page") }}">Login</a></p>
+
+    <!-- Page Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <img src="{{ url_for('static', filename='logo.png') }}"
+                     class="img-fluid mt-5" alt="DatabeesLogo" width="40%">
+                <h1 class="mt-3">ITU DataBees</h1>
+                <h2 class="mt-3">An all in one solution to ITU's database needs!</h2>
+                <p class="lead">Uses:</p>
+                <ul class="list-unstyled">
+                    <li>PostgreSQL</li>
+                    <li>Bootstrap 4.3.1</li>
+                    <li>jQuery 3.4.1</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

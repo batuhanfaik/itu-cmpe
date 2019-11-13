@@ -1,16 +1,16 @@
+import os
+import sys
+
 import psycopg2 as dbapi2
 
 CLEAR_SCHEMA = [
     """
-    create table if not exists test ( );
-    
     DROP SCHEMA public CASCADE;
     CREATE SCHEMA public;
     
     GRANT ALL ON SCHEMA public TO postgres;
     GRANT ALL ON SCHEMA public TO public;
     """
-
 ]
 
 INIT_STATEMENTS = [
@@ -143,7 +143,7 @@ INIT_STATEMENTS = [
         FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (tr_id)
     );
     
-    CREATE TABLE IF NOT EXISTS COURSES_ASSISTED (
+    CREATE TABLE IF NOT EXISTS COURSE_ASSISTED (
         crn char(6) primary key references COURSE(crn) not null,
         assistant_id bigint references ASSISTANT(assistant_id) not null,
         room_id int references CLASSROOM(classroom_id) not null,
@@ -179,7 +179,7 @@ INIT_STATEMENTS = [
         number_of_workers	INT,
         size             	INT         NOT NULL,
         expenses    		INT,
-        PRIMARY KEY(id)
+        PRIMARY KEY(id),
         FOREIGN KEY(campus_id) REFERENCES CAMPUS (id)
     );
     
@@ -210,5 +210,8 @@ def initialize(url):
 
 
 if __name__ == "__main__":
-    url = "postgres://aibqztyjqfdboa:07aad1d3462c03868d5c069697e882eb39e24cfa8ebd35c6829421117ba66325@ec2-54-246-100-246.eu-west-1.compute.amazonaws.com:5432/d80l4n8sl73rk0"
+    url = os.getenv("DATABASE_URL")
+    if url is None:
+        print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
+        sys.exit(1)
     initialize(url)
