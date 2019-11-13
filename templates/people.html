@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>People page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../static/css/bootstrap.css" rel="stylesheet" media="screen">
-</head>
-<body>
+{% extends "layout.html" %}
+
+{% block title %} People {% endblock %}
+
+{% block body %}
+
 <div class="container">
     <h1>People List</h1>
     <br>
@@ -24,5 +22,5 @@
         </table>
     {% endif %}
 </div>
-</body>
-</html>
+
+{% endblock %}

@@ -9,6 +9,7 @@
     <title>DataBees - {% block title %} {% endblock %}</title>
 
     <!-- Add bootstrap-->
+    {#    <link rel="stylesheet" href="../static/css/mdb.min.css">#}
     <link rel="stylesheet" href="../static/css/bootstrap.min.css">
 
 </head>
@@ -37,10 +38,10 @@
                     <a class="nav-link" href="{{ url_for("login_page") }}">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link" href="{{ url_for("people_page") }}">People</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Services</a>
+                    <a class="nav-link" href="{{ url_for("manage_campuses") }}">Campuses</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Contact</a>

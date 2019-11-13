@@ -20,7 +20,7 @@ def login_page():
     return render_template("login.html", error=error)
 
 
-def people_list():
+def people_page():
     db = current_app.config["db"]
     people = db.get_people()
     return render_template("people.html", people=sorted(people))

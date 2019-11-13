@@ -1,7 +1,9 @@
-<html>
-<head>
+{% extends "layout.html" %}
 
-</head>
+{% block title %} Manage Campuses {% endblock %}
+
+{% block body %}
+
 <form action="" method="POST" name="addCampus">
     <input name="campus_name">
     <input name="campus_location">
@@ -45,7 +47,7 @@
 </form>
 <br>
 <body>
-{% block title %}Campusses List{% endblock %}
+
 {% block content %}
     {% if campusses %}
         <table class="table-responsive">
@@ -86,4 +88,4 @@
 {% endblock %}
 </body>
 
-</html>
+{% endblock %}
