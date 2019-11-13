@@ -6,9 +6,10 @@ from person import Person
 
 
 def create_app():
-    app = Flask(__name__, static_url_path="/static/")
+    app = Flask(__name__, static_url_path="/static")
 
     app.config.from_object("settings")
+
     app.add_url_rule("/", view_func=views.landing_page, methods=['GET', 'POST'])
     app.add_url_rule("/login", view_func=views.login_page, methods=['GET', 'POST'])
     app.add_url_rule("/people", view_func=views.people_page, methods=['GET', 'POST'])
