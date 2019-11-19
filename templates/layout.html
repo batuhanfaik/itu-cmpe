@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initia   l-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -15,7 +15,7 @@
 </head>
 <body>
 <!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary static-top">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
         <a class="navbar-brand font-weight-bold" href="/">
             <img src="{{ url_for('static', filename="img/logo.png") }}" width="50"
@@ -41,11 +41,16 @@
                     <a class="nav-link" href="{{ url_for("people_page") }}">People</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for("manage_campuses") }}">Campuses</a>
+                    <a class="nav-link" href="{{ url_for("campus") }}">Campuses</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Contact</a>
                 </li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for("logout_page") }}">Logout</a>
+                </li>  
+                {% endif %}                 
             </ul>
         </div>
     </div>

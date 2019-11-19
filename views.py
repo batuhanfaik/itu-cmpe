@@ -1,24 +1,54 @@
-from flask import current_app, render_template, request, redirect, url_for, abort
+from flask import current_app, render_template, request, redirect, url_for, abort,flash
 
 from campus import Campus
 from faculty import Faculty
-
-
+from flask_login import login_required,logout_user,login_user
+from forms import login_form
+import flask
 def landing_page():
     return render_template("index.html")
 
+# def login_page():
+#     form = login_form()
+#     context = {
+#         'form': form,
+#     }
+#     error = None
+#     if request.method == 'GET':
+#         return render_template("login.html",form=form)
+#     if request.method == 'POST':
+#         if request.form['username'] != 'admin' or request.form['password'] != 'admin':
+#             error = "Invalid credentials."
+#         else:
+#             login_user(request.people)
+#             return redirect(url_for('campus'))
+#     return render_template("login.html", error=error)
 
 def login_page():
-    error = None
-    if request.method == 'GET':
-        return render_template("login.html")
-    if request.method == 'POST':
-        if request.form['username'] != 'admin' or request.form['password'] != 'admin':
-            error = "Invalid credentials."
-        else:
-            return redirect(url_for('manage_campuses'))
-    return render_template("login.html", error=error)
+    # Here we use a class of some kind to represent and validate our
+    # client-side form data. For example, WTForms is a library that will
+    # handle this for us, and we use a custom LoginForm to validate.
+    form = login_form()
+    if form.validate_on_submit():
+        # Login and validate the user.
+        # user should be an instance of your `User` class
+        login_user(people)
 
+        flash('Logged in successfully.')
+
+        next = request.args.get('next')
+        # is_safe_url should check if the url is safe for redirects.
+        # See http://flask.pocoo.org/snippets/62/ for an example.
+        if not is_safe_url(next):
+            return abort(400)
+
+        return redirect(next or url_for('index'))
+    return render_template('login.html', form=form)
+
+@login_required
+def logout_page():
+    logout_user()
+    return redirect(url_for("landing_page"))
 
 def people_page():
     db = current_app.config["db"]
@@ -32,6 +62,8 @@ def person_page(tr_id):
     if person is None:
         abort(404)
     return render_template("person.html", person=person)
+
+
 
 
 def manage_campuses():
