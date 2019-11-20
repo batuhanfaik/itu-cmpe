@@ -41,13 +41,12 @@ Setup		bis.b	#0FFh,		&P1DIR
             mov.w   #0000h,     r6
 ; r4= count_pointer, r5=achilles_pointer, r6=dipslay status
 ; r6= 0, type achilles
-; r6= 1, show count 
-
+; r6= 1, show count
 
 Main        cmp     #001h,      r6
             jz      Show_count
             mov.b   @r5,        &P1OUT ; Typing achilles character by character to screen
-            call    Delay
+            call    #Delay
             add     #001h,      r5
             cmp     #ach_end,   r5
             jz      Reset_seq
@@ -55,16 +54,16 @@ Main        cmp     #001h,      r6
 
 ; Display how many times achilles has been written on the screen
 Show_count  mov.b   @r4,        &P1OUT
-            call    Delay
+            call    #Delay
             jmp     Main
 
 ; Reset count
-Reset_count	mov.b	#arr,		r4
+Reset_count	mov.w	#arr,		r4
 			jmp     Main
 ; Reset character sequence
 Reset_seq   mov.w   #ach_arr,   r5
-            add     #001h,      r4  ; Increment the counter since we typed the word  
-            cmp     #arr_end    r4  ; Reset if count goes over 9
+            add     #001h,      r4  ; Increment the counter since we typed the word
+            cmp     #arr_end,    r4  ; Reset if count goes over 9
             jz      Reset_count
             jmp     Main
 
@@ -92,7 +91,7 @@ ISR         dint
 arr			.byte	00111111b, 00000110b, 01011011b, 01001111b, 01100110b, 01101101b, 01111101b, 00000111b, 01111111b, 01101111b
 arr_end
 ;                       A          C          H         I           L          L           E         S
-ach_arr  .byte   01110111b, 00111001b, 01110110b, 00000110b, 00111000b, 00111000b, 01111001b, 01101101b
+ach_arr  .byte   01110111b, 00111001b, 01110110b, 00110000b, 00111000b, 00111000b, 01111001b, 01101101b
 ach_end
 
 ;-------------------------------------------------------------------------------
@@ -109,4 +108,3 @@ ach_end
             .sect   ".int03"
             .short  ISR
 
-            
