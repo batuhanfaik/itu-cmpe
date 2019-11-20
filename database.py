@@ -1,5 +1,7 @@
 import psycopg2 as dbapi2
 
+from person import Person
+
 
 class Database:
     def __init__(self, dbfile):
@@ -24,25 +26,37 @@ class Database:
         self.people[person.tr_id] = person
         return person.tr_id
 
-    # def add_person(self, person):
-    #     tr_id = person.tr_id
-    #     self.people[tr_id] = person
-    #     return tr_id
+    def update_person(self, person, tr_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "update people set name = %s, surname = %s where (tr_id = %s)"
+            cursor.execute(query, (person.name, person.surname, person.tr_id))
+            connection.commit
 
-    def del_person(self, tr_id):
-        if tr_id in self.people:
-            del self.people[tr_id]
+    def delete_person(self, tr_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "delete from people where (tr_id = %s)"
+            cursor.execute(query, (tr_id,))
+            connection.commit
 
     def get_person(self, tr_id):
-        person = self.people.get(tr_id)
-        if person is None:
-            return None
-        return person
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from people where (tr_id = %s)"
+            cursor.execute(query, (tr_id,))
+        person_ = Person(*cursor.fetchone()[:])  # Inline unpacking of a tuple
+        return person_
 
     def get_people(self):
         people = []
-        for tr_id, person in self.people.items():
-            people.append((tr_id, person))
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from people order by surname, name"
+            cursor.execute(query)
+            for row in cursor:
+                person = Person(*row[:])
+                people.append((person.tr_id, person))
         return people
 
     def add_campus(self, campus):

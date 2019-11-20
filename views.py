@@ -1,51 +1,39 @@
-from flask import current_app, render_template, request, redirect, url_for, abort,flash
+from flask import current_app, render_template, request, redirect, url_for, abort, flash
+from flask_login import login_required, logout_user, login_user
 
 from campus import Campus
 from faculty import Faculty
-from flask_login import login_required,logout_user,login_user
 from forms import login_form
 from person import Person
-import flask
+
+
 def landing_page():
     return render_template("index.html")
 
-# def login_page():
-#     form = login_form()
-#     context = {
-#         'form': form,
-#     }
-#     error = None
-#     if request.method == 'GET':
-#         return render_template("login.html",form=form)
-#     if request.method == 'POST':
-#         if request.form['username'] != 'admin' or request.form['password'] != 'admin':
-#             error = "Invalid credentials."
-#         else:
-#             login_user(request.people)
-#             return redirect(url_for('campus'))
-#     return render_template("login.html", error=error)
 
 def login_page():
     # Here we use a class of some kind to represent and validate our
     # client-side form data. For example, WTForms is a library that will
     # handle this for us, and we use a custom LoginForm to validate.
     form = login_form()
-    if(request.method == 'POST'):
+    if (request.method == 'POST'):
         if form.validate_on_submit():
             email = request.form['email']
             password = request.form['password']
-            registered_user = Person.query.filter_by(email=email,password=password).first()
+            registered_user = Person.query.filter_by(email=email, password=password).first()
             if registered_user is None:
-                flash('Username or Password is invalid' , 'error')
+                flash('Username or Password is invalid', 'error')
                 return redirect(url_for('login'))
             login_user(registered_user)
             flash('Logged in successfully')
     return render_template('login.html', form=form)
 
+
 @login_required
 def logout_page():
     logout_user()
     return redirect(url_for("landing_page"))
+
 
 def people_page():
     db = current_app.config["db"]
@@ -59,8 +47,6 @@ def person_page(tr_id):
     if person is None:
         abort(404)
     return render_template("person.html", person=person)
-
-
 
 
 def manage_campuses():
