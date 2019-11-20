@@ -52,7 +52,7 @@ class Database:
         people = []
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "select * from people order by surname, name"
+            query = "select * from people order by name, surname"
             cursor.execute(query)
             for row in cursor:
                 person = Person(*row[:])

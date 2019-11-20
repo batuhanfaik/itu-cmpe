@@ -212,3 +212,4 @@ if __name__ == "__main__":
         print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
         sys.exit(1)
     initialize(url)
+    print("Successfully initialized the DataBees!")

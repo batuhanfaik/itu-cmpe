@@ -5,16 +5,39 @@
 {% block body %}
 
     <!-- Page Content -->
-<div class="container">
+    <div class="container mt-3">
     <h1>This Person</h1>
-    <br>
     {% if person %}
-        <table class="table is-striped is-fullwidth">
+        <table class="table is-striped is-fullwidth table-hover">
+            <thead>
             <tr>
-                <td>
-                    {{ person.name }} {{ person.surname }}
-                </td>
+                <th scope="col">TR ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Email</th>
+                <th scope="col">Category</th>
+                <th scope="col">Mother Name</th>
+                <th scope="col">Father Name</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Birth City</th>
+                <th scope="col">Birth Date</th>
             </tr>
+            <tbody>
+            <tr>
+                <td scope="row">{{ person.tr_id }}</td>
+                <td>{{ person.name }} {{ person.surname }}</td>
+                <td>{{ person.phone_number }}</td>
+                <td>{{ person.email }}</td>
+                <td>{% set category_list = ["Admin", "Staff", "Instructor", "Doctorate Student", "Master's Student", "Bachelor's Student"] %}
+                    {{ category_list[person.person_category] }}</td>
+                <td>{{ person.mother_fname }}</td>
+                <td>{{ person.father_fname }}</td>
+                <td>{% set gender_dict = {"M":"Male", "F":"Female"} %}
+                    {{ gender_dict.get(person.gender) }}</td>
+                <td>{{ person.birth_city }}</td>
+                <td>{{ person.birth_date }}</td>
+            </tr>
+            </tbody>
         </table>
     {% endif %}
 </div>

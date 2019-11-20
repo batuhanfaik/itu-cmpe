@@ -4,23 +4,32 @@
 
 {% block body %}
 
-<div class="container">
-    <h1>People List</h1>
-    <br>
+    <div class="container mt-3">
+        <h1 class="mb-3">People List</h1>
     {% if people %}
-        <table class="table is-striped is-fullwidth">
+        <table class="table is-striped is-fullwidth table-hover table-sm">
+            <thead>
+            <tr>
+                <th scope="col">TR ID</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Email</th>
+            </tr>
+            </thead>
+            <tbody>
             {% for tr_id, person in people %}
                 <tr>
-                    <td>
-                        <a href="{{ url_for("person_page", tr_id=tr_id) }}">{{ tr_id }}</a>
-                    </td>
-                    <td>
-                        {{ person.name }} {{ person.surname }}
-                    </td>
+                    <td scope="row"><a
+                            href="{{ url_for("person_page", tr_id=tr_id) }}">{{ tr_id }}</a></td>
+                    <td>{{ person.name }}</td>
+                    <td>{{ person.surname }}</td>
+                    <td>{{ person.email }}</td>
                 </tr>
             {% endfor %}
+            </tbody>
         </table>
     {% endif %}
-</div>
+
+    </div>
 
 {% endblock %}
