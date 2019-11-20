@@ -2,13 +2,13 @@ import os
 
 import psycopg2 as dbapi2
 from flask import Flask
-from flask_login import LoginManager,login_user
+from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 
+import campus_views
 import views
 from database import Database
 from person import Person
-import campus_views
-from flask_wtf.csrf import CSRFProtect
 
 UPLOAD_FOLDER = '/media'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
