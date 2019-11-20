@@ -4,6 +4,7 @@ from campus import Campus
 from faculty import Faculty
 from flask_login import login_required,logout_user,login_user
 from forms import login_form
+from person import Person
 import flask
 def landing_page():
     return render_template("index.html")
@@ -29,20 +30,16 @@ def login_page():
     # client-side form data. For example, WTForms is a library that will
     # handle this for us, and we use a custom LoginForm to validate.
     form = login_form()
-    if form.validate_on_submit():
-        # Login and validate the user.
-        # user should be an instance of your `User` class
-        login_user(people)
-
-        flash('Logged in successfully.')
-
-        next = request.args.get('next')
-        # is_safe_url should check if the url is safe for redirects.
-        # See http://flask.pocoo.org/snippets/62/ for an example.
-        if not is_safe_url(next):
-            return abort(400)
-
-        return redirect(next or url_for('index'))
+    if(request.method == 'POST'):
+        if form.validate_on_submit():
+            email = request.form['email']
+            password = request.form['password']
+            registered_user = Person.query.filter_by(email=email,password=password).first()
+            if registered_user is None:
+                flash('Username or Password is invalid' , 'error')
+                return redirect(url_for('login'))
+            login_user(registered_user)
+            flash('Logged in successfully')
     return render_template('login.html', form=form)
 
 @login_required

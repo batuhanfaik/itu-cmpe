@@ -47,7 +47,6 @@ def create_app(db_url):
     app.config["db"] = db
     lm.init_app(app)
     lm.login_view = "login_page"
-    lm.login_user = Person()
     return app
 
 csrf = CSRFProtect()
