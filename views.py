@@ -69,7 +69,13 @@ def person_page(tr_id):
     person = db.get_person(tr_id)
     if person is None:
         abort(404)
-    return render_template("person.html", person=person)
+    if request.method == "GET":
+        return render_template("person.html", person=person)
+    else:
+        if request.form["delete_button"] == "delete":
+            db.delete_person(tr_id)
+            people = db.get_people()
+            return render_template("people.html", people=sorted(people))
 
 
 def manage_campuses():

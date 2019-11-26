@@ -18,7 +18,7 @@ lm.login_view = "views.login"
 
 def init_db(db_url):
     db = Database(db_url)
-    # try:  # TODO: Fix the UniqueViolation error even though the query is unique
+    # try:
     #     db.add_person(
     #         Person("11111111110", "Ahmet", "Mehmet", "+905508004060", "mehmet19@itu.edu.tr",
     #                "password", 2, "Fatma", "Ali", "M", "Istanbul", "01-01-2000", "Istanbul",
