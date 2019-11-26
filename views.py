@@ -72,7 +72,28 @@ def person_page(tr_id):
     if request.method == "GET":
         return render_template("person.html", person=person)
     else:
-        if request.form["delete_button"] == "delete":
+        if request.form["update_button"] == "update":
+            form_tr_id = request.form["tr_id"]
+            form_name = request.form["name"]
+            form_surname = request.form["surname"]
+            form_phone = request.form["phone"]
+            form_email = request.form["email"]
+            form_pwd = request.form["pwd"]
+            form_category = int(request.form["category"])
+            form_mfname = request.form["mfname"]
+            form_ffname = request.form["ffname"]
+            form_gender = request.form["gender"]
+            form_bcity = request.form["bcity"]
+            form_bdate = request.form["bdate"]
+            form_id_regcity = request.form["id_regcity"]
+            form_id_regdist = request.form["id_regdist"]
+            person = Person(form_tr_id, form_name, form_surname, form_phone, form_email, form_pwd,
+                            form_category, form_mfname, form_ffname, form_gender, form_bcity,
+                            form_bdate, form_id_regcity, form_id_regdist)
+            db = current_app.config["db"]
+            db.update_person(person, tr_id)
+            return redirect(url_for("person_page", tr_id=person.tr_id))
+        elif request.form["update_button"] == "delete":
             db.delete_person(tr_id)
             people = db.get_people()
             return render_template("people.html", people=sorted(people))

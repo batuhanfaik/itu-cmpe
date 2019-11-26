@@ -8,8 +8,8 @@
     <div class="container mt-3">
     <h1>This Person</h1>
 
-        <form class="form-inline needs-validation" action="" method="post" id="form_add_person"
-              name="person_get">
+        <form class="form-inline needs-validation" action="" method="post" id="form_update_person"
+              name="person_update">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group">
                 <label for="tr_id" class="mr-sm-2">TR ID:</label>
@@ -110,7 +110,9 @@
                     <option value="F">Female</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary mb-2">Update This Person</button>
+            <button type="submit" class="btn btn-primary mb-2" value="update" name="update_button">
+                Update This Person
+            </button>
         </form>
 
         <script>
@@ -139,7 +141,7 @@
             <thead>
             <tr>
                 <th scope="col">TR ID</th>
-                <th scope="col">Name</th>
+                <th scope="col">Full Name</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Email</th>
                 <th scope="col">Category</th>
@@ -171,7 +173,7 @@
                 <div class="d-flex">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                     <button type="submit" class="btn btn-danger ml-auto" value="delete"
-                            name="delete_button">Delete
+                            name="update_button">Delete
                     </button>
                 </div>
             </form>

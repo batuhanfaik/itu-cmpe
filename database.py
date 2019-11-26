@@ -29,8 +29,15 @@ class Database:
     def update_person(self, person, tr_id):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "update people set name = %s, surname = %s where (tr_id = %s)"
-            cursor.execute(query, (person.name, person.surname, person.tr_id))
+            query = "update people set tr_id = %s, name = %s, surname = %s, phone_number = %s, " \
+                    "email = %s, pass = %s, person_category = %s, mother_fname = %s, " \
+                    "father_fname = %s, gender = %s, birth_city = %s, birth_date = %s, " \
+                    "id_reg_city = %s, id_reg_district = %s where (tr_id = %s)"
+            cursor.execute(query, (person.tr_id, person.name, person.surname, person.phone_number,
+                                   person.email, person.password, person.person_category,
+                                   person.mother_fname, person.father_fname, person.gender,
+                                   person.birth_city, person.birth_date, person.id_reg_city,
+                                   person.id_reg_district, tr_id))
             connection.commit
 
     def delete_person(self, tr_id):
