@@ -1,7 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # @ Filename: person
 # @ Date: 26-Oct-2019
-# @ AUTHOR: batuhanfaik, cihat, fatih
+# @ AUTHOR: batuhanfaik
 # @ Copyright (C) 2019 Batuhan Faik Derinbay
 # @ Project: itucsdb1922
 # @ Description: Not available

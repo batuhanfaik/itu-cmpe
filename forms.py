@@ -1,8 +1,8 @@
-from flask_wtf import FlaskForm, Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField
+from wtforms.fields import DateField, DecimalField, FileField
 from wtforms.validators import DataRequired
-from wtforms.fields import DateField,DecimalField,FileField,TextAreaField
-import wtforms.validators as validators
+
 
 class add_campus_form(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
@@ -10,10 +10,12 @@ class add_campus_form(FlaskForm):
     city = StringField('city')
     foundation_date = DateField('foundation_date')
     size = DecimalField('size')
-    phone_number = StringField('phonu_number')
+    phone_number = StringField('phone_number')
+
 
 class upload_campus_image_form(FlaskForm):
     image = FileField()
+
 
 class login_form(FlaskForm):
     email = StringField("email", validators=[DataRequired()])

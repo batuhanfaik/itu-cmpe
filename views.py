@@ -16,7 +16,7 @@ def login_page():
     # client-side form data. For example, WTForms is a library that will
     # handle this for us, and we use a custom LoginForm to validate.
     form = login_form()
-    if (request.method == 'POST'):
+    if request.method == 'POST':
         if form.validate_on_submit():
             email = request.form['email']
             password = request.form['password']
@@ -38,7 +38,30 @@ def logout_page():
 def people_page():
     db = current_app.config["db"]
     people = db.get_people()
-    return render_template("people.html", people=sorted(people))
+    if request.method == "GET":
+        return render_template("people.html", people=sorted(people))
+    else:
+        form_tr_id = request.form["tr_id"]
+        form_name = request.form["name"]
+        form_surname = request.form["surname"]
+        form_phone = request.form["phone"]
+        form_email = request.form["email"]
+        form_pwd = request.form["pwd"]
+        form_category = int(request.form["category"])
+        form_mfname = request.form["mfname"]
+        form_ffname = request.form["ffname"]
+        form_gender = request.form["gender"]
+        form_bcity = request.form["bcity"]
+        form_bdate = request.form["bdate"]
+        form_id_regcity = request.form["id_regcity"]
+        form_id_regdist = request.form["id_regdist"]
+        person = Person(form_tr_id, form_name, form_surname, form_phone, form_email, form_pwd,
+                        form_category, form_mfname, form_ffname, form_gender, form_bcity,
+                        form_bdate, form_id_regcity, form_id_regdist)
+        db = current_app.config["db"]
+        person_tr_id = db.add_person(person)
+        people = db.get_people()
+        return render_template("people.html", people=sorted(people))
 
 
 def person_page(tr_id):
