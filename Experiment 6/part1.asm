@@ -40,31 +40,17 @@ Setup		bis.b	#0FFh,		&P1DIR
 
 Main		mov.b	@r4,		&P1OUT
 			mov.b	#08h,		&P2DIR
-			call	#Delay
+			clr		&P1OUT
 			mov.b	@r5,		&P1OUT
 			mov.b	#04h,		&P2DIR
-			call	#Delay
+			clr		&P1OUT
 			mov.b	@r6,		&P1OUT
 			mov.b	#02h,		&P2DIR
-			call	#Delay
+			clr		&P1OUT
 			mov.b	@r7,		&P1OUT
 			mov.b	#01h,		&P2DIR
-			call	#Delay
+			clr		&P1OUT
 			jmp		Main
-
-
-; Delay function
-Delay		push 	r14
-			push    r15
-			mov.w	#00h,		R14
-L2			mov.w	#0200,		R15
-L1			dec.w	R15
-			jnz		L1
-			dec.w	R14
-			jnz		L2
-			pop		r15
-			pop 	r14
-			ret
 
 ;						0			1		   2	     3			4			5		  6			  7			8		   9
 arr			.byte	00111111b, 00000110b, 01011011b, 01001111b, 01100110b, 01101101b, 01111101b, 00000111b, 01111111b, 01101111b
