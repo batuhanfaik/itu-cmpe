@@ -52,6 +52,8 @@ class Database:
             cursor = connection.cursor()
             query = "select * from people where (tr_id = %s)"
             cursor.execute(query, (tr_id,))
+            if(cursor.rowcount == 0):
+                return None
         person_ = Person(*cursor.fetchone()[:])  # Inline unpacking of a tuple
         return person_
 

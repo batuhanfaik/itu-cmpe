@@ -5,6 +5,7 @@ from campus import Campus
 from faculty import Faculty
 from forms import login_form
 from person import Person
+from database import Database
 
 
 def landing_page():
@@ -16,16 +17,33 @@ def login_page():
     # client-side form data. For example, WTForms is a library that will
     # handle this for us, and we use a custom LoginForm to validate.
     form = login_form()
+    db = current_app.config["db"]
     if request.method == 'POST':
         if form.validate_on_submit():
-            tr_id = request.form['email']
+            tr_id = request.form['identity']
             password = request.form['password']
-            registered_user = get_person(tr_id)
-            if registered_user is None:
-                flash('Username or Password is invalid', 'error')
-                return redirect(url_for('login'))
-            login_user(registered_user)
-            flash('Logged in successfully')
+            person = db.get_person(tr_id)
+            if(person is None):
+                flash('There is no such a user')
+                form.errors['identity'] = 'There is no such a user!'
+            else:
+                if(person.password == password):
+                    login_user(person)
+                    flash('Logged in successfully')
+
+                else:
+                    flash('Wrong password')
+                    form.errors['password'] = 'Wrong password!'
+
+            # if person is None:
+            #     flash('Invalid username', 'error')
+            #     return redirect(url_for('login'))
+            # else:
+            #     if(person.password == password):
+            #         flash('Login succesfull')
+            #     else:
+            #         flash('Password is wrong!', 'error')
+            #     login_user(person)
     return render_template('login.html', form=form)
 
 

@@ -14,7 +14,7 @@ class Person(UserMixin):
     def __init__(self, tr_id, name, surname, phone_number, email, password, person_category,
                  mother_fname, father_fname, gender, birth_city, birth_date, id_reg_city,
                  id_reg_district):
-        self.tr_id = tr_id
+        self.id = tr_id
         self.name = name
         self.surname = surname
         self.phone_number = phone_number
@@ -33,8 +33,9 @@ class Person(UserMixin):
         if self.person_category == 0:
             self.is_admin = True
 
+        @property
         def get_id(self):
-            return self.email
+            return self.tr_id
 
         @property
         def is_active(self):

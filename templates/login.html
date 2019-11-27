@@ -1,68 +1,79 @@
-{% extends "layout.html" %}
-{% block title %} Login {% endblock %}
-{% block body %}
+{% extends "layout.html" %} {% block title %} Login {% endblock %} {% block body
+%}
 
-    <div class="container py-5 mt-auto">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-6 mx-auto">
-                        <!-- form card login -->
-                        <div class="card rounded-0">
-                            <div class="card-header">
-                                <h3 class="mb-0">Login to DataBees</h3>
-                            </div>
-                            <div class="card-body">
-                                <form class="form" autocomplete="off" id="formLogin"
-                                      novalidate="" method="POST">
-                                      {{ form.csrf_token }}
-                                    <div class="form-group">
-                                        <label for="uname1">Username</label>
-                                        {{ form.email(required=True, autofocus=True,
-                                            class='form-control form-control-lg rounded-0',
-                                            placeholder='your email') }}
-                                        {% for error in form.email.errors %}
-                                        <div class="invalid-feedback">{{ error }}
-                                        </div>
-                                        {% endfor %}    
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        {{ form.password(required=True, autofocus=True,
-                                            class='form-control form-control-lg rounded-0',
-                                            placeholder='your password') }}
-                                        {% for error in form.password.errors %}
-                                        <div class="invalid-feedback">{{ error }}
-                                        </div>
-                                        {% endfor %}    
-                                    </div>
-                                    <div>
-                                        <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input">
-                                            <span class="custom-control-label small align-middle mt-auto">Remember me</span>
-                                        </label>
-                                    </div>
-                                    <button type="submit"
-                                            class="btn bg-primary btn-success btn-lg float-right"
-                                            id="btnLogin">Login
-                                    </button>
-                                </form>
-                            </div>
-                            <!--/card-block-->
-                        </div>
-                        <!-- /form card login -->
-
-                    </div>
-
-
-                </div>
-                <!--/row-->
-
+<div class="container py-5 mt-auto">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-6 mx-auto">
+          <!-- form card login -->
+          <div class="card rounded-0">
+            <div class="card-header">
+              <h3 class="mb-0">Login to DataBees</h3>
             </div>
-            <!--/col-->
+            <div class="card-body">
+              <form
+                class="form"
+                autocomplete="off"
+                id="formLogin"
+                novalidate=""
+                method="POST"
+              >
+                {{ form.csrf_token }}
+                <div class="form-group">
+                  {% with messages = get_flashed_messages() %} {% if messages %}
+                  <ul class="flashes">
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %} {% endwith %}
+                  <label for="uname1">Username</label>
+                  {{ form.identity(required=True, autofocus=True,
+                  class='form-control form-control-lg rounded-0',
+                  placeholder='your identity number') }} {% for error in
+                  form.errors %}
+                  <div class="invalid-feedback">s{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div class="form-group">
+                  <label>Password</label>
+                  {{ form.password(required=True, autofocus=True,
+                  class='form-control form-control-lg rounded-0',
+                  placeholder='your password') }} {% for error in
+                  form.password.errors %}
+                  <div class="invalid-feedback">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div>
+                  <label class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" />
+                    <span
+                      class="custom-control-label small align-middle mt-auto"
+                      >Remember me</span
+                    >
+                  </label>
+                </div>
+                <button
+                  type="submit"
+                  class="btn bg-primary btn-success btn-lg float-right"
+                  id="btnLogin"
+                >
+                  Login
+                </button>
+              </form>
+            </div>
+            <!--/card-block-->
+          </div>
+          <!-- /form card login -->
         </div>
-        <!--/row-->
+      </div>
+      <!--/row-->
     </div>
-    <!--/container-->
+    <!--/col-->
+  </div>
+  <!--/row-->
+</div>
+<!--/container-->
 
 {% endblock %}

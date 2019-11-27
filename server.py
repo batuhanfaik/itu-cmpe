@@ -13,7 +13,7 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg'}
 SECRET_KEY = os.urandom(32)
 lm = LoginManager()
 csrf = CSRFProtect()
-lm.login_view = "views.login"
+lm.login_view = "views.login_page"
 
 
 def init_db(db_url):
@@ -56,16 +56,27 @@ def create_app(db_url):
     app.config.from_object("settings")
     csrf.init_app(app)
 
-    app.add_url_rule("/", view_func=views.landing_page, methods=['GET', 'POST'])
-    app.add_url_rule("/login", view_func=views.login_page, methods=['GET', 'POST'])
-    app.add_url_rule("/logout", view_func=views.logout_page, methods=['GET', 'POST'])
-    app.add_url_rule("/people", view_func=views.people_page, methods=['GET', 'POST'])
-    app.add_url_rule("/people/<tr_id>", view_func=views.person_page, methods=['GET', 'POST'])
-    app.add_url_rule("/campuses/campus", view_func=campus_views.campus, methods=['GET', 'POST'])
+    app.add_url_rule("/", view_func=views.landing_page,
+                     methods=['GET', 'POST'])
+    app.add_url_rule("/login", view_func=views.login_page,
+                     methods=['GET', 'POST'])
+    app.add_url_rule("/logout", view_func=views.logout_page,
+                     methods=['GET', 'POST'])
+    app.add_url_rule("/people", view_func=views.people_page,
+                     methods=['GET', 'POST'])
+    app.add_url_rule("/people/<tr_id>",
+                     view_func=views.person_page, methods=['GET', 'POST'])
+    app.add_url_rule("/campuses/campus",
+                     view_func=campus_views.campus, methods=['GET', 'POST'])
     db = init_db(db_url)
     app.config["db"] = db
     lm.init_app(app)
     lm.login_view = "login_page"
+
+    @lm.user_loader
+    def load_user(id):
+        return db.get_person(id)
+
     return app
 
 
