@@ -28,10 +28,10 @@
                     {% endfor %}
                   </ul>
                   {% endif %} {% endwith %}
-                  <label for="uname1">Username</label>
-                  {{ form.identity(required=True, autofocus=True,
+                  <label for="uname1">Email</label>
+                  {{ form.email(required=True, autofocus=True,
                   class='form-control form-control-lg rounded-0',
-                  placeholder='your identity number') }} {% for error in
+                  placeholder='your email address') }} {% for error in
                   form.errors %}
                   <div class="invalid-feedback">s{{ error }}</div>
                   {% endfor %}

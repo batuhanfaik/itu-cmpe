@@ -75,7 +75,7 @@ def create_app(db_url):
 
     @lm.user_loader
     def load_user(id):
-        return db.get_person(id)
+        return db.get_person_via_email(id)
 
     return app
 

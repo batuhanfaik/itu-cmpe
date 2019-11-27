@@ -20,17 +20,16 @@ def login_page():
     db = current_app.config["db"]
     if request.method == 'POST':
         if form.validate_on_submit():
-            tr_id = request.form['identity']
+            email = request.form['email']
             password = request.form['password']
-            person = db.get_person(tr_id)
+            person = db.get_person_via_email(email)
             if(person is None):
                 flash('There is no such a user')
-                form.errors['identity'] = 'There is no such a user!'
+                form.errors['email'] = 'There is no such a user!'
             else:
                 if(person.password == password):
                     login_user(person)
                     flash('Logged in successfully')
-
                 else:
                     flash('Wrong password')
                     form.errors['password'] = 'Wrong password!'

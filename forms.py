@@ -18,5 +18,5 @@ class upload_campus_image_form(FlaskForm):
 
 
 class login_form(FlaskForm):
-    identity = StringField("identity", validators=[DataRequired()])
+    email = StringField("email", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])

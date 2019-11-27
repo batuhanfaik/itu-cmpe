@@ -57,6 +57,16 @@ class Database:
         person_ = Person(*cursor.fetchone()[:])  # Inline unpacking of a tuple
         return person_
 
+    def get_person_via_email(self, email):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from people where (email = %s)"
+            cursor.execute(query, (email,))
+            if(cursor.rowcount == 0):
+                return None
+        person_ = Person(*cursor.fetchone()[:])  # Inline unpacking of a tuple
+        return person_
+
     def get_people(self):
         people = []
         with dbapi2.connect(self.dbfile) as connection:
