@@ -80,7 +80,8 @@ class Database:
                 del self.campuses[i]
                 flag = False
             if not flag:
-                self.campuses[i].set_campus_id(self.campuses[i].get_campus_id() - 1)
+                self.campuses[i].set_campus_id(
+                    self.campuses[i].get_campus_id() - 1)
         if flag:
             if self.campuses[len(self.campuses) - 1].get_campus_id() == campus_id:
                 del self.campuses[len(self.campuses) - 1]
@@ -111,7 +112,7 @@ class Database:
                     self.campuses[campus_id].faculties[i].get_faculty_id() - 1)
         if flag:
             if self.campuses[campus_id].faculties[
-                len(self.campuses[campus_id].faculties) - 1].get_faculty_id() == faculty_id:
+                    len(self.campuses[campus_id].faculties) - 1].get_faculty_id() == faculty_id:
                 del self.campuses[campus_id].faculties[
                     len(self.campuses[campus_id].faculties) - 1]
         self.campuses[campus_id]._last_faculty_id = self.campuses[campus_id]._last_faculty_id - 1

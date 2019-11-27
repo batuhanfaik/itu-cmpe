@@ -18,9 +18,9 @@ def login_page():
     form = login_form()
     if request.method == 'POST':
         if form.validate_on_submit():
-            email = request.form['email']
+            tr_id = request.form['email']
             password = request.form['password']
-            registered_user = Person.query.filter_by(email=email, password=password).first()
+            registered_user = get_person(tr_id)
             if registered_user is None:
                 flash('Username or Password is invalid', 'error')
                 return redirect(url_for('login'))
@@ -96,7 +96,7 @@ def person_page(tr_id):
         elif request.form["update_button"] == "delete":
             db.delete_person(tr_id)
             people = db.get_people()
-            return render_template("people.html", people=sorted(people))
+            return redirect(url_for("people_page", people=sorted(people)))
 
 
 def manage_campuses():
@@ -113,7 +113,8 @@ def manage_campuses():
             campus_id = request.form["campus_id"]
             campus_name = request.form["campus_name"]
             campus_location = request.form["campus_location"]
-            edited_campus = Campus(campus_name, campus_location, campuses.get(campus_id).faculties)
+            edited_campus = Campus(
+                campus_name, campus_location, campuses.get(campus_id).faculties)
             edited_campus.set_campus_id(int(campus_id))
             db.edit_campus(edited_campus)
         elif 'delete_campus' in request.form:
@@ -127,7 +128,8 @@ def manage_campuses():
             campus_id = request.form["campus_id"]
             faculty_name = request.form["faculty_name"]
             faculty_shortened_name = request.form["faculty_shortened_name"]
-            db.add_faculty(int(campus_id), Faculty(faculty_name, faculty_shortened_name))
+            db.add_faculty(int(campus_id), Faculty(
+                faculty_name, faculty_shortened_name))
         elif 'delete_faculty' in request.form:
             db = current_app.config["db"]
             campuses = db.get_campuses()

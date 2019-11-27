@@ -1,191 +1,286 @@
-{% extends "layout.html" %}
+{% extends "layout.html" %} {% block title %} Person {% endblock %} {% block
+body %}
 
-{% block title %} Person {% endblock %}
+<!-- Page Content -->
+<div class="container mt-3">
+  <h1>This Person</h1>
 
-{% block body %}
+  <form
+    class="form-inline needs-validation"
+    action=""
+    method="post"
+    id="form_update_person"
+    name="person_update"
+  >
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <div class="form-group">
+      <label for="tr_id" class="mr-sm-2">TR ID:</label>
+      <input
+        type="text"
+        class="form-control mb-2 mr-sm-2"
+        id="tr_id"
+        placeholder="Enter TR ID"
+        name="tr_id"
+        required
+      />
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+    <div class="form-group">
+      <label for="name" class="mr-sm-2">Name:</label>
+      <input
+        type="text"
+        class="form-control mb-2 mr-sm-2"
+        id="name"
+        placeholder="Enter name"
+        name="name"
+        required
+      />
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+    <div class="form-group">
+      <label for="surname" class="mr-sm-2">Surname:</label>
+      <input
+        type="text"
+        class="form-control mb-2 mr-sm-2"
+        id="surname"
+        placeholder="Enter surname"
+        name="surname"
+        required
+      />
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+    <div class="form-group">
+      <label for="phone" class="mr-sm-2">Phone:</label>
+      <input
+        type="tel"
+        class="form-control mb-2 mr-sm-2"
+        id="phone"
+        placeholder="Enter phone"
+        name="phone"
+        required
+      />
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+    <div class="form-group">
+      <label for="email" class="mr-sm-2">Email:</label>
+      <input
+        type="email"
+        class="form-control mb-2 mr-sm-2"
+        id="email"
+        placeholder="Enter email"
+        name="email"
+        required
+      />
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+    <div class="form-group">
+      <label for="pwd" class="mr-sm-2">Password:</label>
+      <input
+        type="password"
+        class="form-control mb-2 mr-sm-2"
+        id="pwd"
+        placeholder="Enter password"
+        name="pwd"
+        required
+      />
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+    <div class="form-group">
+      <label for="mfname" class="mr-sm-2">Mother's Name:</label>
+      <input
+        type="text"
+        class="form-control mb-2 mr-sm-2"
+        id="mfname"
+        placeholder="Enter mother name"
+        name="mfname"
+      />
+    </div>
+    <div class="form-group">
+      <label for="ffname" class="mr-sm-2">Father's Name:</label>
+      <input
+        type="text"
+        class="form-control mb-2 mr-sm-2"
+        id="pwd"
+        placeholder="Enter father name"
+        name="ffname"
+      />
+    </div>
+    <div class="form-group">
+      <label for="bcity" class="mr-sm-2">Birth City:</label>
+      <input
+        type="input"
+        class="form-control mb-2 mr-sm-2"
+        id="bcity"
+        placeholder="Enter birth city"
+        name="bcity"
+      />
+    </div>
+    <div class="form-group">
+      <label for="id_regcity" class="mr-sm-2">ID Registration City:</label>
+      <input
+        type="text"
+        class="form-control mb-2 mr-sm-2"
+        id="id_regcity"
+        placeholder="Enter registration city"
+        name="id_regcity"
+        required
+      />
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+    <div class="form-group">
+      <label for="id_regdist" class="mr-sm-2">ID Registration District:</label>
+      <input
+        type="text"
+        class="form-control mb-2 mr-sm-2"
+        id="id_regdist"
+        placeholder="Enter registration district"
+        name="id_regdist"
+        required
+      />
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+    <div class="form-group">
+      <label for="bdate" class="mr-sm-2">Birthday:</label>
+      <input
+        type="date"
+        class="form-control mb-2 mr-sm-2"
+        id="bdate"
+        name="bdate"
+        required
+      />
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please enter the birthday.</div>
+    </div>
+    <div class="form-group mr-2">
+      <label for="category" class="mr-sm-2">Category:</label>
+      <select class="form-control" id="category" name="category" required>
+        <option value="0">Admin</option>
+        <option value="1">Staff</option>
+        <option value="2">Instructor</option>
+        <option value="3">Doctorate Student</option>
+        <option value="4">Master's Student</option>
+        <option value="5">Bachelor's Student</option>
+      </select>
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+    <div class="form-group mr-2">
+      <label for="gender" class="mr-sm-2">Gender:</label>
+      <select class="form-control" id="gender" name="gender">
+        <option value=" ">Not indicated</option>
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+      </select>
+    </div>
+    <button
+      type="submit"
+      class="btn btn-primary mb-2"
+      value="update"
+      name="update_button"
+    >
+      Update This Person
+    </button>
+  </form>
 
-    <!-- Page Content -->
-    <div class="container mt-3">
-    <h1>This Person</h1>
+  <script>
+    // Disable form submissions if there are invalid fields
+    (function() {
+      "use strict";
+      window.addEventListener(
+        "load",
+        function() {
+          // Get the forms we want to add validation styles to
+          var forms = document.getElementsByClassName("needs-validation");
+          // Loop over them and prevent submission
+          var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener(
+              "submit",
+              function(event) {
+                if (form.checkValidity() === false) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                }
+                form.classList.add("was-validated");
+              },
+              false
+            );
+          });
+        },
+        false
+      );
+    })();
+  </script>
+  <br />
+  {% if person %}
+  <table class="table is-striped is-fullwidth table-hover">
+    <thead>
+      <tr>
+        <th scope="col">TR ID</th>
+        <th scope="col">Full Name</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Email</th>
+        <th scope="col">Category</th>
+        <th scope="col">Mother Name</th>
+        <th scope="col">Father Name</th>
+        <th scope="col">Gender</th>
+        <th scope="col">Birth City</th>
+        <th scope="col">Birth Date</th>
+      </tr>
+    </thead>
 
-        <form class="form-inline needs-validation" action="" method="post" id="form_update_person"
-              name="person_update">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-            <div class="form-group">
-                <label for="tr_id" class="mr-sm-2">TR ID:</label>
-                <input type="text" class="form-control mb-2 mr-sm-2" id="tr_id"
-                       placeholder="Enter TR ID" name="tr_id" required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            <div class="form-group">
-                <label for="name" class="mr-sm-2">Name:</label>
-                <input type="text" class="form-control mb-2 mr-sm-2" id="name"
-                       placeholder="Enter name" name="name" required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            <div class="form-group">
-                <label for="surname" class="mr-sm-2">Surname:</label>
-                <input type="text" class="form-control mb-2 mr-sm-2" id="surname"
-                       placeholder="Enter surname" name="surname" required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            <div class="form-group">
-                <label for="phone" class="mr-sm-2">Phone:</label>
-                <input type="tel" class="form-control mb-2 mr-sm-2" id="phone"
-                       placeholder="Enter phone" name="phone" required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            <div class="form-group">
-                <label for="email" class="mr-sm-2">Email:</label>
-                <input type="email" class="form-control mb-2 mr-sm-2" id="email"
-                       placeholder="Enter email" name="email" required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            <div class="form-group">
-                <label for="pwd" class="mr-sm-2">Password:</label>
-                <input type="password" class="form-control mb-2 mr-sm-2" id="pwd"
-                       placeholder="Enter password" name="pwd" required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            <div class="form-group">
-                <label for="mfname" class="mr-sm-2">Mother's Name:</label>
-                <input type="text" class="form-control mb-2 mr-sm-2" id="mfname"
-                       placeholder="Enter mother name" name="mfname">
-            </div>
-            <div class="form-group">
-                <label for="ffname" class="mr-sm-2">Father's Name:</label>
-                <input type="text" class="form-control mb-2 mr-sm-2" id="pwd"
-                       placeholder="Enter father name" name="ffname">
-            </div>
-            <div class="form-group">
-                <label for="bcity" class="mr-sm-2">Birth City:</label>
-                <input type="input" class="form-control mb-2 mr-sm-2" id="bcity"
-                       placeholder="Enter birth city" name="bcity">
-            </div>
-            <div class="form-group">
-                <label for="id_regcity" class="mr-sm-2">ID Registration City:</label>
-                <input type="text" class="form-control mb-2 mr-sm-2" id="id_regcity"
-                       placeholder="Enter registration city" name="id_regcity" required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            <div class="form-group">
-                <label for="id_regdist" class="mr-sm-2">ID Registration District:</label>
-                <input type="text" class="form-control mb-2 mr-sm-2" id="id_regdist"
-                       placeholder="Enter registration district" name="id_regdist" required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            <div class="form-group">
-                <label for="bdate" class="mr-sm-2">Birthday:</label>
-                <input type="date" class="form-control mb-2 mr-sm-2" id="bdate" name="bdate"
-                       required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please enter the birthday.</div>
-            </div>
-            <div class="form-group mr-2">
-                <label for="category" class="mr-sm-2">Category:</label>
-                <select class="form-control" id="category" name="category" required>
-                    <option value="0">Admin</option>
-                    <option value="1">Staff</option>
-                    <option value="2">Instructor</option>
-                    <option value="3">Doctorate Student</option>
-                    <option value="4">Master's Student</option>
-                    <option value="5">Bachelor's Student</option>
-                </select>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            <div class="form-group mr-2">
-                <label for="gender" class="mr-sm-2">Gender:</label>
-                <select class="form-control" id="gender" name="gender">
-                    <option value=" ">Not indicated</option>
-                    <option value="M">Male</option>
-                    <option value="F">Female</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary mb-2" value="update" name="update_button">
-                Update This Person
-            </button>
-        </form>
+    <tbody>
+      <tr>
+        <td scope="row">{{ person.tr_id }}</td>
+        <td>{{ person.name }} {{ person.surname }}</td>
+        <td>{{ person.phone_number }}</td>
+        <td>{{ person.email }}</td>
+        <td>
+          {% set category_list = ["Admin", "Staff", "Instructor", "Doctorate
+          Student", "Master's Student", "Bachelor's Student"] %} {{
+          category_list[person.person_category] }}
+        </td>
+        <td>{{ person.mother_fname }}</td>
+        <td>{{ person.father_fname }}</td>
+        <td>
+          {% set gender_dict = {"M":"Male", "F":"Female"} %} {{
+          gender_dict.get(person.gender) }}
+        </td>
+        <td>{{ person.birth_city }}</td>
+        <td>{{ person.birth_date }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <br />
+  <form action="" method="post" name="delete_person">
+    <div class="d-flex">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <button
+        type="submit"
+        class="btn btn-danger ml-auto"
+        value="delete"
+        name="update_button"
+      >
+        Delete
+      </button>
+    </div>
+  </form>
 
-        <script>
-            // Disable form submissions if there are invalid fields
-            (function () {
-                'use strict';
-                window.addEventListener('load', function () {
-                    // Get the forms we want to add validation styles to
-                    var forms = document.getElementsByClassName('needs-validation');
-                    // Loop over them and prevent submission
-                    var validation = Array.prototype.filter.call(forms, function (form) {
-                        form.addEventListener('submit', function (event) {
-                            if (form.checkValidity() === false) {
-                                event.preventDefault();
-                                event.stopPropagation();
-                            }
-                            form.classList.add('was-validated');
-                        }, false);
-                    });
-                }, false);
-            })();
-        </script>
-        <br>
-        {% if person %}
-        <table class="table is-striped is-fullwidth table-hover">
-            <thead>
-            <tr>
-                <th scope="col">TR ID</th>
-                <th scope="col">Full Name</th>
-                <th scope="col">Phone</th>
-                <th scope="col">Email</th>
-                <th scope="col">Category</th>
-                <th scope="col">Mother Name</th>
-                <th scope="col">Father Name</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Birth City</th>
-                <th scope="col">Birth Date</th>
-            </tr>
-            <tbody>
-            <tr>
-                <td scope="row">{{ person.tr_id }}</td>
-                <td>{{ person.name }} {{ person.surname }}</td>
-                <td>{{ person.phone_number }}</td>
-                <td>{{ person.email }}</td>
-                <td>{% set category_list = ["Admin", "Staff", "Instructor", "Doctorate Student", "Master's Student", "Bachelor's Student"] %}
-                    {{ category_list[person.person_category] }}</td>
-                <td>{{ person.mother_fname }}</td>
-                <td>{{ person.father_fname }}</td>
-                <td>{% set gender_dict = {"M":"Male", "F":"Female"} %}
-                    {{ gender_dict.get(person.gender) }}</td>
-                <td>{{ person.birth_city }}</td>
-                <td>{{ person.birth_date }}</td>
-            </tr>
-            </tbody>
-        </table>
-            <br>
-            <form action="" method="post" name="delete_person">
-                <div class="d-flex">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                    <button type="submit" class="btn btn-danger ml-auto" value="delete"
-                            name="update_button">Delete
-                    </button>
-                </div>
-            </form>
-
-        {% endif %}
+  {% endif %}
 </div>
 
-    {# Prevents form submission on refresh #}
-    <script>
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
-    </script>
+{# Prevents form submission on refresh #}
+<script>
+  if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+  }
+</script>
 
 {% endblock %}
