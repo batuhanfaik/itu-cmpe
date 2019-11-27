@@ -32,7 +32,6 @@ setup_INT   bis.b   #040h,      &P2IE       ;Enabling interrupt
             clr     &P2IFG ; Clearing flags
             eint    ;Enabling interrupt
 
-
 ;r4 = 1, r5 = 10, r6 = 100, r7 = 1000,
 Setup		bis.b	#0FFh,		&P1DIR
 			bis.b	#00Fh,		&P2DIR
@@ -49,28 +48,35 @@ Setup		bis.b	#0FFh,		&P1DIR
 Set_timer	; TA0CTL 15-10..100001x010
 			; TA0CCR0	#10486d
 			; TA0CCTL0  00??x?x00011x?x0
-			bis.w	#01000010010b,	TA0CTL
-			bic.w	#00111100101b,	TA0CTL
-
+			mov.w	#01000010000b,	TA0CTL
 			mov.w	#10486d,	TA0CCR0
-
-			bis.w	#0110000b,		TA0CCTL0
-			bic.w	#1100000111000000b,	TA0CCTL0
-
+			mov.w	#0000000000010000b,	TA0CCTL0
 
 Main		call	#BCD2Dec
 			mov.b	@r4,		&P1OUT
-			mov.b	#08h,		&P2DIR
+			mov.b	#08h,		&P2OUT
+			nop
+			nop
 			clr		&P1OUT
+			clr		&P2OUT
 			mov.b	@r5,		&P1OUT
-			mov.b	#04h,		&P2DIR
+			mov.b	#04h,		&P2OUT
+			nop
+			nop
 			clr		&P1OUT
+			clr		&P2OUT
 			mov.b	@r6,		&P1OUT
-			mov.b	#02h,		&P2DIR
+			mov.b	#02h,		&P2OUT
+			nop
+			nop
 			clr		&P1OUT
+			clr		&P2OUT
 			mov.b	@r7,		&P1OUT
-			mov.b	#01h,		&P2DIR
+			mov.b	#01h,		&P2OUT
+			nop
+			nop
 			clr		&P1OUT
+			clr		&P2OUT
 			jmp		Main
 
 ;-------------------------------------------------------------------------------
@@ -78,8 +84,8 @@ Main		call	#BCD2Dec
 ;-------------------------------------------------------------------------------
 
 ISR			dint
-			mov.b 	#00h,  		&sec
-			mov.b	#00h,		&csec
+			mov.b 	#00h,  		sec
+			mov.b	#00h,		csec
 			clr		&P2IFG
 			eint
 			reti
@@ -90,38 +96,37 @@ ISR			dint
 
 TISR		dint
 			push	r15
-			add.b	#1b,		&csec
-			mov.b	&csec,		r15
+			add.b	#1b,		csec
+			mov.b	csec,		r15
 			bic.b	#0F0h,		r15
 			cmp		#0Ah,		r15
 			jz		ADDDecSec
 			jmp		TISRend
 
-ADDDecSec	add.b	#010h,		&csec
-			bic.b	#00Fh,		&csec
-			mov.b	&csec,		r15
+ADDDecSec	add.b	#010h,		csec
+			bic.b	#00Fh,		csec
+			mov.b	csec,		r15
 			bic.b	#00Fh,		r15
 			cmp		#0A0h,		r15
 			jz		ADDSec
 			jmp		TISRend
 
-ADDSec		add.b	#001h,		&sec
-			bic.b	#0FFh,		&csec
-			mov.b	&sec,		r15
+ADDSec		add.b	#001h,		sec
+			bic.b	#0FFh,		csec
+			mov.b	sec,		r15
 			bic.b	#0F0h,		r15
 			cmp		#0Ah,		r15
 			jz		ADDDekSec
 			jmp		TISRend
 
-ADDDekSec	add.b	#010h,		&sec
-			bic.b	#00Fh,		&sec
-			mov.b	&sec,		r15
+ADDDekSec	add.b	#010h,		sec
+			bic.b	#00Fh,		sec
+			mov.b	sec,		r15
 			bic.b	#00Fh,		r15
 			cmp		#0A0h,		r15
 			jz		RESET
 
 TISRend		pop 	r15
-			bic.b	#01h,		TA0CTL
 			eint
 			reti
 
@@ -131,34 +136,34 @@ TISRend		pop 	r15
 
 BCD2Dec		push 	r14
 
-			mov.b	&csec,	r14
+			mov.b	csec,	r14
 			bic.b	#0F0h,	r14
-			mov.b	#arr,	r4
-			add.b	r14,	r4
+			mov.w	#arr,	r4
+			add.w	r14,	r4
 
-			mov.b	&csec,	r14
-			rra.b	r14
-			rra.b	r14
-			rra.b	r14
-			rra.b	r14
-			bic.b	#0F0h,	r14
-			mov.b	#arr,	r5
-			add.b	r14,	r5
-
-
-			mov.b	&sec,	r14
-			bic.b	#0F0h,	r14
-			mov.b	#arr,	r6
-			add.b	r14,	r6
-
-			mov.b	&sec,	r14
+			mov.b	csec,	r14
 			rra.b	r14
 			rra.b	r14
 			rra.b	r14
 			rra.b	r14
 			bic.b	#0F0h,	r14
-			mov.b	#arr,	r7
-			add.b	r14,	r7
+			mov.w	#arr,	r5
+			add.w	r14,	r5
+
+
+			mov.b	sec,	r14
+			bic.b	#0F0h,	r14
+			mov.w	#arr,	r6
+			add.w	r14,	r6
+
+			mov.b	sec,	r14
+			rra.b	r14
+			rra.b	r14
+			rra.b	r14
+			rra.b	r14
+			bic.b	#0F0h,	r14
+			mov.w	#arr,	r7
+			add.w	r14,	r7
 
 			pop		r14
 			ret
