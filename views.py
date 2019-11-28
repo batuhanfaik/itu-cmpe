@@ -20,12 +20,12 @@ def login_page():
     db = current_app.config["db"]
     if request.method == 'POST':
         if form.validate_on_submit():
-            username = request.form['email']
+            username = request.form['username']
             password = request.form['password']
             user = db.get_user(username)
             if user is None:
                 flash('There is no such a user')
-                form.errors['email'] = 'There is no such a user!'
+                form.errors['username'] = 'There is no such a user!'
             else:
                 if hash_machine.verify(password, user.password):
                     login_user(user)

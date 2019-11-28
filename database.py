@@ -65,10 +65,18 @@ class Database:
                 cursor.execute(query, (username,))
             else:
                 cursor.execute(query, (username + "@itu.edu.tr",))
-            if(cursor.rowcount == 0):
+            if cursor.rowcount == 0:
                 return None
-        person_ = Person(*cursor.fetchone())
-        return person_
+        user = Person(*cursor.fetchone())
+        if user.person_category == 0:
+            user.role = "admin"
+        elif user.person_category == 1:
+            user.role = "staff"
+        elif user.person_category == 2:
+            user.role = "instructor"
+        else:
+            user.role = "student"
+        return user
 
     def get_people(self):
         people = []
