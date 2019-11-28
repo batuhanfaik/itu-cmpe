@@ -8,6 +8,7 @@ import campus_views
 import views
 from database import Database
 
+
 UPLOAD_FOLDER = '/media'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg'}
 SECRET_KEY = os.urandom(32)
@@ -75,7 +76,7 @@ def create_app(db_url):
 
     @lm.user_loader
     def load_user(id):
-        return db.get_person_via_email(id)
+        return db.get_user(id)
 
     return app
 

@@ -5,7 +5,7 @@ from campus import Campus
 from faculty import Faculty
 from forms import login_form
 from person import Person
-from database import Database
+from passlib.hash import pbkdf2_sha256 as hash_machine
 
 
 def landing_page():
@@ -20,15 +20,15 @@ def login_page():
     db = current_app.config["db"]
     if request.method == 'POST':
         if form.validate_on_submit():
-            email = request.form['email']
+            username = request.form['email']
             password = request.form['password']
-            person = db.get_person_via_email(email)
-            if(person is None):
+            user = db.get_user(username)
+            if user is None:
                 flash('There is no such a user')
                 form.errors['email'] = 'There is no such a user!'
             else:
-                if(person.password == password):
-                    login_user(person)
+                if hash_machine.verify(password, user.password):
+                    login_user(user)
                     flash('Logged in successfully')
                 else:
                     flash('Wrong password')
@@ -64,6 +64,7 @@ def people_page():
         form_phone = request.form["phone"]
         form_email = request.form["email"]
         form_pwd = request.form["pwd"]
+        form_pwd = hash_machine.hash(form_pwd)
         form_category = int(request.form["category"])
         form_mfname = request.form["mfname"]
         form_ffname = request.form["ffname"]

@@ -4,3 +4,4 @@ Flask-Login==0.4.1
 Flask-WTF==0.14.2
 psycopg2-binary>=2.7
 gunicorn>=19.9
+passlib
