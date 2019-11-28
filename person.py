@@ -30,10 +30,19 @@ class Person(UserMixin):
         self.id_reg_district = id_reg_district
 
         self.active = True
+        self.is_admin = False
         if self.person_category == 0:
+            self.role = "admin"
             self.is_admin = True
+        elif self.person_category == 1:
+            self.role = "staff"
+        elif self.person_category == 2:
+            self.role = "instructor"
         else:
-            self.is_admin = False
+            self.role = "student"
+
+
+
 
         @property
         def get_id(self):

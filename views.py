@@ -164,3 +164,7 @@ def manage_campuses():
             db.edit_faculty(edited_faculty)
 
         return redirect(url_for("manage_campuses", campuses=campuses))
+
+
+def test_page():
+    return render_template("test.html")
