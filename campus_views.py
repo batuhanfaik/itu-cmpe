@@ -4,8 +4,10 @@ from forms import upload_campus_image_form, add_campus_form, add_faculty_form
 
 
 def campus():
-    db = current_app.config["db"]
-    campuses = db.get_campuses()
+    #db = current_app.config["db"]
+    #campuses = db.get_campuses()
+    campuses = {}
+    campus = {'g': 's'}
    # form = add_campus_form({'name': '', 'city': '', 'address': '',
  #                           'foundation_date': '', 'size': '', 'phone_number': ''})
     if request.method == "POST" and form.validate():
@@ -14,13 +16,14 @@ def campus():
         return redirect(url_for('home'))
     context = {
         # 'form': form,
-        'campuses': campuses
+        'campuses': campuses,
+        'Campus': campus,
     }
     return render_template('/campuses/campus.html', context=context)
 
 
 def campus_detailed():
-    db = current_app.config["db"]
+    #db = current_app.config["db"]
     #campus = db.get_campus(0)
     # if(campus is None):
     #     add_campus_form = add_campus_form()
@@ -36,6 +39,12 @@ def campus_detailed():
         'campus': campus,
     }
     return render_template('/campuses/campus_detailed.html', context=context)
+
+
+def findNumberOfCampus():
+    db = current_app.config["db"]
+    campuses = db.get_campuses()
+    return len(campuses)
 
 
 def faculty_detailed():
