@@ -6,7 +6,7 @@ from person import Person
 class Database:
     def __init__(self, dbfile):
         self.dbfile = dbfile
-        self.campuses = []
+        self.campuses = {}
         self._last_campus_id = 0
         self._last_faculty_id = 0
         self.people = {}
@@ -90,63 +90,54 @@ class Database:
         return people
 
     def add_campus(self, campus):
-        campus.set_campus_id(self._last_campus_id)
-        campus._last_faculty_id = 0
-        self.campuses.append(campus)
-        self._last_campus_id += 1
-        return self._last_campus_id
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "insert into campus (id, name, address, city, size, phone_number) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(query, (campus.id, campus.name, campus.address,
+                                   campus.city, campus.size, campus.phone_number))
+            connection.commit()
+        self.campuses[campus.id] = campus
+        return campus.id
 
     def delete_campus(self, campus_id):
-        flag = True
-        for i in range(len(self.campuses) - 1):
-            if flag and (self.campuses[i].get_campus_id() == int(campus_id)):
-                del self.campuses[i]
-                flag = False
-            if not flag:
-                self.campuses[i].set_campus_id(
-                    self.campuses[i].get_campus_id() - 1)
-        if flag:
-            if self.campuses[len(self.campuses) - 1].get_campus_id() == campus_id:
-                del self.campuses[len(self.campuses) - 1]
-        self._last_campus_id = self._last_campus_id - 1
-        return self._last_campus_id
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "delete from campus where (id = %s)"
+            cursor.execute(query, (campus_id,))
+            connection.commit
+            # if not flag:
+            #     self.campuses[i].set_campus_id(
+            #         self.campuses[i].get_campus_id() - 1)
+        # if flag:
+        #     if self.campuses[len(self.campuses) - 1].get_campus_id() == campus_id:
+        #         del self.campuses[len(self.campuses) - 1]
+        # self._last_campus_id = self._last_campus_id - 1
 
-    def edit_campus(self, campus):
-        for i in range(len(self.campuses)):
-            if self.campuses[i].get_campus_id() == campus.get_campus_id():
-                self.campuses[i] = campus
-                break
-
-    def add_faculty(self, campus_id, faculty):
-        faculty.set_faculty_id(self.campuses[campus_id]._last_faculty_id)
-        self.campuses[campus_id].add_faculty(faculty, campus_id)
-        print(self.campuses)
-        return self.campuses[campus_id]._last_faculty_id
-
-    def delete_faculty(self, campus_id, faculty_id):
-        flag = True
-        for i in range(len(self.campuses[campus_id].faculties) - 1):
-            if (flag == True) and (
-                    self.campuses[campus_id].faculties[i].get_faculty_id() == int(faculty_id)):
-                del self.campuses[campus_id].faculties[i]
-                flag = False
-            if not flag:
-                self.campuses[campus_id].faculties[i].set_faculty_id(
-                    self.campuses[campus_id].faculties[i].get_faculty_id() - 1)
-        if flag:
-            if self.campuses[campus_id].faculties[
-                    len(self.campuses[campus_id].faculties) - 1].get_faculty_id() == faculty_id:
-                del self.campuses[campus_id].faculties[
-                    len(self.campuses[campus_id].faculties) - 1]
-        self.campuses[campus_id]._last_faculty_id = self.campuses[campus_id]._last_faculty_id - 1
-        return self.campuses[campus_id]._last_faculty_id
-
-    def get_campus(self, campus_id):
-        campus = self.campuses.get(campus_id)
-        if campus is None:
-            return None
-        campus = campus(campus.name, campus.location)
-        return campus
+    def update_campus(self, campus):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "update campus set id = %s, name = %s, address = %s, city = %s, size = %s, phone_number = %s where (id= % s)"
+            cursor.execute(query, (campus.id, campus.name, campus.address,
+                                   campus.city.campus.size, campus.phone_number, campus.id))
+            connection.commit
 
     def get_campuses(self):
-        return self.campuses
+        campuses = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from campus order by id desc"
+            cursor.execute(query)
+            for row in cursor:
+                campus = Campus(*row[:])
+                campuses.append((campus.id, campus))
+        return campuses
+
+    def get_campus(self, campus_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from campus where (id = %s)"
+            cursor.execute(query, (campus_id,))
+            if(cursor.rowcount == 0):
+                return None
+        campus_ = Campus(*cursor.fetchone()[:])  # Inline unpacking of a tuple
+        return campus_
