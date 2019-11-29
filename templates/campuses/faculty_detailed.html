@@ -1,0 +1,122 @@
+{%extends "layout.html"%} {% block body %}
+<div class="container mt-3">
+  <h1 class="mb-3">Computer Science Faculty <i class="far fa-edit"></i></h1>
+  <hr />
+  <div class="row">
+    <div class="col-6">
+      <h4><i class="fas fa-map-marker"></i> Faculty Address:</h4>
+      <p>hehsfdgsadfgasfdg <i class="far fa-edit"></i></p>
+      <h4><i class="fas fa-file-signature"></i> Faculty Shortened Name:</h4>
+      <p>hehsfdgsadfgasfdg <i class="far fa-edit"></i></p>
+      <h4><i class="fas fa-phone"></i> Faculty Phone Number:</h4>
+      <p>hehsfdgsadfgasfdg <i class="far fa-edit"></i></p>
+      <h4><i class="fas fa-calendar-alt"></i> Faculty Foundation Date:</h4>
+      <p>hehsfdgsadfgasfdg <i class="far fa-edit"></i></p>
+
+    </div>
+    <div class="col-6">
+      <img
+        src="https://global.itu.edu.tr/images/librariesprovider107/default-album/ayazaga.jpg?sfvrsn=0"
+        class="img-fluid"
+        style="border:2px solid gainsboro"
+        alt="Responsive image"
+      />
+      <p style="text-align: center;">
+        Change Picture <i class="far fa-edit"></i>
+      </p>
+    </div>
+  </div>
+  <hr />
+  <h3>Departments in Computer Science Faculty</h3>
+  <hr>
+  <div class="row">   <div class="col-lg-6 col-sm-12 col-md-12">
+        <form class="form needs-validation" action="" method="post" id="form_add_person"
+              name="person_get">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="form-group inline">
+                <label for="name" class="mr-sm-2"><i class="fas fa-university"></i> Department Name:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
+                       placeholder="e.g. 'Ayazaga Campus'" name="name" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group inline">
+                    <label for="name" class="mr-sm-2"><i class="fas fa-file-signature"></i> Department Shortened Name:</label>
+                    <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
+                           placeholder="e.g. 'Ayazaga Campus'" name="name" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                </div>    
+                <div class="form-group inline">
+                    <label for="name" class="mr-sm-2"><i class="fas fa-portrait"></i> Department Id:</label>
+                    <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
+                           placeholder="e.g. 'Ayazaga Campus'" name="name" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                </div>  
+                <div class="form-group inline">
+                    <label for="name" class="mr-sm-2"><i class="fas fa-building"></i> Block Number(In Faculty):</label>
+                    <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
+                           placeholder="e.g. 'Ayazaga Campus'" name="name" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                </div>     
+
+                <div class="form-group inline">
+                    <label for="name" class="mr-sm-2"><i class="fas fa-money-check-alt"></i> Budget:</label>
+                    <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
+                           placeholder="e.g. 'Ayazaga Campus'" name="name" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                </div> 
+                <div class="form-group inline">
+                    <label for="name" class="mr-sm-2"><i class="fas fa-phone"></i> Phone Number :</label>
+                    <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
+                           placeholder="e.g. 'Ayazaga Campus'" name="name" required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                </div> 
+
+
+            <div class="form-group">
+                    <label for="bdate" class="mr-sm-2"><i class="fas fa-calendar-alt"></i> Department Foundation Date:</label>
+                    <input type="date" class="form-control mb-2 mr-sm-2" id="bdate" style="width:80%;" name="bdate"
+                           required>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please enter the birthday.</div>
+                </div>
+            <button type="submit" class="btn btn-primary mb-2">Add New Department</button>
+        </form>
+        </div>
+        
+        <div class="col-lg-6 col-sm-12 col-md-12">
+                
+                <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
+                <thead>
+                <tr>
+                    <th scope="col"><i class="fas fa-portrait"></i> Id</th>
+                    <th scope="col"><i class="fas fa-signature"></i> Name</th>
+                    <th scope="col"><i class="fas fa-file-signature"></i> Shortened Name</th>
+                    <th scope="col"><i class="fas fa-building"></i> Block Number</th>
+                    <th scope="col"><i class="fas fa-cog"></i> Settings</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for id, campus in campuses %}
+                    <tr>
+                        <td scope="row"><a
+                                href="{{ url_for("campus_detailed", id=id) }}">{{ id }}</a></td>
+                        <td>{{ campus.name }}</td>
+                        <td>{{ person.phone }}</td>
+                        <td><i class="fas fa-trash-alt"></i> | <i class="fas fa-edit"></i></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        
+    
+        </div>
+    </div> 
+</div>
+
+{% endblock %}
