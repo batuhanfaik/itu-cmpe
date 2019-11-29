@@ -1,19 +1,47 @@
 from flask import current_app, render_template, request, redirect, url_for, abort
 
-from forms import upload_campus_image_form, add_campus_form
+from forms import upload_campus_image_form, add_campus_form, add_faculty_form
+
 
 def campus():
     db = current_app.config["db"]
-    form = add_campus_form()
-    add_campus = True
+    campuses = db.get_campuses()
+   # form = add_campus_form({'name': '', 'city': '', 'address': '',
+ #                           'foundation_date': '', 'size': '', 'phone_number': ''})
     if request.method == "POST" and form.validate():
-        campus = Campus(form.name,form.address,form.city,form.foundation_date,form.size)
+        campus = Campus(form.name, form.address, form.city,
+                        form.foundation_date, form.size)
         return redirect(url_for('home'))
-    context ={
-        'form': form,
-        'add' : True
+    context = {
+        # 'form': form,
+        'campuses': campuses
     }
-    return render_template('/campuses/campus.html',context = context)
+    return render_template('/campuses/campus.html', context=context)
+
+
+def campus_detailed():
+    db = current_app.config["db"]
+    #campus = db.get_campus(0)
+    # if(campus is None):
+    #     add_campus_form = add_campus_form()
+    # else:
+    #     add_campus_form = add_campus_form(
+    #         {'name': campus.name, 'address': campus.address})
+    #add_facultyForm = add_faculty_form()
+    if request.method == "POST" and form.validate():
+        faculty = Faculty()
+        return redirect(url_for('home'))
+    context = {
+        # 'add_faculty_form': add_facultyForm,
+        'campus': campus,
+    }
+    return render_template('/campuses/campus_detailed.html', context=context)
+
+
+def faculty_detailed():
+    context = {}
+    return render_template('/campuses/faculty_detailed.html', context=context)
+
 
 def edit_campus(request):
     db = current_app.config["db"]
@@ -23,11 +51,11 @@ def edit_campus(request):
         campus = db.get_campus(request.args.get('campus_id'))
 
     context = {
-        'form' : form,
-        'add' : False,
-        'campus' : campus
+        'form': form,
+        'add': False,
+        'campus': campus
     }
-    return render_template('/campuses/campus.html',context = context)
+    return render_template('/campuses/campus.html', context=context)
 
 
 def upload_campus_image(request):

@@ -1,238 +1,172 @@
-{%extends "layout.html"%}
+{%extends "layout.html"%} {% block body %} 
+<div class="container mt-3">
+    <h1 class="mb-3">Campus List</h1> <button class="btn btn-danger" style="color:white"><a href="{{ url_for("campus_detailed")}}">Campus Detailed </a></button> <button class="btn btn-info"  style="color:white"><a href="{{ url_for("faculty_detailed")}}">Faculty Detailed </a></button>
+<hr>
+    <div class="row">
+    <div class="col-lg-6 col-sm-12 col-md-12">
+    <form class="form needs-validation" action="" method="post" id="form_add_person"
+          name="person_get">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <div class="form-group inline">
+            <label for="name" class="mr-sm-2"><i class="fas fa-university"></i> Campus Name:</label>
+            <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
+                   placeholder="e.g. 'Ayazaga Campus'" name="name" required>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
 
-{% block body %}
-    <br>
-    <div class ="" style="margin: auto;
-    width: 50%;
-    border: 3px solid green;
-    padding: 30px;">
-    <card class="card rounded-" style="width:50%">
-        {% if context.add %}
-        <div class="card-header" style="background-color:gray;"><h1>ADD CAMPUS</h1></div>
-        {% else %}
-        <h1>EDIT CAMPUS</h1>
-        {% endif %}
-    <form class="form-horizontal" ng-submit="submitCampusForm()" role="form">
         <div class="form-group">
-            <label for="firstName" class="col-sm-3 control-label">Name</label>
-            <div class="col-sm-6">
-                <input name="name" class="form-control form-control-lg" type="text" placeholder="Ayazaga, Macka etc.">
-            </div>
-            <div class="col-sm-3"></div>
+            <label for="phone" class="mr-sm-2"><i class="fas fa-map-marker"></i>
 
+                Campus Phone Number:</label>
+            <textarea type="text" class="form-control mb-2 mr-sm-2" id="phone"
+                   placeholder="Address of the new campus." style="width:80%;" name="phone" required></textarea>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
         </div>
         <div class="form-group">
-            <label for="lastName" class="col-sm-3 control-label">Address</label>
-            <div class="col-sm-6">
-                    <input name="adress" class="form-control form-control-lg" type="text" placeholder="Sariyer / Resitpasa Mah. etc.">
-            </div>
-            <div class="col-sm-3"></div>
+            <label for="phone" class="mr-sm-2"><i class="fas fa-city"></i>
+
+                Campus City:</label>
+                <select class="form-control" style="width:80%;" id="category" name="category" required>
+                        <option value="0">Select City</option>
+                        <option value="1">Adana</option>
+                        <option value="2">Adıyaman</option>
+                        <option value="3">Afyonkarahisar</option>
+                        <option value="4">Ağrı</option>
+                        <option value="5">Amasya</option>
+                        <option value="6">Ankara</option>
+                        <option value="7">Antalya</option>
+                        <option value="8">Artvin</option>
+                        <option value="9">Aydın</option>
+                        <option value="10">Balıkesir</option>
+                        <option value="11">Bilecik</option>
+                        <option value="12">Bingöl</option>
+                        <option value="13">Bitlis</option>
+                        <option value="14">Bolu</option>
+                        <option value="15">Burdur</option>
+                        <option value="16">Bursa</option>
+                        <option value="17">Çanakkale</option>
+                        <option value="18">Çankırı</option>
+                        <option value="19">Çorum</option>
+                        <option value="20">Denizli</option>
+                        <option value="21">Diyarbakır</option>
+                        <option value="22">Edirne</option>
+                        <option value="23">Elazığ</option>
+                        <option value="24">Erzincan</option>
+                        <option value="25">Erzurum</option>
+                        <option value="26">Eskişehir</option>
+                        <option value="27">Gaziantep</option>
+                        <option value="28">Giresun</option>
+                        <option value="29">Gümüşhane</option>
+                        <option value="30">Hakkâri</option>
+                        <option value="31">Hatay</option>
+                        <option value="32">Isparta</option>
+                        <option value="33">Mersin</option>
+                        <option value="34">İstanbul</option>
+                        <option value="35">İzmir</option>
+                        <option value="36">Kars</option>
+                        <option value="37">Kastamonu</option>
+                        <option value="38">Kayseri</option>
+                        <option value="39">Kırklareli</option>
+                        <option value="80">Kırşehir</option>
+                        <option value="41">Kocaeli</option>
+                        <option value="42">Konya</option>
+                        <option value="43">Kütahya</option>
+                        <option value="44">Malatya</option>
+                        <option value="45">Manisa</option>
+                        <option value="46">Kahramanmaraş</option>
+                        <option value="47">Mardin</option>
+                        <option value="48">Muğla</option>
+                        <option value="49">Muş</option>
+                        <option value="50">Nevşehir</option>
+                        <option value="51">Niğde</option>
+                        <option value="52">Ordu</option>
+                        <option value="53">Rize</option>
+                        <option value="54">Sakarya</option>
+                        <option value="55">Samsun</option>
+                        <option value="56">Siirt</option>
+                        <option value="57">Sinop</option>
+                        <option value="58">Sivas</option>
+                        <option value="59">Tekirdağ</option>
+                        <option value="60">Tokat</option>
+                        <option value="61">Trabzon</option>
+                        <option value="62">Tunceli</option>
+                        <option value="63">Şanlıurfa</option>
+                        <option value="64">Uşak</option>
+                        <option value="65">Van</option>
+                        <option value="66">Yozgat</option>
+                        <option value="67">Zonguldak</option>
+                        <option value="68">Aksaray</option>
+                        <option value="69">Bayburt</option>
+                        <option value="70">Karaman</option>
+                        <option value="71">Kırıkkale</option>
+                        <option value="72">Batman</option>
+                        <option value="73">Şırnak</option>
+                        <option value="74">Bartın</option>
+                        <option value="75">Ardahan</option>
+                        <option value="76">Iğdır</option>
+                        <option value="77">Yalova</option>
+                        <option value="78">Karabük</option>
+                        <option value="79">Kilis</option>
+                        <option value="80">Osmaniye</option>
+                        <option value="81">Düzce</option>
+                        <option value="82">Abroad</option>
+                </select>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
+        </div>  
+        <div class="form-group">
+            <label for="phone" class="mr-sm-2"><i class="fas fa-expand-arrows-alt"></i>
+
+                Campus Size (Acres):</label>
+            <input type="number" style="width:80%;" class="form-control mb-2 mr-sm-2" id="phone"
+                   placeholder="How many acres is new campus? " name="phone" required>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
         </div>
         <div class="form-group">
-            <label for="lastName" class="col-sm-3 control-label">City</label>
-            <div class="col-sm-6">
-                    <select class="mdb-select md-form" id="exampleFormControlSelect2">
-                            <option value="0">------</option>
-                            <option value="1">Adana</option>
-                            <option value="2">Adıyaman</option>
-                            <option value="3">Afyonkarahisar</option>
-                            <option value="4">Ağrı</option>
-                            <option value="5">Amasya</option>
-                            <option value="6">Ankara</option>
-                            <option value="7">Antalya</option>
-                            <option value="8">Artvin</option>
-                            <option value="9">Aydın</option>
-                            <option value="10">Balıkesir</option>
-                            <option value="11">Bilecik</option>
-                            <option value="12">Bingöl</option>
-                            <option value="13">Bitlis</option>
-                            <option value="14">Bolu</option>
-                            <option value="15">Burdur</option>
-                            <option value="16">Bursa</option>
-                            <option value="17">Çanakkale</option>
-                            <option value="18">Çankırı</option>
-                            <option value="19">Çorum</option>
-                            <option value="20">Denizli</option>
-                            <option value="21">Diyarbakır</option>
-                            <option value="22">Edirne</option>
-                            <option value="23">Elazığ</option>
-                            <option value="24">Erzincan</option>
-                            <option value="25">Erzurum</option>
-                            <option value="26">Eskişehir</option>
-                            <option value="27">Gaziantep</option>
-                            <option value="28">Giresun</option>
-                            <option value="29">Gümüşhane</option>
-                            <option value="30">Hakkâri</option>
-                            <option value="31">Hatay</option>
-                            <option value="32">Isparta</option>
-                            <option value="33">Mersin</option>
-                            <option value="34">İstanbul</option>
-                            <option value="35">İzmir</option>
-                            <option value="36">Kars</option>
-                            <option value="37">Kastamonu</option>
-                            <option value="38">Kayseri</option>
-                            <option value="39">Kırklareli</option>
-                            <option value="40">Kırşehir</option>
-                            <option value="41">Kocaeli</option>
-                            <option value="42">Konya</option>
-                            <option value="43">Kütahya</option>
-                            <option value="44">Malatya</option>
-                            <option value="45">Manisa</option>
-                            <option value="46">Kahramanmaraş</option>
-                            <option value="47">Mardin</option>
-                            <option value="48">Muğla</option>
-                            <option value="49">Muş</option>
-                            <option value="50">Nevşehir</option>
-                            <option value="51">Niğde</option>
-                            <option value="52">Ordu</option>
-                            <option value="53">Rize</option>
-                            <option value="54">Sakarya</option>
-                            <option value="55">Samsun</option>
-                            <option value="56">Siirt</option>
-                            <option value="57">Sinop</option>
-                            <option value="58">Sivas</option>
-                            <option value="59">Tekirdağ</option>
-                            <option value="60">Tokat</option>
-                            <option value="61">Trabzon</option>
-                            <option value="62">Tunceli</option>
-                            <option value="63">Şanlıurfa</option>
-                            <option value="64">Uşak</option>
-                            <option value="65">Van</option>
-                            <option value="66">Yozgat</option>
-                            <option value="67">Zonguldak</option>
-                            <option value="68">Aksaray</option>
-                            <option value="69">Bayburt</option>
-                            <option value="70">Karaman</option>
-                            <option value="71">Kırıkkale</option>
-                            <option value="72">Batman</option>
-                            <option value="73">Şırnak</option>
-                            <option value="74">Bartın</option>
-                            <option value="75">Ardahan</option>
-                            <option value="76">Iğdır</option>
-                            <option value="77">Yalova</option>
-                            <option value="78">Karabük</option>
-                            <option value="79">Kilis</option>
-                            <option value="80">Osmaniye</option>
-                            <option value="81">Düzce</option>
-                            <option value="82">Abroad</option>
-                          </select>            </div>
-            <div class="col-sm-3"></div>
+            <label for="phone" class="mr-sm-2"><i class="fas fa-camera"></i>
+
+                Campus Picture:</label>
+            <input type="file" style="width:80%"class="form-control mb-2 mr-sm-2" id="phone"
+                   placeholder="Enter phone" name="phone" required>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
         </div>
-        <div class="form-group">
-            <label for="lastName" class="col-sm-3 control-label">Size (m2)</label>
-            <div class="col-sm-6">
-                    <input name="size" class="form-control form-control-lg" type="text" placeholder="30000,40000 etc.">
-            </div>
-            <div class="col-sm-3"></div>
-        </div>
-        <div class="form-group">
-            <label for="lastName" class="col-sm-3 control-label">Phone Number</label>
-            <div class="col-sm-6">
-                <input name="size" class="form-control form-control-lg" type="text" placeholder="2124241919">
-            </div>
-            <div class="col-sm-3"></div>
-        </div>
-        <div class="form-grpup">
-            <label for="campusImage" class="col-sm-3 control label">Campus Image</label> 
-            <div class="col-sm-6">
-                <input name="campusImage" class ="form-control form-control-lg" type="file" placeholder="Enter one image for campus">
-            </div>
-            <div class="col-sm-3"></div>
-            <br>
-        </div>
-        <input type="submit" value="Save" class="btn btn-primary col-sm-offset-3" />
-        <input type="reset" value="Reset" class="btn btn-danger col-sm-offset-3" ng-click="resetForm()"> 
+        
+        
+        <button type="submit" class="btn btn-primary mb-2">Add New Campus</button>
     </form>
-    </card>
+    </div>
+    
+    <div class="col-lg-6 col-sm-12 col-md-12">
+            
+            <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
+            <thead>
+            <tr>
+                <th scope="col"><i class="fas fa-id-badge"></i> Id</th>
+                <th scope="col"><i class="fas fa-signature"></i> Campus Name</th>
+                <th scope="col"><i class="fas fa-phone"></i> Campus Phone</th>
+                <th scope="col"><i class="fas fa-cog"></i> Settings</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for id, campus in campuses %}
+                <tr>
+                    <td scope="row"><a
+                            href="{{ url_for("campus_detailed", id=id) }}">{{ id }}</a></td>
+                    <td>{{ campus.name }}</td>
+                    <td>{{ campus.phone }}</td>
+                    <td><i class="fas fa-trash-alt"></i> | <i class="fas fa-edit"></i></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    
+
+    </div>
 </div>
-    <script>
-        //1. create app module 
-           var studentApp = angular.module('studentApp', []);
-   
-           //2. create controller
-           studentApp.controller("studentController", function ($scope, $http) {
-     
-               //3. attach originalStudent model object
-               $scope.originalStudent = {
-                   firstName: 'James',
-                   lastName: 'Bond',
-                   DoB: new Date('01/31/1980'),
-                   gender: 'male',
-                   trainingType: 'online',
-                   maths: false,
-                   physics: true,
-                   chemistry: true
-               };
-   
-               //4. copy originalStudent to student. student will be bind to a form 
-               $scope.student = angular.copy($scope.originalStudent);
-   
-               //5. create submitStudentForm() function. This will be called when user submits the form
-               $scope.submitStudnetForm = function () {
-   
-                   var onSuccess = function (data, status, headers, config) {
-                       alert('Student saved successfully.');
-                   };
-   
-                   var onError = function (data, status, headers, config) {
-                       alert('Error occured.');
-                   }
-   
-                   $http.post('/student/submitData', { student:$scope.student })
-                       .success(onSuccess)
-                       .error(onError);
-   
-               };
-   
-               //6. create resetForm() function. This will be called on Reset button click.  
-               $scope.resetForm = function () {
-                   $scope.student = angular.copy($scope.OriginalStudent);
-               };
-       });
-
-
-(function () {
-  'use strict';
-
-  angular.module('customDatepickerMoment', ['ngMaterial']).config(function($mdDateLocaleProvider) {
-    /**
-     * @param date {Date}
-     * @returns {string} string representation of the provided date
-     */
-    $mdDateLocaleProvider.formatDate = function(date) {
-      return date ? moment(date).format('M/D') : '';
-    };
-
-    /**
-     * @param dateString {string} string that can be converted to a Date
-     * @returns {Date} JavaScript Date object created from the provided dateString
-     */
-    $mdDateLocaleProvider.parseDate = function(dateString) {
-      var m = moment(dateString, 'M/D', true);
-      return m.isValid() ? m.toDate() : new Date(NaN);
-    };
-
-    /**
-     * Check if the date string is complete enough to parse. This avoids calls to parseDate
-     * when the user has only typed in the first digit or two of the date.
-     * Allow only a day and month to be specified.
-     * @param dateString {string} date string to evaluate for parsing
-     * @returns {boolean} true if the date string is complete enough to be parsed
-     */
-    $mdDateLocaleProvider.isDateComplete = function(dateString) {
-      dateString = dateString.trim();
-      // Look for two chunks of content (either numbers or text) separated by delimiters.
-      var re = /^(([a-zA-Z]{3,}|[0-9]{1,4})([ .,]+|[/-]))([a-zA-Z]{3,}|[0-9]{1,4})/;
-      return re.test(dateString);
-    };
-  })
-  .controller("AppCtrl", function($log) {
-    this.myDate = new Date();
-
-    this.onDateChanged = function() {
-      $log.log('Updated Date: ', this.myDate);
-    };
-  });
-})();       
-       </script>   
+    </div>
+ 
 {% endblock %}
