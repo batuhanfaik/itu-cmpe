@@ -1,19 +1,100 @@
 {%extends "layout.html"%} {% block body %}
 <div class="container mt-3">
-  <h1 class="mb-3">Computer Science Faculty <i class="far fa-edit"></i></h1>
+<form method="POST">
+  <h1 id="faculty_name"class="mb-3">{context.Faculty.name}} <i id="faculty_name_edit_icon" class="far fa-edit"></i></h1>
+  <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="faculty_name_edit"
+  placeholder="e.g. 'Computer Science faculty" name="faculty_name" required>
   <hr />
   <div class="row">
     <div class="col-6">
       <h4><i class="fas fa-map-marker"></i> Faculty Address:</h4>
-      <p>hehsfdgsadfgasfdg <i class="far fa-edit"></i></p>
+      <p id="faculty_address">{context.Faculty.address}} <i id="faculty_address_edit_icon"class="far fa-edit"></i></p>
+      <textarea stype="text" class="form-control mb-2 mr-sm-2" style="visibility: hidden;" id="faculty_address_edit"
+      placeholder="Address of the faculty." style="width:80%;" name="address" value={context.Faculty.address}} required></textarea>
       <h4><i class="fas fa-file-signature"></i> Faculty Shortened Name:</h4>
-      <p>hehsfdgsadfgasfdg <i class="far fa-edit"></i></p>
+      <p id="faculty_shortened_name">{context.Faculty.shortened_name}} <i id="faculty_shortened_name_edit_icon" class="far fa-edit"></i></p>
+      <input type="text" style="width:80%;" class="form-control mb-2 mr-sm-2" style="visibility: hidden;" id="faculty_shortened_name_edit"
+      value={context.Faculty.shortened_name}} name="faculty_shortened_name_edit" required>
       <h4><i class="fas fa-phone"></i> Faculty Phone Number:</h4>
-      <p>hehsfdgsadfgasfdg <i class="far fa-edit"></i></p>
+      <p id="faculty_phone_number">{context.Faculty.phone_number}}<i id="faculty_phone_number_edit_icon" class="far fa-edit"></i></p>
+      <input type="text" style="width:80%;" class="form-control mb-2 mr-sm-2" style="visibility: hidden;" id="faculty_phone_number_edit"
+      value={context.Faculty.phone_number}} name="faculty_phone_number_edit" required>
       <h4><i class="fas fa-calendar-alt"></i> Faculty Foundation Date:</h4>
-      <p>hehsfdgsadfgasfdg <i class="far fa-edit"></i></p>
-
+      <p id="faculty_foundation_date">{context.Faculty.foundation_date}} <i id="faculty_foundation_date_edit_icon" class="far fa-edit"></i></p>
+      <input type="text" style="width:80%;" class="form-control mb-2 mr-sm-2" style="visibility: hidden;" id="faculty_foundation_date_edit"
+      value={context.Faculty.foundation_date}} name="faculty_foundation_date" required>
+      <button id="edit_save_button" type="submit" class="btn btn-secondary mb-2" style="visibility: hidden;">Save all Changes</button>
     </div>
+</form>
+<script>
+    document.getElementById('faculty_name_edit_icon').addEventListener("click",()=>{
+      if(document.getElementById('faculty_name_edit').style.visibility == "visible"){
+        document.getElementById('faculty_name_edit').style.visibility = "hidden";
+      }else{
+        document.getElementById('faculty_name_edit').style.visibility = "visible";
+        document.getElementById('edit_save_button').style.visibility="visible";
+      }
+    });
+
+    document.getElementById('faculty_shortened_name_edit_icon').addEventListener("click",()=>{
+      if(document.getElementById('faculty_shortened_name_edit').style.visibility == "visible"){
+        document.getElementById('faculty_shortened_name_edit').style.visibility = "hidden";
+      }else{
+        document.getElementById('faculty_shortened_name_edit').style.visibility = "visible";
+        document.getElementById('edit_save_button').style.visibility="visible";
+
+      }
+    });
+
+    document.getElementById('faculty_address_edit_icon').addEventListener("click",()=>{
+      if(document.getElementById('faculty_address_edit').style.visibility == "visible"){
+        document.getElementById('faculty_address_edit').style.visibility = "hidden";
+      }else{
+        document.getElementById('faculty_address_edit').style.visibility = "visible";
+        document.getElementById('edit_save_button').style.visibility="visible";
+
+      }
+    });
+
+    document.getElementById('faculty_phone_number_edit_icon').addEventListener("click",()=>{
+      if(document.getElementById('faculty_phone_number_edit').style.visibility == "visible"){
+        document.getElementById('faculty_phone_number_edit').style.visibility = "hidden";
+      }else{
+        document.getElementById('faculty_phone_number_edit').style.visibility = "visible";
+        document.getElementById('edit_save_button').style.visibility="visible";
+      }
+    });
+    
+    document.getElementById('faculty_foundation_date_edit_icon').addEventListener("click",()=>{
+      if(document.getElementById('faculty_foundation_date_edit').style.visibility == "visible"){
+        document.getElementById('faculty_foundation_date_edit').style.visibility = "hidden";
+      }else{
+        document.getElementById('faculty_foundation_date_edit').style.visibility = "visible";
+        document.getElementById('edit_save_button').style.visibility="visible";
+      }
+    });
+    document.getElementById('faculty_phone_number_edit').addEventListener("keydown",(event)=>{
+      document.getElementById("faculty_phone_number").innerHTML = event.target.value;
+    });
+    document.getElementById('faculty_name_edit').addEventListener("keydown",(event)=>{
+      document.getElementById("faculty_name").innerHTML = event.target.value;
+    });
+    document.getElementById('faculty_shortened_name_edit').addEventListener("keydown",(event)=>{
+      document.getElementById("faculty_shortened_name").innerHTML = event.target.value;
+    });  
+    document.getElementById('faculty_address_edit').addEventListener("keydown",(event)=>{
+      document.getElementById("faculty_address").innerHTML = event.target.value;
+    });       
+    document.getElementById('faculty_foundation_date_edit').addEventListener("keydown",(event)=>{
+      document.getElementById("faculty_foundation_date").innerHTML = event.target.value;
+    });   
+  // when pushed id(campus_name_edit_icon) show id(campus_name_edit) hide id(campus_name)
+  // when pushed id(campus_city_edit_icon) show id(campus_city_edit) hide id(campus_city)
+  // when pushed id(campus_size_edit_icon) show id(campus_size_edit) hide id(campus_size)
+  // when pushed id(campus_address_edit_icon) show id(campus_address_edit) hide id(campus_address)
+  // when pushed id(campus_phone_number_edit_icon) show id(campus_phone_number_edit) hide id(campus_phone_number)
+  // For all situations make visible id(edit_save_button)
+  </script>
     <div class="col-6">
       <img
         src="https://global.itu.edu.tr/images/librariesprovider107/default-album/ayazaga.jpg?sfvrsn=0"

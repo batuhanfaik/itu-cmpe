@@ -1,16 +1,186 @@
 {%extends "layout.html"%} {% block body %}
 <div class="container mt-3">
-  <h1 class="mb-3">Ayazaga Campus <i class="far fa-edit"></i></h1>
+  <form name="campus_edit" method="POST">
+  <h1 id="campus_name" class="mb-3">Ayazaga Campus <i id="campus_name_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></h1>
+  <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;visibility: hidden;" id="campus_name_edit"
+                   placeholder="e.g. 'Ayazaga Campus'" name="campus_name" required>
   <hr />
   <div class="row">
     <div class="col-6">
       <h4><i class="fas fa-map-marker"></i> Campus Address:</h4>
-      <p>hehsfdgsadfgasfdg <i class="far fa-edit"></i></p>
+      <p id="campus_address">{context.Campus.address}} <i id="campus_address_edit_icon" class="far fa-edit" style="cursor: pointer;"></i></p>
+      <textarea type="text" class="form-control mb-2 mr-sm-2" style="visibility: hidden;" id="campus_address_edit"
+      placeholder="Address of the campus." style="width:80%;visibility: hidden;" name="address" value={context.Campus.address}} required></textarea>
       <h4><i class="fas fa-city"></i> Campus City:</h4>
-      <p>hehsfdgsadfgasfdg <i class="far fa-edit"></i></p>
+      <p id="campus_city">{context.Campus.city}} <i id="campus_city_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></p>
+      <!--Add here city selector-->
+      <select class="form-control" style="width:80%;visibility:hidden;" id="campus_city_edit" value={context.Campus.city}} name="category" required>
+        <option value="0">Select City</option>
+        <option value="1">Adana</option>
+        <option value="2">Adıyaman</option>
+        <option value="3">Afyonkarahisar</option>
+        <option value="4">Ağrı</option>
+        <option value="5">Amasya</option>
+        <option value="6">Ankara</option>
+        <option value="7">Antalya</option>
+        <option value="8">Artvin</option>
+        <option value="9">Aydın</option>
+        <option value="10">Balıkesir</option>
+        <option value="11">Bilecik</option>
+        <option value="12">Bingöl</option>
+        <option value="13">Bitlis</option>
+        <option value="14">Bolu</option>
+        <option value="15">Burdur</option>
+        <option value="16">Bursa</option>
+        <option value="17">Çanakkale</option>
+        <option value="18">Çankırı</option>
+        <option value="19">Çorum</option>
+        <option value="20">Denizli</option>
+        <option value="21">Diyarbakır</option>
+        <option value="22">Edirne</option>
+        <option value="23">Elazığ</option>
+        <option value="24">Erzincan</option>
+        <option value="25">Erzurum</option>
+        <option value="26">Eskişehir</option>
+        <option value="27">Gaziantep</option>
+        <option value="28">Giresun</option>
+        <option value="29">Gümüşhane</option>
+        <option value="30">Hakkâri</option>
+        <option value="31">Hatay</option>
+        <option value="32">Isparta</option>
+        <option value="33">Mersin</option>
+        <option value="34">İstanbul</option>
+        <option value="35">İzmir</option>
+        <option value="36">Kars</option>
+        <option value="37">Kastamonu</option>
+        <option value="38">Kayseri</option>
+        <option value="39">Kırklareli</option>
+        <option value="80">Kırşehir</option>
+        <option value="41">Kocaeli</option>
+        <option value="42">Konya</option>
+        <option value="43">Kütahya</option>
+        <option value="44">Malatya</option>
+        <option value="45">Manisa</option>
+        <option value="46">Kahramanmaraş</option>
+        <option value="47">Mardin</option>
+        <option value="48">Muğla</option>
+        <option value="49">Muş</option>
+        <option value="50">Nevşehir</option>
+        <option value="51">Niğde</option>
+        <option value="52">Ordu</option>
+        <option value="53">Rize</option>
+        <option value="54">Sakarya</option>
+        <option value="55">Samsun</option>
+        <option value="56">Siirt</option>
+        <option value="57">Sinop</option>
+        <option value="58">Sivas</option>
+        <option value="59">Tekirdağ</option>
+        <option value="60">Tokat</option>
+        <option value="61">Trabzon</option>
+        <option value="62">Tunceli</option>
+        <option value="63">Şanlıurfa</option>
+        <option value="64">Uşak</option>
+        <option value="65">Van</option>
+        <option value="66">Yozgat</option>
+        <option value="67">Zonguldak</option>
+        <option value="68">Aksaray</option>
+        <option value="69">Bayburt</option>
+        <option value="70">Karaman</option>
+        <option value="71">Kırıkkale</option>
+        <option value="72">Batman</option>
+        <option value="73">Şırnak</option>
+        <option value="74">Bartın</option>
+        <option value="75">Ardahan</option>
+        <option value="76">Iğdır</option>
+        <option value="77">Yalova</option>
+        <option value="78">Karabük</option>
+        <option value="79">Kilis</option>
+        <option value="80">Osmaniye</option>
+        <option value="81">Düzce</option>
+        <option value="82">Abroad</option>
+</select>
+      <h4><i class="fas fa-phone"></i> Campus Phone Number :</h4>
+      <p id="campus_phone_number">{context.Campus.phone_number}} <i id="campus_phone_number_edit_icon"class="far fa-edit"  style="cursor: pointer;"></i></p>
+      <input type="text" style="width:80%;visibility: hidden;" class="form-control mb-2 mr-sm-2" id="campus_phone_number_edit"
+      value={context.Campus.phone_number}} name="campus_phone_number_edit" required>
       <h4><i class="fas fa-expand-arrows-alt"></i> Campus Size (Acres):</h4>
-      <p>hehsfdgsadfgasfdg <i class="far fa-edit"></i></p>
+      <p id="campus_size">{context.Campus.size}} <i id="campus_size_edit_icon"class="far fa-edit"  style="cursor: pointer;"></i></p>
+      <input type="number" style="width:80%;visibility:hidden" class="form-control mb-2 mr-sm-2" id="campus_size_edit"
+      value={context.Campus.size}} name="campus_size" required>
+      <button id="edit_save_button" type="submit" class="btn btn-secondary mb-2" style="visibility: hidden;">Save all Changes</button>
+      <button id="edit_discard_button" type="submit" class="btn btn-dark-green mb-2" style="visibility: hidden;">Discard all Changes</button>
     </div>
+  </form>
+    <script>
+      document.getElementById('campus_name_edit_icon').addEventListener("click",()=>{
+        if(document.getElementById('campus_name_edit').style.visibility == "visible"){
+          document.getElementById('campus_name_edit').style.visibility = "hidden";
+        }else{
+          document.getElementById('campus_name_edit').style.visibility = "visible";
+          document.getElementById('edit_save_button').style.visibility="visible";
+        }
+      });
+
+      document.getElementById('campus_city_edit_icon').addEventListener("click",()=>{
+        if(document.getElementById('campus_city_edit').style.visibility == "visible"){
+          document.getElementById('campus_city_edit').style.visibility = "hidden";
+        }else{
+          document.getElementById('campus_city_edit').style.visibility = "visible";
+          document.getElementById('edit_save_button').style.visibility="visible";
+
+        }
+      });
+
+      document.getElementById('campus_size_edit_icon').addEventListener("click",()=>{
+        if(document.getElementById('campus_size_edit').style.visibility == "visible"){
+          document.getElementById('campus_size_edit').style.visibility = "hidden";
+        }else{
+          document.getElementById('campus_size_edit').style.visibility = "visible";
+          document.getElementById('edit_save_button').style.visibility="visible";
+
+        }
+      });
+
+      document.getElementById('campus_address_edit_icon').addEventListener("click",()=>{
+        if(document.getElementById('campus_address_edit').style.visibility == "visible"){
+          document.getElementById('campus_address_edit').style.visibility = "hidden";
+        }else{
+          document.getElementById('campus_address_edit').style.visibility = "visible";
+          document.getElementById('edit_save_button').style.visibility="visible";
+
+        }
+      });
+
+      document.getElementById('campus_phone_number_edit_icon').addEventListener("click",()=>{
+        if(document.getElementById('campus_phone_number_edit').style.visibility == "visible"){
+          document.getElementById('campus_phone_number_edit').style.visibility = "hidden";
+        }else{
+          document.getElementById('campus_phone_number_edit').style.visibility = "visible";
+          document.getElementById('edit_save_button').style.visibility="visible";
+        }
+      });
+      document.getElementById('campus_phone_number_edit').addEventListener("keydown",(event)=>{
+        document.getElementById("campus_phone_number").innerHTML = event.target.value;
+      });
+      document.getElementById('campus_name_edit').addEventListener("keydown",(event)=>{
+        document.getElementById("campus_name").innerHTML = event.target.value;
+      });
+      document.getElementById('campus_size_edit').addEventListener("keydown",(event)=>{
+        document.getElementById("campus_size").innerHTML = event.target.value;
+      });  
+      document.getElementById('campus_address_edit').addEventListener("keydown",(event)=>{
+        document.getElementById("campus_address").innerHTML = event.target.value;
+      });       
+      document.getElementById('campus_city_edit').addEventListener("keydown",(event)=>{
+        document.getElementById("campus_city").innerHTML = event.target.value;
+      });   
+    // when pushed id(campus_name_edit_icon) show id(campus_name_edit) hide id(campus_name)
+    // when pushed id(campus_city_edit_icon) show id(campus_city_edit) hide id(campus_city)
+    // when pushed id(campus_size_edit_icon) show id(campus_size_edit) hide id(campus_size)
+    // when pushed id(campus_address_edit_icon) show id(campus_address_edit) hide id(campus_address)
+    // when pushed id(campus_phone_number_edit_icon) show id(campus_phone_number_edit) hide id(campus_phone_number)
+    // For all situations make visible id(edit_save_button)
+    </script>
     <div class="col-6">
       <img
         src="https://global.itu.edu.tr/images/librariesprovider107/default-album/ayazaga.jpg?sfvrsn=0"
@@ -19,7 +189,7 @@
         alt="Responsive image"
       />
       <p style="text-align: center;">
-        Change Picture <i class="far fa-edit"></i>
+        Change Picture <i class="far fa-edit"  style="cursor: pointer;"></i>
       </p>
     </div>
   </div>
@@ -59,7 +229,7 @@
                 </div>
             <div class="form-group">
                     <label for="bdate" class="mr-sm-2"><i class="fas fa-calendar-alt"></i> Faculty Foundation Date:</label>
-                    <input type="date" class="form-control mb-2 mr-sm-2" id="bdate" style="width:80%;" name="bdate"
+                    <input type="date" class="form-control mb-2 mr-sm-2" id="foundation_date" style="width:80%;" name="foundation_date"
                            required>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please enter the birthday.</div>
@@ -86,7 +256,7 @@
                                 href="{{ url_for("campus_detailed", id=id) }}">{{ id }}</a></td>
                         <td>{{ campus.name }}</td>
                         <td>{{ person.phone }}</td>
-                        <td><i class="fas fa-trash-alt"></i> | <i class="fas fa-edit"></i></td>
+                        <td><i class="fas fa-trash-alt"></i> | <i class="fas fa-edit"  style="cursor: pointer;"></i></td>
                     </tr>
                 {% endfor %}
                 </tbody>
