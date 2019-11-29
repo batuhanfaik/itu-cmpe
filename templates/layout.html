@@ -29,28 +29,37 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
+                <li class="nav-item {% if request.path=="/" %} active {% endif %}">
                     <a class="nav-link" href="/">Home
                         <span class="sr-only">(current)</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for("login_page") }}">Login</a>
+                <li class="nav-item {% if request.path==url_for("test_page") %} active {% endif %}">
+                    <a class="nav-link" href="{{ url_for("test_page") }}">Test Page</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {% if request.path==url_for("people_page") %} active {% endif %}">
                     <a class="nav-link" href="{{ url_for("people_page") }}">People</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {% if request.path==url_for("campus") %} active {% endif %}">
                     <a class="nav-link" href="{{ url_for("campus") }}">Campuses</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Contact</a>
                 </li>
                 {% if current_user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for("logout_page") }}">Logout</a>
-                </li>  
-                {% endif %}                 
+                    <li class ="nav-item {% if request.path==url_for("person_page", tr_id=current_user.tr_id) %} active {% endif %}">
+                        <a class="nav-link" href="{{ url_for("person_page", tr_id=current_user.tr_id)}}">
+                            {{ current_user.name + " " + current_user.surname }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for("logout_page") }}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item {% if request.path==url_for("login_page") %} active {% endif %}">
+                        <a class="nav-link" href="{{ url_for("login_page") }}">Login</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
