@@ -87,7 +87,7 @@ def create_app(db_url):
     return app
 
 
-db_url = ("DATABASE_URL")
+db_url = os.getenv("DATABASE_URL")
 app = create_app(db_url)
 
 if __name__ == "__main__":
