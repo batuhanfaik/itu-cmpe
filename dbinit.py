@@ -172,8 +172,8 @@ INIT_STATEMENTS = [
     );
     
     CREATE TABLE IF NOT EXISTS FACILITY(
-        id				    INT 		NOT NULL,
-        campus_id           INT         NOT NULL,
+        id				    BIGINT 		NOT NULL,
+        campus_id           SERIAL      NOT NULL,
         name 				VARCHAR(40)	NOT NULL,
         shortened_name 		VARCHAR(6)	NOT NULL,
         number_of_workers	INT,
@@ -184,14 +184,30 @@ INIT_STATEMENTS = [
     );
     
     CREATE TABLE IF NOT EXISTS STAFF(
-        tr_id           BIGINT          NOT NULL,
-        faculty_id 	    INT             NOT NULL, 
-        facility_id	    INT             NOT NULL, 
-        duty         	VARCHAR(20)	    NOT NULL,
+        id              BIGINT          NOT NULL,
+        manager_name    VARCHAR(20)     NOT NULL, 
+        absences	    INT             NOT NULL, 
+        hire_date      	DATE            NOT NULL,
         authority_lvl   INT             NOT NULL,
         department      VARCHAR(20)     NOT NULL,
-        FOREIGN KEY(tr_id) REFERENCES PEOPLE (tr_id)
+        social_sec_no   BIGINT          NOT NULL,
+        PRIMARY KEY(tr_id),
+        FOREIGN KEY(id) REFERENCES PEOPLE (tr_id)
     );
+    
+    CREATE TABLE IF NOT EXISTS STAFF_FACIL(
+        title           VARCHAR(20)     NOT NULL,
+        from_date 	    DATE            NOT NULL, 
+        to_date 	    DATE, 
+        salary  	    INT             NOT NULL, 
+        facility_id	    BIGINT          NOT NULL, 
+        staff_id        BIGINT          NOT NULL,
+        duty         	VARCHAR(20)	    NOT NULL,
+        FOREIGN KEY(facility_id) REFERENCES FACILITY (id),
+        FOREIGN KEY(staff_id) REFERENCES STAFF (id),
+        PRIMARY KEY(facility_id,staff_id)
+    );
+    
     """
 ]
 
