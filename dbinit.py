@@ -191,7 +191,7 @@ INIT_STATEMENTS = [
         authority_lvl   INT             NOT NULL,
         department      VARCHAR(20)     NOT NULL,
         social_sec_no   BIGINT          NOT NULL,
-        PRIMARY KEY(tr_id),
+        PRIMARY KEY(id),
         FOREIGN KEY(id) REFERENCES PEOPLE (tr_id)
     );
     
