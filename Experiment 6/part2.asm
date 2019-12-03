@@ -37,13 +37,6 @@ Setup		bis.b	#0FFh,		&P1DIR
 			bis.b	#00Fh,		&P2DIR
 			bic.b	#0FFh,		&P1OUT
 			mov.b	#001h,		&P2OUT
-			mov.w	#arr, 		r4
-			add		#6,			r4
-			mov.w	#arr, 		r5
-			add		#4,			r5
-			mov.w	#arr, 		r6
-			add		#2,			r6
-			mov.w	#arr, 		r7
 
 Set_timer	; TA0CTL 15-10..100001x010
 			; TA0CCR0	#10486d
