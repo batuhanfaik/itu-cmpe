@@ -101,7 +101,7 @@ Main		clr R5
 ;r10= address pointer
 			mov.w #string,	R10
 
-loop		cmp.b #0dh,		0(R10)
+loop		cmp.b   #0dh,	0(R10)
 			jz		newline
 			cmp.b	#00h,	0(R10)
 			jz		endseq
@@ -109,15 +109,11 @@ loop		cmp.b #0dh,		0(R10)
 			call 	#SendData
 			mov     &Delay100us, R15
 			call 	#Delay
-			add.b	#01b,	R10
+			add.w	#01b,	R10
 			jmp loop
 
-newline		add.b	#01b,	R10
-			mov.b	#00100000b, R15	;0,0,1,I,n,f,x,x fix this part
-			call 	#SendCMD
-			mov 	&Delay100us, R15
-			call 	#Delay
-			mov.b	#00000010b, R15	; send cursor back to home
+newline		add.w	#01b,	R10
+			mov.b	#011000000b, R5	;0,0,1,I,n,f,x,x fix this part
 			call 	#SendCMD
 			mov 	&Delay100us, R15
 			call 	#Delay
@@ -151,7 +147,7 @@ TrigEn      bis.b #01000000b, &P2OUT
 			ret
 
 SendCMD     mov.b R5, &P1OUT
-
+			bic.b	#080h,	&P2OUT
 			call #TrigEn
 			rla R5
 			rla R5
@@ -159,6 +155,7 @@ SendCMD     mov.b R5, &P1OUT
 			rla R5
 			mov.b R5, &P1OUT
 			call #TrigEn
+			bis.b	#080h,	&P2OUT
 			ret
 
 Delay       dec.w R15 ; Decrement R15
@@ -182,10 +179,9 @@ Delay100ms  .word   07A10h
 ;-------------------------------------------------------------------------------
             .global __STACK_END
             .sect   .stack
-            
+
 ;-------------------------------------------------------------------------------
 ; Interrupt Vectors
 ;-------------------------------------------------------------------------------
             .sect   ".reset"                ; MSP430 RESET Vector
             .short  RESET
-            
