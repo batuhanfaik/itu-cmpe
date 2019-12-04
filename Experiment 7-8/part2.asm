@@ -36,8 +36,18 @@ Setup	 	mov.b #0ffh, &P1DIR
 			mov.b #00000000b, &P2SEL2
 			clr.b &P1OUT
 			clr.b &P2OUT
+			mov.b	#00h,	R6 ; 100
+			mov.b	#00h,	R7 ; 10
+			mov.b	#00h,	R8 ; 1
+			mov.b	#000d,	R9 ; random number
+			mov.b	#0031d,	R11; seed
+			mov.b	#00h,	R13; x
+			mov.b	#00h,	R14; w
 
-InitLCD		mov &Delay100ms, R15
+
+InitLCD		mov.b	#00h,	R12; rewrite on screen flag
+			mov.b #0ffh, &P2DIR
+			mov &Delay100ms, R15
 			call #Delay
 
 			mov.b #00110000b, &P1OUT
@@ -103,9 +113,9 @@ Main		clr R5
 
 
 ;r10= address pointer
-			mov.w #string,	R10
+			mov.w	#string,	R10
 
-loop		cmp.b #0dh,		0(R10)
+loop		cmp.b   #0dh,	0(R10)
 			jz		newline
 			cmp.b	#00h,	0(R10)
 			jz		writenumber
@@ -113,23 +123,69 @@ loop		cmp.b #0dh,		0(R10)
 			call 	#SendData
 			mov     &Delay100us, R15
 			call 	#Delay
-			add.b	#01b,	R10
-			jmp loop
+			add.w	#01b,	R10
+			jmp		loop
 
-newline		add.b	#01b,	R10
-			mov.b	#00100000b, R15	;0,0,1,I,n,f,x,x fix this part
-			call 	#SendCMD
-			mov 	&Delay100us, R15
-			call 	#Delay
-			mov.b	#00000010b, R15	; send cursor back to home
+newline		add.w	#01b,	R10
+			mov.b	#011000000b, R5	;0,0,1,I,n,f,x,x fix this part
 			call 	#SendCMD
 			mov 	&Delay100us, R15
 			call 	#Delay
 			jmp		loop
 
-writenumber
-;todo
+; R9 = incoming generated number
+; R10 = temporary valla
+writenumber	; Find hundreds digit
+			sub.w	#02h,	sp
+			push	#100d
+			push	r9
+			call	#Div_func
+			add.w	#04h,	sp
+			pop		r6
 
+			; Find tens digit
+			sub.w	#02h,	sp
+			push	#10d
+			push	r9
+			call	#Div_func
+			add.w	#04h,	sp
+			pop		r7
+			sub.w	#02h,	sp
+			push	#10d
+			push	r6
+			call	#Mul_func
+			add.w	#04h,	sp
+			pop		r10
+			sub.b	r10,	r7
+
+			; Find units digit
+			add.b	r7,		r10
+			sub.w	#02h,	sp
+			push	#10d
+			push	r10
+			call	#Mul_func
+			add.w	#04h,	sp
+			pop		r10
+			sub.b	r10,	r9
+			mov.b	r9,		r8
+
+			add.b	#048d, R6
+			add.b	#048d, R7
+			add.b	#048d, R8
+			mov.b	R6, R5
+			call 	#SendData
+			mov     &Delay100us, R15
+			call 	#Delay
+			mov.b	R7, R5
+			call 	#SendData
+			mov     &Delay100us, R15
+			call 	#Delay
+			mov.b	R8, R5
+			call 	#SendData
+			mov     &Delay100us, R15
+			call 	#Delay
+			mov.b	#000h,	&P2DIR
+			jmp		stop
 
 
 SendData 	bis.b #080h,  &P2OUT
@@ -146,14 +202,44 @@ SendData 	bis.b #080h,  &P2OUT
 
 
 stop 		mov.b	&Delay100us,	R15
+
 			call 	#Delay
+			cmp.b	#01h,	r12
+			jz		InitLCD
 			jmp 	stop
 
 ;------------------
 ;	I 			S			R
 ;----------------------
 ISR         dint
-;todo
+			push	r6
+			sub.w	#02h,	sp
+			push	r13
+			push	r13
+			call	#Mul_func
+			add.w	#04h,	sp
+			pop		r13
+
+			add.b	r11,	r14
+			add.b	r14,	r13
+			mov.b	r13,	r9
+			rra.b	r9
+			rra.b	r9
+			rra.b	r9
+			rra.b	r9
+			mov.b	r13,	r6
+			rla.b	r6
+			rla.b	r6
+			rla.b	r6
+			rla.b	r6
+			bis.b	r6,		r9
+
+			; Change seed
+			add.b	#01h,	r11
+			; I was in an interrupt flag
+			mov.b	#01h,	r12
+
+			pop		r6
             clr     &P2IFG
             eint
             reti
@@ -164,7 +250,7 @@ TrigEn      bis.b #01000000b, &P2OUT
 			ret
 
 SendCMD     mov.b R5, &P1OUT
-
+			bic.b	#080h,	&P2OUT
 			call #TrigEn
 			rla R5
 			rla R5
@@ -172,6 +258,7 @@ SendCMD     mov.b R5, &P1OUT
 			rla R5
 			mov.b R5, &P1OUT
 			call #TrigEn
+			bis.b	#080h,	&P2OUT
 			ret
 
 Delay       dec.w R15 ; Decrement R15
@@ -228,7 +315,7 @@ Delay100ms  .word   07A10h
 ;-------------------------------------------------------------------------------
             .global __STACK_END
             .sect   .stack
-            
+
 ;-------------------------------------------------------------------------------
 ; Interrupt Vectors
 ;-------------------------------------------------------------------------------
