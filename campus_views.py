@@ -45,7 +45,7 @@ def campus():
                                 form.foundation_date.data, form.phone_number.data, filename, content)
                 os.remove(os.path.join(
                     current_app.config['UPLOAD_FOLDER'], filename))
-
+                db.add_campus(campus)
             # byte_img = request.files['image'].read()
                 #bin_img = ' '.join(map(bin, bytearray(byte_img)))
             # print(bin_img)
