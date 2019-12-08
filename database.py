@@ -90,11 +90,12 @@ class Database:
         return people
 
     def add_campus(self, campus):
+        print('Bak', campus.img_name)
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "insert into campus (name, address, city, size, foundation_date, phone_number) values (%s, %s, %s, %s, %s,%s,%s ,%s)"
+            query = "insert into campus (name, address, city, size, foundation_date, phone_number,campus_image_name,campus_image_data) values (%s, %s, %s, %s, %s,%s,%s ,%s)"
             cursor.execute(query, (campus.name, campus.address,
-                                   campus.city, campus.size, campus.foundation_date, campus.phone_number, campus.filename, campus.content))
+                                   campus.city, campus.size, campus.foundation_date, campus.phone_number, campus.img_name, campus.img_data))
             connection.commit()
         self.campuses[campus.id] = campus
         return campus.id

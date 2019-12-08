@@ -28,7 +28,6 @@ def validate_image(image):
 def campus():
     db = current_app.config["db"]
     campuses = db.get_campuses()
-    campuses = {}
     campus = {}
     form = add_campus_form()
     if request.method == "POST":

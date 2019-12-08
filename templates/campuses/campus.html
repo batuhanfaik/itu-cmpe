@@ -260,7 +260,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for id, campus in campuses %}
+            {% for id, campus in context.campuses %}
                 <tr>
                     <td scope="row"><a
                             href="{{ url_for("campus_detailed", id=id) }}">{{ id }}</a></td>
