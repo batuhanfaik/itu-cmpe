@@ -1,6 +1,6 @@
 class Campus:
-    def __init__(self, name, adress, city, size, foundation_date, phone_number, image_name, image_data):
-        self.campus_id = 0
+    def __init__(self, campus_id, name, adress, city, size, foundation_date, phone_number, image_name, image_data):
+        self.id = campus_id
         self.name = name
         self.address = adress
         self.city = city
@@ -11,4 +11,4 @@ class Campus:
         self.img_data = image_data
 
     def get_campus_id(self):
-        return self.campus_id
+        return self.id

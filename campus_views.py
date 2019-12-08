@@ -40,7 +40,7 @@ def campus():
                 binary_img = open(os.path.join(
                     current_app.config['UPLOAD_FOLDER'], filename), 'rb')
                 content = binary_img.read()
-                campus = Campus(form.name.data, form.address.data, form.city.data, form.size.data,
+                campus = Campus(0, form.name.data, form.address.data, form.city.data, form.size.data,
                                 form.foundation_date.data, form.phone_number.data, filename, content)
                 os.remove(os.path.join(
                     current_app.config['UPLOAD_FOLDER'], filename))

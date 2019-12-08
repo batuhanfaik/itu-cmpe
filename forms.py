@@ -35,7 +35,7 @@ class add_campus_form(FlaskForm):
         # or ByteIO, whatever you like
         bin_file = image.read()
         print(bin_file)
-        campus = Campus(form.name.data, form.address.data, form.city.data,
+        campus = Campus(0, form.name.data, form.address.data, form.city.data,
                         form.size.data, form.foundation_date.data, form.phone_number.data, file_name, image)
         validate_image(image)
         print('ADDEDDDDD->', name.data)

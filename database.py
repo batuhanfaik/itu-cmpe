@@ -1,6 +1,7 @@
 import psycopg2 as dbapi2
 
 from person import Person
+from campus import Campus
 
 
 class Database:
@@ -139,6 +140,7 @@ class Database:
             for row in cursor:
                 campus = Campus(*row[:])
                 campuses.append((campus.id, campus))
+        print('Aq campuses', campuses)
         return campuses
 
     def get_campus(self, campus_id):
