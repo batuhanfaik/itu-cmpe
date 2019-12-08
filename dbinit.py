@@ -38,12 +38,18 @@ INIT_STATEMENTS = [
     );
     
 
+    DROP TABLE IF EXISTS CAMPUS;
+    
     CREATE TABLE IF NOT EXISTS CAMPUS(
-        id		        SERIAL 		NOT NULL,
-        name 		    VARCHAR(25)	NOT NULL,
-        address 	    VARCHAR(40)	NOT NULL,
-        city 		    VARCHAR(25),
-        size 		    INT,
+        id		            SERIAL 		NOT NULL,
+        name 		        VARCHAR(25)	NOT NULL,
+        address 	        VARCHAR(40)	NOT NULL,
+        city 		        VARCHAR(25),
+        size 		        INT,
+        foundation_date     DATE,
+        phone_number        VARCHAR(12),   
+        campus_image_name   VARCHAR(40),
+        campus_image_data   bytea, 
         PRIMARY KEY(id)
     );
     

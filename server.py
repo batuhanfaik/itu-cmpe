@@ -8,13 +8,20 @@ import campus_views
 import views
 from database import Database
 
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLD = 'media'
+UPLOAD_FOLDER = os.path.join(APP_ROOT, UPLOAD_FOLD)
 
-UPLOAD_FOLDER = '/media'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg'}
 SECRET_KEY = os.urandom(32)
 lm = LoginManager()
 csrf = CSRFProtect()
 lm.login_view = "views.login_page"
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def init_db(db_url):
@@ -54,6 +61,7 @@ def create_app(db_url):
     # Triangle(app)
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.config['SECRET_KEY'] = SECRET_KEY
+    app.config['APP_ROOT'] = APP_ROOT
     app.config.from_object("settings")
     csrf.init_app(app)
 

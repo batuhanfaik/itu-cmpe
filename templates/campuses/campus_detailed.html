@@ -107,8 +107,10 @@
       <p id="campus_size">{context.Campus.size}} <i id="campus_size_edit_icon"class="far fa-edit"  style="cursor: pointer;"></i></p>
       <input type="number" style="width:80%;visibility:hidden" class="form-control mb-2 mr-sm-2" id="campus_size_edit"
       value={context.Campus.size}} name="campus_size" required>
-      <button id="edit_save_button" type="submit" class="btn btn-secondary mb-2" style="visibility: hidden;">Save all Changes</button>
-      <button id="edit_discard_button" type="submit" class="btn btn-dark-green mb-2" style="visibility: hidden;">Discard all Changes</button>
+      <div class="button-collapse">
+      <button id="edit_save_button" type="submit" class="btn btn-success mb-2">Save all Changes</button>
+      <button id="edit_discard_button" type="submit" class="btn btn-danger mb-2" >Discard all Changes</button>
+    </div>
     </div>
   </form>
     <script>
@@ -188,12 +190,31 @@
         style="border:2px solid gainsboro"
         alt="Responsive image"
       />
+      <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input name="change_picture" type="text" hidden />
       <p style="text-align: center;">
-        Change Picture <i class="far fa-edit"  style="cursor: pointer;"></i>
+        Change Picture <i id="change_picture_icon" class="far fa-edit"  style="cursor: pointer;"></i>
+    
       </p>
+      <div id ="upload_image" style="visibility: hidden;">
+        <input name="image" type="file" />
+        <input type="submit" class="btn btn-primary"/>
+      </div>
+    </form>
     </div>
   </div>
   <hr />
+
+  <script>
+      document.getElementById('change_picture_icon').addEventListener("click",()=>{
+        if(document.getElementById('upload_image').style.visibility== "visible"){
+          document.getElementById('upload_image').style.visibility= "hidden";
+        }else{
+          document.getElementById('upload_image').style.visibility= "visible";
+        }
+      });
+      </script>
   <h3>Faculties in Ayazaga Campus</h3>
   <div class="row">   <div class="col-lg-6 col-sm-12 col-md-12">
         <form class="form needs-validation" action="" method="post" id="form_add_person"

@@ -92,9 +92,9 @@ class Database:
     def add_campus(self, campus):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "insert into campus (id, name, address, city, size, phone_number) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            cursor.execute(query, (campus.id, campus.name, campus.address,
-                                   campus.city, campus.size, campus.phone_number))
+            query = "insert into campus (name, address, city, size, foundation_date, phone_number) values (%s, %s, %s, %s, %s,%s,%s ,%s)"
+            cursor.execute(query, (campus.name, campus.address,
+                                   campus.city, campus.size, campus.foundation_date, campus.phone_number, campus.filename, campus.content))
             connection.commit()
         self.campuses[campus.id] = campus
         return campus.id
@@ -119,6 +119,14 @@ class Database:
             query = "update campus set id = %s, name = %s, address = %s, city = %s, size = %s, phone_number = %s where (id= % s)"
             cursor.execute(query, (campus.id, campus.name, campus.address,
                                    campus.city.campus.size, campus.phone_number, campus.id))
+            connection.commit
+
+    def update_campus_image(self, campus):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "update campus set image_name = %s, file_extension = %s, image_data = %s where (id= % s)"
+            cursor.execute(query, (campus.image_name,
+                                   campus.file_extension, campus.image_data, campus.id))
             connection.commit
 
     def get_campuses(self):

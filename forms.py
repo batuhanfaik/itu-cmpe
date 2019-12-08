@@ -1,32 +1,52 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, TextAreaField, SelectField, BooleanField
 from wtforms.fields import DateField, DecimalField, FileField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
+from campus import Campus
+from werkzeug.utils import secure_filename
+# 'Adıyaman', 'Afyon', 'Ağrı', 'Amasya', 'Ankara', 'Antalya', 'Artvin',
+#                        'Aydın', 'Balıkesir', 'Bilecik', 'Bingöl', 'Bitlis', 'Bolu', 'Burdur', 'Bursa', 'Çanakkale',
+#                        'Çankırı', 'Çorum', 'Denizli', 'Diyarbakır', 'Edirne', 'Elazığ', 'Erzincan', 'Erzurum', 'Eskişehir',
+#                        'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari', 'Hatay', 'Isparta', 'Mersin', 'İstanbul', 'İzmir',
+#                        'Kars', 'Kastamonu', 'Kayseri', 'Kırklareli', 'Kırşehir', 'Kocaeli', 'Konya', 'Kütahya', 'Malatya',
+#                        'Manisa', 'Kahramanmaraş', 'Mardin', 'Muğla', 'Muş', 'Nevşehir', 'Niğde', 'Ordu', 'Rize', 'Sakarya',
+#                        'Samsun', 'Siirt', 'Sinop', 'Sivas', 'Tekirdağ', 'Tokat', 'Trabzon', 'Tunceli', 'Şanlıurfa', 'Uşak',
+#                        'Van', 'Yozgat', 'Zonguldak', 'Aksaray', 'Bayburt', 'Karaman', 'Kırıkkale', 'Batman', 'Şırnak',
+#                        'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük', 'Kilis', 'Osmaniye', 'Düzce'
+
+city_selections = [('Adana', 'Adana')]
 
 
 class add_campus_form(FlaskForm):
-    nm = ''
-    addr = ''
-    cty = ''
-    fd = ''
-    sze = ''
-    phnu = ''
-
-    def __init__(self, *args, **kwargs):
-        self.nm = args[0]['name']
-        self.cty = args[0]['address']
-        self.addr = args[0]['address']
-        self.foundation_date = args[0]['foundation_date']
-        self.size = args[0]['size']
-        self.phone_number = args[0]['phone_number']
-        super(add_campus_form, self).__init__(*args, **kwargs)
-
     name = StringField('name', validators=[DataRequired()])
-    address = StringField('address')
-    city = StringField('city')
-    foundation_date = DateField('foundation_date')
+    address = TextAreaField('address', validators=[Length(min=4, max=50)])
+    city = SelectField(choices=city_selections)
     size = DecimalField('size')
-    phone_number = StringField('phone_number')
+    foundation_date = DateField('foundation_date', validators=[
+                                DataRequired()])
+    phone_number = StringField('phone_number', validators=[
+                               Length(10)])
+    add_image_checkbox = BooleanField('add_image_checkbox')
+    image = FileField('image')
+
+    def save(form, image):
+        print('HETYHEYHE', image)
+        file_name = secure_filename(image.filename)
+        # or ByteIO, whatever you like
+        bin_file = image.read()
+        print(bin_file)
+        campus = Campus(form.name.data, form.address.data, form.city.data,
+                        form.size.data, form.foundation_date.data, form.phone_number.data, file_name, image)
+        validate_image(image)
+        print('ADDEDDDDD->', name.data)
+        print('Added to database')
+
+
+# class upload_campus_image_form(FlaskForm):
+#     image = FileField('image')
+
+#     def save(form):
+#         print('Added to database image')
 
 
 class add_faculty_form(FlaskForm):
@@ -77,10 +97,6 @@ class add_department_form(FlaskForm):
     foundation_date = DateField('foundation_date')
     size = DecimalField('size')
     phone_number = StringField('phone_number')
-
-
-class upload_campus_image_form(FlaskForm):
-    image = FileField()
 
 
 class login_form(FlaskForm):
