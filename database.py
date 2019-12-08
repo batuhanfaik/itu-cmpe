@@ -98,6 +98,7 @@ class Database:
             cursor.execute(query, (campus.name, campus.address,
                                    campus.city, campus.size, campus.foundation_date, campus.phone_number, campus.img_name, campus.img_data))
             connection.commit()
+        print('End of the campus add function')
         self.campuses[campus.id] = campus
         return campus.id
 
@@ -137,6 +138,8 @@ class Database:
             cursor = connection.cursor()
             query = "select * from campus order by id desc"
             cursor.execute(query)
+            print('Cursor.rowcount', cursor.rowcount)
+
             for row in cursor:
                 campus = Campus(*row[:])
                 campuses.append((campus.id, campus))
