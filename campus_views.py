@@ -54,7 +54,7 @@ def campus():
                 #agin = io.BytesIO(bin_img)
 
                 # print(byte_img)
-
+        return redirect(url_for('campus'))
     context = {
         # 'form': form,
         'campuses': campuses,

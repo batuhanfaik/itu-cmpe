@@ -136,7 +136,7 @@ class Database:
         campuses = []
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "select * from campus order by id desc"
+            query = "select * from campus order by id asc"
             cursor.execute(query)
             print('Cursor.rowcount', cursor.rowcount)
 
