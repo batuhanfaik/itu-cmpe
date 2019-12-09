@@ -54,7 +54,6 @@ def campus():
                 #agin = io.BytesIO(bin_img)
 
                 # print(byte_img)
-        return redirect(url_for('campus'))
     context = {
         # 'form': form,
         'campuses': campuses,
@@ -63,15 +62,16 @@ def campus():
     return render_template('/campuses/campus.html', context=context)
 
 
-def campus_detailed():
-    # db = current_app.config["db"]
-    # campus = db.get_campus(0)
+def campus_detailed(campus_id):
+    db = current_app.config["db"]
+    campus = db.get_campus(campus_id)
     # if(campus is None):
     #     add_campus_form = add_campus_form()
     # else:
     #     add_campus_form = add_campus_form(
     #         {'name': campus.name, 'address': campus.address})
     # add_facultyForm = add_faculty_form()
+    edit_campus_form = add_campus_form()
     if request.method == "POST" and 'change_picture' in request.form:
         file = request.files['image']
         file.save(secure_filename(file.filename))
@@ -86,14 +86,15 @@ def campus_detailed():
             filename = secure_filename(url)
             file.save(os.path.join(
                 current_app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('campus_detailed'))
+            # return redirect(url_for('campus_detailed'))
 
     if request.method == "POST" and request.form.validate():
         faculty = Faculty()
         return redirect(url_for('home'))
     context = {
         # 'add_faculty_form': add_facultyForm,
-        'campus': campus,
+        'Campus': campus,
+        'edit_campus_form': edit_campus_form
     }
     return render_template('/campuses/campus_detailed.html', context=context)
 

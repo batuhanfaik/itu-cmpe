@@ -77,7 +77,7 @@ def create_app(db_url):
                      view_func=views.person_page, methods=['GET', 'POST'])
     app.add_url_rule("/campuses/campus",
                      view_func=campus_views.campus, methods=['GET', 'POST'])
-    app.add_url_rule("/campuses/campus_detailed",
+    app.add_url_rule("/campuses/<campus_id>",
                      view_func=campus_views.campus_detailed, methods=['GET', 'POST'])
     app.add_url_rule("/test",
                      view_func=views.test_page, methods=['GET', 'POST'])

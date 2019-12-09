@@ -1,115 +1,72 @@
 {%extends "layout.html"%} {% block body %}
 <div class="container mt-3">
   <form name="campus_edit" method="POST">
-  <h1 id="campus_name" class="mb-3">Ayazaga Campus <i id="campus_name_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></h1>
-  <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;visibility: hidden;" id="campus_name_edit"
-                   placeholder="e.g. 'Ayazaga Campus'" name="campus_name" required>
+  <h1 class="mb-3"><p id="campus_name" style="display:inline" value="{{context.Campus.name}}">{{context.Campus.name}}</p> <i id="campus_name_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></h1>
+  {{ context.edit_campus_form.name(required=True, autofocus=True,
+    class='form-control mb-2 mr-sm-2',
+    placeholder='e.g. "Ayazaga Campus"', style='width:80%;visibility:hidden', id='campus_name_edit') }} {% for error in
+    context.edit_campus_form.name.errors %}
+    <div class="invalid-feedback">s{{ error }}</div>
+    {% endfor %}   
   <hr />
   <div class="row">
     <div class="col-6">
       <h4><i class="fas fa-map-marker"></i> Campus Address:</h4>
-      <p id="campus_address">{context.Campus.address}} <i id="campus_address_edit_icon" class="far fa-edit" style="cursor: pointer;"></i></p>
-      <textarea type="text" class="form-control mb-2 mr-sm-2" style="visibility: hidden;" id="campus_address_edit"
-      placeholder="Address of the campus." style="width:80%;visibility: hidden;" name="address" value={context.Campus.address}} required></textarea>
+      <p><p id="campus_address" style="display:inline" >{{context.Campus.address}}</p> <i id="campus_address_edit_icon" class="far fa-edit" style="cursor: pointer;"></i></p>
+ <!---    <textarea type="text" class="form-control mb-2 mr-sm-2" style="visibility: hidden;" id="campus_address_edit"
+      placeholder="Address of the campus." style="width:80%;visibility: hidden;" name="address" value={{context.Campus.address}} required></textarea>
+ -->
+      {{ context.edit_campus_form.address(required=True, autofocus=True,
+        class='form-control mb-2 mr-sm-2',
+        placeholder='Address the New Campus', style='width:80%;visibility:hidden', id='campus_address_edit') }} {% for error in
+        context.edit_campus_form.address.errors %}
+        <div class="invalid-feedback">s{{ error }}</div>
+        {% endfor %}  
       <h4><i class="fas fa-city"></i> Campus City:</h4>
-      <p id="campus_city">{context.Campus.city}} <i id="campus_city_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></p>
+      <p ><p id="campus_city" style="display:inline">{{context.Campus.city}}</p> <i id="campus_city_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></p>
       <!--Add here city selector-->
-      <select class="form-control" style="width:80%;visibility:hidden;" id="campus_city_edit" value={context.Campus.city}} name="category" required>
-        <option value="0">Select City</option>
-        <option value="1">Adana</option>
-        <option value="2">Adıyaman</option>
-        <option value="3">Afyonkarahisar</option>
-        <option value="4">Ağrı</option>
-        <option value="5">Amasya</option>
-        <option value="6">Ankara</option>
-        <option value="7">Antalya</option>
-        <option value="8">Artvin</option>
-        <option value="9">Aydın</option>
-        <option value="10">Balıkesir</option>
-        <option value="11">Bilecik</option>
-        <option value="12">Bingöl</option>
-        <option value="13">Bitlis</option>
-        <option value="14">Bolu</option>
-        <option value="15">Burdur</option>
-        <option value="16">Bursa</option>
-        <option value="17">Çanakkale</option>
-        <option value="18">Çankırı</option>
-        <option value="19">Çorum</option>
-        <option value="20">Denizli</option>
-        <option value="21">Diyarbakır</option>
-        <option value="22">Edirne</option>
-        <option value="23">Elazığ</option>
-        <option value="24">Erzincan</option>
-        <option value="25">Erzurum</option>
-        <option value="26">Eskişehir</option>
-        <option value="27">Gaziantep</option>
-        <option value="28">Giresun</option>
-        <option value="29">Gümüşhane</option>
-        <option value="30">Hakkâri</option>
-        <option value="31">Hatay</option>
-        <option value="32">Isparta</option>
-        <option value="33">Mersin</option>
-        <option value="34">İstanbul</option>
-        <option value="35">İzmir</option>
-        <option value="36">Kars</option>
-        <option value="37">Kastamonu</option>
-        <option value="38">Kayseri</option>
-        <option value="39">Kırklareli</option>
-        <option value="80">Kırşehir</option>
-        <option value="41">Kocaeli</option>
-        <option value="42">Konya</option>
-        <option value="43">Kütahya</option>
-        <option value="44">Malatya</option>
-        <option value="45">Manisa</option>
-        <option value="46">Kahramanmaraş</option>
-        <option value="47">Mardin</option>
-        <option value="48">Muğla</option>
-        <option value="49">Muş</option>
-        <option value="50">Nevşehir</option>
-        <option value="51">Niğde</option>
-        <option value="52">Ordu</option>
-        <option value="53">Rize</option>
-        <option value="54">Sakarya</option>
-        <option value="55">Samsun</option>
-        <option value="56">Siirt</option>
-        <option value="57">Sinop</option>
-        <option value="58">Sivas</option>
-        <option value="59">Tekirdağ</option>
-        <option value="60">Tokat</option>
-        <option value="61">Trabzon</option>
-        <option value="62">Tunceli</option>
-        <option value="63">Şanlıurfa</option>
-        <option value="64">Uşak</option>
-        <option value="65">Van</option>
-        <option value="66">Yozgat</option>
-        <option value="67">Zonguldak</option>
-        <option value="68">Aksaray</option>
-        <option value="69">Bayburt</option>
-        <option value="70">Karaman</option>
-        <option value="71">Kırıkkale</option>
-        <option value="72">Batman</option>
-        <option value="73">Şırnak</option>
-        <option value="74">Bartın</option>
-        <option value="75">Ardahan</option>
-        <option value="76">Iğdır</option>
-        <option value="77">Yalova</option>
-        <option value="78">Karabük</option>
-        <option value="79">Kilis</option>
-        <option value="80">Osmaniye</option>
-        <option value="81">Düzce</option>
-        <option value="82">Abroad</option>
-</select>
+      {{ context.edit_campus_form.city(required=True, autofocus=True,
+        class='form-control',
+        placeholder='Select City', style='width:80%;visibility:hidden', id='campus_city_edit') }} {% for error in
+        context.edit_campus_form.city.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
       <h4><i class="fas fa-phone"></i> Campus Phone Number :</h4>
-      <p id="campus_phone_number">{context.Campus.phone_number}} <i id="campus_phone_number_edit_icon"class="far fa-edit"  style="cursor: pointer;"></i></p>
-      <input type="text" style="width:80%;visibility: hidden;" class="form-control mb-2 mr-sm-2" id="campus_phone_number_edit"
-      value={context.Campus.phone_number}} name="campus_phone_number_edit" required>
+      <p><p id="campus_phone_number" style="display: inline;">{{context.Campus.phone_number}}</p> <i id="campus_phone_number_edit_icon"class="far fa-edit"  style="cursor: pointer;"></i></p>
+  <!--    <input type="text" style="width:80%;visibility: hidden;" class="form-control mb-2 mr-sm-2" id="campus_phone_number_edit"
+      value={{context.Campus.phone_number}} name="campus_phone_number_edit" required>-->
+      {{ context.edit_campus_form.phone_number(required=True, autofocus=True,
+        class='form-control mb-2 mr-sm-2',
+        placeholder='5xxxxxxxxx', style='width:80%;visibility:hidden', maxlength="10", id="campus_phone_number_edit",
+        onkeydown="return ( event.ctrlKey || event.altKey 
+    || (47 < event.keyCode && event.keyCode < 58 && event.shiftKey==false) 
+    || (95 < event.keyCode && event.keyCode < 106)
+    || (event.keyCode==8) || (event.keyCode==9) 
+    || (event.keyCode>34 && event.keyCode < 40) 
+    || (event.keyCode==46) )") }} {% for error in
+        context.edit_campus_form.phone_number.errors %}   
+        <div class="invalid-feedback">{{ error }}</div>
+        {%endfor%}
       <h4><i class="fas fa-expand-arrows-alt"></i> Campus Size (Acres):</h4>
-      <p id="campus_size">{context.Campus.size}} <i id="campus_size_edit_icon"class="far fa-edit"  style="cursor: pointer;"></i></p>
-      <input type="number" style="width:80%;visibility:hidden" class="form-control mb-2 mr-sm-2" id="campus_size_edit"
-      value={context.Campus.size}} name="campus_size" required>
+      <p><p id="campus_size" style="display: inline;">{{context.Campus.size}}</p> <i id="campus_size_edit_icon"class="far fa-edit"  style="cursor: pointer;"></i></p>
+  
+ <!--     <input type="number" style="width:80%;visibility:hidden" class="form-control mb-2 mr-sm-2" id="campus_size_edit"
+      value={{context.Campus.size}} name="campus_size" required> -->
+      {{ context.edit_campus_form.size(type="number",required=True, autofocus=True,
+      class='form-control mb-2 mr-sm-2',
+      placeholder='Campus Size(Acres)', style='width:80%;visibility:hidden', id='campus_size_edit') }} {% for error in
+      context.edit_campus_form.size.errors %}   
+      <div class="invalid-feedback">{{ error }}</div>
+      {%endfor%}
+
       <div class="button-collapse">
       <button id="edit_save_button" type="submit" class="btn btn-success mb-2">Save all Changes</button>
       <button id="edit_discard_button" type="submit" class="btn btn-danger mb-2" >Discard all Changes</button>
+        <script>
+          document.getElementById('edit_discard_button').addEventListener("click",()=>{
+            document.getElementById('campus_name').innerText = "{{ context.Campus.name }}";
+          });
+        </script>
     </div>
     </div>
   </form>
@@ -118,6 +75,7 @@
         if(document.getElementById('campus_name_edit').style.visibility == "visible"){
           document.getElementById('campus_name_edit').style.visibility = "hidden";
         }else{
+          document.getElementById('campus_name_edit').value = document.getElementById('campus_name').innerText;
           document.getElementById('campus_name_edit').style.visibility = "visible";
           document.getElementById('edit_save_button').style.visibility="visible";
         }
@@ -129,7 +87,6 @@
         }else{
           document.getElementById('campus_city_edit').style.visibility = "visible";
           document.getElementById('edit_save_button').style.visibility="visible";
-
         }
       });
 
@@ -137,9 +94,9 @@
         if(document.getElementById('campus_size_edit').style.visibility == "visible"){
           document.getElementById('campus_size_edit').style.visibility = "hidden";
         }else{
+          document.getElementById('campus_size_edit').value = document.getElementById('campus_size').innerText;
           document.getElementById('campus_size_edit').style.visibility = "visible";
           document.getElementById('edit_save_button').style.visibility="visible";
-
         }
       });
 
@@ -147,6 +104,7 @@
         if(document.getElementById('campus_address_edit').style.visibility == "visible"){
           document.getElementById('campus_address_edit').style.visibility = "hidden";
         }else{
+          document.getElementById('campus_address_edit').value = document.getElementById('campus_address').innerText;
           document.getElementById('campus_address_edit').style.visibility = "visible";
           document.getElementById('edit_save_button').style.visibility="visible";
 
@@ -157,15 +115,16 @@
         if(document.getElementById('campus_phone_number_edit').style.visibility == "visible"){
           document.getElementById('campus_phone_number_edit').style.visibility = "hidden";
         }else{
+          document.getElementById('campus_phone_number_edit').value = document.getElementById('campus_phone_number').innerText;
           document.getElementById('campus_phone_number_edit').style.visibility = "visible";
           document.getElementById('edit_save_button').style.visibility="visible";
         }
       });
       document.getElementById('campus_phone_number_edit').addEventListener("keydown",(event)=>{
-        document.getElementById("campus_phone_number").innerHTML = event.target.value;
+        document.getElementById("campus_phone_number").innerText = event.target.value;
       });
-      document.getElementById('campus_name_edit').addEventListener("keydown",(event)=>{
-        document.getElementById("campus_name").innerHTML = event.target.value;
+      document.getElementById('campus_name_edit').addEventListener("keyup",(event)=>{
+        document.getElementById("campus_name").innerText = event.target.value;
       });
       document.getElementById('campus_size_edit').addEventListener("keydown",(event)=>{
         document.getElementById("campus_size").innerHTML = event.target.value;
@@ -191,7 +150,7 @@
         alt="Responsive image"
       />
       <form method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" name="csrf_token" value="{ csrf_token() }"/>
         <input name="change_picture" type="text" hidden />
       <p style="text-align: center;">
         Change Picture <i id="change_picture_icon" class="far fa-edit"  style="cursor: pointer;"></i>
@@ -219,7 +178,7 @@
   <div class="row">   <div class="col-lg-6 col-sm-12 col-md-12">
         <form class="form needs-validation" action="" method="post" id="form_add_person"
               name="person_get">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <input type="hidden" name="csrf_token" value="{ csrf_token() }"/>
             <div class="form-group inline">
                 <label for="name" class="mr-sm-2"><i class="fas fa-university"></i> Faculty Name:</label>
                 <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
@@ -274,9 +233,9 @@
                 {% for id, campus in campuses %}
                     <tr>
                         <td scope="row"><a
-                                href="{{ url_for("campus_detailed", id=id) }}">{{ id }}</a></td>
-                        <td>{{ campus.name }}</td>
-                        <td>{{ person.phone }}</td>
+                                href="{ url_for("campus_detailed", campus_id=id) }">{ id }</a></td>
+                        <td>{ campus.name }</td>
+                        <td>{ person.phone }</td>
                         <td><i class="fas fa-trash-alt"></i> | <i class="fas fa-edit"  style="cursor: pointer;"></i></td>
                     </tr>
                 {% endfor %}
