@@ -96,7 +96,7 @@ class Database:
             cursor = connection.cursor()
             query = "insert into campus (name, address, city, size, foundation_date, phone_number,campus_image_name,campus_image_data) values (%s, %s, %s, %s, %s,%s,%s ,%s, %s)"
             cursor.execute(query, (campus.name, campus.address,
-                                   campus.city, campus.size, campus.foundation_date, campus.phone_number, campus.img_name, campus.img_extension, dbapi2.Binary(campus.img_data)))
+                                   campus.city, campus.size, campus.foundation_date, campus.phone_number, campus.img_name, campus.img_extension, campus.img_data))
             connection.commit()
         print('End of the campus add function')
         self.campuses[campus.id] = campus
