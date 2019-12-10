@@ -100,7 +100,7 @@ def campus_detailed(campus_id):
     # print(bytearray(image))
     image = bytes(image)
     image = b64encode(image)
-    print('zaa', image)
+    #print('zaa', image)
     context = {
         # 'add_faculty_form': add_facultyForm,
         'Campus': campus,
