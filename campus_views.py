@@ -32,33 +32,39 @@ def campus():
     campuses = db.get_campuses()
     campus = {}
     form = add_campus_form()
+
     if request.method == "POST":
-        if(form.validate()):
-            image = request.files['image']
-            if(validate_image(image)):
-                filename = secure_filename(image.filename)
-                file_extension = filename.split(".")[-1]
-                filename = filename.split(".")[0]
-                print('File name ->', filename)
-                print('\n File extension ->', file_extension)
-                # image.save(os.path.join(
-                #    current_app.config['UPLOAD_FOLDER'], filename))
-                # binary_img = open(os.path.join(
-                #    current_app.config['UPLOAD_FOLDER'], filename), 'rb')
-                byte_img = request.files['image'].read()
-                bin_img = ' '.join(map(bin, bytearray(byte_img)))
-                #content = binary_img.read()
-                campus = Campus(0, form.name.data, form.address.data, form.city.data, form.size.data,
-                                form.foundation_date.data, form.phone_number.data, filename, file_extension, bin_img)
-               # os.remove(os.path.join(
-              #      current_app.config['UPLOAD_FOLDER'], filename))
-                db.add_campus(campus)
+        if('delete_campus_flag' in request.form):
+            campus_id = request.form['delete_campus_flag']
+            print('campus id ->', campus_id)
+            db.delete_campus(campus_id)
+        else:
+            if(form.validate()):
+                image = request.files['image']
+                if(validate_image(image)):
+                    filename = secure_filename(image.filename)
+                    file_extension = filename.split(".")[-1]
+                    filename = filename.split(".")[0]
+                    print('File name ->', filename)
+                    print('\n File extension ->', file_extension)
+                    # image.save(os.path.join(
+                    #    current_app.config['UPLOAD_FOLDER'], filename))
+                    # binary_img = open(os.path.join(
+                    #    current_app.config['UPLOAD_FOLDER'], filename), 'rb')
+                    byte_img = request.files['image'].read()
+                    bin_img = ' '.join(map(bin, bytearray(byte_img)))
+                    #content = binary_img.read()
+                    campus = Campus(0, form.name.data, form.address.data, form.city.data, form.size.data,
+                                    form.foundation_date.data, form.phone_number.data, filename, file_extension, bin_img)
+                # os.remove(os.path.join(
+                #      current_app.config['UPLOAD_FOLDER'], filename))
+                    db.add_campus(campus)
 
-            # img_name = secure_filename(image.filename)
-            # print(bin_img)
-                # agin = io.BytesIO(bin_img)
+                # img_name = secure_filename(image.filename)
+                # print(bin_img)
+                    # agin = io.BytesIO(bin_img)
 
-                # print(byte_img)
+                    # print(byte_img)
     context = {
         # 'form': form,
         'campuses': campuses,
@@ -99,6 +105,7 @@ def campus_detailed(campus_id):
     image = campus.img_data
     # print(bytearray(image))
     image = bytes(image)
+    print(image)
     image = b64encode(image)
     #print('zaa', image)
     context = {
