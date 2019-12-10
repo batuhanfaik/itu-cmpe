@@ -49,7 +49,7 @@ def campus():
                 bin_img = ' '.join(map(bin, bytearray(byte_img)))
                 #content = binary_img.read()
                 campus = Campus(0, form.name.data, form.address.data, form.city.data, form.size.data,
-                                form.foundation_date.data, form.phone_number.data, file_extension, filename, bin_img)
+                                form.foundation_date.data, form.phone_number.data, filename, file_extension, bin_img)
                # os.remove(os.path.join(
               #      current_app.config['UPLOAD_FOLDER'], filename))
                 db.add_campus(campus)
