@@ -5,6 +5,8 @@ from werkzeug.utils import secure_filename
 import os
 import io
 from campus import Campus
+from base64 import b64encode
+
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg'}
 
 
@@ -35,23 +37,26 @@ def campus():
             image = request.files['image']
             if(validate_image(image)):
                 filename = secure_filename(image.filename)
-                image.save(os.path.join(
-                    current_app.config['UPLOAD_FOLDER'], filename))
-                binary_img = open(os.path.join(
-                    current_app.config['UPLOAD_FOLDER'], filename), 'rb')
-                content = binary_img.read()
+                file_extension = filename.split(".")[-1]
+                filename = filename.split(".")[0]
+                print('File name ->', filename)
+                print('\n File extension ->', file_extension)
+                # image.save(os.path.join(
+                #    current_app.config['UPLOAD_FOLDER'], filename))
+                # binary_img = open(os.path.join(
+                #    current_app.config['UPLOAD_FOLDER'], filename), 'rb')
+                byte_img = request.files['image'].read()
+                bin_img = ' '.join(map(bin, bytearray(byte_img)))
+                #content = binary_img.read()
                 campus = Campus(0, form.name.data, form.address.data, form.city.data, form.size.data,
-                                form.foundation_date.data, form.phone_number.data, filename, content)
-                os.remove(os.path.join(
-                    current_app.config['UPLOAD_FOLDER'], filename))
+                                form.foundation_date.data, form.phone_number.data, file_extension, filename, bin_img)
+               # os.remove(os.path.join(
+              #      current_app.config['UPLOAD_FOLDER'], filename))
                 db.add_campus(campus)
-            # byte_img = request.files['image'].read()
-                #bin_img = ' '.join(map(bin, bytearray(byte_img)))
-            # print(bin_img)
 
-            #img_name = secure_filename(image.filename)
+            # img_name = secure_filename(image.filename)
             # print(bin_img)
-                #agin = io.BytesIO(bin_img)
+                # agin = io.BytesIO(bin_img)
 
                 # print(byte_img)
     context = {
@@ -91,10 +96,16 @@ def campus_detailed(campus_id):
     if request.method == "POST" and request.form.validate():
         faculty = Faculty()
         return redirect(url_for('home'))
+    image = campus.img_data
+    # print(bytearray(image))
+    image = bytes(image)
+    image = b64encode(image)
+    print('zaa', image)
     context = {
         # 'add_faculty_form': add_facultyForm,
         'Campus': campus,
-        'edit_campus_form': edit_campus_form
+        'edit_campus_form': edit_campus_form,
+        'campus_image': image
     }
     return render_template('/campuses/campus_detailed.html', context=context)
 

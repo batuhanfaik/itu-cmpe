@@ -49,6 +49,7 @@ INIT_STATEMENTS = [
         foundation_date     DATE,
         phone_number        VARCHAR(12),   
         campus_image_name   VARCHAR(400),
+        campus_image_extension VARCHAR(10),
         campus_image_data   bytea, 
         PRIMARY KEY(id)
     );
