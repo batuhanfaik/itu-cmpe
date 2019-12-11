@@ -1,6 +1,6 @@
 from flask import current_app, render_template, request, redirect, url_for, abort
 
-from forms import add_campus_form, add_faculty_form
+from forms import add_campus_form, add_faculty_form, add_department_form
 from werkzeug.utils import secure_filename
 import os
 import io
@@ -125,8 +125,16 @@ def findNumberOfCampus():
     return len(campuses)
 
 
-def faculty_detailed():
-    context = {}
+def faculty_detailed(faculty_id):
+    db = current_app.config["db"]
+    faculty = db.get_faculty(faculty_id)
+    edit_faculty_form = add_faculty_form()
+    add_department = add_department_form()
+    context = {
+        'Faculty': faculty,
+        'edit_faculty_form': edit_faculty_form,
+        'add_department_form': add_department,
+    }
     return render_template('/campuses/faculty_detailed.html', context=context)
 
 
