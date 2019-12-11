@@ -81,6 +81,7 @@ def create_app(db_url):
                      view_func=campus_views.campus_detailed, methods=['GET', 'POST'])
     app.add_url_rule("/test",
                      view_func=views.test_page, methods=['GET', 'POST'])
+
     app.add_url_rule("/campus/faculty/<faculty_id>",
                      view_func=campus_views.faculty_detailed, methods=['GET', 'POST'])
     db = init_db(db_url)
