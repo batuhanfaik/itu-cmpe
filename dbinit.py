@@ -36,10 +36,7 @@ INIT_STATEMENTS = [
     CREATE domain credit as real check (
         ((value >= 15) and (value <=28))
     );
-    
-
-    DROP TABLE IF EXISTS CAMPUS;
-    
+        
     CREATE TABLE IF NOT EXISTS CAMPUS(
         id		            SERIAL 		NOT NULL,
         name 		        VARCHAR(25)	NOT NULL,
@@ -56,12 +53,14 @@ INIT_STATEMENTS = [
     
     CREATE TABLE IF NOT EXISTS FACULTY(
         id				    SERIAL 		NOT NULL,
+        campus_id           INT         NOT NULL,
         name 				VARCHAR(40)	NOT NULL,
         shortened_name 		VARCHAR(6)	NOT NULL,
         address 			VARCHAR(40),
         foundation_date 	DATE,
         phone_number		CHAR(11),
         PRIMARY KEY(id)
+        FOREIGN KEY(campus_id) REFERENCES CAMPUS(id)
     );
 
     CREATE TABLE IF NOT EXISTS DEPARTMENT(
