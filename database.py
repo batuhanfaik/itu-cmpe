@@ -117,9 +117,11 @@ class Database:
         # self._last_campus_id = self._last_campus_id - 1
 
     def update_campus(self, campus):
+        print('Girdik 2')
+
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "update campus set name = %s, address = %s, city = %s, size = %s, foundation_date = %s, phone_number = %s, img_name = %s, img_extension = %s, img_data = %s where (id= %d)"
+            query = "update campus set name = %s, address = %s, city = %s, size = %s, foundation_date = %s, phone_number = %s, campus_image_name = %s, campus_image_extension = %s, campus_image_data = %s where (id= %s)"
             cursor.execute(query, (campus.name, campus.address, campus.city,
                                    campus.size, campus.foundation_date, campus.phone_number, campus.img_name, campus.img_extension, campus.img_data, campus.id))
             connection.commit

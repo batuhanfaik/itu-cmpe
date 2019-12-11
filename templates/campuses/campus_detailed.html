@@ -2,7 +2,7 @@
 <div class="container mt-3">
   <form name="campus_edit" method="POST">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-
+      <input type="hidden" name="edit_campus_form"/>
   <div class="form-group">
     <h1 class="mb-3"><p id="campus_name" style="display:inline" value="{{context.Campus.name}}">{{context.Campus.name}}</p> <i id="campus_name_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></h1>
     {{ context.edit_campus_form.name(required=True, autofocus=True,
