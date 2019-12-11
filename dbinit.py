@@ -59,7 +59,7 @@ INIT_STATEMENTS = [
         address 			VARCHAR(40),
         foundation_date 	DATE,
         phone_number		CHAR(11),
-        PRIMARY KEY(id)
+        PRIMARY KEY(id),
         FOREIGN KEY(campus_id) REFERENCES CAMPUS(id)
     );
 
