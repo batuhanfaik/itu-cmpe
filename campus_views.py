@@ -23,7 +23,6 @@ def convertToBinaryData(filename):
 
 
 def validate_image(image):
-    print('oc')
     return True
 
 
@@ -105,7 +104,7 @@ def campus_detailed(campus_id):
     image = campus.img_data
     # print(bytearray(image))
     image = bytes(image)
-    print(image)
+    # print(image)
     image = b64encode(image)
     #print('zaa', image)
     context = {

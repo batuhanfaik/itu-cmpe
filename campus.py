@@ -13,3 +13,31 @@ class Campus:
 
     def get_campus_id(self):
         return self.id
+
+
+class Faculty:
+    def __init__(self, faculty_id, campus_id, name, shortened_name, adress, foundation_date, phone_number):
+        self.id = faculty_id
+        self.campus_id = campus_id
+        self.name = name
+        self.shortened_name = shortened_name
+        self.address = adress
+        self.foundation_date = foundation_date
+        self.phone_number = phone_number
+
+    def get_faculty_id(self):
+        return self.id
+
+
+class Department:
+    def __init__(self, department_id, faculty_id, name, shortened_name, adress, foundation_date, phone_number):
+        self.id = department_id
+        self.faculty_id = faculty_id
+        self.name = name
+        self.shortened_name = shortened_name
+        self.address = adress
+        self.foundation_date = foundation_date
+        self.phone_number = phone_number
+
+    def get_department_id(self):
+        return self.id
