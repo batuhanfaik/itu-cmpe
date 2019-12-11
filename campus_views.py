@@ -76,21 +76,12 @@ def campus():
 def campus_detailed(campus_id):
     db = current_app.config["db"]
     campus = db.get_campus(campus_id)
-    # if(campus is None):
-    #     add_campus_form = add_campus_form()
-    # else:
-    #     add_campus_form = add_campus_form(
-    #         {'name': campus.name, 'address': campus.address})
-    # add_facultyForm = add_faculty_form()
     edit_campus_form = add_campus_form()
     add_faculty = add_faculty_form()
     if request.method == "POST" and 'change_picture' in request.form:
         file = request.files['image']
         file.save(secure_filename(file.filename))
         url = file.filename
-
-        # if user does not select file, browser also
-        # submit an empty part without filename
         if url == '':
             flash('No selected file')
             return redirect(request.url)
@@ -98,17 +89,15 @@ def campus_detailed(campus_id):
             filename = secure_filename(url)
             file.save(os.path.join(
                 current_app.config['UPLOAD_FOLDER'], filename))
-            # return redirect(url_for('campus_detailed'))
     elif request.method == "POST" and 'add_faculty_form' in request.form:
-        if(add_faculty_form.validate()):
-            faculty = Faculty(request.form['add_faculty_form'], form.name.data, form.shortened_name.data,
-                              form.address.data, form.foundation_date.data, form.phone_number.data)
+        if(add_faculty.validate()):
+            faculty = Faculty(0, request.form['add_faculty_form'], add_faculty.name.data, add_faculty.shortened_name.data,
+                              add_faculty.address.data, add_faculty.foundation_date.data, add_faculty.phone_number.data)
             db.add_faculty(faculty)
     elif request.method == "POST" and 'edit_campus_form' in request.form:
         campus_id = campus.id
         updated_campus = Campus(campus_id, edit_campus_form.name.data, edit_campus_form.address.data, edit_campus_form.city.data, edit_campus_form.size.data,
                                 edit_campus_form.foundation_date.data, edit_campus_form.phone_number.data, campus.img_name, campus.img_extension, campus.img_data)
-        print('Girdik 1')
         db.update_campus(updated_campus)
         return redirect(url_for('campus_detailed', campus_id=campus.id))
 
@@ -118,12 +107,14 @@ def campus_detailed(campus_id):
     # print(image)
     image = b64encode(image)
     #print('zaa', image)
+    faculties = db.get_faculties_from_campus(campus.id)
     context = {
         # 'add_faculty_form': add_facultyForm,
         'Campus': campus,
         'edit_campus_form': edit_campus_form,
         'campus_image': image,
         'add_faculty_form': add_faculty,
+        'faculties': faculties
     }
     return render_template('/campuses/campus_detailed.html', context=context)
 

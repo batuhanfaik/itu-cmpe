@@ -325,30 +325,115 @@
         
         <div class="col-lg-6 col-sm-12 col-md-12">
                 
-                <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
+            <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
                 <thead>
                 <tr>
-                    <th scope="col"><i class="fas fa-signature"></i> Faculty Name</th>
-                    <th scope="col"><i class="fas fa-phone"></i> Faculty Phone Number</th>
-                    <th scope="col"><i class="fas fa-id-badge"></i> Faculty Shortened Name</th>   
-                    <th scope="col"><i class="fas fa-cog"></i> Settings</th>
+               <!--  <th scope="col"><i class="fas fa-id-badge"></i> Id</th>
+                -->            
+                <th scope="col"><i class="fas fa-signature"></i> Faculty Name</th>
+                <th scope="col"><i class="fas fa-phone"></i> Faculty Phone Number</th>
+                <th scope="col"><i class="fas fa-id-badge"></i> Faculty Shortened Name</th>   
+                <th scope="col"><i class="fas fa-cog"></i> Settings</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for id, faculty in context.faculties %}
+                <!-- REMOVE MODAL --------------------------------------------- START-->
+    <div class="modal fade" id="remove_faculty_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    
+    <!-- Add .modal-dialog-centered to .modal-dialog to vertically center the modal -->
+    <div class="modal-dialog modal-notify modal-danger" role="document">
+    
+    
+      <div class="modal-content">
+        <!--Header-->
+        <div class="modal-header">
+                <p class="heading lead">Modal Danger</p>
+        
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+              </div>
+        
+              <!--Body-->
+              <div class="modal-body">
+                <div class="text-center">
+                  <i class="fas fa-check fa-4x mb-3 animated rotateIn"></i>
+                  <p>You are about to Delete {{ faculty.name }} Faculty. In this Faculty, there are {{ faculty.numberOfDepartments }} Departments. </p>
+                  <h5>When you delete {{faculty.name}} Faculty, all departments related to this faculty will be removed.</h5>
+                  <h3>Are you Sure?</h3>
+                </div>
+              </div>
+        
+              <!--Footer-->
+              <div class="modal-footer justify-content-center">
+                <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" value={{id}} id="delete_faculty_flag" name="delete_faculty_flag"/>
+                <button type="submit" class="btn btn-danger">Delete Now <i class="far fa-gem ml-1 text-white"></i></button>
+                </form>
+                <a type="button" class="btn btn-outline-danger waves-effect" data-dismiss="modal">Cancel</a>
+              </div>
+            </div>
+            <!--/.Content-->
+      </div>
+    </div>
+    </div>
+    
+    <!-- REMOVE MODAL --------------------------------------------- END-->
+    
+    <!-- EDIT INFORMATIN MODAL --------------------------------------- START -->
+    
+    <!-- Central Modal Medium Info -->
+    <div class="modal fade" id="edit_faculty_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-notify modal-info" role="document">
+        <!--Content-->
+        <div class="modal-content">
+          <!--Header-->
+          <div class="modal-header">
+            <p class="heading lead">Do you Wanna Edit?</p>
+    
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" class="white-text">&times;</span>
+            </button>
+          </div>
+    
+          <!--Body-->
+          <div class="modal-body">
+            <div class="text-center">
+              <i class="fas fa-check fa-4x mb-3 animated rotateIn"></i>
+              <p>Are you sure, you will be directed to the Faculty edit page?</p>
+            </div>
+          </div>
+    
+          <!--Footer-->
+          <div class="modal-footer justify-content-center">
+            <button type="button"  class="btn btn-primary"><a href="{{ url_for("faculty_detailed", faculty_id=id) }}">Ok</a> <i class="far fa-gem ml-1 text-white"></i></button>
+            <a type="button" class="btn btn-outline-primary waves-effect" data-dismiss="modal">Cancel</a>
+          </div>
+        </div>
+        <!--/.Content-->
+      </div>
+    </div>
+    <!-- Central Modal Medium Info-->
+    <!-- EDIT INFORMATION MODAL ---------------- END-->
                     <tr>
                         <!--<td scope="row"><a
-                                href="{ url_for   ("campus_detailed", campus_id=id) }">{ id }</a></td> -->
-                                <td>{ faculty.name }</td>
-                                <td>{ faculty.shortened_name }</td>
-                                <td>{ faculty.phone_number }</td>
-                        <td><i class="fas fa-trash-alt"></i> | <i class="fas fa-edit"  style="cursor: pointer;"></i></td>
+                                href="{{ url_for("campus_detailed", campus_id=id) }}">{{ id }}</a></td>
+                        -->
+                        <td><i class="fas fa-university"></i> {{ faculty.name }}</td>
+                        <td>{{ faculty.phone_number }}</td>
+                        <td>{{ faculty.shortened_name }}</td>
+                        <td><i class="fas fa-trash-alt" id="delete_faculty" data-toggle="modal" data-target="#remove_faculty_modal{{id}}"  style="cursor: pointer;"></i> | <i class="fas fa-edit" data-toggle="modal" data-target="#edit_faculty_modal{{id}}"  style="cursor: pointer;"></i></td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
+
+
         
-    
         </div>
     </div> 
 </div>

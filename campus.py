@@ -1,8 +1,8 @@
 class Campus:
-    def __init__(self, campus_id, name, adress, city, size, foundation_date, phone_number, image_name, image_extension, image_data):
+    def __init__(self, campus_id, name, address, city, size, foundation_date, phone_number, image_name, image_extension, image_data):
         self.id = campus_id
         self.name = name
-        self.address = adress
+        self.address = address
         self.city = city
         self.size = size
         self.foundation_date = foundation_date
@@ -35,7 +35,8 @@ class Department:
         self.faculty_id = faculty_id
         self.name = name
         self.shortened_name = shortened_name
-        self.address = adress
+        self.block_number = block_number
+        self.budget = budget
         self.foundation_date = foundation_date
         self.phone_number = phone_number
 
