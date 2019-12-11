@@ -13,7 +13,7 @@ UPLOAD_FOLD = 'media'
 UPLOAD_FOLDER = os.path.join(APP_ROOT, UPLOAD_FOLD)
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg'}
-SECRET_KEY = os.urandom(32)
+SECRET_KEY = "secret"
 lm = LoginManager()
 csrf = CSRFProtect()
 lm.login_view = "views.login_page"
