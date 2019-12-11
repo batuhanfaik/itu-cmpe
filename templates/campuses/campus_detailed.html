@@ -1,16 +1,20 @@
 {%extends "layout.html"%} {% block body %}
 <div class="container mt-3">
   <form name="campus_edit" method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
   <div class="form-group">
-  <h1 class="mb-3"><p id="campus_name" style="display:inline" value="{{context.Campus.name}}">{{context.Campus.name}}</p> <i id="campus_name_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></h1>
-  {{ context.edit_campus_form.name(required=True, autofocus=True,
-    class='form-control mb-2 mr-sm-2',
-    placeholder='e.g. "Ayazaga Campus"', style='width:80%;visibility:hidden', id='campus_name_edit') }} {% for error in
-    context.edit_campus_form.name.errors %}
-    <div class="invalid-feedback">s{{ error }}</div>
-    {% endfor %}   
+    <h1 class="mb-3"><p id="campus_name" style="display:inline" value="{{context.Campus.name}}">{{context.Campus.name}}</p> <i id="campus_name_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></h1>
+    {{ context.edit_campus_form.name(required=True, autofocus=True,
+      class='form-control mb-2 mr-sm-2',
+      placeholder='e.g. "Ayazaga Campus"', style='width:80%;visibility:hidden', id='campus_name_edit') }} {% for error in
+      context.edit_campus_form.name.errors %}
+      <div class="invalid-feedback">s{{ error }}</div>
+      {% endfor %}   
   </div>
+
   <hr />
+
   <div class="row">
     <div class="col-6">
       <div class="form-group">
@@ -84,8 +88,11 @@
          
       <div class="form-group">
       <div class="button-collapse">
-      <button id="edit_save_button" type="submit" class="btn btn-success mb-2">Save all Changes</button>
+      <form method="POST">
+      <button type="submit" id="edit_save_button" class="btn btn-success mb-2">aSave all Changes</button>
+    </form>
       <button id="edit_discard_button" class="btn btn-danger mb-2" >Discard all Changes</button>
+  
         <script>
           document.getElementById('edit_discard_button').addEventListener("click",()=>{
             document.getElementById('campus_name').innerText = "{{ context.Campus.name }}";
@@ -99,8 +106,9 @@
         </script>
     </div>
     </div>
-    </div>
   </form>
+
+    </div>
     <script>
       document.getElementById('campus_name_edit_icon').addEventListener("click",()=>{
         if(document.getElementById('campus_name_edit').style.visibility == "visible"){
@@ -219,43 +227,97 @@
       </script>
   <h3>Faculties in Ayazaga Campus</h3>
   <div class="row">   <div class="col-lg-6 col-sm-12 col-md-12">
-        <form class="form needs-validation" action="" method="post" id="form_add_person"
-              name="person_get">
+        <form class="form needs-validation" method="post" id="form_add_faculty"
+              name="add_faculty_form">
+            <input type="hidden" value="{{context.Campus.id}}" name="add_faculty_form" />
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group inline">
-                <label for="name" class="mr-sm-2"><i class="fas fa-university"></i> Faculty Name:</label>
-                <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
-                       placeholder="e.g. 'Ayazaga Campus'" name="name" required>
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            <div class="form-group inline">
-                    <label for="name" class="mr-sm-2"><i class="fas fa-university"></i> Faculty Shortened Name:</label>
-                    <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
+                    <label for="name" class="mr-sm-2"><i class="fas fa-university"></i> Faculty Name:</label>
+       <!--           <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
                            placeholder="e.g. 'Ayazaga Campus'" name="name" required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                </div>    
-            <div class="form-group">
-                <label for="phone" class="mr-sm-2"><i class="fas fa-map-marker"></i> Faculty Address:</label>
-                <textarea type="text" class="form-control mb-2 mr-sm-2" id="phone"
-                       placeholder="Address of the new campus." style="width:80%;" name="phone" required></textarea>
+       -->
+            {{ context.add_faculty_form.name(required=True, autofocus=True,
+              class='form-control mb-2 mr-sm-2',
+              placeholder='e.g. "Faculty of Science or Faculty of Medicine"', style='width:80%', id='faculty_name') }} {% for error in
+              context.add_faculty_form.name.errors %}
+              <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %} 
                 <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
-            </div>
-            <div class="form-group">
-                    <label for="phone" class="mr-sm-2"><i class="fas fa-map-marker"></i> Faculty Phone Number:</label>
-                    <textarea type="text" class="form-control mb-2 mr-sm-2" id="phone"
-                           placeholder="Address of the new campus." style="width:80%;" name="phone" required></textarea>
-                    <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
                 </div>
+                
+                <div class="form-group inline">
+                    <label for="faculty_shortened_name" class="mr-sm-2"><i class="fas fa-university"></i> Faculty Shortened Name:</label>
+       <!--           <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
+                           placeholder="e.g. 'Ayazaga Campus'" name="name" required>
+       -->
+            {{ context.add_faculty_form.shortened_name(required=True, autofocus=True,
+              class='form-control mb-2 mr-sm-2',
+              placeholder='e.g. "EHB" etc.', style='width:80%', id='faculty_shortened_name') }} {% for error in
+              context.add_faculty_form.shortened_name.errors %}
+              <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %} 
+                <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                </div>     
+            <div class="form-group">
+                <label for="phone" class="mr-sm-2"><i class="fas fa-map-marker"></i> Faculty Address:</label>
+       <!--        <textarea type="text" class="form-control mb-2 mr-sm-2" id="phone"
+                       placeholder="Address of the new campus." style="width:80%;" name="phone" required></textarea>
+       -->
+            {{ context.add_faculty_form.address(required=True, autofocus=True,
+              class='form-control mb-2 mr-sm-2',
+              placeholder='Address the New Faculty', style='width:80%', id='faculty_address') }} {% for error in
+              context.add_faculty_form.address.errors %}
+              <div class="invalid-feedback">s{{ error }}</div>
+              {% endfor %}  
+       
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="phone_number_input" class="mr-sm-2"><i class="fas fa-phone"></i>
+                    Faculty Phone Number :</label>
+         <!--       <input type="number" style="width:80%;" class="form-control mb-2 mr-sm-2" id="phone" 
+                       placeholder="How many acres is new campus? " name="phone" required> -->
+                       {{ context.add_faculty_form.phone_number(required=True, autofocus=True,
+                        class='form-control mb-2 mr-sm-2',
+                        placeholder='5xxxxxxxxx', style='width:80%', maxlength="10", id="phone_number_input",
+                        onkeydown="return ( event.ctrlKey || event.altKey 
+                    || (47 < event.keyCode && event.keyCode < 58 && event.shiftKey==false) 
+                    || (95 < event.keyCode && event.keyCode < 106)
+                    || (event.keyCode==8) || (event.keyCode==9) 
+                    || (event.keyCode>34 && event.keyCode < 40) 
+                    || (event.keyCode==46) )") }} {% for error in
+                        context.add_faculty_form.phone_number.errors %}   
+                        <div class="invalid-feedback">{{ error }}</div>
+                        {%endfor%}
+                       <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+                <script>
+                        document.getElementById('phone_number_input').addEventListener('keypress',(e)=>{
+                            console.log('hey'+e.target.value)
+
+                            if(document.getElementById('phone_number_input').value.length < 10)
+                                document.getElementById('phone_number_input').style.borderColor='red';
+                            else if(document.getElementById('phone_number_input').value.length == 10)
+                                document.getElementById('phone_number_input').style.borderColor='green';
+                        });
+                </script>
+            </div>
             <div class="form-group">
                     <label for="bdate" class="mr-sm-2"><i class="fas fa-calendar-alt"></i> Faculty Foundation Date:</label>
-                    <input type="date" class="form-control mb-2 mr-sm-2" id="foundation_date" style="width:80%;" name="foundation_date"
+           <!--         <input type="date" class="form-control mb-2 mr-sm-2" id="foundation_date" style="width:80%;" name="foundation_date"
                            required>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please enter the birthday.</div>
+           -->
+                {{ context.add_faculty_form.foundation_date(type="date",format='%Y-%m-%d',required=True, autofocus=True,
+                class='form-control mb-2 mr-sm-2',
+                style='width:80%', id='foundation_date') }} {% for error in
+                context.add_faculty_form.foundation_date.errors %}   
+                <div class="invalid-feedback">{{ error }}</div>
+                {%endfor%}
+                  <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please enter the Foundation Date of Faculty.</div>
                 </div>
             <button type="submit" class="btn btn-primary mb-2">Add New Faculty</button>
         </form>
@@ -266,19 +328,20 @@
                 <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
                 <thead>
                 <tr>
-                    <th scope="col"><i class="fas fa-id-badge"></i> Id</th>
-                    <th scope="col"><i class="fas fa-signature"></i> Campus Name</th>
-                    <th scope="col"><i class="fas fa-phone"></i> Campus Phone</th>
+                    <th scope="col"><i class="fas fa-signature"></i> Faculty Name</th>
+                    <th scope="col"><i class="fas fa-phone"></i> Faculty Phone Number</th>
+                    <th scope="col"><i class="fas fa-id-badge"></i> Faculty Shortened Name</th>   
                     <th scope="col"><i class="fas fa-cog"></i> Settings</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for id, campus in campuses %}
+                {% for id, faculty in context.faculties %}
                     <tr>
                         <!--<td scope="row"><a
-                                href="{ url_for("campus_detailed", campus_id=id) }">{ id }</a></td> -->
-                        <td>{ campus.name }</td>
-                        <td>{ person.phone }</td>
+                                href="{ url_for   ("campus_detailed", campus_id=id) }">{ id }</a></td> -->
+                                <td>{ faculty.name }</td>
+                                <td>{ faculty.shortened_name }</td>
+                                <td>{ faculty.phone_number }</td>
                         <td><i class="fas fa-trash-alt"></i> | <i class="fas fa-edit"  style="cursor: pointer;"></i></td>
                     </tr>
                 {% endfor %}
@@ -290,4 +353,18 @@
     </div> 
 </div>
 
+<script>
+  window.onload = () =>{
+    document.getElementById('campus_name').innerText = "{{ context.Campus.name }}";
+    document.getElementById('campus_name_edit').value = document.getElementById('campus_name').innerText;
+    document.getElementById('campus_address').innerText = "{{ context.Campus.address }}";
+    document.getElementById('campus_address_edit').value = document.getElementById('campus_address').innerText;
+    document.getElementById('campus_size').innerText = "{{ context.Campus.size }}";
+    document.getElementById('campus_size_edit').value = document.getElementById('campus_size').innerText;
+    document.getElementById('campus_phone_number').innerText = "{{ context.Campus.phone_number }}";
+    document.getElementById('campus_phone_number_edit').value = document.getElementById('campus_phone_number').innerText;
+    document.getElementById('campus_foundation_date').innerText = "{{ context.Campus.foundation_date }}";
+    document.getElementById('campus_foundation_date_edit').value = document.getElementById('campus_foundation_date').innerText;
+  }
+</script>
 {% endblock %}

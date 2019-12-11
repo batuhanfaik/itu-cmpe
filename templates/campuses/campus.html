@@ -4,8 +4,8 @@
 <hr>
     <div class="row">
     <div class="col-lg-6 col-sm-12 col-md-12">
-    <form class="form needs-validation" action="" method="post" id="form_add_person"
-          name="person_get" enctype="multipart/form-data">
+    <form class="form needs-validation" action="" method="post" id="form_add_campus"
+          name="campus_add" enctype="multipart/form-data">
           {{ context.form.csrf_token }}
         <div class="form-group inline">
             <label for="name" class="mr-sm-2"><i class="fas fa-university"></i> Campus Name:</label>
@@ -251,8 +251,8 @@
             <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
             <thead>
             <tr>
-                <th scope="col"><i class="fas fa-id-badge"></i> Id</th>
-                <th scope="col"><i class="fas fa-signature"></i> Campus Name</th>
+           <!--  <th scope="col"><i class="fas fa-id-badge"></i> Id</th>
+            --> <th scope="col"><i class="fas fa-signature"></i> Campus Name</th>
                 <th scope="col"><i class="fas fa-phone"></i> Campus Phone</th>
                 <th scope="col"><i class="fas fa-cog"></i> Settings</th>
             </tr>
@@ -341,10 +341,10 @@ aria-hidden="true">
 <!-- Central Modal Medium Info-->
 <!-- EDIT INFORMATION MODAL ---------------- END-->
                 <tr>
-                    <td scope="row"><a
+                    <!--<td scope="row"><a
                             href="{{ url_for("campus_detailed", campus_id=id) }}">{{ id }}</a></td>
-                    <td>{{ campus.name }}</td>
-                    <td>{{ campus.phone }}</td>
+                    --><td><i class="fas fa-university"></i> {{ campus.name }}</td>
+                    <td>{{ campus.phone_number }}</td>
                     <form method="POST">
                     <td><i class="fas fa-trash-alt" id="delete_campus" data-toggle="modal" data-target="#remove_campus_modal{{id}}"  style="cursor: pointer;"></i> </form> | <i class="fas fa-edit" data-toggle="modal" data-target="#edit_campus_modal{{id}}"  style="cursor: pointer;"></i></td>
 

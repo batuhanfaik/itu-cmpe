@@ -4,7 +4,7 @@ from forms import add_campus_form, add_faculty_form
 from werkzeug.utils import secure_filename
 import os
 import io
-from campus import Campus
+from campus import Campus, Faculty
 from base64 import b64encode
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg'}
@@ -82,6 +82,7 @@ def campus_detailed(campus_id):
     #         {'name': campus.name, 'address': campus.address})
     # add_facultyForm = add_faculty_form()
     edit_campus_form = add_campus_form()
+    add_faculty = add_faculty_form()
     if request.method == "POST" and 'change_picture' in request.form:
         file = request.files['image']
         file.save(secure_filename(file.filename))
@@ -97,10 +98,16 @@ def campus_detailed(campus_id):
             file.save(os.path.join(
                 current_app.config['UPLOAD_FOLDER'], filename))
             # return redirect(url_for('campus_detailed'))
-
-    if request.method == "POST" and request.form.validate():
-        faculty = Faculty()
-        return redirect(url_for('home'))
+    elif request.method == "POST" and 'add_faculty_form' in request.form:
+        if(add_faculty_form.validate()):
+            faculty = Faculty(request.form['add_faculty_form'], form.name.data, form.shortened_name.data,
+                              form.address.data, form.foundation_date.data, form.phone_number.data)
+            db.add_faculty(faculty)
+    elif request.method == "POST" and 'edit_campus_form' in request.form:
+        campus_id = campus.id
+        updated_campus = Campus(campus_id, edit_campus_form.name.data, edit_campus_form.city.data, edit_campus_form.size.data,
+                                edit_campus_form.foundation_date.data, edit_campus_form.phone_number.data, campus.image_name, campus.image_extension, campus.image_data)
+        db.updated_campus(updated_campus)
     image = campus.img_data
     # print(bytearray(image))
     image = bytes(image)
@@ -111,7 +118,8 @@ def campus_detailed(campus_id):
         # 'add_faculty_form': add_facultyForm,
         'Campus': campus,
         'edit_campus_form': edit_campus_form,
-        'campus_image': image
+        'campus_image': image,
+        'add_faculty_form': add_faculty,
     }
     return render_template('/campuses/campus_detailed.html', context=context)
 
@@ -125,21 +133,6 @@ def findNumberOfCampus():
 def faculty_detailed():
     context = {}
     return render_template('/campuses/faculty_detailed.html', context=context)
-
-
-def edit_campus(request):
-    db = current_app.config["db"]
-    add_campus = False
-    campus_id = request.form.campus_id
-    if request.method == "GET":
-        campus = db.get_campus(request.args.get('campus_id'))
-
-    context = {
-        'form': form,
-        'add': False,
-        'campus': campus
-    }
-    return render_template('/campuses/campus.html', context=context)
 
 
 def upload_campus_image(request):
