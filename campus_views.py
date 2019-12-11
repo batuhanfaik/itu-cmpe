@@ -37,6 +37,7 @@ def campus():
             campus_id = request.form['delete_campus_flag']
             print('campus id ->', campus_id)
             db.delete_campus(campus_id)
+            return redirect(url_for('campus'))
         else:
             if(form.validate()):
                 image = request.files['image']
@@ -58,7 +59,7 @@ def campus():
                 # os.remove(os.path.join(
                 #      current_app.config['UPLOAD_FOLDER'], filename))
                     db.add_campus(campus)
-
+                    return redirect(url_for('campus'))
                 # img_name = secure_filename(image.filename)
                 # print(bin_img)
                     # agin = io.BytesIO(bin_img)
@@ -109,6 +110,8 @@ def campus_detailed(campus_id):
                                 edit_campus_form.foundation_date.data, edit_campus_form.phone_number.data, campus.img_name, campus.img_extension, campus.img_data)
         print('Girdik 1')
         db.update_campus(updated_campus)
+        return redirect(url_for('campus_detailed', campus_id=campus.id))
+
     image = campus.img_data
     # print(bytearray(image))
     image = bytes(image)
