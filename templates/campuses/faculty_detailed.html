@@ -399,16 +399,19 @@
 
 <script>
   window.onload = () =>{
-    document.getElementById('faculty_name').innerText = "{{ context.Faculty.name }}";
-    document.getElementById('faculty_name_edit').value = document.getElementById('faculty_name').innerText;
-    document.getElementById('faculty_address').innerText = "{{ context.Faculty.address }}";
-    document.getElementById('faculty_address_edit').value = document.getElementById('faculty_address').innerText;
-    document.getElementById('faculty_shortened_name').innerText = "{{ context.Faculty.shortened_name }}";
-    document.getElementById('faculty_shortened_name_edit').value = document.getElementById('faculty_shortened_name').innerText;
-    document.getElementById('faculty_phone_number').innerText = "{{ context.Faculty.phone_number }}";
-    document.getElementById('faculty_phone_number_edit').value = document.getElementById('faculty_phone_number').innerText;
-    document.getElementById('faculty_foundation_date').innerText = "{{ context.Faculty.foundation_date }}";
-    document.getElementById('faculty_foundation_date_edit').value = document.getElementById('faculty_foundation_date').innerText;
+    document.getElementById('department_name').innerText = "{{ context.Department.name }}";
+    document.getElementById('department_name_edit').value = document.getElementById('department_name').innerText;
+    document.getElementById('department_budget').innerText = "{{ context.Department.budget }}";
+    document.getElementById('department_budget_edit').value = document.getElementById('department_budget').innerText;
+    document.getElementById('department_block_number').innerText = "{{ context.Department.block_number }}";
+    document.getElementById('department_block_number').checked = true;
+    document.getElementById('department_block_number_edit').value = document.getElementById('department_block_number').innerText;
+    document.getElementById('department_shortened_name').innerText = "{{ context.Department.shortened_name }}";
+    document.getElementById('department_shortened_name_edit').value = document.getElementById('department_shortened_name').innerText;
+    document.getElementById('department_phone_number').innerText = "{{ context.Department.phone_number }}";
+    document.getElementById('department_phone_number_edit').value = document.getElementById('department_phone_number').innerText;
+    document.getElementById('department_foundation_date').innerText = "{{ context.Department.foundation_date }}";
+    document.getElementById('department_foundation_date_edit').value = document.getElementById('faculty_foundation_date').innerText;
   }
 </script>
 {% endblock %}
