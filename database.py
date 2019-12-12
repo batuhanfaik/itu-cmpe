@@ -1,7 +1,7 @@
 import psycopg2 as dbapi2
 
-from person import Person
 from campus import Campus, Faculty, Department
+from person import Person
 
 
 class Database:
@@ -53,7 +53,17 @@ class Database:
             cursor = connection.cursor()
             query = "select * from people where (tr_id = %s)"
             cursor.execute(query, (tr_id,))
-            if(cursor.rowcount == 0):
+            if (cursor.rowcount == 0):
+                return None
+        person_ = Person(*cursor.fetchone()[:])  # Inline unpacking of a tuple
+        return person_
+
+    def get_person_email(self, email):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from people where (email = %s)"
+            cursor.execute(query, (email,))
+            if (cursor.rowcount == 0):
                 return None
         person_ = Person(*cursor.fetchone()[:])  # Inline unpacking of a tuple
         return person_
