@@ -3,11 +3,12 @@
   <form name="campus_edit" method="POST">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <input type="hidden" name="edit_campus_form"/>
+
   <div class="form-group">
-    <h1 class="mb-3"><p id="campus_name" style="display:inline" value="{{context.Campus.name}}">{{context.Campus.name}}</p> <i id="campus_name_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></h1>
+    <h1 class="mb-3">Manage <p id="campus_name" style="display:inline" value="{{context.Campus.name}}">{{context.Campus.name}}</p> Campus <i id="campus_name_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></h1>
     {{ context.edit_campus_form.name(required=True, autofocus=True,
       class='form-control mb-2 mr-sm-2',
-      placeholder='e.g. "Ayazaga Campus"', style='width:80%;visibility:hidden', id='campus_name_edit') }} {% for error in
+      placeholder='e.g. "Ayazaga"', style='width:80%;visibility:hidden', id='campus_name_edit') }} {% for error in
       context.edit_campus_form.name.errors %}
       <div class="invalid-feedback">s{{ error }}</div>
       {% endfor %}   
@@ -74,22 +75,22 @@
       </div>
      
       <div class="form-group">      
-          <h4><i class="fas fa-phone"></i> Campus Foundation Date :</h4>
+          <h4><i class="fas fa-calendar-alt"></i> Campus Foundation Date :</h4>
           <p><p id="campus_foundation_date" style="display: inline;">{{context.Campus.foundation_date}}</p> <i id="campus_foundation_date_edit_icon"class="far fa-edit"  style="cursor: pointer;"></i></p>
       <!--    <input type="text" style="width:80%;visibility: hidden;" class="form-control mb-2 mr-sm-2" id="campus_phone_number_edit"
           value={{context.Campus.phone_number}} name="campus_phone_number_edit" required>-->
           {{ context.edit_campus_form.foundation_date(type="date",format='%Y-%m-%d',required=True, autofocus=True,
           class='form-control mb-2 mr-sm-2',
-          style='width:80%;visibility:hidden;', id='campus_foundation_date_edit') }} {% for error in
+          style='width:80%;visibility:hidden;', onload="()=>{return console.log('ebeniz')}", id='campus_foundation_date_edit') }} {% for error in
           context.edit_campus_form.foundation_date.errors %}      
             <div class="invalid-feedback">{{ error }}</div>
             {%endfor%}
-          </div>
+      </div>
          
       <div class="form-group">
       <div class="button-collapse">
       <form method="POST">
-      <button type="submit" id="edit_save_button" class="btn btn-success mb-2">aSave all Changes</button>
+      <button type="submit" id="edit_save_button" class="btn btn-success mb-2">Save all Changes</button>
     </form>
       <button id="edit_discard_button" class="btn btn-danger mb-2" >Discard all Changes</button>
   
@@ -225,7 +226,7 @@
         }
       });
       </script>
-  <h3>Faculties in Ayazaga Campus</h3>
+  <h2>Manage faculties in {{ context.Campus.name }} Campus</h2>
   <div class="row">   
     <div class="col-lg-6 col-sm-12 col-md-12">
         <form class="form needs-validation" method="post" id="form_add_faculty"
@@ -233,13 +234,13 @@
             <input type="hidden" value="{{context.Campus.id}}" name="add_faculty_form" />
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group inline">
-                    <label for="name" class="mr-sm-2"><i class="fas fa-university"></i> Faculty Name:</label>
+                    <label for="name" class="mr-sm-2"><i class="fas fa-signature"></i> Faculty Name:</label>
        <!--           <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
                            placeholder="e.g. 'Ayazaga Campus'" name="name" required>
        -->
             {{ context.add_faculty_form.name(required=True, autofocus=True,
               class='form-control mb-2 mr-sm-2',
-              placeholder='e.g. "Faculty of Science or Faculty of Medicine"', style='width:80%', id='faculty_name') }} {% for error in
+              placeholder='e.g. "Science or Medicine"', style='width:80%', id='faculty_name') }} {% for error in
               context.add_faculty_form.name.errors %}
               <div class="invalid-feedback">{{ error }}</div>
               {% endfor %} 
@@ -254,7 +255,7 @@
        -->
             {{ context.add_faculty_form.shortened_name(required=True, autofocus=True,
               class='form-control mb-2 mr-sm-2',
-              placeholder='e.g. "EHB" etc.', style='width:80%', id='faculty_shortened_name') }} {% for error in
+              placeholder='e.g. "EHB" ', style='width:80%', id='faculty_shortened_name') }} {% for error in
               context.add_faculty_form.shortened_name.errors %}
               <div class="invalid-feedback">{{ error }}</div>
               {% endfor %} 
@@ -268,7 +269,7 @@
        -->
             {{ context.add_faculty_form.address(required=True, autofocus=True,
               class='form-control mb-2 mr-sm-2',
-              placeholder='Address the New Faculty', style='width:80%', id='faculty_address') }} {% for error in
+              placeholder='Address of the New Faculty', style='width:80%', id='faculty_address') }} {% for error in
               context.add_faculty_form.address.errors %}
               <div class="invalid-feedback">s{{ error }}</div>
               {% endfor %}  
@@ -321,11 +322,14 @@
                     <div class="invalid-feedback">Please enter the Foundation Date of Faculty.</div>
                 </div>
             <button type="submit" class="btn btn-primary mb-2">Add New Faculty</button>
-        </form>
+            <button type="submit" class="btn btn-danger mb-2">Reset</button>
+
+          </form>
         </div>
         
         <div class="col-lg-6 col-sm-12 col-md-12">
-                
+            <h3 style="text-align: center;">Faculty List</h3>
+
             <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
                 <thead>
                 <tr>
@@ -339,90 +343,65 @@
                 </thead>
                 <tbody>
                 {% for id, faculty in context.faculties %}
-                <!-- REMOVE MODAL --------------------------------------------- START-->
-    <div class="modal fade" id="remove_faculty_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true">
-    
-    <!-- Add .modal-dialog-centered to .modal-dialog to vertically center the modal -->
-    <div class="modal-dialog modal-notify modal-danger" role="document">
-    
-    
-      <div class="modal-content">
-        <!--Header-->
-        <div class="modal-header">
-                <p class="heading lead">Modal Danger</p>
-        
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true" class="white-text">&times;</span>
-                </button>
-              </div>
-        
-              <!--Body-->
-              <div class="modal-body">
-                <div class="text-center">
-                  <i class="fas fa-check fa-4x mb-3 animated rotateIn"></i>
-                  <p>You are about to Delete {{ faculty.name }} Faculty. In this Faculty, there are {{ faculty.numberOfDepartments }} Departments. </p>
-                  <h5>When you delete {{faculty.name}} Faculty, all departments related to this faculty will be removed.</h5>
-                  <h3>Are you Sure?</h3>
+               <!-- REMOVE MODAL --------------------------------------------- START-->
+               <div class="modal fade" id="remove_faculty_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">You are deleting Faculty of {{ faculty.name }} </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        Are you sure that you wanna delete Faculty of {{faculty.name}}?
+                      </div>
+                      <div class="modal-footer">
+                        <form method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <input type="hidden" value={{id}} name="delete_faculty_flag"/>
+                            <button type="submit" name="delete_faculty_flag" class="btn btn-primary">Delete Now</button>
+                        </form>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-        
-              <!--Footer-->
-              <div class="modal-footer justify-content-center">
-                <form method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <input type="hidden" value={{id}} id="delete_faculty_flag" name="delete_faculty_flag"/>
-                <button type="submit" class="btn btn-danger">Delete Now <i class="far fa-gem ml-1 text-white"></i></button>
-                </form>
-                <a type="button" class="btn btn-outline-danger waves-effect" data-dismiss="modal">Cancel</a>
-              </div>
-            </div>
-            <!--/.Content-->
-      </div>
-    </div>
-    </div>
-    
-    <!-- REMOVE MODAL --------------------------------------------- END-->
-    
-    <!-- EDIT INFORMATIN MODAL --------------------------------------- START -->
-    
-    <!-- Central Modal Medium Info -->
-    <div class="modal fade" id="edit_faculty_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog modal-notify modal-info" role="document">
-        <!--Content-->
+  
+  <!-- REMOVE MODAL --------------------------------------------- END-->
+  
+  <!-- EDIT INFORMATIN MODAL --------------------------------------- START -->
+  
+  <!-- Central Modal Medium Info -->
+  <div class="modal fade" id="edit_faculty_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-          <!--Header-->
           <div class="modal-header">
-            <p class="heading lead">Do you Wanna Edit?</p>
-    
+            <h5 class="modal-title" id="exampleModalLongTitle">You are directing faculty edit page </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true" class="white-text">&times;</span>
+              <span aria-hidden="true">&times;</span>
             </button>
           </div>
-    
-          <!--Body-->
           <div class="modal-body">
-            <div class="text-center">
-              <i class="fas fa-check fa-4x mb-3 animated rotateIn"></i>
-              <p>Are you sure, you will be directed to the Faculty edit page?</p>
-            </div>
+            Are you sure that you wanna do some changes related to Faculty of {{faculty.name}}?
           </div>
-    
-          <!--Footer-->
-          <div class="modal-footer justify-content-center">
-            <button type="button"  class="btn btn-primary"><a href="{{ url_for("faculty_detailed", faculty_id=id) }}">Ok</a> <i class="far fa-gem ml-1 text-white"></i></button>
-            <a type="button" class="btn btn-outline-primary waves-effect" data-dismiss="modal">Cancel</a>
+          <div class="modal-footer">
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+  
+                <input type="hidden" value={{id}} name="redirect_edit_page"/>
+                <button type="submit" name="redirect_edit_page" class="btn btn-primary">Yes</button>
+            </form>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
           </div>
         </div>
-        <!--/.Content-->
       </div>
     </div>
-    <!-- Central Modal Medium Info-->
-    <!-- EDIT INFORMATION MODAL ---------------- END-->
+  <!-- Central Modal Medium Info-->
+  <!-- EDIT INFORMATION MODAL ---------------- END-->
                     <tr>
                         <!--<td scope="row"><a
-                                href="{{ url_for("campus_detailed", campus_id=id) }}">{{ id }}</a></td>
+                                href="{{ url_for("faculty_detailed", faculty_id=id) }}">{{ id }}</a></td>
                         -->
                         <td><i class="fas fa-university"></i> {{ faculty.name }}</td>
                         <td>{{ faculty.phone_number }}</td>
@@ -450,7 +429,9 @@
     document.getElementById('campus_phone_number').innerText = "{{ context.Campus.phone_number }}";
     document.getElementById('campus_phone_number_edit').value = document.getElementById('campus_phone_number').innerText;
     document.getElementById('campus_foundation_date').innerText = "{{ context.Campus.foundation_date }}";
-    document.getElementById('campus_foundation_date_edit').value = document.getElementById('campus_foundation_date').innerText;
+    document.getElementById('campus_foundation_date_edit').value = new Date(this).today;
+    console.log('hey')
+
   }
 </script>
 {% endblock %}

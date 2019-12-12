@@ -59,11 +59,15 @@ def campus():
                 db.add_campus(campus)
 
         return redirect(url_for('campus'))
+    elif request.method == "POST" and "redirect_edit_page" in request.form:
+        campus_form_id = request.form['redirect_edit_page']
+        return redirect(url_for('campus_detailed', campus_id=campus_form_id))
         # img_name = secure_filename(image.filename)
         # print(bin_img)
         # agin = io.BytesIO(bin_img)
 
         # print(byte_img)
+
     context = {
         # 'form': form,
         'campuses': campuses,
@@ -101,7 +105,13 @@ def campus_detailed(campus_id):
                                 edit_campus_form.foundation_date.data, edit_campus_form.phone_number.data, campus.img_name, campus.img_extension, campus.img_data)
         db.update_campus(updated_campus)
         return redirect(url_for('campus_detailed', campus_id=campus.id))
-
+    elif request.method == "POST" and 'delete_faculty_flag' in request.form:
+        faculty_delete_id = request.form['delete_faculty_flag']
+        db.delete_faculty(faculty_delete_id)
+        return redirect(url_for('campus_detailed', campus_id=campus.id))
+    elif request.method == "POST" and 'redirect_edit_page' in request.form:
+        faculty_form_id = request.form['redirect_edit_page']
+        return redirect(url_for('faculty_detailed', faculty_id=faculty_form_id))
     image = campus.img_data
     # print(bytearray(image))
     image = bytes(image)
@@ -153,6 +163,10 @@ def faculty_detailed(faculty_id):
     elif request.method == "POST" and 'delete_department_flag' in request.form:
         db.delete_department(request.form['delete_department_flag'])
         return redirect(url_for('faculty_detailed', faculty_id=faculty.id))
+    elif request.method == "POST" and 'redirect_edit_page' in request.form:
+        department_form_id = request.form['redirect_edit_page']
+        return redirect(url_for('department_detailed', department_id=department_form_id))
+
     return render_template('/campuses/faculty_detailed.html', context=context)
 
 

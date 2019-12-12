@@ -1,6 +1,6 @@
 {%extends "layout.html"%} {% block body %} 
 <div class="container mt-3">
-    <h1 class="mb-3">Campus List</h1> <button class="btn btn-danger" style="color:white"><a>Campus Detailed </a></button> <button class="btn btn-info"  style="color:white"><a>Faculty Detailed </a></button>
+    <h1 class="mb-3">Campus Management</h1>
 <hr>
     <div class="row">
     <div class="col-lg-6 col-sm-12 col-md-12">
@@ -185,7 +185,7 @@
 
         </div>
         <div class="form-group">
-                <label for="foundation_date" class="mr-sm-2">Foundation Date:</label>
+                <label for="foundation_date" class="mr-sm-2"><i class="fas fa-calendar-alt"></i> Foundation Date:</label>
               <!--  <input
                   type="date"
                   class="form-control mb-2 mr-sm-2"
@@ -202,53 +202,62 @@
                 <div class="valid-feedback">Valid.</div>
                 <div class="invalid-feedback">Please enter the birthday.</div>
         </div>
-
-        <div id="add_image_form_group" class="form-group">
-            <label for="campus_picture_input" class="mr-sm-2"><i class="fas fa-camera"></i>
-
-                Campus Picture:</label>
-       <!--     <input type="file" style="width:80%"class="form-control mb-2 mr-sm-2" id="campus_picture_input"
-                   placeholder="Enter phone" name="phone" required> -->
-                   {{ context.form.image(autofocus=True,
-                    class='form-control mb-2 mr-sm-2',
-                    placeholder='Campus Picture',style='width:80%', id='campus_picture_input') }} {% for error in
-                    context.form.image.errors %}
-                    <div class="invalid-feedback">s{{ error }}</div>
-                    {%endfor%}                   
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Please fill out this field.</div>
+        <div class="row">
+          <div class="col-5">
+              <div id="add_image_form_check_group" class="form-group">
+                  <label for="add_image_checkbox" class="mr-sm-2"><i class="fas fa-question-circle"></i>
+                  Add picture now?</label>
+                <!--  <input type="checkbox" id="add_image_checkbox" value="No" checked/> -->
+                  {{ context.form.add_image_checkbox(class='form-control mb-2 mr-sm-2',
+                       id='add_image_checkbox', style="width:20%") }} {% for error in
+                      context.form.add_image_checkbox.errors %}
+                      <div class="invalid-feedback">s{{ error }}</div>
+                      {%endfor%}                     
+              </div>
+          </div>
+          <div class="col">
+              <div id="add_image_form_group" style="visibility: hidden;" class="form-group">
+                  <label for="campus_picture_input" class="mr-sm-2"><i class="fas fa-camera"></i>
+      
+                      Campus Picture:</label>
+             <!--     <input type="file" style="width:80%"class="form-control mb-2 mr-sm-2" id="campus_picture_input"
+                         placeholder="Enter phone" name="phone" required> -->
+                         {{ context.form.image(autofocus=True,
+                          class='form-control mb-2 mr-sm-2',
+                          placeholder='Campus Picture',style='width:80%', id='campus_picture_input') }} {% for error in
+                          context.form.image.errors %}
+                          <div class="invalid-feedback">s{{ error }}</div>
+                          {%endfor%}                   
+                  <div class="valid-feedback">Valid.</div>
+                  <div class="invalid-feedback">Please fill out this field.</div>
+              </div>
+          </div>
         </div>
+        
+        
 
         
 
-        <div id="add_image_form_check_group" class="form-group">
-            <label for="add_image_checkbox" class="mr-sm-2"><i class="fas fa-question-circle"></i>
-            Add picture now?</label>
-          <!--  <input type="checkbox" id="add_image_checkbox" value="No" checked/> -->
-            {{ context.form.add_image_checkbox(class='form-control mb-2 mr-sm-2',
-                 id='add_image_checkbox') }} {% for error in
-                context.form.add_image_checkbox.errors %}
-                <div class="invalid-feedback">s{{ error }}</div>
-                {%endfor%}                     
-        </div>
+
         <script>
             document.getElementById('add_image_checkbox').addEventListener("change",()=>{
-                if(document.getElementById('add_image_checkbox').value==="Yes"){
-                    document.getElementById('add_image_form_group').style.visibility="visible";
-                    document.getElementById('add_image_checkbox').value="No";
-                }else{
+                if(document.getElementById('add_image_checkbox').value==="No"){
                     document.getElementById('add_image_form_group').style.visibility="hidden";
                     document.getElementById('add_image_checkbox').value="Yes";
+                }else{
+                    document.getElementById('add_image_form_group').style.visibility="visible";
+                    document.getElementById('add_image_checkbox').value="No";
                 }
             });
         </script>
         
         <button type="submit" class="btn btn-primary mb-2">Add New Campus</button>
+        <button type="submit" class="btn btn-danger mb-2">Reset</button>
     </form>
     </div>
     
     <div class="col-lg-6 col-sm-12 col-md-12">
-            
+            <h3 style="text-align: center;">Campus List</h3>
             <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
             <thead>
             <tr>
@@ -261,84 +270,59 @@
             <tbody>
             {% for id, campus in context.campuses %}
             <!-- REMOVE MODAL --------------------------------------------- START-->
-<div class="modal fade" id="remove_campus_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-aria-hidden="true">
-
-<!-- Add .modal-dialog-centered to .modal-dialog to vertically center the modal -->
-<div class="modal-dialog modal-notify modal-danger" role="document">
-
-
-  <div class="modal-content">
-    <!--Header-->
-    <div class="modal-header">
-            <p class="heading lead">Modal Danger</p>
-    
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true" class="white-text">&times;</span>
-            </button>
-          </div>
-    
-          <!--Body-->
-          <div class="modal-body">
-            <div class="text-center">
-              <i class="fas fa-check fa-4x mb-3 animated rotateIn"></i>
-              <p>You are about to Delete {{ campus.name }} Campus. In this Campus there are {{ campus.numberOfFaculties }} Faculties and in these faculties there are {{ campus.numberOfDepartments }} Departments. </p>
-              <h5>When you delete {{campus.name}} Campus, all faculties and departments related to this campus will be removed.</h5>
-              <h3>Are you Sure?</h3>
-            </div>
-          </div>
-    
-          <!--Footer-->
-          <div class="modal-footer justify-content-center">
-            <form method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-            <input type="hidden" value={{id}} id="delete_campus_flag" name="delete_campus_flag"/>
-            <button type="submit" class="btn btn-danger">Delete Now <i class="far fa-gem ml-1 text-white"></i></button>
-            </form>
-            <a type="button" class="btn btn-outline-danger waves-effect" data-dismiss="modal">Cancel</a>
-          </div>
-        </div>
-        <!--/.Content-->
-  </div>
-</div>
-</div>
+            <div class="modal fade" id="remove_campus_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">You are deleting Campus {{ campus.name }} </h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      Are you sure that you wanna delete Campus {{campus.name}}?
+                    </div>
+                    <div class="modal-footer">
+                      <form method="POST">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                          <input type="hidden" value={{id}} name="delete_campus_flag"/>
+                          <button type="submit" name="delete_campus_flag" class="btn btn-primary">Delete Now</button>
+                      </form>
+                      <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
 <!-- REMOVE MODAL --------------------------------------------- END-->
 
 <!-- EDIT INFORMATIN MODAL --------------------------------------- START -->
 
 <!-- Central Modal Medium Info -->
-<div class="modal fade" id="edit_campus_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-notify modal-info" role="document">
-    <!--Content-->
-    <div class="modal-content">
-      <!--Header-->
-      <div class="modal-header">
-        <p class="heading lead">Do you Wanna Edit?</p>
+<div class="modal fade" id="edit_campus_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">You are directing Campus edit page </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure that you wanna do some changes related to Campus {{campus.name}}?
+        </div>
+        <div class="modal-footer">
+          <form method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" class="white-text">&times;</span>
-        </button>
-      </div>
-
-      <!--Body-->
-      <div class="modal-body">
-        <div class="text-center">
-          <i class="fas fa-check fa-4x mb-3 animated rotateIn"></i>
-          <p>Are you sure, you will be directed to the Campus edit page?</p>
+              <input type="hidden" value={{id}} name="redirect_edit_page"/>
+              <button type="submit" name="redirect_edit_page" class="btn btn-primary">Yes</button>
+          </form>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
       </div>
-
-      <!--Footer-->
-      <div class="modal-footer justify-content-center">
-        <button type="button"  class="btn btn-primary"><a href="{{ url_for("campus_detailed", campus_id=id) }}">Ok</a> <i class="far fa-gem ml-1 text-white"></i></button>
-        <a type="button" class="btn btn-outline-primary waves-effect" data-dismiss="modal">Cancel</a>
-      </div>
     </div>
-    <!--/.Content-->
   </div>
-</div>
 <!-- Central Modal Medium Info-->
 <!-- EDIT INFORMATION MODAL ---------------- END-->
                 <tr>
