@@ -3,6 +3,7 @@ import os
 from flask import Flask
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
+
 import campus_views
 import views
 from database import Database
@@ -25,33 +26,6 @@ def allowed_file(filename):
 
 def init_db(db_url):
     db = Database(db_url)
-    # try:
-    #     db.add_person(
-    #         Person("11111111110", "Ahmet", "Mehmet", "+905508004060", "mehmet19@itu.edu.tr",
-    #                "password", 2, "Fatma", "Ali", "M", "Istanbul", "01-01-2000", "Istanbul",
-    #                "Sariyer"))
-    #     db.add_person(
-    #         Person("12111111110", "Veli", "Mehmet", "+905508004060", "veli19@itu.edu.tr",
-    #                "password", 0, "Fatma", "Ali", "M", "Istanbul", "01-01-2000", "Istanbul",
-    #                "Sariyer"))
-    #     db.add_person(
-    #         Person("13111111110", "Deli", "Mehmet", "+905508004060", "deli19@itu.edu.tr",
-    #                "password", 5, "Fatma", "Ali", "M", "Istanbul", "01-01-2000", "Istanbul",
-    #                "Sariyer"))
-    #     db.add_person(
-    #         Person("14111111110", "Ucar", "Mehmet", "+905508004060", "ucar19@itu.edu.tr",
-    #                "password", 3, "Fatma", "Ali", "F", "Istanbul", "01-01-2000", "Istanbul",
-    #                "Sariyer"))
-    #     db.add_person(
-    #         Person("15111111110", "Ucmaz", "Mehmet", "+905508004060", "ucmaz19@itu.edu.tr",
-    #                "password", 5, "Fatma", "Ali", "M", "Istanbul", "01-01-2000", "Istanbul",
-    #                "Sariyer"))
-    #     db.add_person(
-    #         Person("16111111110", "Ucarmi", "Mehmet", "+905508004060", "ucarmi19@itu.edu.tr",
-    #                "password", 1, "Fatma", "Ali", "F", "Istanbul", "01-01-2000", "Istanbul",
-    #                "Sariyer"))
-    # except dbapi2.errors.UniqueViolation:
-    #     print("A person with the same TR ID already exists")
     return db
 
 

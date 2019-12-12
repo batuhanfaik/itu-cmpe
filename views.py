@@ -1,11 +1,11 @@
 from flask import current_app, render_template, request, redirect, url_for, abort, flash
 from flask_login import login_required, logout_user, login_user
+from passlib.hash import pbkdf2_sha256 as hash_machine
 
 from campus import Campus
 from faculty import Faculty
 from forms import login_form
 from person import Person
-from passlib.hash import pbkdf2_sha256 as hash_machine
 
 
 def landing_page():
@@ -52,34 +52,68 @@ def logout_page():
     return redirect(url_for("landing_page"))
 
 
+def validate_people_form(form):
+    form.data = {}
+    form.errors = {}
+    db = current_app.config["db"]
+
+    form_tr_id = form.get("tr_id")
+    if db.get_person(form_tr_id):
+        form.errors["tr_id"] = "There exists a person with the given TR ID."
+    else:
+        form.data["tr_id"] = form_tr_id
+
+    form_email = form.get("email")
+    if db.get_person_email(form_email):
+        form.errors["email"] = "There exists a person with the given email address."
+    else:
+        form.data["email"] = form_email
+
+    form.data["name"] = form.get("name")
+    form.data["surname"] = form.get("surname")
+    form.data["phone"] = form.get("phone")
+    form.data["mfname"] = form.get("mfname")
+    form.data["ffname"] = form.get("ffname")
+    form.data["bcity"] = form.get("bcity")
+    form.data["bdate"] = form.get("bdate")
+    form.data["id_regcity"] = form.get("id_regcity")
+    form.data["id_regdist"] = form.get("id_regdist")
+
+    return len(form.errors) == 0
+
+
 def people_page():
     db = current_app.config["db"]
     people = db.get_people()
     if request.method == "GET":
-        return render_template("people.html", people=sorted(people))
+        return render_template("people.html", people=sorted(people), values=request.form)
     else:
-        form_tr_id = request.form["tr_id"]
-        form_name = request.form["name"]
-        form_surname = request.form["surname"]
-        form_phone = request.form["phone"]
-        form_email = request.form["email"]
+        valid = validate_people_form(request.form)
+        if not valid:
+            return render_template("people.html", people=sorted(people),
+                                   values=request.form)
+        form_tr_id = request.form.data["tr_id"]
+        form_name = request.form.data["name"]
+        form_surname = request.form.data["surname"]
+        form_phone = request.form.data["phone"]
+        form_email = request.form.data["email"]
         form_pwd = request.form["pwd"]
         form_pwd = hash_machine.hash(form_pwd)
         form_category = int(request.form["category"])
-        form_mfname = request.form["mfname"]
-        form_ffname = request.form["ffname"]
+        form_mfname = request.form.data["mfname"]
+        form_ffname = request.form.data["ffname"]
         form_gender = request.form["gender"]
-        form_bcity = request.form["bcity"]
-        form_bdate = request.form["bdate"]
-        form_id_regcity = request.form["id_regcity"]
-        form_id_regdist = request.form["id_regdist"]
+        form_bcity = request.form.data["bcity"]
+        form_bdate = request.form.data["bdate"]
+        form_id_regcity = request.form.data["id_regcity"]
+        form_id_regdist = request.form.data["id_regdist"]
         person = Person(form_tr_id, form_name, form_surname, form_phone, form_email, form_pwd,
                         form_category, form_mfname, form_ffname, form_gender, form_bcity,
                         form_bdate, form_id_regcity, form_id_regdist)
         db = current_app.config["db"]
         person_tr_id = db.add_person(person)
         people = db.get_people()
-        return render_template("people.html", people=sorted(people))
+        return render_template("people.html", people=sorted(people), values=request.form)
 
 
 def person_page(tr_id):
