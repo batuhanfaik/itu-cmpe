@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, SelectField, BooleanField
+from wtforms import StringField, PasswordField, TextAreaField, SelectField, BooleanField, RadioField
 from wtforms.fields import DateField, DecimalField, FileField
 from wtforms.validators import DataRequired, Length
 from campus import Campus
@@ -62,7 +62,10 @@ class add_department_form(FlaskForm):
     shortened_name = StringField('shortened_name')
     foundation_date = DateField('foundation_date')
     budget = DecimalField('budget')
-    block_number = StringField('block_number')
+ #   block_number = StringField('block_number')
+    block_number = RadioField(
+        "", choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D')])
+
     phone_number = StringField('phone_number')
 
 

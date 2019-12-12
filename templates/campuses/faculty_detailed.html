@@ -16,8 +16,9 @@
   <hr />
 
   <div class="form-group">
-      <h1 class="mb-3"><p id="faculty_name" style="display:inline" value="{{context.Faculty.shortened_name}}">{{context.Faculty.shortened_name}}</p> <i id="faculty_shortened_name_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></h1>
-      {{ context.edit_faculty_form.shortened_name(required=True, autofocus=True,
+    <h4><i class="fas fa-map-marker"></i> Faculty Shortened Name:</h4>
+    <p><p id="faculty_shortened_name" style="display:inline" >{{context.Faculty.shortened_name}}</p> <i id="faculty_shortened_name_edit_icon" class="far fa-edit" style="cursor: pointer;"></i></p>
+    {{ context.edit_faculty_form.shortened_name(required=True, autofocus=True,
         class='form-control mb-2 mr-sm-2',
         placeholder='e.g. "Information Faculty"', style='width:80%;visibility:hidden', id='faculty_shortened_name_edit') }} {% for error in
         context.edit_faculty_form.shortened_name.errors %}
@@ -184,23 +185,24 @@
   <hr />
 
   <h3>Departments in Ayazaga Faculty</h3>
-  <div class="row">   <div class="col-lg-6 col-sm-12 col-md-12">
+  <div class="row">   
+    <div class="col-lg-6 col-sm-12 col-md-12" >
         <form class="form needs-validation" method="post" id="form_add_department"
               name="add_department_form">
             <input type="hidden" value="{{context.Faculty.id}}" name="add_department_form" />
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group inline">
-            <label for="name" class="mr-sm-2"><i class="fas fa-university"></i> Faculty Name:</label>
+            <label for="name" class="mr-sm-2"><i class="fas fa-university"></i> Department Name:</label>
             {{ context.add_department_form.name(required=True, autofocus=True,
               class='form-control mb-2 mr-sm-2',
-              placeholder='e.g. "Computer Science Department"', style='width:80%', id='faculty_name') }} {% for error in
+              placeholder='e.g. "Computer Science Department"', style='width:80%', id='department_name') }} {% for error in
               context.add_department_form.name.errors %}
               <div class="invalid-feedback">{{ error }}</div>
               {% endfor %} 
 
                 
             <div class="form-group inline">
-                <label for="department_shortened_name" class="mr-sm-2"><i class="fas fa-university"></i> Department Shortened Name:</label>
+                <label for="department_shortened_name" class="mr-sm-2"><i class="fas fa-file-signature"></i> Department Shortened Name:</label>
        <!--           <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
                            placeholder="e.g. 'Ayazaga Faculty'" name="name" required>
        -->
@@ -213,7 +215,34 @@
                 <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field.</div>
                 </div>     
-   
+
+                <div class="form-horizontal inline">
+                    <label for="department_block_number" class="mr-sm-2"><i class="fas fa-id-badge"></i> Block Number:</label>
+           <!--           <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
+                               placeholder="e.g. 'Ayazaga Faculty'" name="name" required>
+           -->
+                {{ context.add_department_form.block_number(type="radio", required=True, autofocus=True,
+                style='width:80%', id='department_block_number') }} {% for error in
+                  context.add_department_form.block_number.errors %}
+                  <div class="invalid-feedback">{{ error }}</div>
+                  {% endfor %} 
+                    <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Please fill out this field.</div>
+                    </div>     
+              
+                    <div class="form-group inline">
+                        <label for="department_budget" class="mr-sm-2"><i class="fas fa-money-check-alt"></i> Department Budget:</label>
+               <!--           <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
+                                   placeholder="e.g. 'Ayazaga Faculty'" name="name" required>
+               -->
+                    {{ context.add_department_form.budget(type="number",required=True, autofocus=True,
+                      class='form-control mb-2 mr-sm-2',style='width:80%', id='department_budget') }} {% for error in
+                      context.add_department_form.budget.errors %}
+                      <div class="invalid-feedback">{{ error }}</div>
+                      {% endfor %} 
+                        <div class="valid-feedback">Valid.</div>
+                            <div class="invalid-feedback">Please fill out this field.</div>
+                        </div>             
             <div class="form-group">
                 <label for="phone_number_input" class="mr-sm-2"><i class="fas fa-phone"></i>
                     Faculty Phone Number :</label>
@@ -256,29 +285,29 @@
                 <div class="invalid-feedback">{{ error }}</div>
                 {%endfor%}
                   <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please enter the Foundation Date of Faculty.</div>
+                    <div class="invalid-feedback">Please enter the Foundation Date of Department.</div>
                 </div>
-            <button type="submit" class="btn btn-primary mb-2">Add New Faculty</button>
+            <button type="submit" class="btn btn-primary mb-2">Add New Department</button>
         </form>
-        </div>
-        
-        <div class="col-lg-6 col-sm-12 col-md-12">
-                
-            <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
+    </div>
+  </div>   
+    <div class="col-lg-6 col-sm-12 col-md-12" > 
+        <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
                 <thead>
                 <tr>
                <!--  <th scope="col"><i class="fas fa-id-badge"></i> Id</th>
                 -->            
-                <th scope="col"><i class="fas fa-signature"></i> Faculty Name</th>
-                <th scope="col"><i class="fas fa-phone"></i> Faculty Phone Number</th>
-                <th scope="col"><i class="fas fa-id-badge"></i> Faculty Shortened Name</th>   
+                <th scope="col"><i class="fas fa-signature"></i> Department Name</th>
+                <th scope="col"><i class="fas fa-school"></i> Department Shortened Name</th>
+                <th scope="col"><i class="fas fa-id-badge"></i> Block Number</th>   
+                <th scope="col"><i class="fas fa-phone"></i> Phone Number</th>   
                 <th scope="col"><i class="fas fa-cog"></i> Settings</th>
                 </tr>
                 </thead>
-                <tbody>
-                {% for id, faculty in context.faculties %}
+    <tbody>
+    {% for id, department in context.departments %}
                 <!-- REMOVE MODAL --------------------------------------------- START-->
-    <div class="modal fade" id="remove_faculty_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    <div class="modal fade" id="remove_department_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
     aria-hidden="true">
     
     <!-- Add .modal-dialog-centered to .modal-dialog to vertically center the modal -->
@@ -299,8 +328,8 @@
               <div class="modal-body">
                 <div class="text-center">
                   <i class="fas fa-check fa-4x mb-3 animated rotateIn"></i>
-                  <p>You are about to Delete {{ faculty.name }} Faculty. In this Faculty, there are {{ faculty.numberOfDepartments }} Departments. </p>
-                  <h5>When you delete {{faculty.name}} Faculty, all departments related to this faculty will be removed.</h5>
+                  <p>You are about to Delete {{ department.name }} department. In this department, there are {{ department.numberOfDepartments }} Departments. </p>
+                  <h5>When you delete {{department.name}} department, all departments related to this department will be removed.</h5>
                   <h3>Are you Sure?</h3>
                 </div>
               </div>
@@ -309,7 +338,7 @@
               <div class="modal-footer justify-content-center">
                 <form method="POST">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <input type="hidden" value={{id}} id="delete_faculty_flag" name="delete_faculty_flag"/>
+                <input type="hidden" value={{id}} id="delete_department_flag" name="delete_department_flag"/>
                 <button type="submit" class="btn btn-danger">Delete Now <i class="far fa-gem ml-1 text-white"></i></button>
                 </form>
                 <a type="button" class="btn btn-outline-danger waves-effect" data-dismiss="modal">Cancel</a>
@@ -325,7 +354,7 @@
     <!-- EDIT INFORMATIN MODAL --------------------------------------- START -->
     
     <!-- Central Modal Medium Info -->
-    <div class="modal fade" id="edit_faculty_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    <div class="modal fade" id="edit_department_modal{{id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
       aria-hidden="true">
       <div class="modal-dialog modal-notify modal-info" role="document">
         <!--Content-->
@@ -343,13 +372,13 @@
           <div class="modal-body">
             <div class="text-center">
               <i class="fas fa-check fa-4x mb-3 animated rotateIn"></i>
-              <p>Are you sure, you will be directed to the Faculty edit page?</p>
+              <p>Are you sure, you will be directed to the department edit page?</p>
             </div>
           </div>
     
           <!--Footer-->
           <div class="modal-footer justify-content-center">
-            <button type="button"  class="btn btn-primary"><a href="{{ url_for("faculty_detailed", faculty_id=id) }}">Ok</a> <i class="far fa-gem ml-1 text-white"></i></button>
+            <button type="button"  class="btn btn-primary"><a href="{{ url_for("department_detailed", department_id=id) }}">Ok</a> <i class="far fa-gem ml-1 text-white"></i></button>
             <a type="button" class="btn btn-outline-primary waves-effect" data-dismiss="modal">Cancel</a>
           </div>
         </div>
@@ -362,10 +391,11 @@
                         <!--<td scope="row"><a
                                 href="{{ url_for("faculty_detailed", faculty_id=id) }}">{{ id }}</a></td>
                         -->
-                        <td><i class="fas fa-university"></i> {{ faculty.name }}</td>
-                        <td>{{ faculty.phone_number }}</td>
-                        <td>{{ faculty.shortened_name }}</td>
-                        <td><i class="fas fa-trash-alt" id="delete_faculty" data-toggle="modal" data-target="#remove_faculty_modal{{id}}"  style="cursor: pointer;"></i> | <i class="fas fa-edit" data-toggle="modal" data-target="#edit_faculty_modal{{id}}"  style="cursor: pointer;"></i></td>
+                        <td><i class="fas fa-university"></i> {{ department.name }}</td>
+                        <td>{{ department.shortened_name }}</td>
+                        <td>{{ department.block_number }}</td>
+                        <td>{{ department.phone_number }}</td>
+                        <td><i class="fas fa-trash-alt" id="delete_department" data-toggle="modal" data-target="#remove_department_modal{{id}}"  style="cursor: pointer;"></i> | <i class="fas fa-edit" data-toggle="modal" data-target="#edit_department_modal{{id}}"  style="cursor: pointer;"></i></td>
                     </tr>
                 {% endfor %}
                 </tbody>

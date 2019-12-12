@@ -94,6 +94,8 @@ def campus_detailed(campus_id):
             faculty = Faculty(0, request.form['add_faculty_form'], add_faculty.name.data, add_faculty.shortened_name.data,
                               add_faculty.address.data, add_faculty.foundation_date.data, add_faculty.phone_number.data)
             db.add_faculty(faculty)
+            return redirect(url_for('campus_detailed', campus_id=campus.id))
+
     elif request.method == "POST" and 'edit_campus_form' in request.form:
         campus_id = campus.id
         updated_campus = Campus(campus_id, edit_campus_form.name.data, edit_campus_form.address.data, edit_campus_form.city.data, edit_campus_form.size.data,
