@@ -30,7 +30,7 @@ class Faculty:
 
 
 class Department:
-    def __init__(self, department_id, faculty_id, name, shortened_name, adress, foundation_date, phone_number):
+    def __init__(self, department_id, faculty_id, name, shortened_name, block_number, budget, foundation_date, phone_number):
         self.id = department_id
         self.faculty_id = faculty_id
         self.name = name

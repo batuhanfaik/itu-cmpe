@@ -4,7 +4,7 @@ from forms import add_campus_form, add_faculty_form, add_department_form
 from werkzeug.utils import secure_filename
 import os
 import io
-from campus import Campus, Faculty
+from campus import Campus, Faculty, Department
 from base64 import b64encode
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg'}
@@ -132,12 +132,41 @@ def faculty_detailed(faculty_id):
     faculty = db.get_faculty(faculty_id)
     edit_faculty_form = add_faculty_form()
     add_department = add_department_form()
+    departments = db.get_departments_from_faculty(faculty_id)
     context = {
         'Faculty': faculty,
         'edit_faculty_form': edit_faculty_form,
         'add_department_form': add_department,
+        'departments': departments,
     }
+    if request.method == "POST" and 'add_department_form' in request.form:
+        if(add_department.validate()):
+            department = Department(0, faculty_id, add_department.name.data, add_department.shortened_name.data, add_department.block_number.data,
+                                    add_department.budget.data, add_department.foundation_date.data, add_department.phone_number.data)
+            print('Aq ->', type(department.phone_number))
+            db.add_department(department)
+        return redirect(url_for('faculty_detailed', faculty_id=faculty.id))
+    elif request.method == "POST" and 'edit_faculty_form' in request.form:
+        if(edit_faculty_form.validate()):
+            updated_faculty = Faculty(faculty_id, faculty.campus_id, faculty.name, faculty.shortened_name,
+                                      faculty.address, faculty.foundation_date, faculty.phone_number)
+        return redirect(url_for('faculty_detailed', faculty_id=faculty.id))
+
     return render_template('/campuses/faculty_detailed.html', context=context)
+
+
+def department_detailed(department_id):
+    db = current_app.config["db"]
+    department = db.get_department(department_id)
+    edit_department_form = add_department_form()
+    context = {
+        'Department': department,
+        'edit_department_form': edit_department_form
+    }
+    if(request.method == "POST" and 'edit_department_form' in request.form):
+        if(edit_department_form.validate()):
+            return redirect(url_for('department_detailed', department_id=department.id))
+    return render_template('/campuses/department_detailed.html', context=context)
 
 
 def upload_campus_image(request):
