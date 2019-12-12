@@ -34,8 +34,7 @@
                <!---    <textarea type="text" class="form-control mb-2 mr-sm-2" style="visibility: hidden;" id="department_block_number_edit"
                     placeholder="Address of the Department." style="width:80%;visibility: hidden;" name="block_number" value={{context.Department.block_number}} required></textarea>
                -->
-                    {{ context.edit_department_form.block_number(required=True, autofocus=True,
-                      class='form-control mb-2 mr-sm-2',
+                    {{ context.edit_department_form.block_number(type="radio",required=True, autofocus=True,
                       placeholder='Address the New Department', style='width:80%;visibility:hidden', id='department_block_number_edit') }} {% for error in
                       context.edit_department_form.block_number.errors %}
                       <div class="invalid-feedback">s{{ error }}</div>
@@ -91,7 +90,6 @@
          
       <div class="form-group">
       <div class="button-collapse">
-      <form method="POST">
       <button type="submit" id="edit_save_button" class="btn btn-success mb-2">aSave all Changes</button>
     </form>
       <button id="edit_discard_button" class="btn btn-danger mb-2" >Discard all Changes</button>
@@ -100,8 +98,10 @@
           document.getElementById('edit_discard_button').addEventListener("click",()=>{
             document.getElementById('department_name').innerText = "{{ context.Department.name }}";
             document.getElementById('department_name_edit').value = document.getElementById('department_name').innerText;
-            document.getElementById('department_address').innerText = "{{ context.Department.address }}";
-            document.getElementById('department_address_edit').value = document.getElementById('department_address').innerText;
+            document.getElementById('department_block_number').innerText = "{{ context.Department.block_number }}";
+            document.getElementById('department_block_number_edit').value = document.getElementById('department_block_number').innerText;
+            document.getElementById('department_budget').innerText = "{{ context.Department.budget }}";
+            document.getElementById('department_budget_edit').value = document.getElementById('department_block_number').innerText;
             document.getElementById('department_shortened_name').innerText = "{{ context.Department.shortened_name }}";
             document.getElementById('department_shortened_name_edit').value = document.getElementById('department_shortened_name').innerText;
             document.getElementById('department_phone_number').innerText = "{{ context.Department.phone_number }}";
@@ -111,7 +111,7 @@
         </script>
     </div>
     </div>
-  </form>
+  
 
     </div>
     <script>
@@ -125,11 +125,11 @@
         }
       });
 
-      document.getElementById('department_city_edit_icon').addEventListener("click",()=>{
-        if(document.getElementById('department_city_edit').style.visibility == "visible"){
-          document.getElementById('department_city_edit').style.visibility = "hidden";
+      document.getElementById('department_budget_edit_icon').addEventListener("click",()=>{
+        if(document.getElementById('department_budget_edit').style.visibility == "visible"){
+          document.getElementById('department_budget_edit').style.visibility = "hidden";
         }else{
-          document.getElementById('department_city_edit').style.visibility = "visible";
+          document.getElementById('department_budget_edit').style.visibility = "visible";
           document.getElementById('edit_save_button').style.visibility="visible";
         }
       });
@@ -144,12 +144,12 @@
         }
       });
 
-      document.getElementById('department_address_edit_icon').addEventListener("click",()=>{
-        if(document.getElementById('department_address_edit').style.visibility == "visible"){
-          document.getElementById('department_address_edit').style.visibility = "hidden";
+      document.getElementById('department_block_number_edit_icon').addEventListener("click",()=>{
+        if(document.getElementById('department_block_number_edit').style.visibility == "visible"){
+          document.getElementById('department_block_number_edit').style.visibility = "hidden";
         }else{
-          document.getElementById('department_address_edit').value = document.getElementById('department_address').innerText;
-          document.getElementById('department_address_edit').style.visibility = "visible";
+          document.getElementById('department_block_number_edit').value = document.getElementById('department_block_number').innerText;
+          document.getElementById('department_block_number_edit').style.visibility = "visible";
           document.getElementById('edit_save_button').style.visibility="visible";
 
         }
@@ -182,8 +182,11 @@
       document.getElementById('department_shortened_name_edit').addEventListener("keydown",(event)=>{
         document.getElementById("department_shortened_name").innerHTML = event.target.value;
       });  
-      document.getElementById('department_address_edit').addEventListener("keydown",(event)=>{
-        document.getElementById("department_address").innerHTML = event.target.value;
+      document.getElementById('department_budget_edit').addEventListener("keydown",(event)=>{
+        document.getElementById("department_budget").innerHTML = event.target.value;
+      });
+      document.getElementById('department_block_number_edit').addEventListener("keydown",(event)=>{
+        document.getElementById("department_block_number").innerHTML = event.target.value;
       });       
       document.getElementById('department_foundation_date_edit').addEventListener("keydown",(event)=>{
         document.getElementById("department_foundation_date").innerHTML = event.target.value;
@@ -206,10 +209,13 @@
   window.onload = () =>{
     document.getElementById('department_name').innerText = "{{ context.Department.name }}";
     document.getElementById('department_name_edit').value = document.getElementById('department_name').innerText;
-    document.getElementById('department_address').innerText = "{{ context.Department.address }}";
-    document.getElementById('department_address_edit').value = document.getElementById('department_address').innerText;
-    document.getElementById('department_size').innerText = "{{ context.Department.size }}";
-    document.getElementById('department_size_edit').value = document.getElementById('department_size').innerText;
+    document.getElementById('department_budget').innerText = "{{ context.Department.budget }}";
+    document.getElementById('department_budget_edit').value = document.getElementById('department_budget').innerText;
+    document.getElementById('department_block_number').innerText = "{{ context.Department.block_number }}";
+    document.getElementById('department_block_number_edit').value = document.getElementById('department_block_number').innerText;
+
+    document.getElementById('department_shortened_name').innerText = "{{ context.Department.shortened_name }}";
+    document.getElementById('department_shortened_name_edit').value = document.getElementById('department_shortened_name').innerText;
     document.getElementById('department_phone_number').innerText = "{{ context.Department.phone_number }}";
     document.getElementById('department_phone_number_edit').value = document.getElementById('department_phone_number').innerText;
     document.getElementById('department_foundation_date').innerText = "{{ context.Department.foundation_date }}";
