@@ -30,6 +30,9 @@ INIT_STATEMENTS = [
         birth_date date not null,
         id_reg_city varchar(50) not null,
         id_reg_district varchar(50) not null,
+        photo_name varchar(256),
+        photo_extension varchar(10),
+        photo_data bytea, 
         unique (tr_id, email)
     );
     
