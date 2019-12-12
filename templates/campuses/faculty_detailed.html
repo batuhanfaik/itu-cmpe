@@ -63,7 +63,7 @@
      
       <div class="form-group">      
           <h4><i class="fas fa-phone"></i> Faculty Foundation Date :</h4>
-          <p><p id="faculty_foundation_date" style="display: inline;">{{context.Faculty.foundation_date}}</p> <i id="faculty_foundation_date_edit_icon"class="far fa-edit"  style="cursor: pointer;"></i></p>
+          <p><p id="faculty_foundation_date" style="display: inline;">{{context.Faculty.foundation_date}}</p> <i id="faculty_foundation_date_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></p>
       <!--    <input type="text" style="width:80%;visibility: hidden;" class="form-control mb-2 mr-sm-2" id="faculty_phone_number_edit"
           value={{context.Faculty.phone_number}} name="faculty_phone_number_edit" required>-->
           {{ context.edit_faculty_form.foundation_date(type="date",format='%Y-%m-%d',required=True, autofocus=True,
@@ -73,11 +73,11 @@
             <div class="invalid-feedback">{{ error }}</div>
             {%endfor%}
           </div>
-         
+        
       <div class="form-group">
       <div class="button-collapse">
       <form method="POST">
-      <button type="submit" id="edit_save_button" class="btn btn-success mb-2">aSave all Changes</button>
+      <button type="submit" id="edit_save_button" class="btn btn-success mb-2">Save all Changes</button>
     </form>
       <button id="edit_discard_button" class="btn btn-danger mb-2" >Discard all Changes</button>
   
@@ -110,20 +110,10 @@
         }
       });
 
-      document.getElementById('faculty_city_edit_icon').addEventListener("click",()=>{
-        if(document.getElementById('faculty_city_edit').style.visibility == "visible"){
-          document.getElementById('faculty_city_edit').style.visibility = "hidden";
-        }else{
-          document.getElementById('faculty_city_edit').style.visibility = "visible";
-          document.getElementById('edit_save_button').style.visibility="visible";
-        }
-      });
-
       document.getElementById('faculty_shortened_name_edit_icon').addEventListener("click",()=>{
         if(document.getElementById('faculty_shortened_name_edit').style.visibility == "visible"){
           document.getElementById('faculty_shortened_name_edit').style.visibility = "hidden";
         }else{
-          document.getElementById('faculty_shortened_name_edit').value = document.getElementById('faculty_shortened_name').innerText;
           document.getElementById('faculty_shortened_name_edit').style.visibility = "visible";
           document.getElementById('edit_save_button').style.visibility="visible";
         }
@@ -413,8 +403,8 @@
     document.getElementById('faculty_name_edit').value = document.getElementById('faculty_name').innerText;
     document.getElementById('faculty_address').innerText = "{{ context.Faculty.address }}";
     document.getElementById('faculty_address_edit').value = document.getElementById('faculty_address').innerText;
-    document.getElementById('faculty_size').innerText = "{{ context.Faculty.size }}";
-    document.getElementById('faculty_size_edit').value = document.getElementById('faculty_size').innerText;
+    document.getElementById('faculty_shortened_name').innerText = "{{ context.Faculty.shortened_name }}";
+    document.getElementById('faculty_shortened_name_edit').value = document.getElementById('faculty_shortened_name').innerText;
     document.getElementById('faculty_phone_number').innerText = "{{ context.Faculty.phone_number }}";
     document.getElementById('faculty_phone_number_edit').value = document.getElementById('faculty_phone_number').innerText;
     document.getElementById('faculty_foundation_date').innerText = "{{ context.Faculty.foundation_date }}";
