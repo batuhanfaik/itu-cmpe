@@ -57,13 +57,13 @@ def campus():
                 # os.remove(os.path.join(
                 #      current_app.config['UPLOAD_FOLDER'], filename))
                 db.add_campus(campus)
-        
-        return redirect(url_for('campus'))
-            # img_name = secure_filename(image.filename)
-            # print(bin_img)
-            # agin = io.BytesIO(bin_img)
 
-            # print(byte_img)
+        return redirect(url_for('campus'))
+        # img_name = secure_filename(image.filename)
+        # print(bin_img)
+        # agin = io.BytesIO(bin_img)
+
+        # print(byte_img)
     context = {
         # 'form': form,
         'campuses': campuses,
@@ -88,12 +88,13 @@ def campus_detailed(campus_id):
             filename = secure_filename(url)
             file.save(os.path.join(
                 current_app.config['UPLOAD_FOLDER'], filename))
+        return redirect(url_for('campus_detailed', campus_id=campus.id))
     elif request.method == "POST" and 'add_faculty_form' in request.form:
         if(add_faculty.validate()):
             faculty = Faculty(0, request.form['add_faculty_form'], add_faculty.name.data, add_faculty.shortened_name.data,
                               add_faculty.address.data, add_faculty.foundation_date.data, add_faculty.phone_number.data)
             db.add_faculty(faculty)
-            return redirect(url_for('campus_detailed', campus_id=campus.id))
+        return redirect(url_for('campus_detailed', campus_id=campus.id))
     elif request.method == "POST" and 'edit_campus_form' in request.form:
         campus_id = campus.id
         updated_campus = Campus(campus_id, edit_campus_form.name.data, edit_campus_form.address.data, edit_campus_form.city.data, edit_campus_form.size.data,
@@ -141,7 +142,6 @@ def faculty_detailed(faculty_id):
         if(add_department.validate()):
             department = Department(0, faculty_id, add_department.name.data, add_department.shortened_name.data, add_department.block_number.data,
                                     add_department.budget.data, add_department.foundation_date.data, add_department.phone_number.data)
-            print('Aq ->', type(department.phone_number))
             db.add_department(department)
         return redirect(url_for('faculty_detailed', faculty_id=faculty.id))
     elif request.method == "POST" and 'edit_faculty_form' in request.form:
@@ -165,9 +165,11 @@ def department_detailed(department_id):
         'edit_department_form': edit_department_form
     }
     if(request.method == "POST" and 'edit_department_form' in request.form):
+        print('Burdayim')
         if(edit_department_form.validate()):
-            updated_department = Department(department.id,department.faculty_id,edit_department_form.name.data,edit_department_form.shortened_name.data,edit_department_form.block_number.data,edit_department_form.budget.data,edit_department_form.foundation_date.data,edit_department_form.phone_number.data)
-            db.updated_department(updated_department)
+            updated_department = Department(department.id, department.faculty_id, edit_department_form.name.data, edit_department_form.shortened_name.data,
+                                            edit_department_form.block_number.data, edit_department_form.budget.data, edit_department_form.foundation_date.data, edit_department_form.phone_number.data)
+            db.update_department(updated_department)
             return redirect(url_for('department_detailed', department_id=department.id))
     return render_template('/campuses/department_detailed.html', context=context)
 
