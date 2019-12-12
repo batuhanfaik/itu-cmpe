@@ -204,8 +204,8 @@ class Database:
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             print(department)
-            query = "insert into department (faculty_id, name, shortened_name) values (%s, %s, %s)"
-            cursor.execute(query, (1, 'EBEN', 'ebe'))
+            query = "insert into department (faculty_id, name, shortened_name, block_number, budget, foundation_date, phone_number) values (%s, %s, %s,%s,%s,%s,%s)"
+            cursor.execute(query, (department.faculty_id, department.name, department.shortened_name,department.block_number,department.budget,department.foundation_date,department.phone_number))
             connection.commit
 
     def update_department(self, department):
