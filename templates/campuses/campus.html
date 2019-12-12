@@ -7,7 +7,8 @@
     <form class="form needs-validation" action="" method="post" id="form_add_campus"
           name="campus_add" enctype="multipart/form-data">
           {{ context.form.csrf_token }}
-        <div class="form-group inline">
+        <input type="hidden" name="add_campus_form"/>
+          <div class="form-group inline">
             <label for="name" class="mr-sm-2"><i class="fas fa-university"></i> Campus Name:</label>
          <!--   <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"
                    placeholder="e.g. 'Ayazaga Campus'" name="name" required>-->
