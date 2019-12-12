@@ -1,7 +1,7 @@
 import psycopg2 as dbapi2
 
 from person import Person
-from campus import Campus, Faculty
+from campus import Campus, Faculty, Department
 
 
 class Database:
@@ -198,3 +198,50 @@ class Database:
         # Inline unpacking of a tuple
         faculty_ = Faculty(*cursor.fetchone()[:])
         return faculty_
+
+    def add_department(self, department):
+        print('Enter add department')
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            print(department)
+            query = "insert into department (faculty_id, name, shortened_name) values (%s, %s, %s)"
+            cursor.execute(query, (1, 'EBEN', 'ebe'))
+            connection.commit
+
+    def update_department(self, department):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "update department set name = %s, shortened_name = %s, block_number = %s, budget = %s, foundation_date = %s, phone_number = %s where (id = %s)"
+            cursor.execute(query, (department.name, department.shortened_name, department.block_number, department.budget,
+                                   department.foundation_date, department.phone_number, department.id,))
+            connection.commit
+
+    def delete_department(self, department_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "delete from department where (id = %s)"
+            cursor.execute(query, (department_id,))
+            connection.commit
+
+    def get_departments_from_faculty(self, faculty_id):
+        departments = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from department where (faculty_id = %s) order by id asc"
+            cursor.execute(query, (faculty_id,))
+            print('Cursor.rowcount', cursor.rowcount)
+            for row in cursor:
+                department = Department(*row[:])
+                departments.append((department.id, department))
+        return departments
+
+    def get_department(self, department_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from department where (id = %s)"
+            cursor.execute(query, (department_id,))
+            if(cursor.rowcount == 0):
+                return None
+        # Inline unpacking of a tuple
+        department_ = Department(*cursor.fetchone()[:])
+        return department_
