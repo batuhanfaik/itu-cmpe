@@ -43,21 +43,13 @@ def campus():
                 filename = secure_filename(image.filename)
                 file_extension = filename.split(".")[-1]
                 filename = filename.split(".")[0]
-                print('File name ->', filename)
-                print('\n File extension ->', file_extension)
-                # image.save(os.path.join(
-                #    current_app.config['UPLOAD_FOLDER'], filename))
-                # binary_img = open(os.path.join(
-                #    current_app.config['UPLOAD_FOLDER'], filename), 'rb')
-                byte_img = request.files['image'].read()
-                bin_img = ' '.join(map(bin, bytearray(byte_img)))
-                # content = binary_img.read()
+                img_data = request.files['image'].read()
+                print('Hey -> ', img_data)
                 campus = Campus(0, form.name.data, form.address.data, form.city.data, form.size.data,
-                                form.foundation_date.data, form.phone_number.data, filename, file_extension, bin_img)
+                                form.foundation_date.data, form.phone_number.data, filename, file_extension, img_data)
                 # os.remove(os.path.join(
                 #      current_app.config['UPLOAD_FOLDER'], filename))
                 db.add_campus(campus)
-
         return redirect(url_for('campus'))
     elif request.method == "POST" and "redirect_edit_page" in request.form:
         campus_form_id = request.form['redirect_edit_page']
@@ -82,17 +74,18 @@ def campus_detailed(campus_id):
     edit_campus_form = add_campus_form()
     add_faculty = add_faculty_form()
     if request.method == "POST" and 'change_picture' in request.form:
-        file = request.files['image']
-        file.save(secure_filename(file.filename))
-        url = file.filename
-        if url == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(url):
-            filename = secure_filename(url)
-            file.save(os.path.join(
-                current_app.config['UPLOAD_FOLDER'], filename))
-        return redirect(url_for('campus_detailed', campus_id=campus.id))
+        image = request.files['image']
+        if(validate_image(image)):
+            filename = secure_filename(image.filename)
+            file_extension = filename.split(".")[-1]
+            filename = filename.split(".")[0]
+            img_data = request.files['image'].read()
+            campus = Campus(campus_id, campus.name, campus.address, campus.city, campus.size,
+                            campus.foundation_date, campus.phone_number, filename, file_extension, img_data)
+            # os.remove(os.path.join(
+            #      current_app.config['UPLOAD_FOLDER'], filename))
+            db.update_campus(campus)
+        return redirect(url_for('campus_detailed', campus_id=campus_id))
     elif request.method == "POST" and 'add_faculty_form' in request.form:
         if(add_faculty.validate()):
             faculty = Faculty(0, request.form['add_faculty_form'], add_faculty.name.data, add_faculty.shortened_name.data,
@@ -112,20 +105,21 @@ def campus_detailed(campus_id):
     elif request.method == "POST" and 'redirect_edit_page' in request.form:
         faculty_form_id = request.form['redirect_edit_page']
         return redirect(url_for('faculty_detailed', faculty_id=faculty_form_id))
-    image = campus.img_data
-    # print(bytearray(image))
-    image = bytes(image)
-    # print(image)
-    image = b64encode(image)
-    # print('zaa', image)
+    image = b64encode(campus.img_data)
+    image = image.decode('utf-8')
+    image_extension = campus.img_extension
     faculties = db.get_faculties_from_campus(campus.id)
+    print('hey', image == "")
+
     context = {
         # 'add_faculty_form': add_facultyForm,
         'Campus': campus,
         'edit_campus_form': edit_campus_form,
         'campus_image': image,
+        'campus_image_extension': image_extension,
         'add_faculty_form': add_faculty,
-        'faculties': faculties
+        'faculties': faculties,
+        'image_added': True,
     }
     return render_template('/campuses/campus_detailed.html', context=context)
 
@@ -179,7 +173,6 @@ def department_detailed(department_id):
         'edit_department_form': edit_department_form
     }
     if(request.method == "POST" and 'edit_department_form' in request.form):
-        print('Burdayim')
         if(edit_department_form.validate()):
             updated_department = Department(department.id, department.faculty_id, edit_department_form.name.data, edit_department_form.shortened_name.data,
                                             edit_department_form.block_number.data, edit_department_form.budget.data, edit_department_form.foundation_date.data, edit_department_form.phone_number.data)
