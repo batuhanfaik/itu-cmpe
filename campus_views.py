@@ -32,39 +32,38 @@ def campus():
     campus = {}
     form = add_campus_form()
 
-    if request.method == "POST":
-        if('delete_campus_flag' in request.form):
-            campus_id = request.form['delete_campus_flag']
-            print('campus id ->', campus_id)
-            db.delete_campus(campus_id)
-            return redirect(url_for('campus'))
-        else:
-            if(form.validate()):
-                image = request.files['image']
-                if(validate_image(image)):
-                    filename = secure_filename(image.filename)
-                    file_extension = filename.split(".")[-1]
-                    filename = filename.split(".")[0]
-                    print('File name ->', filename)
-                    print('\n File extension ->', file_extension)
-                    # image.save(os.path.join(
-                    #    current_app.config['UPLOAD_FOLDER'], filename))
-                    # binary_img = open(os.path.join(
-                    #    current_app.config['UPLOAD_FOLDER'], filename), 'rb')
-                    byte_img = request.files['image'].read()
-                    bin_img = ' '.join(map(bin, bytearray(byte_img)))
-                    #content = binary_img.read()
-                    campus = Campus(0, form.name.data, form.address.data, form.city.data, form.size.data,
-                                    form.foundation_date.data, form.phone_number.data, filename, file_extension, bin_img)
+    if request.method == "POST" and 'delete_campus_flag' in request.form:
+        campus_id = request.form['delete_campus_flag']
+        db.delete_campus(campus_id)
+        return redirect(url_for('campus'))
+    elif request.method == "POST" and 'add_campus_form' in request.form:
+        if(form.validate()):
+            image = request.files['image']
+            if(validate_image(image)):
+                filename = secure_filename(image.filename)
+                file_extension = filename.split(".")[-1]
+                filename = filename.split(".")[0]
+                print('File name ->', filename)
+                print('\n File extension ->', file_extension)
+                # image.save(os.path.join(
+                #    current_app.config['UPLOAD_FOLDER'], filename))
+                # binary_img = open(os.path.join(
+                #    current_app.config['UPLOAD_FOLDER'], filename), 'rb')
+                byte_img = request.files['image'].read()
+                bin_img = ' '.join(map(bin, bytearray(byte_img)))
+                # content = binary_img.read()
+                campus = Campus(0, form.name.data, form.address.data, form.city.data, form.size.data,
+                                form.foundation_date.data, form.phone_number.data, filename, file_extension, bin_img)
                 # os.remove(os.path.join(
                 #      current_app.config['UPLOAD_FOLDER'], filename))
-                    db.add_campus(campus)
-                    return redirect(url_for('campus'))
-                # img_name = secure_filename(image.filename)
-                # print(bin_img)
-                    # agin = io.BytesIO(bin_img)
+                db.add_campus(campus)
+        
+        return redirect(url_for('campus'))
+            # img_name = secure_filename(image.filename)
+            # print(bin_img)
+            # agin = io.BytesIO(bin_img)
 
-                    # print(byte_img)
+            # print(byte_img)
     context = {
         # 'form': form,
         'campuses': campuses,
@@ -95,7 +94,6 @@ def campus_detailed(campus_id):
                               add_faculty.address.data, add_faculty.foundation_date.data, add_faculty.phone_number.data)
             db.add_faculty(faculty)
             return redirect(url_for('campus_detailed', campus_id=campus.id))
-
     elif request.method == "POST" and 'edit_campus_form' in request.form:
         campus_id = campus.id
         updated_campus = Campus(campus_id, edit_campus_form.name.data, edit_campus_form.address.data, edit_campus_form.city.data, edit_campus_form.size.data,
@@ -108,7 +106,7 @@ def campus_detailed(campus_id):
     image = bytes(image)
     # print(image)
     image = b64encode(image)
-    #print('zaa', image)
+    # print('zaa', image)
     faculties = db.get_faculties_from_campus(campus.id)
     context = {
         # 'add_faculty_form': add_facultyForm,
@@ -148,10 +146,13 @@ def faculty_detailed(faculty_id):
         return redirect(url_for('faculty_detailed', faculty_id=faculty.id))
     elif request.method == "POST" and 'edit_faculty_form' in request.form:
         if(edit_faculty_form.validate()):
-            updated_faculty = Faculty(faculty_id, faculty.campus_id, faculty.name, faculty.shortened_name,
-                                      faculty.address, faculty.foundation_date, faculty.phone_number)
+            updated_faculty = Faculty(faculty_id, faculty.campus_id, edit_faculty_form.name.data, edit_faculty_form.shortened_name.data,
+                                      edit_faculty_form.address.data, edit_faculty_form.foundation_date.data, edit_faculty_form.phone_number.data)
+            db.update_faculty(updated_faculty)
         return redirect(url_for('faculty_detailed', faculty_id=faculty.id))
-
+    elif request.method == "POST" and 'delete_department_flag' in request.form:
+        db.delete_department(request.form['delete_department_flag'])
+        return redirect(url_for('faculty_detailed', faculty_id=faculty.id))
     return render_template('/campuses/faculty_detailed.html', context=context)
 
 
@@ -165,6 +166,8 @@ def department_detailed(department_id):
     }
     if(request.method == "POST" and 'edit_department_form' in request.form):
         if(edit_department_form.validate()):
+            updated_department = Department(department.id,department.faculty_id,edit_department_form.name.data,edit_department_form.shortened_name.data,edit_department_form.block_number.data,edit_department_form.budget.data,edit_department_form.foundation_date.data,edit_department_form.phone_number.data)
+            db.updated_department(updated_department)
             return redirect(url_for('department_detailed', department_id=department.id))
     return render_template('/campuses/department_detailed.html', context=context)
 
