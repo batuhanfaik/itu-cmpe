@@ -80,7 +80,7 @@ INIT_STATEMENTS = [
     );
 
     CREATE TABLE IF NOT EXISTS CLASSROOM(
-        classroom_id INT NOT NULL PRIMARY KEY,
+        id SERIAL NOT NULL PRIMARY KEY,
         capacity INT NOT NULL,
         has_projection BOOLEAN NOT NULL,
         door_number CHAR(4) NOT NULL,
