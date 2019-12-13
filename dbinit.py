@@ -124,7 +124,7 @@ INIT_STATEMENTS = [
     CREATE TABLE IF NOT EXISTS ASSISTANT (
         tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) NOT NULL,
         faculty_id int references FACULTY(id) not null,
-        supervisor bigint references INSTRUCTOR(tr_id) not null,
+        supervisor bigint references INSTRUCTOR(id) not null,
         assistant_id bigint not null,
         bachelors varchar(80) not null,
         degree varchar(80) not null,
@@ -150,7 +150,7 @@ INIT_STATEMENTS = [
         instructor_id BIGINT NOT NULL,
         FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id),
         FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
-        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (tr_id)
+        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id)
     );
     
     CREATE TABLE IF NOT EXISTS COURSE_ASSISTED (
@@ -228,7 +228,7 @@ INIT_STATEMENTS = [
         FOREIGN KEY(staff_id) REFERENCES STAFF (id),
         PRIMARY KEY(facility_id,staff_id)
     );
-    
+        
     """
 ]
 
