@@ -221,7 +221,7 @@ INIT_STATEMENTS = [
 ]
 
 
-def initialize(url):
+def reset_db(url):
     with dbapi2.connect(url) as connection:
         cursor = connection.cursor()
         for statement in CLEAR_SCHEMA:
@@ -236,5 +236,4 @@ if __name__ == "__main__":
     if url is None:
         print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
         sys.exit(1)
-    initialize(url)
     print("Successfully initialized the DataBees!")

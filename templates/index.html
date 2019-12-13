@@ -20,5 +20,12 @@
             </div>
         </div>
     </div>
+    {% if current_user.role == "admin" %}
+    <form action="/reset_db" method="post" name="reset_db">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <button class="button"> Reset Database </button>
+    </form>
+    {% endif %}
+
 
 {% endblock %}

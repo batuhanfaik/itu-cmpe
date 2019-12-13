@@ -1,7 +1,9 @@
 from flask import current_app, render_template, request, redirect, url_for, abort, flash
-from flask_login import login_required, logout_user, login_user
+from flask_login import login_required, logout_user, login_user, current_user
 from passlib.hash import pbkdf2_sha256 as hash_machine
 from werkzeug.utils import secure_filename
+from os import getenv
+import dbinit
 
 from assistant import Assistant
 from campus import Campus
@@ -387,6 +389,14 @@ def manage_campuses():
             db.edit_faculty(edited_faculty)
 
         return redirect(url_for("manage_campuses", campuses=campuses))
+
+
+@login_required
+def reset_db():
+    db_url = getenv("DATABASE_URL")
+    if current_user.is_admin:
+        dbinit.reset_db(db_url)
+    return redirect(url_for("landing_page"))
 
 
 def test_page():
