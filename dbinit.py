@@ -89,7 +89,8 @@ INIT_STATEMENTS = [
         board_count     CHAR(1),
         air_conditioner BOOLEAN     DEFAULT false,
         faculty_id      INT         NOT NULL,
-        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id)
+        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
+        unique(door_number, faculty_id)
     );
 
 
