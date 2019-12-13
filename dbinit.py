@@ -334,10 +334,10 @@ INIT_STATEMENTS = [
 
     # Add Courses
     """insert into course (crn, code, name, start_time, end_time, day, capacity, credits, classroom_id,
-     faculty_id, instructor_id, department_id) values ('11111', '101', 'Intro to computing (C)', '12', '13',
+     faculty_id, instructor_id, department_id) values ('11111', '101', 'Intro to computing (C)', '12:00:00', '13:00:00',
      'Wednesday', 50, 3, 1, 1, 1, 1);""",
     """insert into course (crn, code, name, start_time, end_time, day, capacity, credits, classroom_id,
-     faculty_id, instructor_id, department_id) values ('22222', '102', 'Intro to computing (Python)', '12', '13',
+     faculty_id, instructor_id, department_id) values ('22222', '102', 'Intro to computing (Python)', '12:00:00', '13:00:00',
      'Thursday', 50, 3, 1, 1, 1, 1);""",
 ]
 
