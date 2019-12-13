@@ -80,15 +80,15 @@ INIT_STATEMENTS = [
     );
 
     CREATE TABLE IF NOT EXISTS CLASSROOM(
-        id SERIAL NOT NULL PRIMARY KEY,
-        capacity INT NOT NULL,
-        has_projection BOOLEAN NOT NULL,
-        door_number CHAR(4) NOT NULL,
-        floor VARCHAR(2) NOT NULL,
-        renewed BOOLEAN DEFAULT false,
-        board_count CHAR(1),
-        air_conditioner BOOLEAN DEFAULT false,
-        faculty_id INT,
+        id              SERIAL      NOT NULL PRIMARY KEY,
+        capacity        INT         NOT NULL,
+        has_projection  BOOLEAN     DEFAULT false,
+        door_number     CHAR(4)     NOT NULL,
+        floor           VARCHAR(2),
+        renewed         BOOLEAN     DEFAULT false,
+        board_count     CHAR(1),
+        air_conditioner BOOLEAN     DEFAULT false,
+        faculty_id      INT         NOT NULL,
         FOREIGN KEY (faculty_id) REFERENCES FACULTY (id)
     );
 
@@ -229,7 +229,83 @@ INIT_STATEMENTS = [
         PRIMARY KEY(facility_id,staff_id)
     );
         
-    """
+    """,
+    # DATABASE FILLER #
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (1,'fadmin', 'fatih', '1', 
+    'fadmin@itu.edu.tr','$pbkdf2-sha256$29000$pPQ.RwgB4Nxbq7V2DmGM8Q$4lFUXxu17es8iNJHSD/w/FM6Y/5JaF7bvekDxhRmAeU',
+    '0', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (2,'badmin', 'batu', '1', 
+    'badmin@itu.edu.tr','$pbkdf2-sha256$29000$cc557907RyiFEOK813ovJQ$Xnrg4Tfl5QqpZoeVfHmBaA4A./ZK.6obUc2WXNIIu3g',
+    '0', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (3,'cadmin', 'cihat', '1', 
+    'cadmin@itu.edu.tr','$pbkdf2-sha256$29000$PMeYc865d641BiBE6N2b8w$BE4L4t9zfdrZvKYuJRX0/EnpkiSA2n/TAIXwfmhTj1c',
+    '0', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (4,'zadmin', 'zeynep', '1', 
+    'zadmin@itu.edu.tr','$pbkdf2-sha256$29000$3RsjZAxByLm3ViqF8F7rXQ$HkPwZXe73FrvDuVJQ3JC1ExmmcIvbAwpbnhzhMmqa0w',
+    '0', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (11,'finstructor', 'fatih', '1', 
+    'finstructor@itu.edu.tr','$pbkdf2-sha256$29000$pPQ.RwgB4Nxbq7V2DmGM8Q$4lFUXxu17es8iNJHSD/w/FM6Y/5JaF7bvekDxhRmAeU',
+    '2', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (22,'binstructor', 'batu', '1', 
+    'binstructor@itu.edu.tr','$pbkdf2-sha256$29000$cc557907RyiFEOK813ovJQ$Xnrg4Tfl5QqpZoeVfHmBaA4A./ZK.6obUc2WXNIIu3g',
+    '2', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (33,'cinstructor', 'cihat', '1', 
+    'cinstructor@itu.edu.tr','$pbkdf2-sha256$29000$PMeYc865d641BiBE6N2b8w$BE4L4t9zfdrZvKYuJRX0/EnpkiSA2n/TAIXwfmhTj1c',
+    '2', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (44,'zinstructor', 'zeynep', '1', 
+    'zinstructor@itu.edu.tr','$pbkdf2-sha256$29000$3RsjZAxByLm3ViqF8F7rXQ$HkPwZXe73FrvDuVJQ3JC1ExmmcIvbAwpbnhzhMmqa0w',
+    '2', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (111,'fstudent', 'fatih', '1', 
+    'fstudent@itu.edu.tr','$pbkdf2-sha256$29000$pPQ.RwgB4Nxbq7V2DmGM8Q$4lFUXxu17es8iNJHSD/w/FM6Y/5JaF7bvekDxhRmAeU',
+    '5', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (222,'bstudent', 'batu', '1', 
+    'bstudent@itu.edu.tr','$pbkdf2-sha256$29000$cc557907RyiFEOK813ovJQ$Xnrg4Tfl5QqpZoeVfHmBaA4A./ZK.6obUc2WXNIIu3g',
+    '5', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (333,'cstudent', 'cihat', '1', 
+    'cstudent@itu.edu.tr','$pbkdf2-sha256$29000$PMeYc865d641BiBE6N2b8w$BE4L4t9zfdrZvKYuJRX0/EnpkiSA2n/TAIXwfmhTj1c',
+    '5', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (444,'zstudent', 'zeynep', '1', 
+    'zstudent@itu.edu.tr','$pbkdf2-sha256$29000$3RsjZAxByLm3ViqF8F7rXQ$HkPwZXe73FrvDuVJQ3JC1ExmmcIvbAwpbnhzhMmqa0w',
+    '5', '2019-10-10', 'a','b');""",
+
+    # Create campus
+    """insert into campus (name, address) values ('Ayazaga', 'ayazaga iste aq');""",
+
+    # Add some faculties
+    """insert into faculty (campus_id, name, shortened_name) values (1, 
+        'Faculty of Computer and Informatics Engineering ', 'CMPF');""",
+    """insert into faculty (campus_id, name, shortened_name) values (1, 
+    'Faculty of Electric and Electronics Engineering', 'EEB');""",
+    """insert into faculty (campus_id, name, shortened_name) values (1, 'Faculty of ISLETME YEAH', 'ISLF');""",
+    
+    # Add departments
+    """insert into department (faculty_id, name, shortened_name) values (1, 'Computer Engineering', 'BLG');""",
+    """insert into department (faculty_id, name, shortened_name) values (1, 'Informatics Engineering', 'BIL');""",
+    """insert into department (faculty_id, name, shortened_name) values (2, 
+    'Electronic and Communication Engineering', 'EHB');""",
+    """insert into department (faculty_id, name, shortened_name) values (2, 
+    'Elektronik Haberlesme Turkce', 'EHBTR');""",
+    """insert into department (faculty_id, name, shortened_name) values (3, 
+    'Isletme Muhendisligi', 'ISLTR');""",
+    """insert into department (faculty_id, name, shortened_name) values (3, 
+    'Management Enginnering', 'ISL');""",
+
+
+    # Add classrooms
+
+
 ]
 
 
@@ -239,7 +315,11 @@ def reset_db(url):
         for statement in CLEAR_SCHEMA:
             cursor.execute(statement)
         for statement in INIT_STATEMENTS:
-            cursor.execute(statement)
+            try:
+                cursor.execute(statement)
+            except dbapi2.Error as e:
+                print(e)
+                sys.exit(1)
         cursor.close()
 
 
@@ -248,4 +328,5 @@ if __name__ == "__main__":
     if url is None:
         print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
         sys.exit(1)
+    reset_db(url)
     print("Successfully initialized the DataBees!")
