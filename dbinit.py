@@ -332,10 +332,13 @@ INIT_STATEMENTS = [
     """insert into instructor (tr_id, department_id, faculty_id) values (33, 1, 2);""",
     """insert into instructor (tr_id, department_id, faculty_id) values (44, 1, 3);""",
 
-    # Add Course
-    # """insert into course (crn, start_time, end_time, day, capacity, credits, classroom_id, faculty_id, instructor_id)
-    #  values (11000, '11:00:00', '12:00:00', 'Wednesday', 30, 3, 1, 1, 1);"""
-
+    # Add Courses
+    """insert into course (crn, code, name, start_time, end_time, day, capacity, credits, classroom_id,
+     faculty_id, instructor_id, department_id) values ('11111', '101', 'Intro to computing (C)', '12', '13',
+     'Wednesday', 50, 3, 1, 1, 1, 1);""",
+    """insert into course (crn, code, name, start_time, end_time, day, capacity, credits, classroom_id,
+     faculty_id, instructor_id, department_id) values ('22222', '102', 'Intro to computing (Python)', '12', '13',
+     'Thursday', 50, 3, 1, 1, 1, 1);""",
 ]
 
 
