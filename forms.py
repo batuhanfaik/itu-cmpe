@@ -1,9 +1,51 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField, SelectField, BooleanField, RadioField
-from wtforms.fields import DateField, DecimalField, FileField
+from wtforms.fields import DateField, DecimalField, FileField, IntegerField
 from wtforms.validators import DataRequired, Length
 from campus import Campus
 from werkzeug.utils import secure_filename
+
+
+class InstructorForm(FlaskForm):
+    tr_id = IntegerField("TR ID", validators=[DataRequired(), Length(min=11, max=11, message="TR ID's length must be 11")])
+    department_id = IntegerField("Department ID", validators=[DataRequired()])
+    faculty_id = IntegerField("Faculty ID", validators=[DataRequired()])
+    specialization = StringField("Specialization")
+    bachelors = StringField("Bachelor's Degree")
+    masters = StringField("Master's Degree")
+    doctorates = StringField("Doctorate's Degree")
+    room_id = StringField("Room ID", validators=[DataRequired(), Length(max=4)])
+
+
+
+    # CREATE TABLE IF NOT EXISTS INSTRUCTOR(
+    #     id SERIAL NOT NULL PRIMARY KEY,
+    #     tr_id BIGINT NOT NULL,
+    #     department_id INT NOT NULL,
+    #     faculty_id INT NOT NULL,
+    #     specialization VARCHAR(80),
+    #     bachelors VARCHAR(80),
+    #     masters VARCHAR(80),
+    #     doctorates VARCHAR(80),
+    #     room_id CHAR(4),
+    #     FOREIGN KEY (tr_id) REFERENCES PEOPLE (tr_id),
+    #     FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
+    #     FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id)
+    # );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # 'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük', 'Kilis', 'Osmaniye', 'Düzce'
 

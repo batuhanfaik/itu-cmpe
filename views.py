@@ -8,7 +8,7 @@ import dbinit
 from assistant import Assistant
 from campus import Campus
 from faculty import Faculty
-from forms import login_form
+from forms import login_form, InstructorForm
 from person import Person
 from student import Student
 
@@ -398,6 +398,11 @@ def reset_db():
         dbinit.reset_db(db_url)
     return redirect(url_for("landing_page"))
 
+
+def instructors_page():
+    form = InstructorForm()
+    if form.validate_on_submit():
+        tr_id = form.data["tr_id"]
 
 def test_page():
     return render_template("test.html")
