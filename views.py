@@ -406,3 +406,17 @@ def instructors_page():
 
 def test_page():
     return render_template("test.html")
+
+
+def staff_add_page():
+    db = current_app.config["db"]
+    if request.method == "GET":
+        return render_template("staff.html")
+    else:
+        if 'add_staff' in request.form:
+            manager_name = request.form["manager_name"]
+            staff_id = request.form["staff_id"]
+
+        return redirect(url_for("staff_page"))
+
+
