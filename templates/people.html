@@ -4,6 +4,7 @@
 
 {% block body %}
 
+    {# Style alert boxes so they take up less space #}
     <style>
         .alert {
             margin-bottom: 1px;
@@ -16,8 +17,27 @@
     <div class="container mt-3">
         <h1 class="mb-3">People List</h1>
 
-        <form class="form-inline needs-validation" action="" method="post" id="form_add_person"
-              name="person_get">
+
+        {% if values.errors %}
+            {# Autoclose alerts #}
+            <script>
+                window.setTimeout(function () {
+                    $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                        $(this).remove();
+                    });
+                }, 2000);
+            </script>
+
+            {% for key in values.errors %}
+                <div class="alert alert-danger mb-2" role="alert">
+                    {{ values.errors[key] }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form class="form-inline needs-validation" action="" method="post"
+              enctype=multipart/form-data id="form_add_person"
+              name="form_add_person">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group">
                 <label for="tr_id" class="mr-sm-2">TR ID:</label>
@@ -125,16 +145,17 @@
                     <option value="F">Female</option>
                 </select>
             </div>
+            <div class="form-check-inline">
+                <label for="photo_check" class="mr-sm-2">Photo:</label>
+                <input type="checkbox" class="form-control mb-2 mr-sm-2" id="photo_check">
+            </div>
+            <div class="form-group" id="photo_upload">
+                <label for="photo" class="mr-sm-2"></label>
+                <input type="file" class="form-control mb-2 mr-sm-2" id="photo"
+                       placeholder="Upload photo" name="photo" accept="image/*">
+            </div>
             <button type="submit" class="btn btn-primary mb-2">Add New Person</button>
         </form>
-
-        {% if values.errors %}
-            {% for key in values.errors %}
-                <div class="alert alert-danger mt-2" role="alert">
-                    {{ values.errors[key] }}
-                </div>
-            {% endfor %}
-        {% endif %}
 
         {% if people %}
             <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
@@ -163,6 +184,25 @@
 
     </div>
 
+
+    <script>
+        var form = $('#form_add_person'),
+            checkbox = $('#photo_check'),
+            photoBlock = $('#photo_upload');
+
+        photoBlock.hide();
+
+        checkbox.on('click', function () {
+            if ($(this).is(':checked')) {
+                photoBlock.show();
+                photoBlock.find('input').attr('required', true);
+            } else {
+                photoBlock.hide();
+                photoBlock.find('input').attr('required', false);
+            }
+        })
+    </script>
+
     <script>
         // Disable form submissions if there are invalid fields
         (function () {
@@ -189,15 +229,6 @@
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
         }
-    </script>
-
-    {# Autoclose alerts #}
-    <script>
-        window.setTimeout(function () {
-            $(".alert").fadeTo(500, 0).slideUp(500, function () {
-                $(this).remove();
-            });
-        }, 2000);
     </script>
 
 {% endblock %}
