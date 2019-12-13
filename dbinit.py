@@ -30,11 +30,14 @@ INIT_STATEMENTS = [
         birth_date date not null,
         id_reg_city varchar(50) not null,
         id_reg_district varchar(50) not null,
+        photo_name varchar(256),
+        photo_extension varchar(10),
+        photo_data bytea, 
         unique (tr_id, email)
     );
     
     CREATE domain credit as real check (
-        ((value >= 15) and (value <=28))
+        ((value >= 0) and (value <=250))
     );
         
     CREATE TABLE IF NOT EXISTS CAMPUS(
@@ -77,7 +80,7 @@ INIT_STATEMENTS = [
     );
 
     CREATE TABLE IF NOT EXISTS CLASSROOM(
-        classroom_id INT NOT NULL PRIMARY KEY,
+        id SERIAL NOT NULL PRIMARY KEY,
         capacity INT NOT NULL,
         has_projection BOOLEAN NOT NULL,
         door_number CHAR(4) NOT NULL,
@@ -104,7 +107,8 @@ INIT_STATEMENTS = [
     );
 
     CREATE TABLE IF NOT EXISTS INSTRUCTOR(
-        tr_id BIGINT NOT NULL PRIMARY KEY,
+        id SERIAL NOT NULL PRIMARY KEY,
+        tr_id BIGINT NOT NULL,
         department_id INT NOT NULL,
         faculty_id INT NOT NULL,
         specialization VARCHAR(80),
@@ -120,13 +124,13 @@ INIT_STATEMENTS = [
     CREATE TABLE IF NOT EXISTS ASSISTANT (
         tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) NOT NULL,
         faculty_id int references FACULTY(id) not null,
-        supervisor bigint references INSTRUCTOR(tr_id) not null,
+        supervisor bigint references INSTRUCTOR(id) not null,
         assistant_id bigint not null,
         bachelors varchar(80) not null,
         degree varchar(80) not null,
         grad_gpa real not null,
         research_area varchar(100) not null,
-        office_day varchar(9) null default 'None',
+        office_day varchar(9) null default 'none',
         office_hour_start time null,
         office_hour_end time null,
         unique (assistant_id)
@@ -144,15 +148,15 @@ INIT_STATEMENTS = [
         classroom_id INT NOT NULL,
         faculty_id INT NOT NULL,
         instructor_id BIGINT NOT NULL,
-        FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (classroom_id),
+        FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id),
         FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
-        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (tr_id)
+        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id)
     );
     
     CREATE TABLE IF NOT EXISTS COURSE_ASSISTED (
         crn char(6) primary key references COURSE(crn) not null,
         assistant_id bigint references ASSISTANT(assistant_id) not null,
-        room_id int references CLASSROOM(classroom_id) not null,
+        room_id int references CLASSROOM(id) not null,
         problem_session boolean not null default false,
         exam boolean not null default false,
         homework boolean not null default false,
@@ -161,13 +165,24 @@ INIT_STATEMENTS = [
         role varchar(60) null
     );
 
-    CREATE TABLE IF NOT EXISTS TAKEN_COURSES(
-        id INT PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS TAKEN_COURSE(
+        id SERIAL PRIMARY KEY,
         student_id BIGINT NOT NULL,
         crn CHAR(6) NOT NULL,
         datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (student_id) REFERENCES STUDENT (tr_id),
-        FOREIGN KEY (crn) REFERENCES COURSE (crn) 
+        FOREIGN KEY (student_id) REFERENCES STUDENT (student_id),
+        FOREIGN KEY (crn) REFERENCES COURSE (crn), 
+        UNIQUE(student_id, crn)
+    );
+    
+    CREATE TABLE IF NOT EXISTS COMPETED_COURSE(
+        id                  SERIAL      NOT NULL PRIMARY KEY,
+        student_id          BIGINT      NOT NULL,
+        crn                 CHAR(6)     NOT NULL,
+        grade               CHAR(2)     NOT NULL,
+        FOREIGN KEY (student_id) REFERENCES STUDENT (student_id),
+        FOREIGN KEY (crn) REFERENCES COURSE (crn),
+        UNIQUE(student_id, crn)
     );
 
     CREATE TABLE IF NOT EXISTS ADMINISTRATOR(
@@ -213,12 +228,12 @@ INIT_STATEMENTS = [
         FOREIGN KEY(staff_id) REFERENCES STAFF (id),
         PRIMARY KEY(facility_id,staff_id)
     );
-    
+        
     """
 ]
 
 
-def initialize(url):
+def reset_db(url):
     with dbapi2.connect(url) as connection:
         cursor = connection.cursor()
         for statement in CLEAR_SCHEMA:
@@ -233,5 +248,4 @@ if __name__ == "__main__":
     if url is None:
         print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
         sys.exit(1)
-    initialize(url)
     print("Successfully initialized the DataBees!")

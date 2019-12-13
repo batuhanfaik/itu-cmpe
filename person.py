@@ -6,13 +6,15 @@
 # @ Project: itucsdb1922
 # @ Description: Not available
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-from flask import current_app
+from base64 import b64encode
+
 from flask_login import UserMixin
+
 
 class Person(UserMixin):
     def __init__(self, tr_id, name, surname, phone_number, email, password, person_category,
                  mother_fname, father_fname, gender, birth_city, birth_date, id_reg_city,
-                 id_reg_district):
+                 id_reg_district, photo_name, photo_extension, photo_data):
         self.tr_id = tr_id
         self.id = email
         self.name = name
@@ -28,6 +30,13 @@ class Person(UserMixin):
         self.birth_date = birth_date
         self.id_reg_city = id_reg_city
         self.id_reg_district = id_reg_district
+        self.photo_name = photo_name
+        self.photo_extension = photo_extension
+        self.photo_data = photo_data
+
+        if self.photo_data:
+            self.photo = b64encode(self.photo_data)
+            self.photo = self.photo.decode('utf-8')
 
         self.active = True
         if self.person_category == 0:
