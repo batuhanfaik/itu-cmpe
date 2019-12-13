@@ -139,6 +139,8 @@ INIT_STATEMENTS = [
     
     CREATE TABLE IF NOT EXISTS COURSE (
         crn             CHAR(6)     NOT NULL PRIMARY KEY,
+        code            CHAR(3)     NOT NULL,
+        name            VARCHAR(100) NOT NULL,
         start_time      TIME        NOT NULL,
         end_time        TIME        NOT NULL,
         day             VARCHAR(9)  NOT NULL,
@@ -149,9 +151,11 @@ INIT_STATEMENTS = [
         classroom_id    INT         NOT NULL,
         faculty_id      INT         NOT NULL,
         instructor_id   BIGINT      NOT NULL,
+        department_id   INT         NOT NULL,
         FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id),
         FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
-        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id)
+        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id),
+        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id)
     );
     
     CREATE TABLE IF NOT EXISTS COURSE_ASSISTED (
