@@ -148,7 +148,7 @@ INIT_STATEMENTS = [
         classroom_id INT NOT NULL,
         faculty_id INT NOT NULL,
         instructor_id BIGINT NOT NULL,
-        FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (classroom_id),
+        FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id),
         FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
         FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (tr_id)
     );
@@ -156,7 +156,7 @@ INIT_STATEMENTS = [
     CREATE TABLE IF NOT EXISTS COURSE_ASSISTED (
         crn char(6) primary key references COURSE(crn) not null,
         assistant_id bigint references ASSISTANT(assistant_id) not null,
-        room_id int references CLASSROOM(classroom_id) not null,
+        room_id int references CLASSROOM(id) not null,
         problem_session boolean not null default false,
         exam boolean not null default false,
         homework boolean not null default false,
