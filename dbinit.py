@@ -107,7 +107,8 @@ INIT_STATEMENTS = [
     );
 
     CREATE TABLE IF NOT EXISTS INSTRUCTOR(
-        tr_id BIGINT NOT NULL PRIMARY KEY,
+        id SERIAL NOT NULL PRIMARY KEY,
+        tr_id BIGINT NOT NULL,
         department_id INT NOT NULL,
         faculty_id INT NOT NULL,
         specialization VARCHAR(80),
