@@ -303,6 +303,7 @@ class Database:
 
     def update_campus(self, campus):
         with dbapi2.connect(self.dbfile) as connection:
+            print('hey')
             cursor = connection.cursor()
             query = "update campus set name = %s, address = %s, city = %s, size = %s, foundation_date = %s, phone_number = %s, campus_image_name = %s, campus_image_extension = %s, campus_image_data = %s where (id= %s)"
             cursor.execute(query, (campus.name, campus.address, campus.city,

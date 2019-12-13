@@ -75,16 +75,22 @@ def campus_detailed(campus_id):
     add_faculty = add_faculty_form()
     if request.method == "POST" and 'change_picture' in request.form:
         image = request.files['image']
+        print('Bak', image)
         if(validate_image(image)):
+            print('bak2')
             filename = secure_filename(image.filename)
             file_extension = filename.split(".")[-1]
             filename = filename.split(".")[0]
             img_data = request.files['image'].read()
-            campus = Campus(campus_id, campus.name, campus.address, campus.city, campus.size,
-                            campus.foundation_date, campus.phone_number, filename, file_extension, img_data)
+            updated_campus = Campus(campus_id, campus.name, campus.address, campus.city, campus.size,
+                                    campus.foundation_date, campus.phone_number, filename, file_extension, img_data)
             # os.remove(os.path.join(
             #      current_app.config['UPLOAD_FOLDER'], filename))
-            db.update_campus(campus)
+            hey = db.get_campus(campus_id)
+            print('Once ', hey.img_data)
+            db.update_campus(updated_campus)
+            hey = db.get_campus(campus_id)
+            print('Sonra ', hey.img_data)
         return redirect(url_for('campus_detailed', campus_id=campus_id))
     elif request.method == "POST" and 'add_faculty_form' in request.form:
         if(add_faculty.validate()):
@@ -109,8 +115,6 @@ def campus_detailed(campus_id):
     image = image.decode('utf-8')
     image_extension = campus.img_extension
     faculties = db.get_faculties_from_campus(campus.id)
-    print('hey', image == "")
-
     context = {
         # 'add_faculty_form': add_facultyForm,
         'Campus': campus,
