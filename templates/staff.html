@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block title %}Staff Page{% endblock %}
+{% block body %}
+    <h1 class="title">Add Staff</h1>
+
+    <form action="" method="post" name="add_staff">
+      <div class="field">
+        <label for="manager_name" class="label">Manager Name:</label>
+        <div class="control">
+          <input type="text" name="manager_name" class="input" required="required"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="staff_id" class="label">Staff id:</label>
+        <div class="control">
+          <input type="number" name="staff_id" class="input" required="required"/>
+        </div>
+      </div>
+
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="button is-primary is-small">Add Staff</button>
+        </div>
+      </div>
+    </form>
+{% endblock %}
