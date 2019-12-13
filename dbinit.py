@@ -305,6 +305,22 @@ INIT_STATEMENTS = [
 
 
     # Add classrooms
+    """insert into classroom (capacity, door_number, faculty_id) values ('100', '5202', '1');"""
+    """insert into classroom (capacity, door_number, faculty_id) values ('120', '5204', '1');"""
+    """insert into classroom (capacity, door_number, faculty_id) values ('31', 'A101', '2');"""
+    """insert into classroom (capacity, door_number, faculty_id) values ('62', 'A102', '2');"""
+    """insert into classroom (capacity, door_number, faculty_id) values ('104', 'DB11', '3');"""
+    """insert into classroom (capacity, door_number, faculty_id) values ('300', 'DB12', '3');"""
+
+    # Add students
+    """insert into student (tr_id, faculty_id, department_id, student_id, credits_taken, gpa) values 
+    (111, 1, 1, 150180707, 69.5, 0);"""
+    """insert into student (tr_id, faculty_id, department_id, student_id, credits_taken, gpa) values 
+    (222, 1, 2, 150180704, 200, 4);"""
+    """insert into student (tr_id, faculty_id, department_id, student_id, credits_taken, gpa) values 
+    (333, 2, 1, 150180705, 200, 4);"""
+    """insert into student (tr_id, faculty_id, department_id, student_id, credits_taken, gpa) values 
+    (444, 3, 1, 150150150, 200, 4);"""
 
 
 ]
