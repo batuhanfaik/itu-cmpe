@@ -1,5 +1,6 @@
 import psycopg2 as dbapi2
 
+from assistant import Assistant
 from campus import Campus, Faculty, Department
 from person import Person
 from student import Student
@@ -13,6 +14,7 @@ class Database:
         self._last_faculty_id = 0
         self.people = {}
         self.students = {}
+        self.assistants = {}
 
     def add_person(self, person):
         with dbapi2.connect(self.dbfile) as connection:
@@ -88,8 +90,8 @@ class Database:
             cursor = connection.cursor()
             query = "insert into student (tr_id, faculty_id, department_id, student_id, semester, grade, gpa, credits_taken, minor) values (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
             cursor.execute(query, (
-            student.tr_id, student.faculty_id, student.department_id, student.student_id,
-            student.semester, student.grade, student.gpa, student.credits_taken, student.minor))
+                student.tr_id, student.faculty_id, student.department_id, student.student_id,
+                student.semester, student.grade, student.gpa, student.credits_taken, student.minor))
             connection.commit()
         self.students[student.tr_id] = student
         return student.tr_id
@@ -101,9 +103,9 @@ class Database:
                     "semester = %s, grade = %s, gpa = %s, credits_taken = %s, " \
                     "minor = %s where (tr_id = %s)"
             cursor.execute(query, (
-            student.tr_id, student.faculty_id, student.department_id, student.student_id,
-            student.semester, student.grade, student.gpa, student.credits_taken, student.minor,
-            tr_id))
+                student.tr_id, student.faculty_id, student.department_id, student.student_id,
+                student.semester, student.grade, student.gpa, student.credits_taken, student.minor,
+                tr_id))
             connection.commit
 
     def delete_student(self, tr_id):
@@ -123,6 +125,16 @@ class Database:
         student_ = Student(*cursor.fetchone()[:])  # Inline unpacking of a tuple
         return student_
 
+    def get_student_via_student_id(self, student_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from student where (student_id = %s)"
+            cursor.execute(query, (student_id,))
+            if (cursor.rowcount == 0):
+                return None
+        student_ = Student(*cursor.fetchone()[:])  # Inline unpacking of a tuple
+        return student_
+
     def get_students(self):
         students = []
         with dbapi2.connect(self.dbfile) as connection:
@@ -133,6 +145,69 @@ class Database:
                 student = Student(*row[:])
                 students.append((student.tr_id, student))
         return students
+
+    def add_assistant(self, assistant):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "insert into assistant (tr_id, faculty_id, supervisor, assistant_id, bachelors, degree, grad_gpa, research_area, office_day, office_hour_start, office_hour_end) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(query, (
+                assistant.tr_id, assistant.faculty_id, assistant.supervisor, assistant.assistant_id,
+                assistant.bachelors, assistant.degree, assistant.grad_gpa, assistant.research_area,
+                assistant.office_day, assistant.office_hour_start, assistant.office_hour_end))
+            connection.commit()
+        self.assistants[assistant.tr_id] = assistant
+        return assistant.tr_id
+
+    def update_assistant(self, assistant, tr_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "update assistant set tr_id = %s, faculty_id = %s, supervisor = %s, assistant_id = %s, " \
+                    "bachelors = %s, degree = %s, grad_gpa = %s, research_area = %s, office_day = %s, office_hour_start = %s, " \
+                    "office_hour_end = %s where (tr_id = %s)"
+            cursor.execute(query, (
+                assistant.tr_id, assistant.faculty_id, assistant.supervisor, assistant.assistant_id,
+                assistant.bachelors, assistant.degree, assistant.grad_gpa, assistant.research_area,
+                assistant.office_day, assistant.office_hour_start, assistant.office_hour_end,
+                tr_id))
+            connection.commit
+
+    def delete_assistant(self, tr_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "delete from assistant where (tr_id = %s)"
+            cursor.execute(query, (tr_id,))
+            connection.commit
+
+    def get_assistant(self, tr_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from assistant where (tr_id = %s)"
+            cursor.execute(query, (tr_id,))
+            if (cursor.rowcount == 0):
+                return None
+        assistant_ = Assistant(*cursor.fetchone()[:])  # Inline unpacking of a tuple
+        return assistant_
+
+    def get_assistant_via_assistant_id(self, tr_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from assistant where (assistant_id = %s)"
+            cursor.execute(query, (tr_id,))
+            if (cursor.rowcount == 0):
+                return None
+        assistant_ = Assistant(*cursor.fetchone()[:])  # Inline unpacking of a tuple
+        return assistant_
+
+    def get_assistants(self):
+        assistants = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from assistant order by assistant_id"
+            cursor.execute(query)
+            for row in cursor:
+                assistant = Assistant(*row[:])
+                assistants.append((assistant.tr_id, assistant))
+        return assistants
 
     def get_user(self, username):
         with dbapi2.connect(self.dbfile) as connection:

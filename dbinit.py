@@ -129,7 +129,7 @@ INIT_STATEMENTS = [
         degree varchar(80) not null,
         grad_gpa real not null,
         research_area varchar(100) not null,
-        office_day varchar(9) null default 'None',
+        office_day varchar(9) null default 'none',
         office_hour_start time null,
         office_hour_end time null,
         unique (assistant_id)

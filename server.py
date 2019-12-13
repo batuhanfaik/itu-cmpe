@@ -52,6 +52,10 @@ def create_app(db_url):
                      methods=['GET', 'POST'])
     app.add_url_rule("/students/<tr_id>",
                      view_func=views.student_page, methods=['GET', 'POST'])
+    app.add_url_rule("/assistants", view_func=views.assistants_page,
+                     methods=['GET', 'POST'])
+    app.add_url_rule("/assistants/<tr_id>",
+                     view_func=views.assistant_page, methods=['GET', 'POST'])
     app.add_url_rule("/campuses/campus",
                      view_func=campus_views.campus, methods=['GET', 'POST'])
     app.add_url_rule("/campuses/<campus_id>",

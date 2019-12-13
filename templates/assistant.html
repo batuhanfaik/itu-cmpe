@@ -1,0 +1,220 @@
+{% extends "layout.html" %} {% block title %} Assistant {% endblock %} {% block
+body %}
+
+    <!-- Page Content -->
+    <div class="container mt-3">
+        <h1>This Assistant</h1>
+
+        <form
+                class="form-inline needs-validation"
+                action=""
+                method="post"
+                id="form_update_assistant"
+                name="form_update_assistant"
+        >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="form-group">
+                <label for="tr_id" class="mr-sm-2">TR ID:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="tr_id"
+                       placeholder="Enter TR ID" name="tr_id" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="faculty_id" class="mr-sm-2">Faculty ID:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="faculty_id"
+                       placeholder="Enter faculty ID" name="faculty_id" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="supervisor" class="mr-sm-2">Supervisor:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="supervisor"
+                       placeholder="Enter supervisor" name="supervisor" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="assistant_id" class="mr-sm-2">Assistant ID:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="assistant_id"
+                       placeholder="Enter assistant ID" name="assistant_id" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="bachelors" class="mr-sm-2">Bachelors:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="bachelors"
+                       placeholder="Enter bachelors" name="bachelors" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group mr-2">
+                <label for="degree" class="mr-sm-2">Degree:</label>
+                <select class="form-control" id="degree" name="degree" required>
+                    <option value="bachelors">Bachelor's</option>
+                    <option value="masters">Master's</option>
+                    <option value="doctorate">Doctorate</option>
+                </select>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="grad_gpa" class="mr-sm-2">Graduation GPA:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="grad_gpa"
+                       placeholder="Enter graduation GPA" name="grad_gpa" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="research_area" class="mr-sm-2">Research Area:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="credits_taken"
+                       placeholder="Enter research area" name="research_area" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-check-inline">
+                <label for="office_check" class="mr-sm-2">Office:</label>
+                <input type="checkbox" class="form-control mb-2 mr-sm-2" id="office_check">
+            </div>
+            <div class="office_wrapper" id="office">
+                <div class="form-group mr-2">
+                    <label for="office_day" class="mr-sm-2 mb-1 mt-1">Office Day:</label>
+                    <select class="form-control" id="office_day" name="office_day">
+                        <option value="None">None</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                    </select>
+                    <div class="valid-feedback">Valid.</div>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                </div>
+                <div class="form-group md-form mb-1 mt-1 mr-2 ml-2">
+                    <label for="office_hour_start">Office Hour Start: </label>
+                    <input placeholder="Start time" type="text" name="office_hour_start"
+                           id="office_hour_start" class="form-control mb-2 mr-sm-2" value="00:00">
+                </div>
+                <div class="form-group md-form mb-1 mt-1 mr-2 ml-2">
+                    <label for="office_hour_end">Office Hour End: </label>
+                    <input placeholder="End time" type="text" name="office_hour_end"
+                           id="office_hour_end" class="form-control mb-2 mr-sm-2" value="00:00">
+                </div>
+            </div>
+            <button
+                    type="submit"
+                    class="btn btn-primary mb-2"
+                    value="update"
+                    name="update_button"
+            >
+                Update This Assistant
+            </button>
+        </form>
+
+        <script>
+            // Disable form submissions if there are invalid fields
+            (function () {
+                "use strict";
+                window.addEventListener(
+                    "load",
+                    function () {
+                        // Get the forms we want to add validation styles to
+                        var forms = document.getElementsByClassName("needs-validation");
+                        // Loop over them and prevent submission
+                        var validation = Array.prototype.filter.call(forms, function (form) {
+                            form.addEventListener(
+                                "submit",
+                                function (event) {
+                                    if (form.checkValidity() === false) {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                    }
+                                    form.classList.add("was-validated");
+                                },
+                                false
+                            );
+                        });
+                    },
+                    false
+                );
+            })();
+        </script>
+        <br/>
+        {% if assistant %}
+            <table class="table is-striped is-fullwidth table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">TR ID</th>
+                    <th scope="col">Faculty ID</th>
+                    <th scope="col">Supervisor</th>
+                    <th scope="col">Assistant ID</th>
+                    <th scope="col">Bachelors</th>
+                    <th scope="col">Degree</th>
+                    <th scope="col">Graduation GPA</th>
+                    <th scope="col">Research Area</th>
+                    <th scope="col">Office Day</th>
+                    <th scope="col">Office Hour Start</th>
+                    <th scope="col">Office Hour End</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td scope="row">{{ assistant.tr_id }}</td>
+                    <td>{{ assistant.faculty_id }}</td>
+                    <td>{{ assistant.supervisor }}</td>
+                    <td>{{ assistant.assistant_id }}</td>
+                    <td>{{ assistant.bachelors }}</td>
+                    <td>{{ assistant.degree }}</td>
+                    <td>{{ assistant.grad_gpa }}</td>
+                    <td>{{ assistant.research_area }}</td>
+                    <td>{{ assistant.office_day }}</td>
+                    <td>{{ assistant.office_hour_start }}</td>
+                    <td>{{ assistant.office_hour_end }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <br/>
+            <form action="" method="post" name="delete_assistant">
+                <div class="d-flex">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <button
+                            type="submit"
+                            class="btn btn-danger ml-auto"
+                            value="delete"
+                            name="update_button"
+                    >
+                        Delete
+                    </button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+
+    {# Hide/show office inputs #}
+    <script>
+        var form = $('#form_update_assistant'),
+            checkbox = $('#office_check'),
+            officeBlock = $('#office');
+
+        officeBlock.hide();
+
+        checkbox.on('click', function () {
+            if ($(this).is(':checked')) {
+                officeBlock.show();
+                officeBlock.find('input').attr('required', true);
+            } else {
+                officeBlock.hide();
+                officeBlock.find('input').attr('required', false);
+            }
+        })
+    </script>
+
+    {# Prevents form submission on refresh #}
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
+
+{% endblock %}

@@ -142,25 +142,6 @@
 
     </div>
 
-
-    <script>
-        var form = $('#form_add_person'),
-            checkbox = $('#photo_check'),
-            photoBlock = $('#photo_upload');
-
-        photoBlock.hide();
-
-        checkbox.on('click', function () {
-            if ($(this).is(':checked')) {
-                photoBlock.show();
-                photoBlock.find('input').attr('required', true);
-            } else {
-                photoBlock.hide();
-                photoBlock.find('input').attr('required', false);
-            }
-        })
-    </script>
-
     <script>
         // Disable form submissions if there are invalid fields
         (function () {
