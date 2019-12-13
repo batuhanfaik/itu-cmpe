@@ -165,13 +165,14 @@ INIT_STATEMENTS = [
         role varchar(60) null
     );
 
-    CREATE TABLE IF NOT EXISTS TAKEN_COURSES(
-        id INT PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS TAKEN_COURSE(
+        id SERIAL PRIMARY KEY,
         student_id BIGINT NOT NULL,
         crn CHAR(6) NOT NULL,
         datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (student_id) REFERENCES STUDENT (tr_id),
-        FOREIGN KEY (crn) REFERENCES COURSE (crn) 
+        FOREIGN KEY (crn) REFERENCES COURSE (crn), 
+        UNIQUE(student_id, crn)
     );
 
     CREATE TABLE IF NOT EXISTS ADMINISTRATOR(

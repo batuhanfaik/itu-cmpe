@@ -12,3 +12,12 @@ class Course:
         self.classroom_id = classroom_id
         self.faculty_id = faculty_id
         self.instructor_id = instructor_id
+
+
+class TakenCourse:
+    def __init__(self, id, student_id, crn, datetime):
+        self.student_id = student_id
+        self.crn = crn
+        self.datetime = datetime
+        self.id = id
+
