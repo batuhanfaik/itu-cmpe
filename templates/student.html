@@ -1,0 +1,176 @@
+{% extends "layout.html" %} {% block title %} Student {% endblock %} {% block
+body %}
+
+    <!-- Page Content -->
+    <div class="container mt-3">
+        <h1>This Student</h1>
+
+        <form
+                class="form-inline needs-validation"
+                action=""
+                method="post"
+                id="form_update_student"
+                name="form_update_student"
+        >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="form-group">
+                <label for="tr_id" class="mr-sm-2">TR ID:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="tr_id"
+                       placeholder="Enter TR ID" name="tr_id"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="faculty_id" class="mr-sm-2">Faculty ID:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="faculty_id"
+                       placeholder="Enter faculty ID" name="faculty_id" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="department_id" class="mr-sm-2">Department ID:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="department_id"
+                       placeholder="Enter department ID" name="department_id"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="student_id" class="mr-sm-2">Student ID:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="student_id"
+                       placeholder="Enter student ID" name="student_id"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="semester" class="mr-sm-2">Semester:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="semester"
+                       placeholder="Enter semester" name="semester"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="grade" class="mr-sm-2">Grade:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="grade"
+                       placeholder="Enter grade" name="grade" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="gpa" class="mr-sm-2">GPA:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="gpa"
+                       placeholder="Enter GPA" name="gpa" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="credits_taken" class="mr-sm-2">Credits Taken:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="credits_taken"
+                       placeholder="Enter credits taken" name="credits_taken" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="minor" class="radio-inline mr-sm-2">Minor:
+                    <input type="radio" class="ml-1 mr-1" name="minor" id="minor_no" value="yes"
+                           checked>No
+                    <input type="radio" class="ml-1 mr-1" name="minor" id="minor_yes" value="no">Yes
+                </label>
+            </div>
+            <button
+                    type="submit"
+                    class="btn btn-primary mb-2"
+                    value="update"
+                    name="update_button"
+            >
+                Update This Student
+            </button>
+        </form>
+
+        <script>
+            // Disable form submissions if there are invalid fields
+            (function () {
+                "use strict";
+                window.addEventListener(
+                    "load",
+                    function () {
+                        // Get the forms we want to add validation styles to
+                        var forms = document.getElementsByClassName("needs-validation");
+                        // Loop over them and prevent submission
+                        var validation = Array.prototype.filter.call(forms, function (form) {
+                            form.addEventListener(
+                                "submit",
+                                function (event) {
+                                    if (form.checkValidity() === false) {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                    }
+                                    form.classList.add("was-validated");
+                                },
+                                false
+                            );
+                        });
+                    },
+                    false
+                );
+            })();
+        </script>
+        <br/>
+        {% if student %}
+            <table class="table is-striped is-fullwidth table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">TR ID</th>
+                    <th scope="col">Faculty ID</th>
+                    <th scope="col">Department ID</th>
+                    <th scope="col">Student ID</th>
+                    <th scope="col">Semester</th>
+                    <th scope="col">Grade</th>
+                    <th scope="col">GPA</th>
+                    <th scope="col">Credits Taken</th>
+                    <th scope="col">Has Minor</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td scope="row">{{ student.tr_id }}</td>
+                    <td>{{ student.faculty_id }}</td>
+                    <td>{{ student.department_id }}</td>
+                    <td>{{ student.student_id }}</td>
+                    <td>{{ student.semester }}</td>
+                    <td>{{ student.grade }}</td>
+                    <td>{{ student.gpa }}</td>
+                    <td>{{ student.credits_taken }}</td>
+                    <td>{{ student.minor }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <br/>
+            <form action="" method="post" name="delete_person">
+                <div class="d-flex">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <button
+                            type="submit"
+                            class="btn btn-danger ml-auto"
+                            value="delete"
+                            name="update_button"
+                    >
+                        Delete
+                    </button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+
+    {# Prevents form submission on refresh #}
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
+
+{% endblock %}

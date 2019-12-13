@@ -2,6 +2,7 @@ import psycopg2 as dbapi2
 
 from campus import Campus, Faculty, Department
 from person import Person
+from student import Student
 
 
 class Database:
@@ -11,18 +12,20 @@ class Database:
         self._last_campus_id = 0
         self._last_faculty_id = 0
         self.people = {}
+        self.students = {}
 
     def add_person(self, person):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "insert into people (tr_id, name, surname, phone_number, email, pass, " \
                     "person_category, mother_fname, father_fname, gender, birth_city, birth_date, " \
-                    "id_reg_city, id_reg_district) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                    "id_reg_city, id_reg_district, photo_name, photo_extension, photo_data) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             cursor.execute(query, (person.tr_id, person.name, person.surname, person.phone_number,
                                    person.email, person.password, person.person_category,
                                    person.mother_fname, person.father_fname, person.gender,
                                    person.birth_city, person.birth_date, person.id_reg_city,
-                                   person.id_reg_district))
+                                   person.id_reg_district, person.photo_name,
+                                   person.photo_extension, person.photo_data))
             connection.commit()
         self.people[person.tr_id] = person
         return person.tr_id
@@ -33,12 +36,13 @@ class Database:
             query = "update people set tr_id = %s, name = %s, surname = %s, phone_number = %s, " \
                     "email = %s, pass = %s, person_category = %s, mother_fname = %s, " \
                     "father_fname = %s, gender = %s, birth_city = %s, birth_date = %s, " \
-                    "id_reg_city = %s, id_reg_district = %s where (tr_id = %s)"
+                    "id_reg_city = %s, id_reg_district = %s, photo_name = %s, photo_extension = %s, photo_data = %s where (tr_id = %s)"
             cursor.execute(query, (person.tr_id, person.name, person.surname, person.phone_number,
                                    person.email, person.password, person.person_category,
                                    person.mother_fname, person.father_fname, person.gender,
                                    person.birth_city, person.birth_date, person.id_reg_city,
-                                   person.id_reg_district, tr_id))
+                                   person.id_reg_district, person.photo_name,
+                                   person.photo_extension, person.photo_data, tr_id))
             connection.commit
 
     def delete_person(self, tr_id):
@@ -68,6 +72,68 @@ class Database:
         person_ = Person(*cursor.fetchone()[:])  # Inline unpacking of a tuple
         return person_
 
+    def get_people(self):
+        people = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from people order by name, surname"
+            cursor.execute(query)
+            for row in cursor:
+                person = Person(*row[:])
+                people.append((person.tr_id, person))
+        return people
+
+    def add_student(self, student):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "insert into student (tr_id, faculty_id, department_id, student_id, semester, grade, gpa, credits_taken, minor) values (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(query, (
+            student.tr_id, student.faculty_id, student.department_id, student.student_id,
+            student.semester, student.grade, student.gpa, student.credits_taken, student.minor))
+            connection.commit()
+        self.students[student.tr_id] = student
+        return student.tr_id
+
+    def update_student(self, student, tr_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "update student set tr_id = %s, faculty_id = %s, department_id = %s, student_id = %s, " \
+                    "semester = %s, grade = %s, gpa = %s, credits_taken = %s, " \
+                    "minor = %s where (tr_id = %s)"
+            cursor.execute(query, (
+            student.tr_id, student.faculty_id, student.department_id, student.student_id,
+            student.semester, student.grade, student.gpa, student.credits_taken, student.minor,
+            tr_id))
+            connection.commit
+
+    def delete_student(self, tr_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "delete from student where (tr_id = %s)"
+            cursor.execute(query, (tr_id,))
+            connection.commit
+
+    def get_student(self, tr_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from student where (tr_id = %s)"
+            cursor.execute(query, (tr_id,))
+            if (cursor.rowcount == 0):
+                return None
+        student_ = Student(*cursor.fetchone()[:])  # Inline unpacking of a tuple
+        return student_
+
+    def get_students(self):
+        students = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from student order by student_id"
+            cursor.execute(query)
+            for row in cursor:
+                student = Student(*row[:])
+                students.append((student.tr_id, student))
+        return students
+
     def get_user(self, username):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
@@ -89,23 +155,14 @@ class Database:
             user.role = "student"
         return user
 
-    def get_people(self):
-        people = []
-        with dbapi2.connect(self.dbfile) as connection:
-            cursor = connection.cursor()
-            query = "select * from people order by name, surname"
-            cursor.execute(query)
-            for row in cursor:
-                person = Person(*row[:])
-                people.append((person.tr_id, person))
-        return people
-
     def add_campus(self, campus):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "insert into campus (name, address, city, size, foundation_date, phone_number,campus_image_name,campus_image_extension,campus_image_data) values (%s, %s, %s, %s, %s,%s,%s ,%s, %s )"
             cursor.execute(query, (campus.name, campus.address,
-                                   campus.city, campus.size, campus.foundation_date, campus.phone_number, campus.img_name, campus.img_extension, campus.img_data))
+                                   campus.city, campus.size, campus.foundation_date,
+                                   campus.phone_number, campus.img_name, campus.img_extension,
+                                   campus.img_data))
             connection.commit()
         print('End of the campus add function')
         self.campuses[campus.id] = campus
@@ -130,7 +187,9 @@ class Database:
             cursor = connection.cursor()
             query = "update campus set name = %s, address = %s, city = %s, size = %s, foundation_date = %s, phone_number = %s, campus_image_name = %s, campus_image_extension = %s, campus_image_data = %s where (id= %s)"
             cursor.execute(query, (campus.name, campus.address, campus.city,
-                                   campus.size, campus.foundation_date, campus.phone_number, campus.img_name, campus.img_extension, campus.img_data, campus.id))
+                                   campus.size, campus.foundation_date, campus.phone_number,
+                                   campus.img_name, campus.img_extension, campus.img_data,
+                                   campus.id))
             connection.commit
 
     def update_campus_image(self, campus):
@@ -158,7 +217,7 @@ class Database:
             cursor = connection.cursor()
             query = "select * from campus where (id = %s)"
             cursor.execute(query, (campus_id,))
-            if(cursor.rowcount == 0):
+            if (cursor.rowcount == 0):
                 return None
         campus_ = Campus(*cursor.fetchone()[:])  # Inline unpacking of a tuple
         return campus_
@@ -203,7 +262,7 @@ class Database:
             cursor = connection.cursor()
             query = "select * from faculty where (id = %s)"
             cursor.execute(query, (faculty_id,))
-            if(cursor.rowcount == 0):
+            if (cursor.rowcount == 0):
                 return None
         # Inline unpacking of a tuple
         faculty_ = Faculty(*cursor.fetchone()[:])
@@ -215,16 +274,20 @@ class Database:
             cursor = connection.cursor()
             print(department)
             query = "insert into department (faculty_id, name, shortened_name, block_number, budget, foundation_date, phone_number) values (%s, %s, %s,%s,%s,%s,%s)"
-            cursor.execute(query, (department.faculty_id, department.name, department.shortened_name,
-                                   department.block_number, department.budget, department.foundation_date, department.phone_number))
+            cursor.execute(query,
+                           (department.faculty_id, department.name, department.shortened_name,
+                            department.block_number, department.budget, department.foundation_date,
+                            department.phone_number))
             connection.commit
 
     def update_department(self, department):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "update department set name = %s, shortened_name = %s, block_number = %s, budget = %s, foundation_date = %s, phone_number = %s where (id = %s)"
-            cursor.execute(query, (department.name, department.shortened_name, department.block_number, department.budget,
-                                   department.foundation_date, department.phone_number, department.id,))
+            cursor.execute(query, (
+                department.name, department.shortened_name, department.block_number,
+                department.budget,
+                department.foundation_date, department.phone_number, department.id,))
             connection.commit
 
     def delete_department(self, department_id):
@@ -251,7 +314,7 @@ class Database:
             cursor = connection.cursor()
             query = "select * from department where (id = %s)"
             cursor.execute(query, (department_id,))
-            if(cursor.rowcount == 0):
+            if (cursor.rowcount == 0):
                 return None
         # Inline unpacking of a tuple
         department_ = Department(*cursor.fetchone()[:])

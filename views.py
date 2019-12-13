@@ -1,11 +1,13 @@
 from flask import current_app, render_template, request, redirect, url_for, abort, flash
 from flask_login import login_required, logout_user, login_user
 from passlib.hash import pbkdf2_sha256 as hash_machine
+from werkzeug.utils import secure_filename
 
 from campus import Campus
 from faculty import Faculty
 from forms import login_form
 from person import Person
+from student import Student
 
 
 def landing_page():
@@ -33,16 +35,6 @@ def login_page():
                 else:
                     flash('Wrong password')
                     form.errors['password'] = 'Wrong password!'
-
-            # if person is None:
-            #     flash('Invalid username', 'error')
-            #     return redirect(url_for('login'))
-            # else:
-            #     if(person.password == password):
-            #         flash('Login succesfull')
-            #     else:
-            #         flash('Password is wrong!', 'error')
-            #     login_user(person)
     return render_template('login.html', form=form)
 
 
@@ -107,13 +99,25 @@ def people_page():
         form_bdate = request.form.data["bdate"]
         form_id_regcity = request.form.data["id_regcity"]
         form_id_regdist = request.form.data["id_regdist"]
+
+        if "photo" not in request.files:
+            flash('No file part')
+            filename, file_extension, photo_data = "", "", ""
+        else:
+            photo = request.files["photo"]
+            filename = secure_filename(photo.filename)
+            file_extension = filename.split(".")[-1]
+            filename = filename.split(".")[0]
+            photo_data = request.files['photo'].read()
+
         person = Person(form_tr_id, form_name, form_surname, form_phone, form_email, form_pwd,
                         form_category, form_mfname, form_ffname, form_gender, form_bcity,
-                        form_bdate, form_id_regcity, form_id_regdist)
+                        form_bdate, form_id_regcity, form_id_regdist, filename, file_extension,
+                        photo_data)
         db = current_app.config["db"]
         person_tr_id = db.add_person(person)
         people = db.get_people()
-        return render_template("people.html", people=sorted(people), values=request.form)
+        return render_template("people.html", people=sorted(people), values={})
 
 
 def person_page(tr_id):
@@ -139,16 +143,109 @@ def person_page(tr_id):
             form_bdate = request.form["bdate"]
             form_id_regcity = request.form["id_regcity"]
             form_id_regdist = request.form["id_regdist"]
+
+            if "photo" not in request.files:
+                flash('No file part')
+                filename, file_extension, photo_data = "", "", ""
+            else:
+                photo = request.files["photo"]
+                filename = secure_filename(photo.filename)
+                file_extension = filename.split(".")[-1]
+                filename = filename.split(".")[0]
+                photo_data = request.files['photo'].read()
+
             person = Person(form_tr_id, form_name, form_surname, form_phone, form_email, form_pwd,
                             form_category, form_mfname, form_ffname, form_gender, form_bcity,
-                            form_bdate, form_id_regcity, form_id_regdist)
+                            form_bdate, form_id_regcity, form_id_regdist, filename, file_extension,
+                            photo_data)
             db = current_app.config["db"]
             db.update_person(person, tr_id)
             return redirect(url_for("person_page", tr_id=person.tr_id))
         elif request.form["update_button"] == "delete":
             db.delete_person(tr_id)
             people = db.get_people()
-            return redirect(url_for("people_page", people=sorted(people)))
+            return redirect(url_for("people_page", people=sorted(people), values={}))
+
+
+def validate_students_form(form):
+    form.data = {}
+    form.errors = {}
+    db = current_app.config["db"]
+
+    form_student_id = form.get("student_id")
+    if db.get_person(form_student_id):
+        form.errors["student_id"] = "There exists a student with the given ID."
+    else:
+        form.data["student_id"] = form_student_id
+
+    form.data["tr_id"] = form.get("tr_id")
+    form.data["faculty_id"] = form.get("faculty_id")
+    form.data["department_id"] = form.get("department_id")
+    form.data["semester"] = form.get("semester")
+    form.data["grade"] = form.get("grade")
+    form.data["gpa"] = form.get("gpa")
+    form.data["credits_taken"] = form.get("credits_taken")
+    form.data["minor"] = form.get("minor")
+
+    return len(form.errors) == 0
+
+
+def students_page():
+    db = current_app.config["db"]
+    students = db.get_students()
+    if request.method == "GET":
+        return render_template("students.html", students=sorted(students), values=request.form)
+    else:
+        valid = validate_students_form(request.form)
+        print(request.form)
+        if not valid:
+            return render_template("students.html", students=sorted(students), values=request.form)
+        form_tr_id = request.form.data["tr_id"]
+        form_faculty_id = request.form.data["faculty_id"]
+        form_department_id = request.form.data["department_id"]
+        form_student_id = request.form.data["student_id"]
+        form_semester = request.form.data["semester"]
+        form_grade = request.form.data["grade"]
+        form_gpa = request.form.data["gpa"]
+        form_credits_taken = request.form.data["credits_taken"]
+        form_minor = request.form.data["minor"]
+
+        student = Student(form_tr_id, form_faculty_id, form_department_id, form_student_id,
+                          form_semester, form_grade, form_gpa, form_credits_taken, form_minor)
+        db = current_app.config["db"]
+        student_tr_id = db.add_student(student)
+        students = db.get_students()
+        return render_template("students.html", students=sorted(students), values={})
+
+
+def student_page(tr_id):
+    db = current_app.config["db"]
+    student = db.get_student(tr_id)
+    if student is None:
+        abort(404)
+    if request.method == "GET":
+        return render_template("student.html", student=student)
+    else:
+        if request.form["update_button"] == "update":
+            form_tr_id = request.form["tr_id"]
+            form_faculty_id = request.form["faculty_id"]
+            form_department_id = request.form["department_id"]
+            form_student_id = request.form["student_id"]
+            form_semester = request.form["semester"]
+            form_grade = request.form["grade"]
+            form_gpa = request.form["gpa"]
+            form_credits_taken = request.form["credits_taken"]
+            form_minor = request.form["minor"]
+
+            student = Student(form_tr_id, form_faculty_id, form_department_id, form_student_id,
+                              form_semester, form_grade, form_gpa, form_credits_taken, form_minor)
+            db = current_app.config["db"]
+            db.update_student(student, tr_id)
+            return redirect(url_for("student_page", tr_id=student.tr_id))
+        elif request.form["update_button"] == "delete":
+            db.delete_student(tr_id)
+            students = db.get_students()
+            return redirect(url_for("students_page", students=sorted(students), values={}))
 
 
 def manage_campuses():

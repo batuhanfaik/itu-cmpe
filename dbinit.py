@@ -37,7 +37,7 @@ INIT_STATEMENTS = [
     );
     
     CREATE domain credit as real check (
-        ((value >= 15) and (value <=28))
+        ((value >= 0) and (value <=250))
     );
         
     CREATE TABLE IF NOT EXISTS CAMPUS(
