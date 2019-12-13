@@ -170,8 +170,18 @@ INIT_STATEMENTS = [
         student_id BIGINT NOT NULL,
         crn CHAR(6) NOT NULL,
         datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (student_id) REFERENCES STUDENT (tr_id),
+        FOREIGN KEY (student_id) REFERENCES STUDENT (student_id),
         FOREIGN KEY (crn) REFERENCES COURSE (crn), 
+        UNIQUE(student_id, crn)
+    );
+    
+    CREATE TABLE IF NOT EXISTS COMPETED_COURSE(
+        id                  SERIAL      NOT NULL PRIMARY KEY,
+        student_id          BIGINT      NOT NULL,
+        crn                 CHAR(6)     NOT NULL,
+        grade               CHAR(2)     NOT NULL,
+        FOREIGN KEY (student_id) REFERENCES STUDENT (student_id),
+        FOREIGN KEY (crn) REFERENCES COURSE (crn),
         UNIQUE(student_id, crn)
     );
 

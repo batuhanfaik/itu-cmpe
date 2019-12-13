@@ -21,3 +21,10 @@ class TakenCourse:
         self.datetime = datetime
         self.id = id
 
+
+class CompletedCourse:
+    def __init__(self, id, student_id, crn, grade):
+        self.id = id
+        self.student_id = student_id
+        self.crn = crn
+        self.grade = grade
