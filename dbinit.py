@@ -138,17 +138,17 @@ INIT_STATEMENTS = [
     );
     
     CREATE TABLE IF NOT EXISTS COURSE (
-        crn CHAR(6) NOT NULL PRIMARY KEY,
-        start_time TIME NOT NULL,
-        end_time TIME NOT NULL,
-        day VARCHAR(9) NOT NULL,
-        capacity INT NOT NULL,
-        enrolled INT NOT NULL,
-        credits REAL NOT NULL,
-        language CHAR(2) NOT NULL,
-        classroom_id INT NOT NULL,
-        faculty_id INT NOT NULL,
-        instructor_id BIGINT NOT NULL,
+        crn             CHAR(6)     NOT NULL PRIMARY KEY,
+        start_time      TIME        NOT NULL,
+        end_time        TIME        NOT NULL,
+        day             VARCHAR(9)  NOT NULL,
+        capacity        INT         NOT NULL,
+        enrolled        INT         default(0),
+        credits         REAL        NOT NULL,
+        language        CHAR(2)     default('en'),
+        classroom_id    INT         NOT NULL,
+        faculty_id      INT         NOT NULL,
+        instructor_id   BIGINT      NOT NULL,
         FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id),
         FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
         FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id)
@@ -305,23 +305,32 @@ INIT_STATEMENTS = [
 
 
     # Add classrooms
-    """insert into classroom (capacity, door_number, faculty_id) values ('100', '5202', '1');"""
-    """insert into classroom (capacity, door_number, faculty_id) values ('120', '5204', '1');"""
-    """insert into classroom (capacity, door_number, faculty_id) values ('31', 'A101', '2');"""
-    """insert into classroom (capacity, door_number, faculty_id) values ('62', 'A102', '2');"""
-    """insert into classroom (capacity, door_number, faculty_id) values ('104', 'DB11', '3');"""
-    """insert into classroom (capacity, door_number, faculty_id) values ('300', 'DB12', '3');"""
+    """insert into classroom (capacity, door_number, faculty_id) values ('100', '5202', '1');""",
+    """insert into classroom (capacity, door_number, faculty_id) values ('120', '5204', '1');""",
+    """insert into classroom (capacity, door_number, faculty_id) values ('31', 'A101', '2');""",
+    """insert into classroom (capacity, door_number, faculty_id) values ('62', 'A102', '2');""",
+    """insert into classroom (capacity, door_number, faculty_id) values ('104', 'DB11', '3');""",
+    """insert into classroom (capacity, door_number, faculty_id) values ('300', 'DB12', '3');""",
 
     # Add students
     """insert into student (tr_id, faculty_id, department_id, student_id, credits_taken, gpa) values 
-    (111, 1, 1, 150180707, 69.5, 0);"""
+    (111, 1, 1, 150180707, 69.5, 0);""",
     """insert into student (tr_id, faculty_id, department_id, student_id, credits_taken, gpa) values 
-    (222, 1, 2, 150180704, 200, 4);"""
+    (222, 1, 2, 150180704, 200, 4);""",
     """insert into student (tr_id, faculty_id, department_id, student_id, credits_taken, gpa) values 
-    (333, 2, 1, 150180705, 200, 4);"""
+    (333, 2, 1, 150180705, 200, 4);""",
     """insert into student (tr_id, faculty_id, department_id, student_id, credits_taken, gpa) values 
-    (444, 3, 1, 150150150, 200, 4);"""
+    (444, 3, 1, 150150150, 200, 4);""",
 
+    # Add instructor
+    """insert into instructor (tr_id, department_id, faculty_id) values (11, 1, 1);""",
+    """insert into instructor (tr_id, department_id, faculty_id) values (22, 2, 1);""",
+    """insert into instructor (tr_id, department_id, faculty_id) values (33, 1, 2);""",
+    """insert into instructor (tr_id, department_id, faculty_id) values (44, 1, 3);""",
+
+    # Add Course
+    # """insert into course (crn, start_time, end_time, day, capacity, credits, classroom_id, faculty_id, instructor_id)
+    #  values (11000, '11:00:00', '12:00:00', 'Wednesday', 30, 3, 1, 1, 1);"""
 
 ]
 
