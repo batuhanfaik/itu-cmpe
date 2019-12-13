@@ -57,7 +57,7 @@ INIT_STATEMENTS = [
     CREATE TABLE IF NOT EXISTS FACULTY(
         id				    SERIAL 		NOT NULL,
         campus_id           INT         NOT NULL,
-        name 				VARCHAR(40)	NOT NULL,
+        name 				VARCHAR(100) NOT NULL,
         shortened_name 		VARCHAR(6)	NOT NULL,
         address 			VARCHAR(40),
         foundation_date 	DATE,
@@ -69,7 +69,7 @@ INIT_STATEMENTS = [
     CREATE TABLE IF NOT EXISTS DEPARTMENT(
         id				    SERIAL 		NOT NULL,
         faculty_id			INT			NOT NULL,
-        name 				VARCHAR(40)	NOT NULL,
+        name 				VARCHAR(100) NOT NULL,
         shortened_name 		VARCHAR(6)	NOT NULL,
         block_number 		CHAR(1),
         budget			 	INT,
