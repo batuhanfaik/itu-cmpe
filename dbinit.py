@@ -42,13 +42,12 @@ INIT_STATEMENTS = [
         
     CREATE TABLE IF NOT EXISTS CAMPUS(
         id		            SERIAL 		NOT NULL,
-        name 		        VARCHAR(25)	NOT NULL,
-        address 	        VARCHAR(40)	NOT NULL,
+        name 		        VARCHAR(50)	NOT NULL,
+        address 	        VARCHAR(80)	NOT NULL,
         city 		        VARCHAR(25),
         size 		        INT,
         foundation_date     DATE,
         phone_number        VARCHAR(12),   
-        campus_image_name   VARCHAR(400),
         campus_image_extension VARCHAR(10) DEFAULT('NO_IMAGE'),
         campus_image_data   bytea, 
         PRIMARY KEY(id)
@@ -59,7 +58,7 @@ INIT_STATEMENTS = [
         campus_id           INT         NOT NULL,
         name 				VARCHAR(100) NOT NULL,
         shortened_name 		VARCHAR(6)	NOT NULL,
-        address 			VARCHAR(40),
+        address 			VARCHAR(80),
         foundation_date 	DATE,
         phone_number		CHAR(11),
         PRIMARY KEY(id),
@@ -286,26 +285,93 @@ INIT_STATEMENTS = [
     '5', '2019-10-10', 'a','b');""",
 
     # Create campus
-    """insert into campus (name, address) values ('Ayazaga', 'ayazaga iste aq');""",
+    """insert into campus (name, address,city,size,foundation_date,phone_number,) values ('Ayazağa', 'Reşitpaşa, Park Yolu No:2, 34467 Sarıyer','İstanbul','247','01.01.1773','2122853030');""",
+    """insert into campus (name, address,city,size,foundation_date,phone_number,) values ('Taşkışla', 'Harbiye Mh, Taşkışla Cd. No:2, 34367 Şişli','İstanbul','52','01.01.1950','2122931300');""",
+    """insert into campus (name, address,city,size,foundation_date,phone_number,) values ('Maçka', 'Harbiye, İTÜ Maçka Kampüsü 4 A, 34367 Şişli','İstanbul','63','01.01.1970','2122963147');""",
+    """insert into campus (name, address,city,size,foundation_date,phone_number,) values ('Gümüşsuyu', 'Gümüşsuyu, İnönü Cd. No:65, 34437 Beyoğlu','İstanbul','42','01.01.1850','2122931300');""",
+    """insert into campus (name, address,city,size,foundation_date,phone_number,) values ('Tuzla', 'Postane, Denizcilik Fakültesi, 34940 Tuzla','İstanbul','66','01.01.1992','2163954501');""",
 
     # Add some faculties
-    """insert into faculty (campus_id, name, shortened_name) values (1, 
-        'Faculty of Computer and Informatics Engineering ', 'CMPF');""",
-    """insert into faculty (campus_id, name, shortened_name) values (1, 
-    'Faculty of Electric and Electronics Engineering', 'EEB');""",
-    """insert into faculty (campus_id, name, shortened_name) values (1, 'Faculty of ISLETME YEAH', 'ISLF');""",
+    """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
+        'Computer and Informatics Engineering', 'CMPF','İTÜ Ayazağa Kampüsü Bilgisayar ve Bilişim Fakültesi', 34467 Sariyer','2010','2122853682');""",
+    """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
+        'Electrical and Electronics Engineering ', 'EEBF','Reşitpaşa, Prof. B. Karafakıoğlu Cd, 34467 Sarıyer','1934','2122853422');""",
+    """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
+        'Science and Letters', 'SCF','Reşitpaşa, 34469 Maslak/Sarıyer/İstanbul', 34467 Sariyer','1971','2122853340');""",
+    """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
+        'Civil Engineering', 'CEF','Ayazağa Yerleşkesi İnşaat Fakültesi Binası, Maslak, 34469 Sarıyer/İstanbul','1727','2122853855');""",
+
+    """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (4, 
+        'Mechanical Engineering', 'MEF','Gümüşsuyu, İnönü Cd. No:65, 34437 Beyoğlu/İstanbul','1944','2122931300');""",
+    """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (4, 
+        'Textile Technologies and Design', 'TTDF','Gümüşsuyu, İnönü Cd. No:65, 34437 Beyoğlu/İstanbul','2004','2122931300');""",
+
+    """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (2, 
+        'Architecture', 'AF','Harbiye Mh, Taşkışla Cd. No:2, 34367 Şişli/İstanbul','1884','2122931300');""",
+
+    """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (3, 
+        'Management', 'MF','Harbiye, 34367 Maçka/Beşiktaş/İstanbul','1977','2122931300');""",
+
+    """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (5, 
+        'Maritime', 'FOM','Postane Mahallesi Manastır Yolu Caddesi 1 1, 34940 Tuzla','1884','2163954501');""",
+
 
     # Add departments
-    """insert into department (faculty_id, name, shortened_name) values (1, 'Computer Engineering', 'BLG');""",
-    """insert into department (faculty_id, name, shortened_name) values (1, 'Informatics Engineering', 'BIL');""",
-    """insert into department (faculty_id, name, shortened_name) values (2, 
-    'Electronic and Communication Engineering', 'EHB');""",
-    """insert into department (faculty_id, name, shortened_name) values (2, 
-    'Elektronik Haberlesme Turkce', 'EHBTR');""",
-    """insert into department (faculty_id, name, shortened_name) values (3, 
-    'Isletme Muhendisligi', 'ISLTR');""",
-    """insert into department (faculty_id, name, shortened_name) values (3, 
-    'Management Enginnering', 'ISL');""",
+
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (1, 
+    'Computer Engineering', 'BLG','D','897987','01.01.1997','2122853682');""",
+
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (2, 
+    'Electrical Engineering', 'BLG','D','879797','01.01.1970','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (2, 
+    'Electronics & Communication Engineering', 'BLG','D','987987','01.01.1978','2122853682');""",
+
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (3, 
+    'Mathematics', 'MAT','A','76876','01.01.1850','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (3, 
+    'Physics Engineering', 'PHI','B','78676','01.01.1820','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (3, 
+    'Chemistry', 'CHE','C','987987','01.01.1810','2122853682');""",
+
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (4, 
+    'Civil Engineering', 'CIV','A','788678','01.01.1950','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (4, 
+    'Geomatics Engineering', 'GEO','B','34245','01.01.1950','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (4, 
+    'Enviromental Engineering', 'ENV','C','543453','01.01.1930','2122853682');""",
+
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (5, 
+    'Mechanical Engineering', 'MEC','B','897897','01.01.2001','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (5, 
+    'Manufacturing Engineering', 'MAK','A','876878','01.01.2003','2122853682');""",
+
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (6, 
+    'Textile Engineering', 'TEX','A','654564','01.01.1970','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (6, 
+    'Fashion Design', 'FASH','D','8787678','01.01.1978','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (6, 
+    'Textile Development and Design', 'TEXD','C','989799','01.01.1987','2122853682');""",
+
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (7, 
+    'Architecture', 'ARC','D','897979','01.01.1790','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (7, 
+    'Urban and Regional Planning', 'URP','E','876876','01.01.1890','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (7, 
+    'Industrial Design', 'IND','A','567475','01.01.1990','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (7, 
+    'Landscape Architecture', 'LAND','B','900000','01.01.1990','2122853682');""",
+
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (8, 
+    'Management Engineering', 'MAN','C','80000','01.01.1897','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (8, 
+    'Industrial Engineering', 'IND','B','300000','01.01.1890','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (8, 
+    'Economics', 'EKO','A','1000000','01.01.1893','2122853682');""",
+
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (9, 
+    'Marine Engineering', 'BLG','B','300500','01.01.1990','2122853682');""",
+    """insert into department (faculty_id, name, shortened_name,block_number,budget,foundation_date,phone_number) values (9, 
+    'Maritime Transportation and Management Engineering', 'MTME','A','500000','01.01.1997','2122853682');""",
 
 
     # Add classrooms
