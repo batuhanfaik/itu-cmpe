@@ -287,11 +287,11 @@ INIT_STATEMENTS = [
 
     # Add some faculties
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
-        'Computer and Informatics Engineering', 'CMPF','İTÜ Ayazağa Kampüsü Bilgisayar ve Bilişim Fakültesi', 34467 Sariyer','2010','2122853682');""",
+        'Computer and Informatics Engineering', 'CMPF','İTÜ Ayazağa Kampüsü Bilgisayar ve Bilişim Fakültesi, 34467 Sariyer','2010','2122853682');""",
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
         'Electrical and Electronics Engineering ', 'EEBF','Reşitpaşa, Prof. B. Karafakıoğlu Cd, 34467 Sarıyer','1934','2122853422');""",
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
-        'Science and Letters', 'SCF','Reşitpaşa, 34469 Maslak/Sarıyer/İstanbul', 34467 Sariyer','1971','2122853340');""",
+        'Science and Letters', 'SCF','Reşitpaşa, 34469 Maslak/Sarıyer/İstanbul 34467 Sariyer','1971','2122853340');""",
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
         'Civil Engineering', 'CEF','Ayazağa Yerleşkesi İnşaat Fakültesi Binası, Maslak, 34469 Sarıyer/İstanbul','1727','2122853855');""",
 
