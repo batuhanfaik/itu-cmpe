@@ -205,26 +205,29 @@ img.responsive { height: auto; }
     // For all situations make visible id(edit_save_button)
     </script>
     <div class="col-6">
-    <!---  <div class="container" style="text-align:center;border:1px solid red">
-          <h1>There is no Image yet</h1>
-        </div>-->
+
       <div class="img-container" style="text-align: center;">
+        {% if context.campus_image_extension == "" %}
+         <div class="container" style="text-align:center;border:1px solid red">
+          <h1>There is no Image yet</h1>
+        </div>
+        {% else %}
           <img
             src="data:image/{{context.campus_image_extension}};base64, {{ context.campus_image }}"
             class="responsive img-fluid"
             style="border:2px solid gainsboro;"
             alt="Campus Image"
-          />  
+          />
+        {% endif %}  
       </div>
       <div class="container" style="text-align: center;">
         <form method="POST" enctype="multipart/form-data">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           <input name="change_picture" type="text" hidden />
-        {% if campus_image is none %}
+        {% if context.campus_image_extension == "" %}
         <p style="text-align: center;">
           Add Picture <i id="change_picture_icon" class="far fa-edit"  style="cursor: pointer;"></i>
         </p>
-        
         {% else %}
         <p style="text-align: center;">
             Change Picture <i id="change_picture_icon" class="far fa-edit"  style="cursor: pointer;"></i>

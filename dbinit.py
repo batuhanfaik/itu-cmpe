@@ -49,7 +49,7 @@ INIT_STATEMENTS = [
         foundation_date     DATE,
         phone_number        VARCHAR(12),   
         campus_image_name   VARCHAR(400),
-        campus_image_extension VARCHAR(10),
+        campus_image_extension VARCHAR(10) DEFAULT('NO_IMAGE'),
         campus_image_data   bytea, 
         PRIMARY KEY(id)
     );
@@ -295,7 +295,7 @@ INIT_STATEMENTS = [
     """insert into faculty (campus_id, name, shortened_name) values (1, 
     'Faculty of Electric and Electronics Engineering', 'EEB');""",
     """insert into faculty (campus_id, name, shortened_name) values (1, 'Faculty of ISLETME YEAH', 'ISLF');""",
-    
+
     # Add departments
     """insert into department (faculty_id, name, shortened_name) values (1, 'Computer Engineering', 'BLG');""",
     """insert into department (faculty_id, name, shortened_name) values (1, 'Informatics Engineering', 'BIL');""",
