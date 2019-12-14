@@ -24,14 +24,16 @@
         {% endfor %}
     {% if request.path == url_for('add_instructor_page') %}
     <button class="button">Add Instructor</button>
+     </form>
     {% else %}
     <button class="button">Update Instructor</button>
+    </form>
     <form action="./delete" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <button class="button red">Delete Instructor</button>
     </form>
     {% endif %}
-    </form>
+
 
 
 {% endblock %}
