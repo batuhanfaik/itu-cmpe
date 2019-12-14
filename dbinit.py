@@ -287,27 +287,27 @@ INIT_STATEMENTS = [
 
     # Add some faculties
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
-        'Computer and Informatics Engineering', 'CMPF','İTÜ Ayazağa Kampüsü Bilgisayar ve Bilişim Fakültesi, 34467 Sariyer','2010','2122853682');""",
+        'Computer and Informatics Engineering', 'CMPF','İTÜ Ayazağa Kampüsü Bilgisayar ve Bilişim Fakültesi 34467 Sariyer','01.01.2010','2122853682');""",
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
-        'Electrical and Electronics Engineering ', 'EEBF','Reşitpaşa, Prof. B. Karafakıoğlu Cd, 34467 Sarıyer','1934','2122853422');""",
+        'Electrical and Electronics Engineering ', 'EEBF','Reşitpaşa, Prof. B. Karafakıoğlu Cd, 34467 Sarıyer','01.01.1934','2122853422');""",
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
-        'Science and Letters', 'SCF','Reşitpaşa, 34469 Maslak/Sarıyer/İstanbul 34467 Sariyer','1971','2122853340');""",
+        'Science and Letters', 'SCF','Reşitpaşa, 34469 Maslak/Sarıyer/İstanbul 34467 Sariyer','01.01.1971','2122853340');""",
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
-        'Civil Engineering', 'CEF','Ayazağa Yerleşkesi İnşaat Fakültesi Binası, Maslak, 34469 Sarıyer/İstanbul','1727','2122853855');""",
+        'Civil Engineering', 'CEF','Ayazağa Yerleşkesi İnşaat Fakültesi Binası, Maslak, 34469 Sarıyer/İstanbul','01.01.1727','2122853855');""",
 
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (4, 
-        'Mechanical Engineering', 'MEF','Gümüşsuyu, İnönü Cd. No:65, 34437 Beyoğlu/İstanbul','1944','2122931300');""",
+        'Mechanical Engineering', 'MEF','Gümüşsuyu, İnönü Cd. No:65, 34437 Beyoğlu/İstanbul','01.01.1944','2122931300');""",
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (4, 
-        'Textile Technologies and Design', 'TTDF','Gümüşsuyu, İnönü Cd. No:65, 34437 Beyoğlu/İstanbul','2004','2122931300');""",
+        'Textile Technologies and Design', 'TTDF','Gümüşsuyu, İnönü Cd. No:65, 34437 Beyoğlu/İstanbul','01.01.2004','2122931300');""",
 
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (2, 
-        'Architecture', 'AF','Harbiye Mh, Taşkışla Cd. No:2, 34367 Şişli/İstanbul','1884','2122931300');""",
+        'Architecture', 'AF','Harbiye Mh, Taşkışla Cd. No:2, 34367 Şişli/İstanbul','01.01.1884','2122931300');""",
 
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (3, 
-        'Management', 'MF','Harbiye, 34367 Maçka/Beşiktaş/İstanbul','1977','2122931300');""",
+        'Management', 'MF','Harbiye, 34367 Maçka/Beşiktaş/İstanbul','01.01.1977','2122931300');""",
 
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (5, 
-        'Maritime', 'FOM','Postane Mahallesi Manastır Yolu Caddesi 1 1, 34940 Tuzla','1884','2163954501');""",
+        'Maritime', 'FOM','Postane Mahallesi Manastır Yolu Caddesi 1 1, 34940 Tuzla','01.01.1884','2163954501');""",
 
 
     # Add departments
