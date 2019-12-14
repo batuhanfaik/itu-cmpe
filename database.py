@@ -48,7 +48,7 @@ class Database:
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "delete from instructor where (id = %s)"
-            cursor.execute(query, (id))
+            cursor.execute(query, (id,))
 
         pass
 
@@ -107,14 +107,14 @@ class Database:
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "delete from classroom where (id = %s)"
-            cursor.execute(query, (id))
+            cursor.execute(query, (id,))
         pass
 
     def get_classroom(self, id):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "select * from classroom where (id = %s)"
-            cursor.execute(query, (id))
+            cursor.execute(query, (id,))
             if cursor.rowcount == 0:
                 return None
         classroom = Classroom(*cursor.fetchone())  # Inline unpacking of a tuple
@@ -148,7 +148,7 @@ class Database:
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "delete from course where (crn = %s)"
-            cursor.execute(query, (crn))
+            cursor.execute(query, (crn,))
 
         pass
 
@@ -156,7 +156,7 @@ class Database:
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "select * from crn where (crn = %s)"
-            cursor.execute(query, (crn))
+            cursor.execute(query, (crn,))
             if cursor.rowcount == 0:
                 return None
         course = Course(*cursor.fetchone())
