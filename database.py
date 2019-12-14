@@ -31,7 +31,7 @@ class Database:
 
         return instructor.id
 
-    def update_instructor(self, instructor, id):
+    def update_instructor(self, id, instructor):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "update instructor set tr_id = %s, department_id = %s, faculty_id = %s," \
@@ -57,8 +57,8 @@ class Database:
             cursor.execute(query, (id,))
             if cursor.rowcount == 0:
                 return None
-        person_ = Person(*cursor.fetchone()[:])  # Inline unpacking of a tuple
-        return person_
+        instructor  = Instructor(*cursor.fetchone())  # Inline unpacking of a tuple
+        return instructor
 
     def get_instructors(self):
         instructors = []
