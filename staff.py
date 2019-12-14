@@ -1,5 +1,5 @@
 class Staff:
-    def __init__(self,id,manager_name,absences,hire_date,social_sec_no,authority_lvl,department):
+    def __init__(self,id,manager_name,absences,hire_date,authority_lvl,department,social_sec_no):
         self.manager_name = manager_name
         self.id = id
         self.absences = absences

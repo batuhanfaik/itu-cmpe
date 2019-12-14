@@ -5,6 +5,7 @@ from campus import Campus, Faculty, Department
 from person import Person
 from student import Student
 from instructor import Instructor
+from staff import Staff
 
 class Database:
     def __init__(self, dbfile):
@@ -15,6 +16,7 @@ class Database:
         self.people = {}
         self.students = {}
         self.assistants = {}
+        self.staffs = {}
 
     ### faati's cruds ###
 
@@ -439,3 +441,31 @@ class Database:
         # Inline unpacking of a tuple
         department_ = Department(*cursor.fetchone()[:])
         return department_
+
+    def add_staff(self,staff):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "insert into staff (id, manager_name, absences, hire_date, social_sec_no, authority_lvl,department) values (%s, %s, %s, %s, %s, %s,%s)"
+            cursor.execute(query, (staff.id, staff.manager_name, staff.absences, staff.hire_date,
+                                   staff.social_sec_no, staff.authority_lvl, staff.department))
+            connection.commit
+
+    def get_staff(self,staff_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from staff where (id = %s)"
+            cursor.execute(query, (staff_id,))
+            if (cursor.rowcount == 0):
+                return None
+        found_staff = Staff(*cursor.fetchone()[:])
+        return found_staff
+    def get_all_staff(self):
+        all_staff = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from staff order by id asc"
+            cursor.execute(query)
+            for row in cursor:
+                staf = Staff(*row[:])
+                all_staff.append(staf)
+        return all_staff
