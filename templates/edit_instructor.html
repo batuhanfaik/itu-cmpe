@@ -8,7 +8,7 @@
             {{ error }}
         </div>
     {% endif %}
-    <form action="" method="post" name="add_instructor" class="form-inline">
+    <form action="" method="post" name="edit_instructor" class="form-inline">
     {{ form.csrf_token }}
 
         {% for field in form if field.widget.input_type != 'hidden' %}
@@ -22,9 +22,11 @@
                 </div>
             </div>
         {% endfor %}
-
+    {% if request.path == url_for('add_instructor_page') %}
     <button class="button">Add Instructor</button>
-
+    {% else %}
+    <button class="button">Update Instructor</button>
+    {% endif %}
     </form>
 
 {% endblock %}

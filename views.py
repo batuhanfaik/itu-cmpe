@@ -418,7 +418,7 @@ def add_instructor_page():
     if form.validate_on_submit():
         db = current_app.config["db"]
         id = None
-        tr_id=form.data['tr_id']
+        tr_id = form.data['tr_id']
         department_id=form.data['department_id']
         faculty_id = form.data['faculty_id']
         specialization = form.data['specialization']
@@ -432,16 +432,56 @@ def add_instructor_page():
             db.add_instructor(instructor)
         except Error as e:
             if isinstance(e, errors.UniqueViolation):
-                return render_template("add_instructor.html", form=form,
+                return render_template("edit_instructor.html", form=form,
                                        error="An instructor with this TR ID already exists")
             if isinstance(e, errors.ForeignKeyViolation):
-                return render_template("add_instructor.html", form=form,
+                return render_template("edit_instructor.html", form=form,
                                        error="No people exists with this TR ID")
             else:
-                return render_template("add_instructor.html", form=form,
-                                        error=type(e).__name__ + "-----" + str(e))
+                return render_template("edit_instructor.html", form=form,
+                                       error=type(e).__name__ + "-----" + str(e))
         return redirect(url_for("instructors_page"))
-    return render_template("add_instructor.html", form=form, error=None)
+    return render_template("edit_instructor.html", form=form, error=None)
+
+
+def update_instructor_page(id):
+    db = current_app.config["db"]
+    form = InstructorForm()
+    if form.validate_on_submit():
+        tr_id = form.data['tr_id']
+        department_id = form.data['department_id']
+        faculty_id = form.data['faculty_id']
+        specialization = form.data['specialization']
+        bachelors = form.data['bachelors']
+        masters = form.data['masters']
+        doctorates = form.data['doctorates']
+        room_id = form.data['room_id']
+        instructor = Instructor(id, tr_id, department_id, faculty_id, specialization,
+                                bachelors, masters, doctorates, room_id)
+        try:
+            db.update_instructor(id, instructor)
+        except Error as e:
+            if isinstance(e, errors.UniqueViolation):
+                return render_template("edit_instructor.html", form=form,
+                                       error="An instructor with this TR ID already exists")
+            if isinstance(e, errors.ForeignKeyViolation):
+                return render_template("edit_instructor.html", form=form,
+                                       error="No people exists with this TR ID")
+            else:
+                return render_template("edit_instructor.html", form=form,
+                                       error=type(e).__name__ + "-----" + str(e))
+        return redirect(url_for("instructors_page"))
+    instructor = db.get_instructor(id)
+    form.tr_id.data = instructor.tr_id
+    form.room_id.data = instructor.room_id
+    form.doctorates.data = instructor.doctorates
+    form.masters.data = instructor.masters
+    form.bachelors.data = instructor.bachelors
+    form.specialization.data = instructor.specialization
+    form.department_id.data = instructor.department_id
+    form.faculty_id.data = instructor.faculty_id
+    return render_template("edit_instructor.html", form=form, error=None)
+
 
 def test_page():
     return render_template("test.html")
