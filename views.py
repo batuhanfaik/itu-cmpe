@@ -21,8 +21,12 @@ def login_page():
     # Here we use a class of some kind to represent and validate our
     # client-side form data. For example, WTForms is a library that will
     # handle this for us, and we use a custom LoginForm to validate.
+    if current_user.is_authenticated:
+        return redirect(url_for('landing_page'))
+
     form = login_form()
     db = current_app.config["db"]
+
     if request.method == 'POST':
         if form.validate_on_submit():
             username = request.form['username']
@@ -35,9 +39,11 @@ def login_page():
                 if hash_machine.verify(password, user.password):
                     login_user(user)
                     flash('Logged in successfully')
+                    return redirect(url_for('landing_page'))
                 else:
                     flash('Wrong password')
                     form.errors['password'] = 'Wrong password!'
+        return redirect(url_for('login_page'))
     return render_template('login.html', form=form)
 
 
@@ -413,5 +419,3 @@ def staff_add_page():
             staff_id = request.form["staff_id"]
 
         return redirect(url_for("staff_page"))
-
-
