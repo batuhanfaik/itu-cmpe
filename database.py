@@ -59,6 +59,16 @@ class Database:
         person_ = Person(*cursor.fetchone()[:])  # Inline unpacking of a tuple
         return person_
 
+    def get_instructors(self):
+        instructors = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            cursor.execute("select * from instructor order by(instructor.id);")
+            for row in cursor:
+                instructors.append(Instructor(*row))
+        return instructors
+
+
     ########################
     def add_person(self, person):
         with dbapi2.connect(self.dbfile) as connection:

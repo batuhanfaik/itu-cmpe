@@ -400,9 +400,10 @@ def reset_db():
 
 
 def instructors_page():
-    form = InstructorForm()
-    if form.validate_on_submit():
-        tr_id = form.data["tr_id"]
+    db = current_app.config["db"]
+    instructors = db.get_instructors()
+    return render_template("instructors.html", instructors=instructors)
+
 
 def test_page():
     return render_template("test.html")
