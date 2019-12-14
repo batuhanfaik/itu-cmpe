@@ -63,9 +63,18 @@ class Database:
         instructors = []
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            cursor.execute("select * from instructor order by(instructor.id);")
+            cursor.execute("select instructor.*, people.name, people.surname, department.name, faculty.name "
+                           "from people, instructor, department, faculty "
+                           "where (people.tr_id = instructor.tr_id "
+                           "and instructor.department_id = department.id "
+                           "and instructor.faculty_id = faculty.id);")
             for row in cursor:
-                instructors.append(Instructor(*row))
+                instructor = Instructor(*row[:9])
+                instructor.name = row[9]
+                instructor.surname = row[10]
+                instructor.departmentName = row[11]
+                instructor.facultyName = row[12]
+                instructors.append(instructor)
         return instructors
 
 

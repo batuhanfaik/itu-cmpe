@@ -7,9 +7,9 @@
 <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
         <thead>
         <tr>
-            <th scope="col">TR ID</th>
-            <th scope="col">Department ID</th>
-            <th scope="col">Faculty ID</th>
+            <th scope="col">Name Surname</th>
+            <th scope="col">Department</th>
+            <th scope="col">Faculty</th>
             <th scope="col">Room</th>
             <th scope="col">Specialization</th>
             <th scope="col">Bachelor's Degree</th>
@@ -19,9 +19,9 @@
         </thead>
         {% for instructor in instructors %}
             <tr>
-                <td>{{ instructor.tr_id }}</td>
-                <td>{{ instructor.department_id }}</td>
-                <td>{{ instructor.faculty_id }}</td>
+                <td>{{ instructor.name + " " + instructor.surname }}</td>
+                <td>{{ instructor.departmentName }}</td>
+                <td>{{ instructor.facultyName }}</td>
                 <td>{{ instructor.room_id }}</td>
                 <td>{{ instructor.specialization }}</td>
                 <td>{{ instructor.bachelors }}</td>
