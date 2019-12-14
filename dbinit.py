@@ -332,6 +332,11 @@ INIT_STATEMENTS = [
     """insert into course (crn, code, name, start_time, end_time, day, capacity, credits, classroom_id,
      faculty_id, instructor_id, department_id) values ('22222', '102', 'Intro to computing (Python)', '12:00:00', '13:00:00',
      'Thursday', 50, 3, 1, 1, 1, 1);""",
+
+    # Add Staff
+    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('1', 'Best Manager Ever', '1', '2019-12-12','12345','Best Department','1');""",
+    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('444', 'Manager2', '0', '2019-12-12','12344','Information Tech','2');""",
+
 ]
 
 

@@ -13,6 +13,7 @@ from forms import login_form, InstructorForm
 from person import Person
 from student import Student
 from instructor import Instructor
+from staff import Staff
 
 def landing_page():
     return render_template("index.html")
@@ -445,14 +446,46 @@ def add_instructor_page():
 def test_page():
     return render_template("test.html")
 
+def validation_staff():
+    form.data = {}
+    form.errors = {}
+    db = current_app.config["db"]
 
+    form_id = form.get("id")
+    if db.get_staff(form_id):
+        form.errors["id"] = "This staff is already registered with the given id."
+    else:
+        form.data["id"] = form_id
+
+    form.data["id"] = form.get("id")
+    form.data["manager_name"] = form.get("manager_name")
+    form.data["absences"] = form.get("absences")
+    form.data["hire_date"] = form.get("hire_date")
+    form.data["authority_lvl"] = form.get("authority_lvl")
+    form.data["department"] = form.get("department")
+    form.data["social_sec_no"] = form.get("social_sec_no")
+
+    return len(form.errors) == 0
 def staff_add_page():
     db = current_app.config["db"]
+    all_staff = db.get_all_staff()
     if request.method == "GET":
-        return render_template("staff.html")
+        return render_template("staff.html",staffs = all_staff)
     else:
+        #validate input, write validation function
         if 'add_staff' in request.form:
             manager_name = request.form["manager_name"]
-            staff_id = request.form["staff_id"]
+            staff_id = request.form["id"]
+            absences = request.form["absences"]
+            hire_date = request.form["hire_date"]
+            authority = request.form["authority_lvl"]
+            department = request.form["department"]
+            social_sec = request.form["social_sec_no"]
 
-        return redirect(url_for("staff_page"))
+            new_staff = Staff(staff_id,manager_name,absences,hire_date,social_sec,department,authority)
+            db.add_staff(new_staff)
+            flash('Staff successfully added!')
+        else:
+            flash('Staff NOT added!')
+
+        return redirect(url_for("staff_add_page",staffs=all_staff))
