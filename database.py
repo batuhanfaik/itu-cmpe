@@ -6,6 +6,8 @@ from person import Person
 from student import Student
 from instructor import Instructor
 from staff import Staff
+from classroom import Classroom
+from course import Course
 
 
 class Database:
@@ -19,9 +21,8 @@ class Database:
         self.assistants = {}
         self.staffs = {}
 
-    ### faati's cruds ###
-
-    ### instructor table ###
+    # faati's cruds #
+    # instructor crud #
     def add_instructor(self, instructor):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
@@ -30,8 +31,7 @@ class Database:
             cursor.execute(query, (instructor.tr_id, instructor.department_id, instructor.faculty_id,
                                    instructor.specialization, instructor.bachelors, instructor.masters,
                                    instructor.doctorates, instructor.room_id))
-
-        return instructor.id
+        pass
 
     def update_instructor(self, id, instructor):
         with dbapi2.connect(self.dbfile) as connection:
@@ -48,7 +48,7 @@ class Database:
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "delete from instructor where (id = %s)"
-            cursor.execute(query, (id,))
+            cursor.execute(query, (id))
 
         pass
 
@@ -59,7 +59,7 @@ class Database:
             cursor.execute(query, (id,))
             if cursor.rowcount == 0:
                 return None
-        instructor  = Instructor(*cursor.fetchone())  # Inline unpacking of a tuple
+        instructor = Instructor(*cursor.fetchone())  # Inline unpacking of a tuple
         return instructor
 
     def get_instructors(self):
@@ -80,7 +80,87 @@ class Database:
                 instructors.append(instructor)
         return instructors
 
+    # classroom crud #
+    def add_classroom(self, classroom):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """insert into classroom (capacity, has_projection, 
+                        door_number, floor, renewed, board_count, air_conditioner,
+                        faculty_id) values (%s, %s, %s, %s, %s, %s, %s, %s)"""
+            cursor.execute(query, (classroom.capacity, classroom.has_projection, classroom.door_number,
+                                   classroom.floor, classroom.renewed, classroom.board_count,
+                                   classroom.air_conditioner, classroom.faculty_id))
+            pass
 
+    def update_classroom(self, id, classroom):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """update classroom set capacity = %s, has_projection = %s, door_number = %s, floor = %s,
+                        renewed = %s, board_count = %s, air_conditioner = %s, faculty_id = %s where (id = %s)"""
+            cursor.execute(query, (classroom.capacity, classroom.has_projection, classroom.door_number,
+                                   classroom.floor, classroom.renewed, classroom.board_count,
+                                   classroom.air_conditioner, classroom.faculty_id, id))
+
+        return classroom.id
+
+    def delete_classroom(self, id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "delete from classroom where (id = %s)"
+            cursor.execute(query, (id))
+        pass
+
+    def get_classroom(self, id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from classroom where (id = %s)"
+            cursor.execute(query, (id))
+            if cursor.rowcount == 0:
+                return None
+        classroom = Classroom(*cursor.fetchone())  # Inline unpacking of a tuple
+        return classroom
+
+    # course crud #
+    def add_course(self, course):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """insert into course (crn, code, name, start_time, end_time, day, capacity, enrolled,
+                        credits, language, classroom_id, faculty_id, instructor_id, department_id)
+                        values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+            cursor.execute(query, (course.crn, course.code, course.name, course.start_time, course.end_time,
+                                   course.day, course.capacity, course.enrolled, course.credits, course.language,
+                                   course.classroom_id, course.faculty_id, course.instructor_id, course.department_id))
+        pass
+
+    def update_course(self, crn, course):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """update course set crn = %s, code = %s, name = %s, start_time = %s, end_time = %s,
+                        day = %s, capacity = %s, enrolled = %s, credits = %s, language = %s, classroom_id = %s, 
+                        faculty_id = %s, instructor_id = %s, department_id = %s where (crn = %s)"""
+            cursor.execute(query, (course.crn, course.code, course.name, course.start_time, course.end_time,
+                                   course.day, course.capacity, course.enrolled, course.credits, course.language,
+                                   course.classroom_id, course.faculty_id, course.instructor_id,
+                                   course.department_id, crn))
+        return course.crn
+
+    def delete_course(self, crn):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "delete from course where (crn = %s)"
+            cursor.execute(query, (crn))
+
+        pass
+
+    def get_course(self, crn):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from crn where (crn = %s)"
+            cursor.execute(query, (crn))
+            if cursor.rowcount == 0:
+                return None
+        course = Course(*cursor.fetchone())
+        return course
     ########################
     def add_person(self, person):
         with dbapi2.connect(self.dbfile) as connection:

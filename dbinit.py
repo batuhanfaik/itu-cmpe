@@ -83,7 +83,7 @@ INIT_STATEMENTS = [
         door_number     CHAR(4)     NOT NULL,
         floor           VARCHAR(2),
         renewed         BOOLEAN     DEFAULT false,
-        board_count     CHAR(1),
+        board_count     INT,
         air_conditioner BOOLEAN     DEFAULT false,
         faculty_id      INT         NOT NULL,
         FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
