@@ -50,7 +50,7 @@ def campus():
                     file_extension = "NO_IMAGE"
                     img_data = b''
                 campus = Campus(0, form.name.data, form.address.data, form.city.data, form.size.data,
-                                form.foundation_date.data, form.phone_number.data, filename, file_extension, img_data)
+                                form.foundation_date.data, form.phone_number.data, file_extension, img_data)
                 # os.remove(os.path.join(
                 #      current_app.config['UPLOAD_FOLDER'], filename))
                 db.add_campus(campus)

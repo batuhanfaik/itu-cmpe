@@ -277,10 +277,10 @@ class Database:
     def add_campus(self, campus):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "insert into campus (name, address, city, size, foundation_date, phone_number,campus_image_name,campus_image_extension,campus_image_data) values (%s, %s, %s, %s, %s,%s,%s ,%s, %s )"
+            query = "insert into campus (name, address, city, size, foundation_date, phone_number,campus_image_extension,campus_image_data) values (%s, %s, %s, %s, %s,%s,%s ,%s)"
             cursor.execute(query, (campus.name, campus.address,
                                    campus.city, campus.size, campus.foundation_date,
-                                   campus.phone_number, campus.img_name, campus.img_extension,
+                                   campus.phone_number,campus.img_extension,
                                    campus.img_data))
             connection.commit()
         print('End of the campus add function')
@@ -305,19 +305,17 @@ class Database:
         with dbapi2.connect(self.dbfile) as connection:
             print('hey')
             cursor = connection.cursor()
-            query = "update campus set name = %s, address = %s, city = %s, size = %s, foundation_date = %s, phone_number = %s, campus_image_name = %s, campus_image_extension = %s, campus_image_data = %s where (id= %s)"
+            query = "update campus set name = %s, address = %s, city = %s, size = %s, foundation_date = %s, phone_number = %s,campus_image_extension = %s, campus_image_data = %s where (id= %s)"
             cursor.execute(query, (campus.name, campus.address, campus.city,
-                                   campus.size, campus.foundation_date, campus.phone_number,
-                                   campus.img_name, campus.img_extension, campus.img_data,
+                                   campus.size, campus.foundation_date, campus.phone_number, campus.img_extension, campus.img_data,
                                    campus.id))
             connection.commit
 
     def update_campus_image(self, campus):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "update campus set image_name = %s, file_extension = %s, image_data = %s where (id= % s)"
-            cursor.execute(query, (campus.image_name,
-                                   campus.file_extension, campus.image_data, campus.id))
+            query = "update campus set file_extension = %s, image_data = %s where (id= % s)"
+            cursor.execute(query, (campus.file_extension, campus.image_data, campus.id))
             connection.commit
 
     def get_campuses(self):
