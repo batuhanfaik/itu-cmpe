@@ -5,6 +5,8 @@ from campus import Campus, Faculty, Department
 from person import Person
 from student import Student
 from instructor import Instructor
+from staff import Staff
+
 
 class Database:
     def __init__(self, dbfile):
@@ -15,6 +17,7 @@ class Database:
         self.people = {}
         self.students = {}
         self.assistants = {}
+        self.staffs = {}
 
     ### faati's cruds ###
 
@@ -25,12 +28,12 @@ class Database:
             query = "INSERT INTO INSTRUCTOR (tr_id, department_id, faculty_id, specialization," \
                     " bachelors, masters, doctorates, room_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(query, (instructor.tr_id, instructor.department_id, instructor.faculty_id,
-                                   instructor.specialization, instructor.bachelors, instructor.doctorates,
-                                   instructor.room_id))
-            cursor.commit()
+                                   instructor.specialization, instructor.bachelors, instructor.masters,
+                                   instructor.doctorates, instructor.room_id))
+
         return instructor.id
 
-    def update_instructor(self, instructor, id):
+    def update_instructor(self, id, instructor):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "update instructor set tr_id = %s, department_id = %s, faculty_id = %s," \
@@ -38,7 +41,7 @@ class Database:
             cursor.execute(query, (instructor.tr_id, instructor.department_id, instructor.faculty_id,
                            instructor.specialization, instructor.bachelors, instructor.masters, instructor.doctorates,
                            instructor.room_id, id))
-            cursor.commit()
+
         return instructor.id
 
     def delete_instructor(self, id):
@@ -46,7 +49,7 @@ class Database:
             cursor = connection.cursor()
             query = "delete from instructor where (id = %s)"
             cursor.execute(query, (id,))
-            connection.commit()
+
         pass
 
     def get_instructor(self, id):
@@ -56,8 +59,27 @@ class Database:
             cursor.execute(query, (id,))
             if cursor.rowcount == 0:
                 return None
-        person_ = Person(*cursor.fetchone()[:])  # Inline unpacking of a tuple
-        return person_
+        instructor  = Instructor(*cursor.fetchone())  # Inline unpacking of a tuple
+        return instructor
+
+    def get_instructors(self):
+        instructors = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            cursor.execute("select instructor.*, people.name, people.surname, department.name, faculty.name "
+                           "from people, instructor, department, faculty "
+                           "where (people.tr_id = instructor.tr_id "
+                           "and instructor.department_id = department.id "
+                           "and instructor.faculty_id = faculty.id);")
+            for row in cursor:
+                instructor = Instructor(*row[:9])
+                instructor.name = row[9]
+                instructor.surname = row[10]
+                instructor.departmentName = row[11]
+                instructor.facultyName = row[12]
+                instructors.append(instructor)
+        return instructors
+
 
     ########################
     def add_person(self, person):
@@ -437,3 +459,31 @@ class Database:
         # Inline unpacking of a tuple
         department_ = Department(*cursor.fetchone()[:])
         return department_
+
+    def add_staff(self,staff):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "insert into staff (id, manager_name, absences, hire_date, social_sec_no, authority_lvl,department) values (%s, %s, %s, %s, %s, %s,%s)"
+            cursor.execute(query, (staff.id, staff.manager_name, staff.absences, staff.hire_date,
+                                   staff.social_sec_no, staff.authority_lvl, staff.department))
+            connection.commit
+
+    def get_staff(self,staff_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from staff where (id = %s)"
+            cursor.execute(query, (staff_id,))
+            if (cursor.rowcount == 0):
+                return None
+        found_staff = Staff(*cursor.fetchone()[:])
+        return found_staff
+    def get_all_staff(self):
+        all_staff = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from staff order by id asc"
+            cursor.execute(query)
+            for row in cursor:
+                staf = Staff(*row[:])
+                all_staff.append(staf)
+        return all_staff

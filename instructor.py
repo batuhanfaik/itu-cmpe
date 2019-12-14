@@ -11,3 +11,7 @@ class Instructor:
         self.department_id = department_id
         self.doctorates = doctorates
         self.room_id = room_id
+        self.departmentName = None
+        self.facultyName = None
+        self.name = None
+        self.surname = None

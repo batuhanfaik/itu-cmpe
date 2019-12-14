@@ -10,10 +10,10 @@
     <link rel="shortcut icon" type="image/png" href="../static/img/favicon.png"/>
     <!-- Add bootstrap-->
     {#    <link rel="stylesheet" href="../static/css/mdb.min.css">#}
-    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
-    <script src="../static/js/jquery.slim.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery.slim.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
 </head>
 <body>
 <!-- Navigation -->
@@ -41,6 +41,9 @@
                 </li>
                 <li class="nav-item {% if request.path==url_for("people_page") %} active {% endif %}">
                     <a class="nav-link" href="{{ url_for("people_page") }}">People</a>
+                </li>
+                <li class="nav-item {% if request.path==url_for("instructors_page") %} active {% endif %}">
+                    <a class="nav-link" href="{{ url_for("instructors_page") }}">Instructors</a>
                 </li>
                 <li class="nav-item {% if request.path==url_for("students_page") %} active {% endif %}">
                     <a class="nav-link" href="{{ url_for("students_page") }}">Students</a>

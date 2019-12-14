@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %} Instructors {% endblock %}
+
+{% block body %}
+    <a href="{{ url_for("add_instructor_page") }}"> Add Instructor </a>
+<table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
+        <thead>
+        <tr>
+            <th scope="col">Name Surname</th>
+            <th scope="col">Department</th>
+            <th scope="col">Faculty</th>
+            <th scope="col">Room</th>
+            <th scope="col">Specialization</th>
+            <th scope="col">Bachelor's Degree</th>
+            <th scope="col">Master's Degree</th>
+            <th scope="col">Doctorate's Degree</th>
+        </tr>
+        </thead>
+        {% for instructor in instructors %}
+            <tr>
+                <td><a href="{{ url_for('update_instructor_page', id=instructor.id) }}">{{ instructor.name + " " + instructor.surname }}</a></td>
+                <td>{{ instructor.departmentName }}</td>
+                <td>{{ instructor.facultyName }}</td>
+                <td>{{ instructor.room_id }}</td>
+                <td>{{ instructor.specialization }}</td>
+                <td>{{ instructor.bachelors }}</td>
+                <td>{{ instructor.masters }}</td>
+                <td>{{ instructor.doctorates }}</td>
+            </tr>
+
+        {% endfor %}
+</table>
+{% endblock %}
