@@ -279,11 +279,11 @@ INIT_STATEMENTS = [
     '5', '2019-10-10', 'a','b');""",
 
     # Create campus
-    """insert into campus (name, address,city,size,foundation_date,phone_number,) values ('Ayazağa', 'Reşitpaşa, Park Yolu No:2, 34467 Sarıyer','İstanbul','247','01.01.1773','2122853030');""",
-    """insert into campus (name, address,city,size,foundation_date,phone_number,) values ('Taşkışla', 'Harbiye Mh, Taşkışla Cd. No:2, 34367 Şişli','İstanbul','52','01.01.1950','2122931300');""",
-    """insert into campus (name, address,city,size,foundation_date,phone_number,) values ('Maçka', 'Harbiye, İTÜ Maçka Kampüsü 4 A, 34367 Şişli','İstanbul','63','01.01.1970','2122963147');""",
-    """insert into campus (name, address,city,size,foundation_date,phone_number,) values ('Gümüşsuyu', 'Gümüşsuyu, İnönü Cd. No:65, 34437 Beyoğlu','İstanbul','42','01.01.1850','2122931300');""",
-    """insert into campus (name, address,city,size,foundation_date,phone_number,) values ('Tuzla', 'Postane, Denizcilik Fakültesi, 34940 Tuzla','İstanbul','66','01.01.1992','2163954501');""",
+    """insert into campus (name, address,city,size,foundation_date,phone_number) values ('Ayazağa', 'Reşitpaşa, Park Yolu No:2, 34467 Sarıyer','İstanbul','247','01.01.1773','2122853030');""",
+    """insert into campus (name, address,city,size,foundation_date,phone_number) values ('Taşkışla', 'Harbiye Mh, Taşkışla Cd. No:2, 34367 Şişli','İstanbul','52','01.01.1950','2122931300');""",
+    """insert into campus (name, address,city,size,foundation_date,phone_number) values ('Maçka', 'Harbiye, İTÜ Maçka Kampüsü 4 A, 34367 Şişli','İstanbul','63','01.01.1970','2122963147');""",
+    """insert into campus (name, address,city,size,foundation_date,phone_number) values ('Gümüşsuyu', 'Gümüşsuyu, İnönü Cd. No:65, 34437 Beyoğlu','İstanbul','42','01.01.1850','2122931300');""",
+    """insert into campus (name, address,city,size,foundation_date,phone_number) values ('Tuzla', 'Postane, Denizcilik Fakültesi, 34940 Tuzla','İstanbul','66','01.01.1992','2163954501');""",
 
     # Add some faculties
     """insert into faculty (campus_id, name, shortened_name, address, foundation_date, phone_number) values (1, 
