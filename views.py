@@ -3,16 +3,16 @@ from flask_login import login_required, logout_user, login_user, current_user
 from passlib.hash import pbkdf2_sha256 as hash_machine
 from werkzeug.utils import secure_filename
 from os import getenv
+from psycopg2 import errors, Error
 import dbinit
 
 from assistant import Assistant
 from campus import Campus
 from faculty import Faculty
-from forms import login_form
+from forms import login_form, InstructorForm
 from person import Person
 from student import Student
-from staff import Staff
-
+from instructor import Instructor
 
 def landing_page():
     return render_template("index.html")
@@ -22,8 +22,12 @@ def login_page():
     # Here we use a class of some kind to represent and validate our
     # client-side form data. For example, WTForms is a library that will
     # handle this for us, and we use a custom LoginForm to validate.
+    if current_user.is_authenticated:
+        return redirect(url_for('landing_page'))
+
     form = login_form()
     db = current_app.config["db"]
+
     if request.method == 'POST':
         if form.validate_on_submit():
             username = request.form['username']
@@ -36,9 +40,11 @@ def login_page():
                 if hash_machine.verify(password, user.password):
                     login_user(user)
                     flash('Logged in successfully')
+                    return redirect(url_for('landing_page'))
                 else:
                     flash('Wrong password')
                     form.errors['password'] = 'Wrong password!'
+        return redirect(url_for('login_page'))
     return render_template('login.html', form=form)
 
 
@@ -391,55 +397,6 @@ def manage_campuses():
 
         return redirect(url_for("manage_campuses", campuses=campuses))
 
-def validation_staff():
-    form.data = {}
-    form.errors = {}
-    db = current_app.config["db"]
-
-    form_id = form.get("id")
-    if db.get_staff(form_id):
-        form.errors["id"] = "This staff is already registered with the given id."
-    else:
-        form.data["id"] = form_id
-
-    form.data["id"] = form.get("id")
-    form.data["manager_name"] = form.get("manager_name")
-    form.data["absences"] = form.get("absences")
-    form.data["hire_date"] = form.get("hire_date")
-    form.data["authority_lvl"] = form.get("authority_lvl")
-    form.data["department"] = form.get("department")
-    form.data["social_sec_no"] = form.get("social_sec_no")
-
-    return len(form.errors) == 0
-
-
-def staff_add_page():
-    db = current_app.config["db"]
-    all_staff = db.get_all_staff()
-    if request.method == "GET":
-        return render_template("staff.html",staffs = all_staff)
-    else:
-        #validate input, write validation function
-        if 'add_staff' in request.form:
-            manager_name = request.form["manager_name"]
-            staff_id = request.form["id"]
-            absences = request.form["absences"]
-            hire_date = request.form["hire_date"]
-            authority = request.form["authority_lvl"]
-            department = request.form["department"]
-            social_sec = request.form["social_sec_no"]
-
-            new_staff = Staff(staff_id,manager_name,absences,hire_date,social_sec,department,authority)
-            db.add_staff(new_staff)
-            flash('Staff successfully added!')
-        else:
-            flash('Staff NOT added!')
-
-        return redirect(url_for("staff_add_page",staffs=all_staff))
-
-
-
-
 
 @login_required
 def reset_db():
@@ -449,9 +406,53 @@ def reset_db():
     return redirect(url_for("landing_page"))
 
 
+def instructors_page():
+    db = current_app.config["db"]
+    instructors = db.get_instructors()
+    return render_template("instructors.html", instructors=instructors)
+
+
+def add_instructor_page():
+    form = InstructorForm()
+    if form.validate_on_submit():
+        db = current_app.config["db"]
+        id = None
+        tr_id=form.data['tr_id']
+        department_id=form.data['department_id']
+        faculty_id = form.data['faculty_id']
+        specialization = form.data['specialization']
+        bachelors = form.data['bachelors']
+        masters = form.data['masters']
+        doctorates = form.data['doctorates']
+        room_id = form.data['room_id']
+        instructor = Instructor(id, tr_id, department_id, faculty_id, specialization,
+                                bachelors, masters, doctorates, room_id)
+        try:
+            db.add_instructor(instructor)
+        except Error as e:
+            if isinstance(e, errors.UniqueViolation):
+                return render_template("add_instructor.html", form=form,
+                                       error="An instructor with this TR ID already exists")
+            if isinstance(e, errors.ForeignKeyViolation):
+                return render_template("add_instructor.html", form=form,
+                                       error="No people exists with this TR ID")
+            else:
+                return render_template("add_instructor.html", form=form,
+                                        error=type(e).__name__ + "-----" + str(e))
+        return redirect(url_for("instructors_page"))
+    return render_template("add_instructor.html", form=form, error=None)
+
 def test_page():
     return render_template("test.html")
 
 
+def staff_add_page():
+    db = current_app.config["db"]
+    if request.method == "GET":
+        return render_template("staff.html")
+    else:
+        if 'add_staff' in request.form:
+            manager_name = request.form["manager_name"]
+            staff_id = request.form["staff_id"]
 
-
+        return redirect(url_for("staff_page"))

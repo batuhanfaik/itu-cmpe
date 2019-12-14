@@ -1,7 +1,9 @@
 class Course:
-    def __init__(self, crn, start_time, end_time, day, capacity, enrolled, credits,
-                 language, classroom_id, faculty_id, instructor_id):
+    def __init__(self, crn, code, name, start_time, end_time, day, capacity, enrolled, credits,
+                 language, classroom_id, faculty_id, instructor_id, department_id):
         self.crn = crn
+        self.code = code
+        self.name = name
         self.start_time = start_time
         self.end_time = end_time
         self.day = day
@@ -12,6 +14,7 @@ class Course:
         self.classroom_id = classroom_id
         self.faculty_id = faculty_id
         self.instructor_id = instructor_id
+        self.department_id = department_id
 
 
 class TakenCourse:

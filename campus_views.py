@@ -40,11 +40,15 @@ def campus():
         if(form.validate()):
             image = request.files['image']
             if(validate_image(image)):
-                filename = secure_filename(image.filename)
-                file_extension = filename.split(".")[-1]
-                filename = filename.split(".")[0]
-                img_data = request.files['image'].read()
-                print('Hey -> ', img_data)
+                if(image.filename != ""):
+                    filename = secure_filename(image.filename)
+                    file_extension = filename.split(".")[-1]
+                    filename = filename.split(".")[0]
+                    img_data = request.files['image'].read()
+                else:
+                    filename = ""
+                    file_extension = "NO_IMAGE"
+                    img_data = b''
                 campus = Campus(0, form.name.data, form.address.data, form.city.data, form.size.data,
                                 form.foundation_date.data, form.phone_number.data, filename, file_extension, img_data)
                 # os.remove(os.path.join(
@@ -111,10 +115,19 @@ def campus_detailed(campus_id):
     elif request.method == "POST" and 'redirect_edit_page' in request.form:
         faculty_form_id = request.form['redirect_edit_page']
         return redirect(url_for('faculty_detailed', faculty_id=faculty_form_id))
-    image = b64encode(campus.img_data)
-    image = image.decode('utf-8')
-    image_extension = campus.img_extension
+    print(campus.img_data)
+    if(campus.img_data is None):
+        image = ""
+        image_extension = ""
+    elif(campus.img_extension != "NO_IMAGE"):
+        image = b64encode(campus.img_data)
+        image = image.decode('utf-8')
+        image_extension = campus.img_extension
+    else:
+        image = ""
+        image_extension = ""
     faculties = db.get_faculties_from_campus(campus.id)
+
     context = {
         # 'add_faculty_form': add_facultyForm,
         'Campus': campus,

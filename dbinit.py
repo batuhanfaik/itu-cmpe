@@ -7,7 +7,7 @@ CLEAR_SCHEMA = [
     """
     DROP SCHEMA public CASCADE;
     CREATE SCHEMA public;
-    
+
     GRANT ALL ON SCHEMA public TO postgres;
     GRANT ALL ON SCHEMA public TO public;
     """
@@ -35,11 +35,11 @@ INIT_STATEMENTS = [
         photo_data bytea, 
         unique (tr_id, email)
     );
-    
+
     CREATE domain credit as real check (
         ((value >= 0) and (value <=250))
     );
-        
+
     CREATE TABLE IF NOT EXISTS CAMPUS(
         id		            SERIAL 		NOT NULL,
         name 		        VARCHAR(25)	NOT NULL,
@@ -49,11 +49,11 @@ INIT_STATEMENTS = [
         foundation_date     DATE,
         phone_number        VARCHAR(12),   
         campus_image_name   VARCHAR(400),
-        campus_image_extension VARCHAR(10),
+        campus_image_extension VARCHAR(10) DEFAULT('NO_IMAGE'),
         campus_image_data   bytea, 
         PRIMARY KEY(id)
     );
-    
+
     CREATE TABLE IF NOT EXISTS FACULTY(
         id				    SERIAL 		NOT NULL,
         campus_id           INT         NOT NULL,
@@ -65,7 +65,6 @@ INIT_STATEMENTS = [
         PRIMARY KEY(id),
         FOREIGN KEY(campus_id) REFERENCES CAMPUS(id)
     );
-
     CREATE TABLE IF NOT EXISTS DEPARTMENT(
         id				    SERIAL 		NOT NULL,
         faculty_id			INT			NOT NULL,
@@ -78,7 +77,6 @@ INIT_STATEMENTS = [
         PRIMARY KEY(id),
         FOREIGN KEY(faculty_id) REFERENCES FACULTY(id)
     );
-
     CREATE TABLE IF NOT EXISTS CLASSROOM(
         id              SERIAL      NOT NULL PRIMARY KEY,
         capacity        INT         NOT NULL,
@@ -92,8 +90,6 @@ INIT_STATEMENTS = [
         FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
         unique(door_number, faculty_id)
     );
-
-
     CREATE TABLE IF NOT EXISTS STUDENT (
         tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) NOT NULL,
         faculty_id int references FACULTY(id) not null,
@@ -106,7 +102,6 @@ INIT_STATEMENTS = [
         minor boolean not null default false,
         unique (student_id)
     );
-
     CREATE TABLE IF NOT EXISTS INSTRUCTOR(
         id SERIAL NOT NULL PRIMARY KEY,
         tr_id BIGINT NOT NULL,
@@ -119,9 +114,10 @@ INIT_STATEMENTS = [
         room_id CHAR(4),
         FOREIGN KEY (tr_id) REFERENCES PEOPLE (tr_id),
         FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
-        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id)
+        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id),
+        unique(tr_id)
     );
-    
+
     CREATE TABLE IF NOT EXISTS ASSISTANT (
         tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) NOT NULL,
         faculty_id int references FACULTY(id) not null,
@@ -136,9 +132,11 @@ INIT_STATEMENTS = [
         office_hour_end time null,
         unique (assistant_id)
     );
-    
+
     CREATE TABLE IF NOT EXISTS COURSE (
         crn             CHAR(6)     NOT NULL PRIMARY KEY,
+        code            CHAR(3)     NOT NULL,
+        name            VARCHAR(100) NOT NULL,
         start_time      TIME        NOT NULL,
         end_time        TIME        NOT NULL,
         day             VARCHAR(9)  NOT NULL,
@@ -149,11 +147,13 @@ INIT_STATEMENTS = [
         classroom_id    INT         NOT NULL,
         faculty_id      INT         NOT NULL,
         instructor_id   BIGINT      NOT NULL,
+        department_id   INT         NOT NULL,
         FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id),
         FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
-        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id)
+        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id),
+        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id)
     );
-    
+
     CREATE TABLE IF NOT EXISTS COURSE_ASSISTED (
         crn char(6) primary key references COURSE(crn) not null,
         assistant_id bigint references ASSISTANT(assistant_id) not null,
@@ -165,7 +165,6 @@ INIT_STATEMENTS = [
         recitation boolean not null default false,
         role varchar(60) null
     );
-
     CREATE TABLE IF NOT EXISTS TAKEN_COURSE(
         id SERIAL PRIMARY KEY,
         student_id BIGINT NOT NULL,
@@ -175,7 +174,7 @@ INIT_STATEMENTS = [
         FOREIGN KEY (crn) REFERENCES COURSE (crn), 
         UNIQUE(student_id, crn)
     );
-    
+
     CREATE TABLE IF NOT EXISTS COMPETED_COURSE(
         id                  SERIAL      NOT NULL PRIMARY KEY,
         student_id          BIGINT      NOT NULL,
@@ -185,14 +184,13 @@ INIT_STATEMENTS = [
         FOREIGN KEY (crn) REFERENCES COURSE (crn),
         UNIQUE(student_id, crn)
     );
-
     CREATE TABLE IF NOT EXISTS ADMINISTRATOR(
         tr_id           BIGINT          NOT NULL,
         faculty_id 	    INT             NOT NULL, 
         phone_number 	VARCHAR(40)	    NOT NULL,
         FOREIGN KEY(tr_id) REFERENCES PEOPLE (tr_id)
     );
-    
+
     CREATE TABLE IF NOT EXISTS FACILITY(
         id				    BIGINT 		NOT NULL,
         campus_id           SERIAL      NOT NULL,
@@ -204,7 +202,7 @@ INIT_STATEMENTS = [
         PRIMARY KEY(id),
         FOREIGN KEY(campus_id) REFERENCES CAMPUS (id)
     );
-    
+
     CREATE TABLE IF NOT EXISTS STAFF(
         id              BIGINT          NOT NULL,
         manager_name    VARCHAR(20)     NOT NULL, 
@@ -216,7 +214,7 @@ INIT_STATEMENTS = [
         PRIMARY KEY(id),
         FOREIGN KEY(id) REFERENCES PEOPLE (tr_id)
     );
-    
+
     CREATE TABLE IF NOT EXISTS STAFF_FACIL(
         title           VARCHAR(20)     NOT NULL,
         from_date 	    DATE            NOT NULL, 
@@ -229,7 +227,7 @@ INIT_STATEMENTS = [
         FOREIGN KEY(staff_id) REFERENCES STAFF (id),
         PRIMARY KEY(facility_id,staff_id)
     );
-        
+
     """,
     # DATABASE FILLER #
     """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
@@ -290,7 +288,7 @@ INIT_STATEMENTS = [
     """insert into faculty (campus_id, name, shortened_name) values (1, 
     'Faculty of Electric and Electronics Engineering', 'EEB');""",
     """insert into faculty (campus_id, name, shortened_name) values (1, 'Faculty of ISLETME YEAH', 'ISLF');""",
-    
+
     # Add departments
     """insert into department (faculty_id, name, shortened_name) values (1, 'Computer Engineering', 'BLG');""",
     """insert into department (faculty_id, name, shortened_name) values (1, 'Informatics Engineering', 'BIL');""",
@@ -302,7 +300,6 @@ INIT_STATEMENTS = [
     'Isletme Muhendisligi', 'ISLTR');""",
     """insert into department (faculty_id, name, shortened_name) values (3, 
     'Management Enginnering', 'ISL');""",
-
 
     # Add classrooms
     """insert into classroom (capacity, door_number, faculty_id) values ('100', '5202', '1');""",
@@ -328,13 +325,13 @@ INIT_STATEMENTS = [
     """insert into instructor (tr_id, department_id, faculty_id) values (33, 1, 2);""",
     """insert into instructor (tr_id, department_id, faculty_id) values (44, 1, 3);""",
 
-    # Add Course
-    # """insert into course (crn, start_time, end_time, day, capacity, credits, classroom_id, faculty_id, instructor_id)
-    #  values (11000, '11:00:00', '12:00:00', 'Wednesday', 30, 3, 1, 1, 1);"""
-
-    #Add Staff
-    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('1', 'Best Manager Ever', '1', '2019-12-12','12345','Best Department','1');""",
-    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('444', 'Manager2', '0', '2019-12-12','12344','Information Tech','1');""",
+    # Add Courses
+    """insert into course (crn, code, name, start_time, end_time, day, capacity, credits, classroom_id,
+     faculty_id, instructor_id, department_id) values ('11111', '101', 'Intro to computing (C)', '12:00:00', '13:00:00',
+     'Wednesday', 50, 3, 1, 1, 1, 1);""",
+    """insert into course (crn, code, name, start_time, end_time, day, capacity, credits, classroom_id,
+     faculty_id, instructor_id, department_id) values ('22222', '102', 'Intro to computing (Python)', '12:00:00', '13:00:00',
+     'Thursday', 50, 3, 1, 1, 1, 1);""",
 ]
 
 

@@ -1,9 +1,21 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField, SelectField, BooleanField, RadioField
-from wtforms.fields import DateField, DecimalField, FileField
-from wtforms.validators import DataRequired, Length
+from wtforms.fields import DateField, DecimalField, FileField, IntegerField
+from wtforms.validators import DataRequired, Length, InputRequired
 from campus import Campus
 from werkzeug.utils import secure_filename
+
+
+class InstructorForm(FlaskForm):
+    tr_id = IntegerField(u"TR ID", validators=[InputRequired()]) # , Length(min=11, max=11, message="TR ID's length must be 11")
+    department_id = IntegerField(u"Department ID", validators=[InputRequired()])
+    faculty_id = IntegerField(u"Faculty ID", validators=[InputRequired()])
+    specialization = StringField(u"Specialization")
+    bachelors = StringField(u"Bachelor's Degree")
+    masters = StringField(u"Master's Degree")
+    doctorates = StringField(u"Doctorate's Degree")
+    room_id = StringField(u"Room ID", validators=[InputRequired(), Length(max=4)])
+
 
 # 'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük', 'Kilis', 'Osmaniye', 'Düzce'
 
