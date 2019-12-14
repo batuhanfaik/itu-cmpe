@@ -6,6 +6,7 @@ from person import Person
 from student import Student
 from instructor import Instructor
 
+
 class Database:
     def __init__(self, dbfile):
         self.dbfile = dbfile
@@ -25,9 +26,9 @@ class Database:
             query = "INSERT INTO INSTRUCTOR (tr_id, department_id, faculty_id, specialization," \
                     " bachelors, masters, doctorates, room_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(query, (instructor.tr_id, instructor.department_id, instructor.faculty_id,
-                                   instructor.specialization, instructor.bachelors, instructor.doctorates,
-                                   instructor.room_id))
-            cursor.commit()
+                                   instructor.specialization, instructor.bachelors, instructor.masters,
+                                   instructor.doctorates, instructor.room_id))
+
         return instructor.id
 
     def update_instructor(self, instructor, id):
@@ -38,7 +39,7 @@ class Database:
             cursor.execute(query, (instructor.tr_id, instructor.department_id, instructor.faculty_id,
                            instructor.specialization, instructor.bachelors, instructor.masters, instructor.doctorates,
                            instructor.room_id, id))
-            cursor.commit()
+
         return instructor.id
 
     def delete_instructor(self, id):
@@ -46,7 +47,7 @@ class Database:
             cursor = connection.cursor()
             query = "delete from instructor where (id = %s)"
             cursor.execute(query, (id,))
-            connection.commit()
+
         pass
 
     def get_instructor(self, id):

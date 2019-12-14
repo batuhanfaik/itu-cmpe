@@ -3,6 +3,7 @@ from flask_login import login_required, logout_user, login_user, current_user
 from passlib.hash import pbkdf2_sha256 as hash_machine
 from werkzeug.utils import secure_filename
 from os import getenv
+from psycopg2 import errors, Error
 import dbinit
 
 from assistant import Assistant
@@ -11,7 +12,7 @@ from faculty import Faculty
 from forms import login_form, InstructorForm
 from person import Person
 from student import Student
-
+from instructor import Instructor
 
 def landing_page():
     return render_template("index.html")
@@ -404,6 +405,36 @@ def instructors_page():
     instructors = db.get_instructors()
     return render_template("instructors.html", instructors=instructors)
 
+
+def add_instructor_page():
+    form = InstructorForm()
+    if form.validate_on_submit():
+        db = current_app.config["db"]
+        id = None
+        tr_id=form.data['tr_id']
+        department_id=form.data['department_id']
+        faculty_id = form.data['faculty_id']
+        specialization = form.data['specialization']
+        bachelors = form.data['bachelors']
+        masters = form.data['masters']
+        doctorates = form.data['doctorates']
+        room_id = form.data['room_id']
+        instructor = Instructor(id, tr_id, department_id, faculty_id, specialization,
+                                bachelors, masters, doctorates, room_id)
+        try:
+            db.add_instructor(instructor)
+        except Error as e:
+            if isinstance(e, errors.UniqueViolation):
+                return render_template("add_instructor.html", form=form,
+                                       error="An instructor with this TR ID already exists")
+            if isinstance(e, errors.ForeignKeyViolation):
+                return render_template("add_instructor.html", form=form,
+                                       error="No people exists with this TR ID")
+            else:
+                return render_template("add_instructor.html", form=form,
+                                        error=type(e).__name__ + "-----" + str(e))
+        return redirect(url_for("instructors_page"))
+    return render_template("add_instructor.html", form=form, error=None)
 
 def test_page():
     return render_template("test.html")

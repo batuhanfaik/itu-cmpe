@@ -119,7 +119,8 @@ INIT_STATEMENTS = [
         room_id CHAR(4),
         FOREIGN KEY (tr_id) REFERENCES PEOPLE (tr_id),
         FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
-        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id)
+        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id),
+        unique(tr_id)
     );
     
     CREATE TABLE IF NOT EXISTS ASSISTANT (

@@ -70,6 +70,7 @@ def create_app(db_url):
     app.add_url_rule("/test",
                      view_func=views.test_page, methods=['GET', 'POST'])
     app.add_url_rule("/instructors", view_func=views.instructors_page, methods=['GET'])
+    app.add_url_rule("/instructors/add", view_func=views.add_instructor_page, methods=['GET', 'POST'])
 
     db = init_db(db_url)
     app.config["db"] = db
