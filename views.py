@@ -483,6 +483,11 @@ def update_instructor_page(id):
     return render_template("edit_instructor.html", form=form, error=None)
 
 
+def delete_instructor(id):
+    db = current_app.config['db']
+    db.delete_instructor(id)
+    return redirect(url_for("instructors_page"))
+
 def test_page():
     return render_template("test.html")
 

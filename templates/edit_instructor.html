@@ -28,5 +28,9 @@
     <button class="button">Update Instructor</button>
     {% endif %}
     </form>
+    <form action="./delete" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button class="button red">Delete Instructor</button>
+    </form>
 
 {% endblock %}
