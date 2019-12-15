@@ -87,20 +87,27 @@ body %}
                 </thead>
                 <tbody>
                 <form method="POST">
-                {% for id, student in context.students %}
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                {% for student in context.students %}
                     <tr>
                         <td scope="row"><a
-                                href="{{ url_for("person_page", tr_id=tr_id) }}">{{ tr_id }}}</a>
+                                href="{{ url_for("person_page", tr_id=student.tr_id) }}">{{ student.name }}</a>
                         </td>
                         <td>{{ student.department_id }}</td>
                         <td>{{ student.gpa }}</td>
                         <td>{{ student.semester }}</td>
-                        <td>{{ student.grade }}   &nbsp;&nbsp;<input name="std"{{student.student_id}} ,style="width:40px" ,"number"/></td>
+                        <td>{% if student.grade == "None" %} There is no Grade {% else %} {{ student.grade }} {% endif %}  &nbsp;&nbsp;<select name="std{{student.student_id}}" ,style="width:40px"><option value="None">Select Note</option><option id="0" ,value="0">0</option><option id="1", value="1">1</option><option id="2", value="2">2</option><option id="3", value="3">3</option><option id="4",value="4">4</option></select></td>
                     </tr>
+                    <script>
+                      window.onload()={
+                        document.getElementById("{{student.grade}}").value="{{student.grade}}"
+                      }
+                    </script>
                 {% endfor %}
                 </tbody>
             </table>
-            <button class="btn btn-danger">Save</button>
+            <button type="submit" class="btn btn-danger">Save</button>
         </form>
   </div>
 </div>

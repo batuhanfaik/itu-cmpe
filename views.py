@@ -666,9 +666,14 @@ def course_info_page(crn):
     department= db.get_department(course.department_id)
     faculty= db.get_faculty(department.faculty_id)
     students = []
-    for id, student in taken_course_students:
+    for student in taken_course_students:
         std = db.get_student_via_student_id(student.student_id)
         std.grade = student.grade
+        pers = db.get_person(std.tr_id)
+        student_name = pers.name
+        student_last_name = pers.surname
+        std.tr_id = pers.tr_id
+        std.name = student_name + " "+student_last_name
         students.append(std)
     context={
         'students' : students,
@@ -678,9 +683,12 @@ def course_info_page(crn):
     }
     if(request.method == "POST"):
         for taken_course in taken_course_students:
-            taken_course.grade = request.form['std'.join(taken_course.student_id)]
-            db.update_taken_course(taken_course)
-        return redirect(url_for(course_info_page), crn = crn)
+            strm = 'std'+str(taken_course.student_id)
+            print(request.form)
+            taken_course.grade = request.form[strm]
+            if(taken_course.grade!="None"):
+                db.update_taken_course(taken_course.id,taken_course)
+        return redirect(url_for('course_info_page', crn = crn))
     return render_template("course_inf.html",context= context)
 
 def validation_staff(form):
