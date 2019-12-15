@@ -386,8 +386,14 @@ INIT_STATEMENTS = [
      'Thursday', 50, 3, 1, 1, 1);""",
 
     # Add Staff
-    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('1', 'Best Manager Ever', '1', '2019-12-12','12345','Best Department','1');""",
-    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('444', 'Manager2', '0', '2019-12-12','12344','Information Tech','2');""",
+    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('1', 'Manager1', '1', '2019-12-12','12345','Finance ','1');""",
+    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('2', 'Manager2', '0', '2019-12-12','12344','Information Tech','2');""",
+    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('3', 'Manager3', '1', '2019-12-12','12345','Information Tech','1');""",
+    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('4', 'Manager4', '0', '2019-12-12','12344','Service','2');""",
+    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('11', 'Manager1', '1', '2019-12-12','12345','Finance','1');""",
+    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('22', 'Manager2', '0', '2019-12-12','12344','Information Tech','2');""",
+    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('33', 'Manager3', '1', '2019-12-12','12345','Information Tech','1');""",
+    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('44', 'Manager4', '0', '2019-12-12','12344','Service Tech','2');""",
 
 ]
 
