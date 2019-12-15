@@ -446,7 +446,7 @@ def add_instructor_page():
 def test_page():
     return render_template("test.html")
 
-def validation_staff():
+def validation_staff(form):
     form.data = {}
     form.errors = {}
     db = current_app.config["db"]
@@ -454,38 +454,118 @@ def validation_staff():
     form_id = form.get("id")
     if db.get_staff(form_id):
         form.errors["id"] = "This staff is already registered with the given id."
+        flash('This staff is already registered with the given id')
+    elif form.get("id") == 0 or form.get("id") ==None:
+        form.errors["id"] = "ID cannot be empty."
+        flash('ID cannot be empty.')
+    elif form.get("hire_date") == 0:
+        form.errors["hire_date"] = "Hire Date cannot be empty."
+        flash('Hire Date cannot be empty.')
+    elif form.get("social_sec_no") == 0:
+        form.errors["social_sec_no"] = "Social Security Number cannot be empty."
+        flash('Social Security Number cannot be empty')
+    elif not db.get_person(form_id):
+        form.errors["id"] = "There is no Person with the given ID."
+        flash('No people exists with this TR ID')
+
+
     else:
-        form.data["id"] = form_id
-
-    form.data["id"] = form.get("id")
-    form.data["manager_name"] = form.get("manager_name")
-    form.data["absences"] = form.get("absences")
-    form.data["hire_date"] = form.get("hire_date")
-    form.data["authority_lvl"] = form.get("authority_lvl")
-    form.data["department"] = form.get("department")
-    form.data["social_sec_no"] = form.get("social_sec_no")
-
+        form.data["id"] = form.get("id")
+        form.data["manager_name"] = form.get("manager_name")
+        form.data["absences"] = form.get("absences")
+        form.data["hire_date"] = form.get("hire_date")
+        form.data["authority_lvl"] = form.get("authority_lvl")
+        form.data["department"] = form.get("department")
+        form.data["social_sec_no"] = form.get("social_sec_no")
     return len(form.errors) == 0
+
+
+
 def staff_add_page():
     db = current_app.config["db"]
     all_staff = db.get_all_staff()
     if request.method == "GET":
-        return render_template("staff.html",staffs = all_staff)
-    else:
-        #validate input, write validation function
-        if 'add_staff' in request.form:
-            manager_name = request.form["manager_name"]
-            staff_id = request.form["id"]
-            absences = request.form["absences"]
-            hire_date = request.form["hire_date"]
-            authority = request.form["authority_lvl"]
-            department = request.form["department"]
-            social_sec = request.form["social_sec_no"]
+        return render_template("staff.html",staffs = all_staff, values=request.form)
 
-            new_staff = Staff(staff_id,manager_name,absences,hire_date,social_sec,department,authority)
-            db.add_staff(new_staff)
-            flash('Staff successfully added!')
+    elif 'search_staff' in request.form:
+        print("Searching staff.. id:",request.form.get("staff-id"))
+        found_staff = db.get_staff(request.form.get("staff-id"))
+        if found_staff is None:
+            flash('No staff has been found.')
+            return render_template("staff.html", staffs=all_staff,
+                                   values=request.form)
         else:
-            flash('Staff NOT added!')
+            flash('Staff found!')
+            return render_template("staff_search.html", staff=found_staff,staff_id = found_staff.id,
+                                   values=request.form)
+    elif 'delete_staff' in request.form:
 
-        return redirect(url_for("staff_add_page",staffs=all_staff))
+
+        staff_id = request.form["staff_id"]
+        print("Delete staff!", staff_id)
+        db.delete_staff(int(staff_id))
+        flash('Staff Deleted!')
+        all_staff = db.get_all_staff()
+        return render_template("staff.html",staffs=all_staff,
+                               values=request.form)
+
+
+    elif 'update_staff' in request.form:
+
+        print("UPDATEEEE")
+        old_staff_id = request.form["staff_id"]
+        manager_name = request.form.get("manager_name")
+        absences = request.form.get("absences")
+        hire_date = request.form.get("hire_date")
+        authority = request.form.get("authority_lvl")
+        department = request.form.get("department")
+        social_sec = request.form.get("social_sec_no")
+
+        new_staff = Staff(id=old_staff_id, manager_name=manager_name, absences=absences, hire_date=hire_date,
+                          social_sec_no=social_sec, department=department, authority_lvl=authority)
+        print(new_staff.id, new_staff.manager_name, new_staff.absences,new_staff.hire_date, new_staff.social_sec_no,new_staff.department)
+        db.update_staff(new_staff)
+
+        flash('Staff Updated!')
+        all_staff = db.get_all_staff()
+        return render_template("staff.html",staffs=all_staff,
+                               values=request.form)
+
+
+    else:
+        print("ADDİTİON")
+        valid = validation_staff(request.form)
+        if not valid:
+            flash('Input NOT Valid!')
+            return render_template("staff.html", staffs=all_staff,
+                                   values=request.form)
+        else:
+            manager_name = request.form.data["manager_name"]
+            staff_id = request.form.data["id"]
+            absences = request.form.data["absences"]
+            hire_date = request.form.data["hire_date"]
+            authority = request.form.data["authority_lvl"]
+            department = request.form.data["department"]
+            social_sec = request.form.data["social_sec_no"]
+            new_staff = Staff(id=staff_id,manager_name= manager_name,absences= absences,hire_date= hire_date,social_sec_no= social_sec,department= department,authority_lvl= authority)
+            try:
+                db.add_staff(new_staff)
+                flash('Staff successfully added!')
+            except Error as e:
+                flash('Staff NOT added!')
+                if isinstance(e, errors.UniqueViolation):
+                    flash('A staff with this ID already exists')
+                    return render_template("staff.html", form=request.form,staffs = all_staff,values=request.form,
+                                           error="A staff with this ID already exists")
+                if isinstance(e, errors.ForeignKeyViolation):
+                    flash('No people exists with this TR ID')
+                    return render_template("staff.html", form=request.form,staffs = all_staff,values=request.form,
+                                           error="No people exists with this TR ID")
+
+                else:
+                    flash(type(e))
+                    return render_template("staff.html", form=request.form,staffs = all_staff,values=request.form,
+                                           error=type(e).__name__ + "-----" + str(e))
+            return redirect(url_for("staff_add_page",staffs = all_staff,values=request.form))
+
+    #return redirect(url_for("staff_add_page",staffs=all_staff))

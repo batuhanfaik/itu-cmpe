@@ -464,10 +464,13 @@ class Database:
 
     def add_staff(self,staff):
         with dbapi2.connect(self.dbfile) as connection:
+            print("TRYİNG TO ADD:")
+            print(staff.id," --",staff.department," - ", staff.hire_date,"  ", staff.manager_name,"   ", staff.absences,"   ",staff.authority_lvl,"  ", staff.social_sec_no)
+            print("----------")
             cursor = connection.cursor()
-            query = "insert into staff (id, manager_name, absences, hire_date, social_sec_no, authority_lvl,department) values (%s, %s, %s, %s, %s, %s,%s)"
-            cursor.execute(query, (staff.id, staff.manager_name, staff.absences, staff.hire_date,
-                                   staff.social_sec_no, staff.authority_lvl, staff.department))
+            query = "insert into staff (id, manager_name, absences, hire_date, authority_lvl,department, social_sec_no) values (%s, %s, %s, %s, %s, %s,%s)"
+            cursor.execute(query, (staff.id, staff.manager_name, staff.absences, staff.hire_date, staff.authority_lvl, staff.department,
+                                   staff.social_sec_no))
             connection.commit
 
     def get_staff(self,staff_id):
@@ -479,6 +482,7 @@ class Database:
                 return None
         found_staff = Staff(*cursor.fetchone()[:])
         return found_staff
+
     def get_all_staff(self):
         all_staff = []
         with dbapi2.connect(self.dbfile) as connection:
@@ -489,3 +493,17 @@ class Database:
                 staf = Staff(*row[:])
                 all_staff.append(staf)
         return all_staff
+    def delete_staff(self,staff_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "delete from staff where (id = %s)"
+            cursor.execute(query, (staff_id,))
+            connection.commit
+
+    def update_staff(self,staff):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "update staff set  manager_name = %s, absences = %s, hire_date = %s, authority_lvl = %s,department = %s, social_sec_no = %s where (id = %s)"
+            cursor.execute(query, (staff.id, staff.manager_name, staff.absences, staff.hire_date, staff.authority_lvl, staff.department,
+                                   staff.social_sec_no))
+            connection.commit

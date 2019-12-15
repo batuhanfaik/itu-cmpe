@@ -2,7 +2,7 @@
 
 
 
-{% block title %}Staff Page{% endblock %}
+{% block title %}Staff Search Page{% endblock %}
 {% block body %}
 
 <div class="container mt-3">
@@ -28,104 +28,6 @@
 </form>
 <br><br>
 
-    <h1 class="mb-3">Add Staff</h1>
-
-
-
-    <form action="" method="post" name="add_staff" class="form-inline needs-validation">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-
-
-      <div class="form-group"  >
-
-
-
-
-        <br>
-        <label for="manager_name" class="mr-sm-2">Manager Name:</label>
-        <div class="control"  style="  width: 1200px; display: inline-block;" >
-          <input type="text" name="manager_name" class="form-control mb-2 mr-sm-2" required="required" id="manager_name"/>
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Please fill out this field.</div>
-
-        </div>
-      </div>
-
-
-      <div class="form-group" >
-        <label for="id" class="mr-sm-2">Staff id:</label>
-        <div class="control" style="  width: 1200px; display: inline-block;">
-          <input type="number" name="id" class="form-control mb-2 mr-sm-2" required="required" id="id" />
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Please fill out this field.</div>
-        </div>
-      </div>
-        <br><br>
-
-
-        <label for="hire_date" class="mr-sm-2">Hire date:</label>
-        <div class="form-group" style="  width: 600px; display: inline-block;">
-          <input type="date" name="hire_date" class="form-control mb-2 mr-sm-2" id="hire_date" required="required"  />
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Please fill out this field.</div>
-        </div>
-
-        <br/><br>
-
-
-      <div class="form-group">
-        <label for="department" class="mr-sm-2">Department:</label>
-        <div class="control" style="  width: 600px; display: inline-block;">
-          <input type="text" name="department" class="form-control mb-2 mr-sm-2" id="department"/>
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Please fill out this field.</div>
-        </div>
-      </div>
-        <br><br>
-
-
-      <div class="form-group">
-        <label for="social_sec_no" class="mr-sm-2">Social Security Number:</label>
-        <div class="control" style="  width: 600px; display: inline-block;">
-          <input type="number" name="social_sec_no" class="form-control mb-2 mr-sm-2" required="required" id="social_sec_no"/>
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Please fill out this field.</div>
-        </div>
-      </div>
-        <br><br>
-
-
-      <div class="form-group">
-        <label for="authority_lvl" class="mr-sm-2">Authority level:</label>
-        <div class="control" style="  width: 600px; display: inline-block;">
-          <input type="number" name="authority_lvl" class="form-control mb-2 mr-sm-2" required="required" id="authority_lvl"/>
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Please fill out this field.</div>
-        </div>
-
-      </div>
-        <br><br>
-
-
-      <div class="form-group">
-        <label for="absences" class="mr-sm-2">Absences:</label>
-        <div class="control" style="  width: 1200px; display: inline-block;">
-          <input type="number" name="absences" class="form-control mb-2 mr-sm-2" id="absences"/>
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Please fill out this field.</div>
-        </div>
-      </div>
-        <br><br>
-
-      <div class="field is-grouped">
-        <div class="control">
-          <button class="btn btn-primary mb-2">Add Staff</button>
-        </div>
-      </div>
-    </form>
-
-<br><br><br>
-
 
         <h1 class="mb-3">Staff List</h1>
                 <table class="table is-striped is-fullwidth table-hover">
@@ -143,7 +45,6 @@
                 </thead>
 
                 <tbody>
-                {% for staff in staffs %}
                 <tr>
 
                 <td>{{ staff.id }}</td>
@@ -154,23 +55,107 @@
                 <td>{{ staff.department }}</td>
                 <td>{{ staff.social_sec_no }}</td>
                 </tr>
-                {% endfor %}
                 </tbody>
             </table>
             <br/>
+<form action="" method="POST" name="deleteStaff" style="display: contents">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input type="hidden" name="staff_id" value="{{staff.id}}">
+    <input class="btn btn-danger ml-auto" type="submit" id="delete_staff" name='delete_staff' value="Delete Staff">
+</form>
+
+
+<br><br>
+
+
+ <h1 class="mb-3">Update Staff</h1>
+
+
+
+    <form action="" method="post" name="update_staff" class="form-inline needs-validation">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+
+      <div class="form-group"  >
+
+
+        <br>
+        <label for="manager_name" class="mr-sm-2">Manager Name:</label>
+        <div class="control"  style="  width: 1200px; display: inline-block;" >
+          <input type="text" name="manager_name" class="form-control mb-2 mr-sm-2" required="required" id="manager_name"/>
+
+
+        </div>
+      </div>
+
+
+
+        <br><br>
+
+
+        <label for="hire_date" class="mr-sm-2">Hire date:</label>
+        <div class="form-group" style="  width: 600px; display: inline-block;">
+          <input type="date" name="hire_date" class="form-control mb-2 mr-sm-2" id="hire_date" required="required"  />
+
+        </div>
+
+        <br/><br>
+
+
+      <div class="form-group">
+        <label for="department" class="mr-sm-2">Department:</label>
+        <div class="control" style="  width: 600px; display: inline-block;">
+          <input type="text" name="department" class="form-control mb-2 mr-sm-2" id="department"/>
+
+        </div>
+      </div>
+        <br><br>
+
+
+      <div class="form-group">
+        <label for="social_sec_no" class="mr-sm-2">Social Security Number:</label>
+        <div class="control" style="  width: 600px; display: inline-block;">
+          <input type="number" name="social_sec_no" class="form-control mb-2 mr-sm-2" required="required" id="social_sec_no"/>
+
+        </div>
+      </div>
+        <br><br>
+
+
+      <div class="form-group">
+        <label for="authority_lvl" class="mr-sm-2">Authority level:</label>
+        <div class="control" style="  width: 600px; display: inline-block;">
+          <input type="number" name="authority_lvl" class="form-control mb-2 mr-sm-2" required="required" id="authority_lvl"/>
+
+        </div>
+
+      </div>
+        <br><br>
+
+
+      <div class="form-group">
+        <label for="absences" class="mr-sm-2">Absences:</label>
+        <div class="control" style="  width: 1200px; display: inline-block;">
+          <input type="number" name="absences" class="form-control mb-2 mr-sm-2" id="absences"/>
+
+        </div>
+      </div>
+        <br><br>
+
+      <div class="field is-grouped">
+        <div class="control">
+            <input type="hidden" name="staff_id" value="{{staff.id}}">
+          <button class="btn btn-primary mb-2" id="update_staff" name="update_staff">Update Staff</button>
+        </div>
+      </div>
+    </form>
+
+<br><br><br>
+
 
 
       </div>
 
-<br>
-<br><br><br>
-
-
-    <script>
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
-    </script>
 
 {% endblock %}
     </div>
