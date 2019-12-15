@@ -88,7 +88,7 @@ def create_app(db_url):
     app.add_url_rule("/course/<crn>/edit",
                      view_func=views.edit_course_page, methods=['POST', 'GET'])
     app.add_url_rule(
-        "/course/<crn>", view_func=views.course_inf_page, methods=['POST', 'GET'])
+        "/course/<crn>", view_func=views.course_info_page, methods=['POST', 'GET'])
 
     db = init_db(db_url)
     app.config["db"] = db

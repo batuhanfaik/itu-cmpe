@@ -658,9 +658,10 @@ def edit_instructor_page(id):
 def test_page():
     return render_template("test.html")
 
-def course_inf_page(crn):
+
+def course_info_page(crn):
     db = current_app.config["db"]
-    taken_course_students = db.get_taken_course_students(crn)
+    taken_course_students = db.get_taken_course_by_crn(crn)
     course = db.get_course(crn)
     department= db.get_department(course.department_id)
     faculty= db.get_faculty(department.faculty_id)
@@ -679,7 +680,7 @@ def course_inf_page(crn):
         for taken_course in taken_course_students:
             taken_course.grade = request.form['std'.join(taken_course.student_id)]
             db.update_taken_course(taken_course)
-        return redirect(url_for(course_inf_page),crn = crn)
+        return redirect(url_for(course_info_page), crn = crn)
     return render_template("course_inf.html",context= context)
 
 def validation_staff(form):

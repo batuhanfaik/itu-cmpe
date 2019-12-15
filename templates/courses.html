@@ -29,7 +29,10 @@
             </thead>
             {% for course in courses %}
                 <tr>
-                    <td><a href="{{ url_for('edit_course_page', crn=course.crn) }}">{{ course.crn }}</a></td>
+                    <td><a href="{% if current_user.role == 'admin' %} {{url_for('edit_course_page', crn=course.crn)}}
+                    {% else %}
+                    {{ url_for("course_info_page", crn=course.crn) }}
+                    {% endif %}">{{ course.crn }}</a></td>
                     <td>{{ course.department_name + " " + course.code }}</td>
                     <td>{{ course.name }}</td>
                     <td>{{ course.instructor_name }}</td>
