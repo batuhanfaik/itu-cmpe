@@ -409,7 +409,7 @@ def reset_db():
 
 def instructors_page():
     db = current_app.config["db"]
-    instructors = db.get_instructors()
+    instructors = db.get_all_instructors()
     return render_template("instructors.html", instructors=instructors)
 
 

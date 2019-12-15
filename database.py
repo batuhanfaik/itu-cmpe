@@ -62,7 +62,7 @@ class Database:
         instructor = Instructor(*cursor.fetchone())  # Inline unpacking of a tuple
         return instructor
 
-    def get_instructors(self):
+    def get_all_instructors(self):
         instructors = []
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
