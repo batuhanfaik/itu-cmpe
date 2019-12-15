@@ -730,5 +730,3 @@ class Database:
                 facility = Facility(*row[:])
                 facilities.append(facility)
         return facilities
-
-      connection.commit
