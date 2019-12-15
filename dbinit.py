@@ -138,8 +138,9 @@ INIT_STATEMENTS = [
         credits         REAL        NOT NULL,
         language        CHAR(2)     default('en'),
         classroom_id    INT         NOT NULL,
-        instructor_id   INT      NOT NULL,
+        instructor_id   INT         NOT NULL,
         department_id   INT         NOT NULL,
+        info            TEXT        NULL,
         FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id),
         FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id),
         FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id)

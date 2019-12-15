@@ -28,6 +28,7 @@ class CourseForm(FlaskForm):
     classroom_id = IntegerField("Classroom ID", validators=[InputRequired()])
     instructor_id = IntegerField("Instructor ID", validators=[InputRequired()])
     department_id = IntegerField("Department ID", validators=[InputRequired()])
+    info = TextAreaField("Course Information", validators=[InputRequired()])
 
 
 class ClassroomForm(FlaskForm):

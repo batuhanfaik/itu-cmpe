@@ -205,11 +205,11 @@ class Database:
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = """insert into course (crn, code, name, start_time, end_time, day, capacity, enrolled,
-                        credits, language, classroom_id , instructor_id, department_id)
-                        values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                        credits, language, classroom_id , instructor_id, department_id, info)
+                        values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             cursor.execute(query, (course.crn, course.code, course.name, course.start_time, course.end_time,
                                    course.day, course.capacity, course.enrolled, course.credits, course.language,
-                                   course.classroom_id, course.instructor_id, course.department_id))
+                                   course.classroom_id, course.instructor_id, course.department_id, course.info))
         pass
 
     def update_course(self, crn, course):
@@ -217,11 +217,11 @@ class Database:
             cursor = connection.cursor()
             query = """update course set crn = %s, code = %s, name = %s, start_time = %s, end_time = %s,
                         day = %s, capacity = %s, enrolled = %s, credits = %s, language = %s, classroom_id = %s, 
-                        instructor_id = %s, department_id = %s where (crn = %s)"""
+                        instructor_id = %s, department_id = %s, info = %s where (crn = %s)"""
             cursor.execute(query, (crn, course.code, course.name, course.start_time, course.end_time,
                                    course.day, course.capacity, course.enrolled, course.credits, course.language,
                                    course.classroom_id, course.instructor_id,
-                                   course.department_id, crn))
+                                   course.department_id, course.info, crn))
         return course.crn
 
     def delete_course(self, crn):
@@ -255,11 +255,11 @@ class Database:
                             and course.classroom_id = classroom.id
                             and people.tr_id = instructor.tr_id) order by (department.shortened_name);""")
             for row in cursor:
-                course = Course(*row[:13])
-                course.faculty_name = row[13]
-                course.department_name = row[14]
-                course.instructor_name = row[15] + " " + row[16]
-                course.door_number = row[17]
+                course = Course(*row[:14])
+                course.faculty_name = row[14]
+                course.department_name = row[15]
+                course.instructor_name = row[16] + " " + row[17]
+                course.door_number = row[18]
                 courses.append(course)
         return courses
     ########################
