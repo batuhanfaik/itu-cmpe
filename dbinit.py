@@ -138,11 +138,9 @@ INIT_STATEMENTS = [
         credits         REAL        NOT NULL,
         language        CHAR(2)     default('en'),
         classroom_id    INT         NOT NULL,
-        faculty_id      INT         NOT NULL,
         instructor_id   BIGINT      NOT NULL,
         department_id   INT         NOT NULL,
         FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id),
-        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
         FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id),
         FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id)
     );
@@ -381,11 +379,11 @@ INIT_STATEMENTS = [
 
     # Add Courses
     """insert into course (crn, code, name, start_time, end_time, day, capacity, credits, classroom_id,
-     faculty_id, instructor_id, department_id) values ('11111', '101', 'Intro to computing (C)', '12:00:00', '13:00:00',
-     'Wednesday', 50, 3, 1, 1, 1, 1);""",
+      instructor_id, department_id) values ('11111', '101', 'Intro to computing (C)', '12:00:00', '13:00:00',
+     'Wednesday', 50, 3, 1, 1, 1);""",
     """insert into course (crn, code, name, start_time, end_time, day, capacity, credits, classroom_id,
-     faculty_id, instructor_id, department_id) values ('22222', '102', 'Intro to computing (Python)', '12:00:00', '13:00:00',
-     'Thursday', 50, 3, 1, 1, 1, 1);""",
+     instructor_id, department_id) values ('22222', '102', 'Intro to computing (Python)', '12:00:00', '13:00:00',
+     'Thursday', 50, 3, 1, 1, 1);""",
 
     # Add Staff
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('1', 'Best Manager Ever', '1', '2019-12-12','12345','Best Department','1');""",

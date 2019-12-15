@@ -48,6 +48,9 @@
                 <li class="nav-item {% if request.path==url_for("students_page") %} active {% endif %}">
                     <a class="nav-link" href="{{ url_for("students_page") }}">Students</a>
                 </li>
+                <li class="nav-item {% if request.path==url_for("courses_page") %} active {% endif %}">
+                    <a class="nav-link" href="{{ url_for("courses_page") }}">Courses</a>
+                </li>
                 <li class="nav-item {% if request.path==url_for("assistants_page") %} active {% endif %}">
                     <a class="nav-link" href="{{ url_for("assistants_page") }}">Assistants</a>
                 </li>

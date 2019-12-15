@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %} Courses {% endblock %}
+
+{% block body %}
+    <div class="container mt-3">
+        <div class="text-center mt-1 mb-1">
+
+{#        <button class="button btn-success" onClick=" window.location.href = '{{url_for("add_course_page") }}'"> Add Course </button>#}
+        </div>
+        <table class="table mt-1 is-striped is-fullwidth table-hover table-sm">
+            <thead>
+            <tr>
+                <th scope="col">CRN</th>
+                <th scope="col">Code</th>
+                <th scope="col">Name</th>
+                <th scope="col">Instructor</th>
+                <th scope="col">Department</th>
+                <th scope="col">Building</th>
+                <th scope="col">Room</th>
+                <th scope="col">Day</th>
+                <th scope="col">Start Time</th>
+                <th scope="col">End Time</th>
+                <th scope="col">Enrolled</th>
+                <th scope="col">Capacity</th>
+                <th scope="col">Credits</th>
+                <th scope="col">Language</th>
+            </tr>
+            </thead>
+            {% for course in courses %}
+                <tr>
+{#                    <td><a href="{{ url_for('update_instructor_page', id=instructor.id) }}">{{ instructor.name + " " + instructor.surname }}</a></td>#}
+                    <td>{{ course.crn }}</td>
+                    <td>{{ course.department_name + " " + course.code }}</td>
+                    <td>{{ course.name }}</td>
+                    <td>{{ course.instructor_name }}</td>
+                    <td>{{ course.department_name }}</td>
+                    <td>{{ course.faculty_name }}</td>
+                    <td>{{ course.door_number }}</td>
+                    <td>{{ course.day }}</td>
+                    <td>{{ course.start_time }}</td>
+                    <td>{{ course.end_time }}</td>
+                    <td>{{ course.enrolled }}</td>
+                    <td>{{ course.capacity }}</td>
+                    <td>{{ course.credits }}</td>
+                    <td>{{ course.language }}</td>
+                </tr>
+
+            {% endfor %}
+    </table>
+    </div>
+{% endblock %}

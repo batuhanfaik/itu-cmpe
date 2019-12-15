@@ -172,12 +172,33 @@ class Database:
     def get_course(self, crn):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = "select * from crn where (crn = %s)"
+            query = "select * from course where (crn = %s)"
             cursor.execute(query, (crn,))
             if cursor.rowcount == 0:
                 return None
         course = Course(*cursor.fetchone())
         return course
+
+    def get_all_courses(self):
+        courses = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            cursor.execute("""select course.*, faculty.shortened_name, department.shortened_name,
+                            people.name, people.surname, classroom.door_number
+                            from course, classroom, faculty, instructor, department, people
+                            where (course.department_id = department.id
+                            and course.instructor_id = instructor.id
+                            and classroom.faculty_id = faculty.id
+                            and course.classroom_id = classroom.id
+                            and people.tr_id = instructor.tr_id) order by (department.shortened_name);""")
+            for row in cursor:
+                course = Course(*row[:13])
+                course.faculty_name = row[13]
+                course.department_name = row[14]
+                course.instructor_name = row[15] + " " + row[16]
+                course.door_number = row[17]
+                courses.append(course)
+        return courses
     ########################
     def add_person(self, person):
         with dbapi2.connect(self.dbfile) as connection:

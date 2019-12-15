@@ -473,6 +473,12 @@ def delete_classroom(faculty_id, id):
     return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
 
 
+# course pages#
+def courses_page():
+    db = current_app.config["db"]
+    courses = db.get_all_courses()
+    return render_template("courses.html", courses=courses)
+
 # instructor pages#
 def instructors_page():
     db = current_app.config["db"]
