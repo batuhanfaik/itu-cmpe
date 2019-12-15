@@ -389,8 +389,13 @@ INIT_STATEMENTS = [
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('33', 'Manager3', '1', '2019-12-12','12345','Information Tech','1');""",
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('44', 'Manager4', '0', '2019-12-12','12344','Service Tech','2');""",
 
-]
+    # Insert Taken Courses
+    """insert into taken_course (id,student_id,crn) values ('1','150180704','11111');""",
+    """insert into taken_course (id,student_id,crn) values ('2','150180705','11111');""",
+    """insert into taken_course (id,student_id,crn) values ('3','150180707','22222');""",
+    """insert into taken_course (id,student_id,crn) values ('4','150150150','22222');""",
 
+]
 
 
 def reset_db(url):
