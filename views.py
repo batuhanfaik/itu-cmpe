@@ -516,8 +516,6 @@ def edit_course_page(crn):
     return render_template("edit_course.html", form=form, error=None, title="Edit Course")
 
 
-
-
 # instructor pages#
 def instructors_page():
     db = current_app.config["db"]
@@ -543,46 +541,70 @@ def add_instructor_page():
         try:
             db.add_instructor(instructor)
         except Error as e:
+            error = type(e).__name__ + "-----" + str(e)
             if isinstance(e, errors.UniqueViolation):
-                return render_template("edit_instructor.html", form=form, title="Add Instructor",
-                                       error="An instructor with this TR ID already exists")
+                error = "An instructor with this TR ID already exists"
             if isinstance(e, errors.ForeignKeyViolation):
-                return render_template("edit_instructor.html", form=form, title="Add Instructor",
-                                       error="No people exists with this TR ID")
-            else:
-                return render_template("edit_instructor.html", form=form, title="Add Instructor",
-                                       error=type(e).__name__ + "-----" + str(e))
+                str_e = str(e)
+                if 'tr_id' in str_e:
+                    error = "No people exists with this TR ID"
+                elif 'faculty_id' in str_e:
+                    error = "No faculty exists with this Faculty ID"
+                elif 'department_id' in str_e:
+                    error = "No department exists with this Department ID"
+            return render_template("edit_instructor.html", form=form, title="Add Instructor",
+                                   error=error)
         return redirect(url_for("instructors_page"))
     return render_template("edit_instructor.html", form=form, title="Add Instructor", error=None)
 
 
-def update_instructor_page(id):
+def edit_instructor_page(id):
     db = current_app.config["db"]
     form = InstructorForm()
     if form.validate_on_submit():
-        tr_id = form.data['tr_id']
-        department_id = form.data['department_id']
-        faculty_id = form.data['faculty_id']
-        specialization = form.data['specialization']
-        bachelors = form.data['bachelors']
-        masters = form.data['masters']
-        doctorates = form.data['doctorates']
-        room_id = form.data['room_id']
-        instructor = Instructor(id, tr_id, department_id, faculty_id, specialization,
-                                bachelors, masters, doctorates, room_id)
+        if request.form['btn'] == 'update':
+            tr_id = form.data['tr_id']
+            department_id = form.data['department_id']
+            faculty_id = form.data['faculty_id']
+            specialization = form.data['specialization']
+            bachelors = form.data['bachelors']
+            masters = form.data['masters']
+            doctorates = form.data['doctorates']
+            room_id = form.data['room_id']
+            instructor = Instructor(id, tr_id, department_id, faculty_id, specialization,
+                                    bachelors, masters, doctorates, room_id)
+            try:
+                db.update_instructor(id, instructor)
+            except Error as e:
+                error = type(e).__name__ + "-----" + str(e)
+                if isinstance(e, errors.UniqueViolation):
+                    error = "An instructor with this TR ID already exists"
+                if isinstance(e, errors.ForeignKeyViolation):
+                    str_e = str(e)
+                    if 'tr_id' in str_e:
+                        error = "No people exists with this TR ID"
+                    elif 'faculty_id' in str_e:
+                        error = "No faculty exists with this Faculty ID"
+                    elif 'department_id' in str_e:
+                        error = "No department exists with this Department ID"
+                return render_template("edit_instructor.html", form=form, title="Edit Instructor",
+                                       error=error)
+            return redirect(url_for("instructors_page"))
+    if request.method == 'POST' and request.form['btn'] == 'delete':
         try:
-            db.update_instructor(id, instructor)
+            db.delete_instructor(id)
+            return redirect(url_for("courses_page"))
         except Error as e:
-            if isinstance(e, errors.UniqueViolation):
-                return render_template("edit_instructor.html", form=form, title="Update Instructor",
-                                       error="An instructor with this TR ID already exists")
+            error = type(e).__name__ + '----' + str(e)
             if isinstance(e, errors.ForeignKeyViolation):
-                return render_template("edit_instructor.html", form=form, title="Update Instructor",
-                                       error="No people exists with this TR ID")
-            else:
-                return render_template("edit_instructor.html", form=form, title="Update Instructor",
-                                       error=type(e).__name__ + "-----" + str(e))
-        return redirect(url_for("instructors_page"))
+                str_e = str(e)
+                if 'course' in str_e:
+                    error = "There are courses given by this instructor! It can not be deleted!"
+                elif 'assistant' in str_e:
+                    error = "There are assistants supervised by this instructor! It can not be deleted!"
+            return render_template("edit_instructor.html", form=form, title="Edit Instructor",
+                                   error=error)
+
     instructor = db.get_instructor(id)
     form.tr_id.data = instructor.tr_id
     form.room_id.data = instructor.room_id
@@ -593,14 +615,6 @@ def update_instructor_page(id):
     form.department_id.data = instructor.department_id
     form.faculty_id.data = instructor.faculty_id
     return render_template("edit_instructor.html", form=form, title="Update Instructor", error=None)
-
-
-def delete_instructor(id):
-    db = current_app.config['db']
-    db.delete_instructor(id)
-    # TODO:https://stackoverflow.com/questions/18290142/multiple-forms-in-a-single-page-using-flask-and-wtforms
-    #   fix referential integrity problems
-    return redirect(url_for("instructors_page"))
 
 
 def test_page():

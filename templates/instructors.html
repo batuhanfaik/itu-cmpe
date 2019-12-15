@@ -23,7 +23,7 @@
             </thead>
             {% for instructor in instructors %}
                 <tr>
-                    <td><a href="{{ url_for('update_instructor_page', id=instructor.id) }}">{{ instructor.name + " " + instructor.surname }}</a></td>
+                    <td><a href="{{ url_for('edit_instructor_page', id=instructor.id) }}">{{ instructor.name + " " + instructor.surname }}</a></td>
                     <td>{{ instructor.departmentName }}</td>
                     <td>{{ instructor.facultyName }}</td>
                     <td>{{ instructor.room_id }}</td>
