@@ -33,7 +33,7 @@ class Database:
     def update_taken_course(self, id, takencourse):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = """update taken_course set student_id = %s, crn = %s, grade = %s,
+            query = """update taken_course set student_id = %s, crn = %s, grade = %s
                         where (id = %s)"""
             cursor.execute(query, (takencourse.student_id, takencourse.crn, takencourse.grade, id))
         return id
@@ -59,7 +59,7 @@ class Database:
             cursor.execute(query, (crn,))
             for row in cursor:
                 taken_course = TakenCourse(*row[:])
-                students.append((taken_course.id, taken_course))
+                students.append(taken_course)
         return students
 
     # instructor crud #
