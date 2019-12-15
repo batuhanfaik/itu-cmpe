@@ -396,9 +396,9 @@ INIT_STATEMENTS = [
     """insert into taken_course (id,student_id,crn) values ('4','150150150','22222');""",
 
     # Add facility
-    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, "size", expenses) values (1, 1, 'Yemekhane', 'YMK', '50', '1400', '70000')"""
-    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, "size", expenses) values (2, 2, 'Kütüphane', 'LIB', '50', '1400', '50000')"""
-    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, "size", expenses) values (3, 4, 'Bilgi İşlem', 'BIDB', '50', '1400', '80000')"""
+    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, "size", expenses) values (1, 1, 'Yemekhane', 'YMK', '50', '1400', '70000')""",
+    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, "size", expenses) values (2, 2, 'Kütüphane', 'LIB', '50', '1400', '50000')""",
+    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, "size", expenses) values (3, 4, 'Bilgi İşlem', 'BIDB', '50', '1400', '80000')""",
 
 
 ]
