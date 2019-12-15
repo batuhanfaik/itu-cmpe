@@ -51,6 +51,17 @@ class Database:
             cursor.execute(query, (id,))
             return TakenCourse(*cursor.fetchone)
 
+    def get_taken_course_by_crn(self, crn):
+        students = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from taken_course where (crn = %s)"
+            cursor.execute(query, (crn,))
+            for row in cursor:
+                taken_course = TakenCourse(*row[:])
+                students.append((taken_course.id, taken_course))
+        return students
+
     # instructor crud #
     def add_instructor(self, instructor):
         with dbapi2.connect(self.dbfile) as connection:
@@ -80,16 +91,6 @@ class Database:
             cursor.execute(query, (id,))
 
         pass
-    def get_taken_course_students(self,crn):
-        students = []
-        with dbapi2.connect(self.dbfile) as connection:
-            cursor = connection.cursor()
-            query = "select * from taken_course where (crn = %s)"
-            cursor.execute(query, (crn,))
-            for row in cursor:
-                taken_course = TakenCourse(*row[:])
-                student.append((taken_course.id, taken_course))
-        return students
 
     def get_instructor(self, id):
         with dbapi2.connect(self.dbfile) as connection:
