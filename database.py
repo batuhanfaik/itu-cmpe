@@ -80,7 +80,18 @@ class Database:
                 instructors.append(instructor)
         return instructors
 
+    def is_instructor_available(self, start_time, end_time, instructor_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """select * from course where (instructor_id = %s 
+                                   and ((%s >= start_time and %s < end_time)
+                                       or (%s <= end_time and %s > start_time)));"""
+            cursor.execute(query, (instructor_id, start_time, start_time, end_time, end_time))
+            if cursor.rowcount > 0:
+                return False
+        return True
     # classroom crud #
+
     def add_classroom(self, classroom):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
@@ -137,6 +148,18 @@ class Database:
             for row in cursor:
                 classrooms.append(Classroom(*row))
         return classrooms
+
+    def is_classroom_available(self, start_time, end_time, classroom_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """select * from course where (classroom_id = %s 
+                        and ((%s >= start_time and %s < end_time)
+                                or (%s <= end_time and %s > start_time)));"""
+            cursor.execute(query, (classroom_id, start_time, start_time, end_time, end_time))
+            if cursor.rowcount > 0:
+                return False
+        return True
+
     # course crud #
     def add_course(self, course):
         with dbapi2.connect(self.dbfile) as connection:

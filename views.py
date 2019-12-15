@@ -491,16 +491,6 @@ def edit_classroom_page(faculty_id, id):
                            error=None)
 
 
-def delete_classroom(faculty_id, id):
-    db = current_app.config['db']
-    try:
-        db.delete_classroom(id)
-    except Error as e:
-        # TODO Find a way to show errors about referential integrity problems
-        return redirect(url_for("edit_classroom_page", faculty_id=faculty_id, id=id))
-    return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
-
-
 # course pages#
 def courses_page():
     db = current_app.config["db"]
@@ -517,8 +507,29 @@ def add_course_page():
             if key != 'csrf_token':
                 args.append(value)
         course = Course(*args)
-        db.add_course(course)
-        return redirect(url_for('courses_page'))
+        if not db.is_classroom_available(course.start_time, course.end_time,
+                                                        course.classroom_id):
+            error = "There is already a course given in that classroom at that time!"
+            return render_template("edit_course.html", form=form, error=error, title="Add Course")
+        if not db.is_instructor_available(course.start_time, course.end_time, course.instructor_id):
+            error = "The instructor already has a course at that time!"
+            return render_template("edit_course.html", form=form, error=error, title="Add Course")
+        try:
+            db.add_course(course)
+            return redirect(url_for('courses_page'))
+        except Error as e:
+            error = type(e).__name__ + '----' + str(e)
+            str_e = str(e)
+            if isinstance(e, errors.UniqueViolation):
+                error = "This course already exists"
+            if isinstance(e, errors.ForeignKeyViolation):
+                if 'classroom' in str_e:
+                    error = "There is no classroom with given id"
+                if 'department' in str_e:
+                    error = "There is no department with given id"
+                if 'instructor' in str_e:
+                    error = "There is no instructor with given id"
+            return render_template("edit_course.html", form=form, error=error, title="Add Course")
     return render_template("edit_course.html", form=form, error=None, title="Add Course")
 
 
