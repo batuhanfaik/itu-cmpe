@@ -37,11 +37,11 @@
     <button type="submit" class="button btn-primary mb-2">Add Classroom</button>
      </form>
     {% else %}
-    <button type="submit" class="button btn-primary mb-2">Update Classroom</button>
+    <button type="submit" class="button btn-primary mb-2" value="delete" name="btn">Update Classroom</button>
     </form>
-    <form action="./delete" method="post">
+    <form action="" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <button type="submit" class="button btn-danger mb-2">Delete Classroom</button>
+        <button type="submit" class="button btn-danger mb-2" value="delete" name="btn">Delete Classroom</button>
     </form>
     {% endif %}
    </div>

@@ -15,6 +15,9 @@ class CourseForm(FlaskForm):
     name = StringField("Course Name", validators=[InputRequired(), Length(max=100)])
     start_time = TimeField("Start Time", validators=[InputRequired()])
     end_time = TimeField("End Time", validators=[InputRequired()])
+    def validate_end_time(self, field):
+        if self.start_time.data >= field.data:
+            raise ValidationError("End time can not be equal or lower than Start Time")
     day = SelectField("Day", choices=[('Monday', 'Monday'), ('Tuesday', 'Tuesday'),
                                       ('Wednesday', 'Wednesday'), ('Thursday', 'Thursday'),
                                       ('Friday', 'Friday')])

@@ -164,7 +164,7 @@ INIT_STATEMENTS = [
         FOREIGN KEY (crn) REFERENCES COURSE (crn), 
         UNIQUE(student_id, crn)
     );
-    CREATE TABLE IF NOT EXISTS COMPETED_COURSE(
+    CREATE TABLE IF NOT EXISTS COMPLETED_COURSE(
         id                  SERIAL      NOT NULL PRIMARY KEY,
         student_id          BIGINT      NOT NULL,
         crn                 CHAR(6)     NOT NULL,
