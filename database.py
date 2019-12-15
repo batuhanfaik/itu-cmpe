@@ -8,6 +8,7 @@ from instructor import Instructor
 from staff import Staff
 from classroom import Classroom
 from course import Course
+from facility import Facility
 
 
 class Database:
@@ -623,3 +624,49 @@ class Database:
             cursor.execute(query, ( staff.manager_name, staff.absences, staff.hire_date, staff.authority_lvl, staff.department,
                                    staff.social_sec_no, staff.id))
             connection.commit
+
+    def get_facility(self,facility_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from facility where (id = %s)"
+            cursor.execute(query, (facility_id,))
+            if (cursor.rowcount == 0):
+                return None
+        found_facility = Facility(*cursor.fetchone()[:])
+        return found_facility
+    def get_all_facility(self):
+        all_facility = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from facility order by id asc"
+            cursor.execute(query)
+            for row in cursor:
+                facil = Facility(*row[:])
+                all_facility.append(facil)
+        return all_facility
+    def delete_facility(self,facility_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "delete from facility where (id = %s)"
+            cursor.execute(query, (facility_id,))
+            connection.commit
+    def add_facility(self,facility):
+        with dbapi2.connect(self.dbfile) as connection:
+            print("TRYİNG TO ADD:")
+            print("----------")
+            cursor = connection.cursor()
+            query = "insert into facility (id, campus_id, name, shortened_name,number_of_workers,size,expenses) values (%s, %s, %s, %s, %s, %s,%s)"
+            cursor.execute(query, (facility.id, facility.campus_id, facility.name, facility.shortened_name,
+                                   facility.number_of_workers, facility.size, facility.expenses))
+            connection.commit
+    def get_facility_from_campus(self, campus_id):
+        facilities = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from facility where (campus_id = %s) order by id asc"
+            cursor.execute(query, (campus_id,))
+            for row in cursor:
+                facility = Facility(*row[:])
+                facilities.append(facility)
+        return facilities
+

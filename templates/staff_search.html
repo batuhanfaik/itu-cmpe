@@ -29,7 +29,7 @@
 <br><br>
 
 
-        <h1 class="mb-3">Staff List</h1>
+        <h1 class="mb-3">Staff Work Information</h1>
                 <table class="table is-striped is-fullwidth table-hover">
                 <thead>
                 <tr>
@@ -54,6 +54,33 @@
                 <td>{{ staff.authority_lvl }}</td>
                 <td>{{ staff.department }}</td>
                 <td>{{ staff.social_sec_no }}</td>
+                </tr>
+                </tbody>
+            </table>
+    <h1 class="mb-3">Staff Personal Information</h1>
+                <table class="table is-striped is-fullwidth table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">TR IDe</th>
+                    <th scope="col">Staff Name</th>
+                    <th scope="col">Staff Surname</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Category</th>
+
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                <td>{{ person_info.tr_id }}</td>
+                <td>{{ person_info.name }}</td>
+                <td>{{ person_info.surname }}</td>
+                <td>{{ person_info.phone_number }}</td>
+                <td>{{ person_info.email }}</td>
+                <td>{{ person_info.person_category }}</td>
+
                 </tr>
                 </tbody>
             </table>

@@ -16,6 +16,7 @@ from instructor import Instructor
 from staff import Staff
 from classroom import Classroom
 from course import Course
+from facility import Facility
 
 def landing_page():
     return render_template("index.html")
@@ -628,6 +629,7 @@ def staff_add_page():
     elif 'search_staff' in request.form:
         print("Searching staff.. id:",request.form.get("staff-id"))
         found_staff = db.get_staff(request.form.get("staff-id"))
+        person_info = db.get_person(request.form.get("staff-id"))
         if found_staff is None:
             flash('No staff has been found.')
             return render_template("staff.html", staffs=all_staff,
@@ -635,7 +637,7 @@ def staff_add_page():
         else:
             flash('Staff found!')
             return render_template("staff_search.html", staff=found_staff,staff_id = found_staff.id,
-                                   values=request.form)
+                                   values=request.form,person_info= person_info)
     elif 'delete_staff' in request.form:
 
 
@@ -671,7 +673,6 @@ def staff_add_page():
 
 
     else:
-        print("ADDİTİON")
         valid = validation_staff(request.form)
         if not valid:
             flash('Input NOT Valid!')
@@ -701,9 +702,136 @@ def staff_add_page():
                                            error="No people exists with this TR ID")
 
                 else:
-                    flash(type(e))
                     return render_template("staff.html", form=request.form,staffs = all_staff,values=request.form,
                                            error=type(e).__name__ + "-----" + str(e))
             return redirect(url_for("staff_add_page",staffs = all_staff,values=request.form))
 
-    #return redirect(url_for("staff_add_page",staffs=all_staff))
+
+def find_campus(campus_id):
+     db = current_app.config["db"]
+     campuses = db.get_campuses()
+     for id,campus in campuses:
+        if campus_id==id:
+            return True
+     return None
+
+def validation_facility(form):
+    form.data = {}
+    form.errors = {}
+    db = current_app.config["db"]
+
+    form_id = form.get("id")
+    form_campus_id = form.get("campus_id")
+
+
+    if db.get_facility(form_id):
+        form.errors["id"] = "This facility is already registered with the given id."
+        flash('This facility is already registered with the given id')
+    elif form.get("id") == 0 or form.get("id") ==None:
+        form.errors["id"] = "ID cannot be empty."
+        flash('ID cannot be empty.')
+    elif form.get("campus_id") == 0:
+        form.errors["campus_id"] = "Campus ID cannot be empty."
+        flash('Campus ID cannot be empty.')
+    elif form.get("name") == 0:
+        form.errors["name"] = "Name cannot be empty."
+        flash('Name cannot be empty')
+    elif not find_campus(int(form_campus_id)):
+        form.errors["id"] = "There is no Campus with the given Campus ID."
+        flash('There is no Campus with the given Campus ID.')
+
+
+    else:
+        form.data["id"] = form.get("id")
+        form.data["campus_id"] = form.get("campus_id")
+        form.data["name"] = form.get("name")
+        form.data["shortened_name"] = form.get("shortened_name")
+        form.data["number_of_workers"] = form.get("number_of_workers")
+        form.data["size"] = form.get("size")
+        form.data["expenses"] = form.get("expenses")
+    return len(form.errors) == 0
+
+
+
+def facility_page():
+    db = current_app.config["db"]
+    all_facilities = db.get_all_facility()
+
+    if request.method == "GET":
+        return render_template("facility.html", values=request.form, facilities = all_facilities)
+
+
+    elif 'facility_search' in request.form:
+        facil = db.get_facility(request.form.get("facility_id"))
+        if facil is None:
+            flash('No facility has been found.')
+            return render_template("facility.html",  facilities=all_facilities,
+                                       values=request.form)
+        else:
+            flash('Facility found!')
+            return render_template("facility_search.html", facility=facil, facility_id=facil.id,
+                                    by_campus= 0, values=request.form)
+
+    elif 'delete_facility' in request.form:
+        f_id = request.form["facility_id"]
+        db.delete_facility(int(f_id))
+        flash('Facility Deleted!')
+        all_f = db.get_all_facility()
+        return render_template("facility.html", facilities=all_f,
+                               values=request.form)
+
+    elif 'search_facility_campus' in request.form:
+        campus_id = request.form["find_campus_id"]
+        campus= db.get_campus(campus_id)
+        c_name=campus.name
+        facilities = db.get_facility_from_campus(campus_id)
+        if len(facilities) == 0:
+
+            flash('There is no facility in this Campus.')
+            return render_template("facility.html", facilities=all_facilities,
+                                   values=request.form)
+        return render_template("facility_search.html", facilities=facilities, campus_name = c_name,
+                               by_campus = 1 ,values=request.form)
+
+
+    else:
+        valid = validation_facility(request.form)
+        if not valid:
+            #flash('Input NOT Valid!')
+            return render_template("facility.html", facilities=all_facilities,
+                                   values=request.form)
+
+
+
+
+
+        else:
+            id = request.form.get("id")
+            campus_id = request.form.data["campus_id"]
+            name = request.form.data["name"]
+            short_name = request.form.data["shortened_name"]
+            num_worker = request.form.data["number_of_workers"]
+            size = request.form.data["size"]
+            expense = request.form.data["expenses"]
+            new_facil = Facility(id=id, campus_id=campus_id, name=name, shortened_name=short_name,
+                              number_of_workers=num_worker, size=size, expenses=expense)
+            try:
+                db.add_facility(new_facil)
+                flash('Facility successfully added!')
+                all_facilities = db.get_all_facility()
+            except Error as e:
+                flash('Facility NOT added!')
+                if isinstance(e, errors.UniqueViolation):
+                    flash('A Facility with this ID already exists')
+                    return render_template("facility.html", form=request.form, facilities=all_facilities, values=request.form,
+                                           error="A Facility with this ID already exists")
+                if isinstance(e, errors.ForeignKeyViolation):
+                    flash('No campus exists with this ID')
+                    return render_template("facility.html", form=request.form,facilities=all_facilities, values=request.form,
+                                           error="No campus exists with this ID")
+
+                else:
+                    return render_template("facility.html", form=request.form, facilities=all_facilities, values=request.form,
+                                           error=type(e).__name__ + "-----" + str(e))
+            return redirect(url_for("facility_page", facilities=all_facilities, values=request.form))
+

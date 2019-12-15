@@ -60,6 +60,9 @@
                 <li class="nav-item {% if request.path==url_for("staff_add_page") %} active {% endif %}">
                     <a class="nav-link" href="{{ url_for("staff_add_page") }}">Staff</a>
                 </li>
+                <li class="nav-item {% if request.path==url_for("facility_page") %} active {% endif %}">
+                    <a class="nav-link" href="{{ url_for("facility_page") }}">Facilities</a>
+                </li>
                 {% if current_user.is_authenticated %}
                     <li class="nav-item {% if request.path==url_for("person_page", tr_id=current_user.tr_id) %} active {% endif %}">
                         <a class="nav-link"

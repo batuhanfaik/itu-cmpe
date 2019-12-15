@@ -183,9 +183,9 @@ INIT_STATEMENTS = [
         id				    SERIAL 		NOT NULL,
         campus_id           SERIAL      NOT NULL,
         name 				VARCHAR(40)	NOT NULL,
-        shortened_name 		VARCHAR(6)	NOT NULL,
+        shortened_name 		VARCHAR(6),
         number_of_workers	INT,
-        size             	INT         NOT NULL,
+        size             	INT,
         expenses    		INT,
         PRIMARY KEY(id),
         FOREIGN KEY(campus_id) REFERENCES CAMPUS (id)
@@ -394,6 +394,9 @@ INIT_STATEMENTS = [
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('22', 'Manager2', '0', '2019-12-12','12344','Information Tech','2');""",
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('33', 'Manager3', '1', '2019-12-12','12345','Information Tech','1');""",
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('44', 'Manager4', '0', '2019-12-12','12344','Service Tech','2');""",
+
+    #Add facility
+    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, "size", expenses) values (1, 1, 'Yemekhane', 'YMK', '50', '1400', '50000')"""
 
 ]
 
