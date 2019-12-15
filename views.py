@@ -620,6 +620,29 @@ def edit_instructor_page(id):
 def test_page():
     return render_template("test.html")
 
+def course_inf_page(crn):
+    db = current_app.config["db"]
+    taken_course_students = db.get_taken_course_students(crn)
+    course = db.get_course(crn)
+    department= db.get_department(course.department_id)
+    faculty= db.get_faculty(department.faculty_id)
+    students = []
+    for id, student in taken_course_students:
+        std = db.get_student_via_student_id(student.student_id)
+        std.grade = student.grade
+        students.append(std)
+    context={
+        'students' : students,
+        'course' : course,
+        'department':department,
+        'faculty':faculty,
+    }
+    if(request.method == "POST"):
+        for taken_course in taken_course_students:
+            taken_course.grade = requeest.form['std'.join(taken_course.student_id)]
+            db.update_taken_course(taken_course)
+        return redirect(url_for(course_inf_page),crn = crn)
+    return render_template("course_inf.html",context= context)
 
 def validation_staff(form):
     form.data = {}
