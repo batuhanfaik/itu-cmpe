@@ -1,11 +1,30 @@
 from flask import current_app
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField, SelectField, BooleanField, RadioField
-from wtforms.fields import DateField, DecimalField, FileField, IntegerField, BooleanField
+from wtforms.fields import DateField, DecimalField, FileField, IntegerField, BooleanField, HiddenField
 from wtforms.validators import DataRequired, Length, InputRequired
 from wtforms import ValidationError
+from wtforms_components import TimeField
 from campus import Campus
 from werkzeug.utils import secure_filename
+
+
+class CourseForm(FlaskForm):
+    crn = StringField("CRN", validators=[InputRequired(), Length(min=5, max=5)])
+    code = StringField("Code", validators=[InputRequired(), Length(min=3, max=3)])
+    name = StringField("Course Name", validators=[InputRequired(), Length(max=100)])
+    start_time = TimeField("Start Time", validators=[InputRequired()])
+    end_time = TimeField("End Time", validators=[InputRequired()])
+    day = SelectField("Day", choices=[('Monday', 'Monday'), ('Tuesday', 'Tuesday'),
+                                      ('Wednesday', 'Wednesday'), ('Thursday', 'Thursday'),
+                                      ('Friday', 'Friday')])
+    capacity = IntegerField("Capacity", validators=[InputRequired()])
+    enrolled = HiddenField("Enrolled", default=0)
+    credits = DecimalField("Credits", validators=[InputRequired()], places=1)
+    language = StringField("Language", validators=[Length(max=2)])
+    classroom_id = IntegerField("Classroom ID", validators=[InputRequired()])
+    instructor_id = IntegerField("Instructor ID", validators=[InputRequired()])
+    department_id = IntegerField("Department ID", validators=[InputRequired()])
 
 
 class ClassroomForm(FlaskForm):

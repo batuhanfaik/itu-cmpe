@@ -142,11 +142,11 @@ class Database:
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = """insert into course (crn, code, name, start_time, end_time, day, capacity, enrolled,
-                        credits, language, classroom_id, faculty_id, instructor_id, department_id)
-                        values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                        credits, language, classroom_id , instructor_id, department_id)
+                        values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
             cursor.execute(query, (course.crn, course.code, course.name, course.start_time, course.end_time,
                                    course.day, course.capacity, course.enrolled, course.credits, course.language,
-                                   course.classroom_id, course.faculty_id, course.instructor_id, course.department_id))
+                                   course.classroom_id, course.instructor_id, course.department_id))
         pass
 
     def update_course(self, crn, course):

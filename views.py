@@ -9,12 +9,13 @@ import dbinit
 from assistant import Assistant
 from campus import Campus
 from faculty import Faculty
-from forms import login_form, InstructorForm, ClassroomForm
+from forms import login_form, InstructorForm, ClassroomForm, CourseForm
 from person import Person
 from student import Student
 from instructor import Instructor
 from staff import Staff
 from classroom import Classroom
+from course import Course
 
 def landing_page():
     return render_template("index.html")
@@ -479,6 +480,21 @@ def courses_page():
     courses = db.get_all_courses()
     return render_template("courses.html", courses=courses)
 
+
+def add_course_page():
+    form = CourseForm()
+    if form.validate_on_submit():
+        db = current_app.config['db']
+        args = []
+        for key, value in form.data.items():
+            if key != 'csrf_token':
+                args.append(value)
+        course = Course(*args)
+        db.add_course(course)
+        return redirect(url_for('courses_page'))
+    return render_template("edit_course.html", form=form, error=None, title="Add Course")
+
+
 # instructor pages#
 def instructors_page():
     db = current_app.config["db"]
@@ -559,10 +575,14 @@ def update_instructor_page(id):
 def delete_instructor(id):
     db = current_app.config['db']
     db.delete_instructor(id)
+    # TODO:https://stackoverflow.com/questions/18290142/multiple-forms-in-a-single-page-using-flask-and-wtforms
+    #   fix referential integrity problems
     return redirect(url_for("instructors_page"))
+
 
 def test_page():
     return render_template("test.html")
+
 
 def validation_staff(form):
     form.data = {}
