@@ -1,8 +1,11 @@
 {% extends "layout.html" %}
 
-{% block title %} Add Instructor {% endblock %}
+{% block title %} {{ title }} {% endblock %}
 
 {% block body %}
+   <div class="container mt-3">
+   <h1> {{ title }}</h1>
+   <hr>
     {% if error %}
         <div class="text-danger hr-bold">
             {{ error }}
@@ -23,17 +26,15 @@
             </div>
         {% endfor %}
     {% if request.path == url_for('add_instructor_page') %}
-    <button class="button">Add Instructor</button>
+    <button type="submit" class="button btn-primary mb-2">Add Instructor</button>
      </form>
     {% else %}
-    <button class="button">Update Instructor</button>
+    <button type="submit" class="button btn-primary mb-2">Update Instructor</button>
     </form>
     <form action="./delete" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <button class="button red">Delete Instructor</button>
+        <button type="submit" class="button btn-danger mb-2">Delete Instructor</button>
     </form>
     {% endif %}
-
-
-
+   </div>
 {% endblock %}

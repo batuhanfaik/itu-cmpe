@@ -9,11 +9,12 @@ import dbinit
 from assistant import Assistant
 from campus import Campus
 from faculty import Faculty
-from forms import login_form, InstructorForm
+from forms import login_form, InstructorForm, ClassroomForm
 from person import Person
 from student import Student
 from instructor import Instructor
 from staff import Staff
+from classroom import Classroom
 
 def landing_page():
     return render_template("index.html")
@@ -406,10 +407,76 @@ def reset_db():
         dbinit.reset_db(db_url)
     return redirect(url_for("landing_page"))
 
+# faati's pages #
+# classroom pages #
+# classrooms_page is inside faculty_detailed page #
 
+
+def add_classroom_page(faculty_id):
+    form = ClassroomForm()
+    if form.validate_on_submit():
+        db = current_app.config['db']
+        capacity = form.data['capacity']
+        has_projection = form.data['has_projection']
+        door_number = form.data['door_number']
+        floor = form.data['floor']
+        renewed = form.data['renewed']
+        board_count = form.data['board_count']
+        air_conditioner = form.data['air_conditioner']
+        classroom = db.get_classroom_by_door_and_faculty(faculty_id, door_number)
+        if classroom is not None:
+            return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Add Classroom",
+                                   error="There exists a classroom with this door number in this faculty!")
+        db.add_classroom(Classroom(None, capacity, has_projection, door_number, floor, renewed,
+                                   board_count, air_conditioner, faculty_id))
+        return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+    return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Add Classroom", error=None)
+
+
+def update_classroom_page(faculty_id, id, error=None):
+    form = ClassroomForm()
+    db = current_app.config['db']
+    if form.validate_on_submit():
+        capacity = form.data['capacity']
+        has_projection = form.data['has_projection']
+        door_number = form.data['door_number']
+        floor = form.data['floor']
+        renewed = form.data['renewed']
+        board_count = form.data['board_count']
+        air_conditioner = form.data['air_conditioner']
+        classroom = db.get_classroom_by_door_and_faculty(faculty_id, door_number)
+        if (classroom is not None) and (classroom.id != int(id)):
+            return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Update Classroom",
+                                   error="There exists a classroom with this door number in this faculty!")
+        db.update_classroom(id, Classroom(None, capacity, has_projection, door_number, floor, renewed,
+                                   board_count, air_conditioner, faculty_id))
+        return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+    classroom = db.get_classroom(id)
+    form.capacity.data = classroom.capacity
+    form.has_projection.data = classroom.has_projection
+    form.door_number.data = classroom.door_number
+    form.floor.data = classroom.floor
+    form.renewed.data = classroom.renewed
+    form.board_count.data = classroom.board_count
+    form.air_conditioner.data = classroom.air_conditioner
+    return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Update Classroom",
+                           error=error)
+
+
+def delete_classroom(faculty_id, id):
+    db = current_app.config['db']
+    try:
+        db.delete_classroom(id)
+    except Error as e:
+        # TODO Find a way to show errors about referential integrity problems
+        return redirect(url_for("update_classroom_page", faculty_id=faculty_id, id=id))
+    return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+
+
+# instructor pages#
 def instructors_page():
     db = current_app.config["db"]
-    instructors = db.get_instructors()
+    instructors = db.get_all_instructors()
     return render_template("instructors.html", instructors=instructors)
 
 
@@ -432,16 +499,16 @@ def add_instructor_page():
             db.add_instructor(instructor)
         except Error as e:
             if isinstance(e, errors.UniqueViolation):
-                return render_template("edit_instructor.html", form=form,
+                return render_template("edit_instructor.html", form=form, title="Add Instructor",
                                        error="An instructor with this TR ID already exists")
             if isinstance(e, errors.ForeignKeyViolation):
-                return render_template("edit_instructor.html", form=form,
+                return render_template("edit_instructor.html", form=form, title="Add Instructor",
                                        error="No people exists with this TR ID")
             else:
-                return render_template("edit_instructor.html", form=form,
+                return render_template("edit_instructor.html", form=form, title="Add Instructor",
                                        error=type(e).__name__ + "-----" + str(e))
         return redirect(url_for("instructors_page"))
-    return render_template("edit_instructor.html", form=form, error=None)
+    return render_template("edit_instructor.html", form=form, title="Add Instructor", error=None)
 
 
 def update_instructor_page(id):
@@ -462,13 +529,13 @@ def update_instructor_page(id):
             db.update_instructor(id, instructor)
         except Error as e:
             if isinstance(e, errors.UniqueViolation):
-                return render_template("edit_instructor.html", form=form,
+                return render_template("edit_instructor.html", form=form, title="Update Instructor",
                                        error="An instructor with this TR ID already exists")
             if isinstance(e, errors.ForeignKeyViolation):
-                return render_template("edit_instructor.html", form=form,
+                return render_template("edit_instructor.html", form=form, title="Update Instructor",
                                        error="No people exists with this TR ID")
             else:
-                return render_template("edit_instructor.html", form=form,
+                return render_template("edit_instructor.html", form=form, title="Update Instructor",
                                        error=type(e).__name__ + "-----" + str(e))
         return redirect(url_for("instructors_page"))
     instructor = db.get_instructor(id)
@@ -480,7 +547,7 @@ def update_instructor_page(id):
     form.specialization.data = instructor.specialization
     form.department_id.data = instructor.department_id
     form.faculty_id.data = instructor.faculty_id
-    return render_template("edit_instructor.html", form=form, error=None)
+    return render_template("edit_instructor.html", form=form, title="Update Instructor", error=None)
 
 
 def delete_instructor(id):

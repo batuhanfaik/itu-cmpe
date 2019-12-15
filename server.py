@@ -63,13 +63,17 @@ def create_app(db_url):
                      view_func=campus_views.campus_detailed, methods=['GET', 'POST'])
     app.add_url_rule("/faculty/<faculty_id>",
                      view_func=campus_views.faculty_detailed, methods=['GET', 'POST'])
+    app.add_url_rule("/faculty/<faculty_id>/add_classroom",
+                     view_func=views.add_classroom_page, methods=['GET', 'POST'])
+    app.add_url_rule("/faculty/<faculty_id>/classroom/<id>/edit", view_func=views.update_classroom_page,
+                     methods=['GET', 'POST'])
+    app.add_url_rule("/faculty/<faculty_id>/classroom/<id>/delete", view_func=views.delete_classroom, methods=['POST'])
     app.add_url_rule("/department/<department_id>",
                      view_func=campus_views.department_detailed, methods=['GET', 'POST'])
     app.add_url_rule("/staff",
                      view_func=views.staff_add_page, methods=['GET', 'POST'])
     app.add_url_rule("/staff/<staff_id>",
                      view_func=views.staff_add_page, methods=['GET', 'POST'])
-
     app.add_url_rule("/test",
                      view_func=views.test_page, methods=['GET', 'POST'])
     app.add_url_rule("/instructors", view_func=views.instructors_page, methods=['GET'])
@@ -95,4 +99,5 @@ if __name__ == "__main__":
     host = app.config.get("HOST")
     port = app.config.get("PORT")
     debug = app.config.get("DEBUG")
+    # TODO: Fix PORT!
     app.run(host=host, port=port, debug=debug)

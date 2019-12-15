@@ -1,10 +1,27 @@
+from flask import current_app
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField, SelectField, BooleanField, RadioField
-from wtforms.fields import DateField, DecimalField, FileField, IntegerField
+from wtforms.fields import DateField, DecimalField, FileField, IntegerField, BooleanField
 from wtforms.validators import DataRequired, Length, InputRequired
+from wtforms import ValidationError
 from campus import Campus
 from werkzeug.utils import secure_filename
 
+
+class ClassroomForm(FlaskForm):
+    faculty_id = None
+    capacity = IntegerField(u"Capacity", validators=[InputRequired()])
+    door_number = StringField(u"Door Number", validators=[InputRequired(), Length(max=4)])
+    # def validate_door_number(self, field):
+    #     db = current_app.config['db']
+    #     classroom = db.get_classroom_by_door_and_faculty(self.faculty_id, field.data)
+    #     if classroom is not None:
+    #         raise ValidationError("There exists is a classroom with this door number!")
+    floor = StringField(u"Floor", validators=[Length(max=2)])
+    board_count = IntegerField(u"Board Count")
+    has_projection = BooleanField(u"Has Projection")
+    renewed = BooleanField(u"Renewed")
+    air_conditioner = BooleanField(u"Has Air Conditioner")
 
 class InstructorForm(FlaskForm):
     tr_id = IntegerField(u"TR ID", validators=[InputRequired()]) # , Length(min=11, max=11, message="TR ID's length must be 11")

@@ -62,7 +62,7 @@ class Database:
         instructor = Instructor(*cursor.fetchone())  # Inline unpacking of a tuple
         return instructor
 
-    def get_instructors(self):
+    def get_all_instructors(self):
         instructors = []
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
@@ -120,6 +120,23 @@ class Database:
         classroom = Classroom(*cursor.fetchone())  # Inline unpacking of a tuple
         return classroom
 
+    def get_classroom_by_door_and_faculty(self, faculty_id, door_number):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from classroom where(faculty_id = %s and door_number = %s);"
+            cursor.execute(query, (faculty_id, door_number))
+            if cursor.rowcount == 0:
+                return None
+            return Classroom(*cursor.fetchone())
+
+    def get_all_classrooms(self):
+        classrooms = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            cursor.execute("select * from classroom order by (id);")
+            for row in cursor:
+                classrooms.append(Classroom(*row))
+        return classrooms
     # course crud #
     def add_course(self, course):
         with dbapi2.connect(self.dbfile) as connection:
