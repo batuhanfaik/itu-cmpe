@@ -470,14 +470,14 @@ def edit_classroom_page(faculty_id, id):
     if request.method == 'POST' and request.form['btn'] == 'delete':
         try:
             db.delete_classroom(id)
-            return redirect(url_for("courses_page"))
+            return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
         except Error as e:
             error = type(e).__name__ + '----' + str(e)
             if isinstance(e, errors.ForeignKeyViolation):
                 str_e = str(e)
                 if 'course' in str_e:
                     error = "There are courses given in this classroom!"
-            return render_template("edit_instructor.html", form=form, title="Edit Classroom",
+            return render_template("edit_classroom.html", form=form, title="Edit Classroom",
                                    error=error)
     classroom = db.get_classroom(id)
     form.capacity.data = classroom.capacity
