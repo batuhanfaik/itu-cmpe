@@ -377,13 +377,15 @@
 
         
         </div>
-    <hr>
-    <h1>Classrooms</h1>
-    </hr>
     <div class="row">
-    <table>
-{#            <a href="{{ url_for("add_classroom_page") }}"> Add Classroom </a>#}
-<table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
+    <hr class="mt-5"/>
+    <div class="mt-1 mb-1 mr-1 ml-1 w-100">
+        <h1 class="float-left">Classrooms</h1>
+        <button class="button btn-success float-right mt-5" onClick=" window.location.href = '{{url_for("add_classroom_page",
+        faculty_id=context.Faculty.id)}}'"> Add Classroom </button>
+    </div>
+
+    <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
         <thead>
         <tr>
             <th scope="col">ID</th>

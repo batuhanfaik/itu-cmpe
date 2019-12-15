@@ -120,6 +120,15 @@ class Database:
         classroom = Classroom(*cursor.fetchone())  # Inline unpacking of a tuple
         return classroom
 
+    def get_classroom_by_door_and_faculty(self, faculty_id, door_number):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from classroom where(faculty_id = %s and door_number = %s);"
+            cursor.execute(query, (faculty_id, door_number))
+            if cursor.rowcount == 0:
+                return None
+            return Classroom(*cursor.fetchone())
+
     def get_all_classrooms(self):
         classrooms = []
         with dbapi2.connect(self.dbfile) as connection:

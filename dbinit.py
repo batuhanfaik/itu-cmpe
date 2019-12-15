@@ -76,7 +76,7 @@ INIT_STATEMENTS = [
         id              SERIAL      NOT NULL PRIMARY KEY,
         capacity        INT         NOT NULL,
         has_projection  BOOLEAN     DEFAULT false,
-        door_number     CHAR(4)     NOT NULL,
+        door_number     VARCHAR(4)     NOT NULL,
         floor           VARCHAR(2),
         renewed         BOOLEAN     DEFAULT false,
         board_count     INT,
