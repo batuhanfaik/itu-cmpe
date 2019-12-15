@@ -1,0 +1,115 @@
+{% extends "layout.html" %} {% block title %} Assistant {% endblock %} {% block
+body %}
+<div class="container mt-3">
+  <h1>{{context.course.name}}</h1>
+  <hr />
+  <div class="row">
+    <div class="col-lg-4 col-sm-6">
+      <div class="container-fluid">
+        <h3 for="course_code">Course Code:</h3>
+        <p id="course_code">{{context.course.code}}</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-sm-6">
+      <div class="container-fluid">
+        <h3 for="start_time">Start Time:</h3>
+        <p id="start_time">{{context.course.start_time}}</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-sm-6">
+      <div class="container-fluid">
+        <h3 for="end_time">End Time:</h3>
+        <p id="end_time">{{context.course.end_time}}</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-sm-6">
+      <div class="container-fluid">
+        <h3 for="day">Day:</h3>
+        <p id="day">{{context.course.day}}</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-sm-6">
+      <div class="container-fluid">
+        <h3 for="capacity">Capacity:</h3>
+        <p id="capacity">{{context.course.capacity}}</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-sm-6">
+      <div class="container-fluid">
+        <h3 for="enrolled">Enrolled Students:</h3>
+        <p id="enrolled">{{context.course.enrolled}}</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-sm-6">
+      <div class="container-fluid">
+        <h3 for="credit">Credit:</h3>
+        <p id="credit">{{context.course.credit}}</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-sm-6">
+      <div class="container-fluid">
+        <h3 for="lanugage">Language:</h3>
+        <p id="lanugage">{{context.course.language}}</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-sm-6">
+      <div class="container-fluid">
+        <h3 for="department_name">Department Name:</h3>
+        <p id="department_name">{{context.department.name}}</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-sm-6">
+      <div class="container-fluid">
+        <h3 for="faculty_name">Faculty Name:</h3>
+        <p id="faculty_name">{{context.faculty.name}}</p>
+      </div>
+    </div>
+    <div class="col-lg-4 col-sm-6">
+      <div class="container-fluid">
+        <h3 for="door_number">Door Number:</h3>
+        <p id="door_number">{{context.course.door_number}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <h1>Student List</h1>
+    <hr />
+
+            <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Department</th>
+                    <th scope="col">GPA</th>
+                    <th scope="col">Semester</th>
+                    <th scope="col">Grade</th>
+                </tr>
+                </thead>
+                <tbody>
+                <form method="POST">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                {% for student in context.students %}
+                    <tr>
+                        <td scope="row"><a
+                                href="{{ url_for("person_page", tr_id=student.tr_id) }}">{{ student.name }}</a>
+                        </td>
+                        <td>{{ student.department_id }}</td>
+                        <td>{{ student.gpa }}</td>
+                        <td>{{ student.semester }}</td>
+                        <td>{% if student.grade == "None" %} There is no Grade {% else %} {{ student.grade }} {% endif %}  &nbsp;&nbsp;<select name="std{{student.student_id}}" ,style="width:40px"><option value="None">Select Note</option><option id="0" ,value="0">0</option><option id="1", value="1">1</option><option id="2", value="2">2</option><option id="3", value="3">3</option><option id="4",value="4">4</option></select></td>
+                    </tr>
+                    <script>
+                      window.onload()={
+                        document.getElementById("{{student.grade}}").value="{{student.grade}}"
+                      }
+                    </script>
+                {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-danger">Save</button>
+        </form>
+  </div>
+</div>
+
+{% endblock %}

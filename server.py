@@ -65,9 +65,8 @@ def create_app(db_url):
                      view_func=campus_views.faculty_detailed, methods=['GET', 'POST'])
     app.add_url_rule("/faculty/<faculty_id>/add_classroom",
                      view_func=views.add_classroom_page, methods=['GET', 'POST'])
-    app.add_url_rule("/faculty/<faculty_id>/classroom/<id>/edit", view_func=views.update_classroom_page,
+    app.add_url_rule("/faculty/<faculty_id>/classroom/<id>/edit", view_func=views.edit_classroom_page,
                      methods=['GET', 'POST'])
-    app.add_url_rule("/faculty/<faculty_id>/classroom/<id>/delete", view_func=views.delete_classroom, methods=['POST'])
     app.add_url_rule("/department/<department_id>",
                      view_func=campus_views.department_detailed, methods=['GET', 'POST'])
     app.add_url_rule("/staff",
@@ -80,12 +79,20 @@ def create_app(db_url):
                      view_func=views.staff_add_page, methods=['GET', 'POST'])
     app.add_url_rule("/test",
                      view_func=views.test_page, methods=['GET', 'POST'])
-    app.add_url_rule("/instructors", view_func=views.instructors_page, methods=['GET'])
-    app.add_url_rule("/instructors/add", view_func=views.add_instructor_page, methods=['GET', 'POST'])
-    app.add_url_rule("/instructor/<id>/edit", view_func=views.update_instructor_page, methods=['GET', 'POST'])
-    app.add_url_rule("/instructor/<id>/delete", view_func=views.delete_instructor, methods=['POST'])
-    app.add_url_rule("/courses", view_func=views.courses_page, methods=["POST", "GET"])
-    app.add_url_rule("/courses/add", view_func=views.add_course_page, methods=['POST', 'GET'])
+    app.add_url_rule(
+        "/instructors", view_func=views.instructors_page, methods=['GET'])
+    app.add_url_rule("/instructors/add",
+                     view_func=views.add_instructor_page, methods=['GET', 'POST'])
+    app.add_url_rule("/instructor/<id>/edit",
+                     view_func=views.edit_instructor_page, methods=['GET', 'POST'])
+    app.add_url_rule("/courses", view_func=views.courses_page,
+                     methods=["POST", "GET"])
+    app.add_url_rule(
+        "/courses/add", view_func=views.add_course_page, methods=['POST', 'GET'])
+    app.add_url_rule("/course/<crn>/edit",
+                     view_func=views.edit_course_page, methods=['POST', 'GET'])
+    app.add_url_rule(
+        "/course/<crn>", view_func=views.course_info_page, methods=['POST', 'GET'])
 
     db = init_db(db_url)
     app.config["db"] = db

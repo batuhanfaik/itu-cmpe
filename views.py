@@ -429,30 +429,57 @@ def add_classroom_page(faculty_id):
         if classroom is not None:
             return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Add Classroom",
                                    error="There exists a classroom with this door number in this faculty!")
-        db.add_classroom(Classroom(None, capacity, has_projection, door_number, floor, renewed,
+        try:
+            db.add_classroom(Classroom(None, capacity, has_projection, door_number, floor, renewed,
                                    board_count, air_conditioner, faculty_id))
-        return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+            return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+        except Error as e:
+            str_e = str(e)
+            error = type(e).__name__ + '----' + str_e
+            if isinstance(e, errors.UniqueViolation):
+                error = "This classroom already exists in the given building"
+            return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Add Classroom",
+                                   error=error)
     return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Add Classroom", error=None)
 
 
-def update_classroom_page(faculty_id, id, error=None):
+def edit_classroom_page(faculty_id, id):
     form = ClassroomForm()
     db = current_app.config['db']
     if form.validate_on_submit():
-        capacity = form.data['capacity']
-        has_projection = form.data['has_projection']
-        door_number = form.data['door_number']
-        floor = form.data['floor']
-        renewed = form.data['renewed']
-        board_count = form.data['board_count']
-        air_conditioner = form.data['air_conditioner']
-        classroom = db.get_classroom_by_door_and_faculty(faculty_id, door_number)
-        if (classroom is not None) and (classroom.id != int(id)):
-            return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Update Classroom",
-                                   error="There exists a classroom with this door number in this faculty!")
-        db.update_classroom(id, Classroom(None, capacity, has_projection, door_number, floor, renewed,
-                                   board_count, air_conditioner, faculty_id))
-        return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+        if request.form['btn'] == 'update':
+            capacity = form.data['capacity']
+            has_projection = form.data['has_projection']
+            door_number = form.data['door_number']
+            floor = form.data['floor']
+            renewed = form.data['renewed']
+            board_count = form.data['board_count']
+            air_conditioner = form.data['air_conditioner']
+            classroom = db.get_classroom_by_door_and_faculty(faculty_id, door_number)
+            if (classroom is not None) and (classroom.id != int(id)):
+                return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Update Classroom",
+                                       error="There exists a classroom with this door number in this faculty!")
+            try:
+                db.update_classroom(id, Classroom(None, capacity, has_projection, door_number, floor, renewed,
+                                       board_count, air_conditioner, faculty_id))
+                return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+            except Error as e:
+                error = type(e).__name__ + '----' + str(e)
+                str_e = str(e)
+                if isinstance(e, errors.UniqueViolation):
+                    error = "This classroom already exists in the given building"
+    if request.method == 'POST' and request.form['btn'] == 'delete':
+        try:
+            db.delete_classroom(id)
+            return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+        except Error as e:
+            error = type(e).__name__ + '----' + str(e)
+            if isinstance(e, errors.ForeignKeyViolation):
+                str_e = str(e)
+                if 'course' in str_e:
+                    error = "There are courses given in this classroom!"
+            return render_template("edit_classroom.html", form=form, title="Edit Classroom",
+                                   error=error)
     classroom = db.get_classroom(id)
     form.capacity.data = classroom.capacity
     form.has_projection.data = classroom.has_projection
@@ -462,17 +489,7 @@ def update_classroom_page(faculty_id, id, error=None):
     form.board_count.data = classroom.board_count
     form.air_conditioner.data = classroom.air_conditioner
     return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Update Classroom",
-                           error=error)
-
-
-def delete_classroom(faculty_id, id):
-    db = current_app.config['db']
-    try:
-        db.delete_classroom(id)
-    except Error as e:
-        # TODO Find a way to show errors about referential integrity problems
-        return redirect(url_for("update_classroom_page", faculty_id=faculty_id, id=id))
-    return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+                           error=None)
 
 
 # course pages#
@@ -491,9 +508,51 @@ def add_course_page():
             if key != 'csrf_token':
                 args.append(value)
         course = Course(*args)
-        db.add_course(course)
-        return redirect(url_for('courses_page'))
+        if not db.is_classroom_available(course.start_time, course.end_time,
+                                                        course.classroom_id):
+            error = "There is already a course given in that classroom at that time!"
+            return render_template("edit_course.html", form=form, error=error, title="Add Course")
+        if not db.is_instructor_available(course.start_time, course.end_time, course.instructor_id):
+            error = "The instructor already has a course at that time!"
+            return render_template("edit_course.html", form=form, error=error, title="Add Course")
+        try:
+            db.add_course(course)
+            return redirect(url_for('courses_page'))
+        except Error as e:
+            error = type(e).__name__ + '----' + str(e)
+            str_e = str(e)
+            if isinstance(e, errors.UniqueViolation):
+                error = "This course already exists"
+            if isinstance(e, errors.ForeignKeyViolation):
+                if 'classroom' in str_e:
+                    error = "There is no classroom with given id"
+                if 'department' in str_e:
+                    error = "There is no department with given id"
+                if 'instructor' in str_e:
+                    error = "There is no instructor with given id"
+            return render_template("edit_course.html", form=form, error=error, title="Add Course")
     return render_template("edit_course.html", form=form, error=None, title="Add Course")
+
+
+def edit_course_page(crn):
+    db = current_app.config["db"]
+    course = db.get_course(crn)
+    form = CourseForm(data=course.__dict__)
+    form.crn(readonly=True)
+    if form.validate_on_submit():
+        if request.form['btn'] == 'update':
+            args = []
+            for key, value in form.data.items():
+                if key != 'csrf_token':
+                    args.append(value)
+            course = Course(*args)
+            course.crn = crn
+            db.update_course(crn, course)
+            return redirect(url_for("courses_page"))
+    if request.method == 'POST' and request.form['btn'] == 'delete':
+        db.delete_course(crn)
+        return redirect(url_for("courses_page"))
+    return render_template("edit_course.html", form=form, error=None, title="Edit Course")
 
 
 # instructor pages#
@@ -521,46 +580,70 @@ def add_instructor_page():
         try:
             db.add_instructor(instructor)
         except Error as e:
+            error = type(e).__name__ + "-----" + str(e)
             if isinstance(e, errors.UniqueViolation):
-                return render_template("edit_instructor.html", form=form, title="Add Instructor",
-                                       error="An instructor with this TR ID already exists")
+                error = "An instructor with this TR ID already exists"
             if isinstance(e, errors.ForeignKeyViolation):
-                return render_template("edit_instructor.html", form=form, title="Add Instructor",
-                                       error="No people exists with this TR ID")
-            else:
-                return render_template("edit_instructor.html", form=form, title="Add Instructor",
-                                       error=type(e).__name__ + "-----" + str(e))
+                str_e = str(e)
+                if 'tr_id' in str_e:
+                    error = "No people exists with this TR ID"
+                elif 'faculty_id' in str_e:
+                    error = "No faculty exists with this Faculty ID"
+                elif 'department_id' in str_e:
+                    error = "No department exists with this Department ID"
+            return render_template("edit_instructor.html", form=form, title="Add Instructor",
+                                   error=error)
         return redirect(url_for("instructors_page"))
     return render_template("edit_instructor.html", form=form, title="Add Instructor", error=None)
 
 
-def update_instructor_page(id):
+def edit_instructor_page(id):
     db = current_app.config["db"]
     form = InstructorForm()
     if form.validate_on_submit():
-        tr_id = form.data['tr_id']
-        department_id = form.data['department_id']
-        faculty_id = form.data['faculty_id']
-        specialization = form.data['specialization']
-        bachelors = form.data['bachelors']
-        masters = form.data['masters']
-        doctorates = form.data['doctorates']
-        room_id = form.data['room_id']
-        instructor = Instructor(id, tr_id, department_id, faculty_id, specialization,
-                                bachelors, masters, doctorates, room_id)
+        if request.form['btn'] == 'update':
+            tr_id = form.data['tr_id']
+            department_id = form.data['department_id']
+            faculty_id = form.data['faculty_id']
+            specialization = form.data['specialization']
+            bachelors = form.data['bachelors']
+            masters = form.data['masters']
+            doctorates = form.data['doctorates']
+            room_id = form.data['room_id']
+            instructor = Instructor(id, tr_id, department_id, faculty_id, specialization,
+                                    bachelors, masters, doctorates, room_id)
+            try:
+                db.update_instructor(id, instructor)
+            except Error as e:
+                error = type(e).__name__ + "-----" + str(e)
+                if isinstance(e, errors.UniqueViolation):
+                    error = "An instructor with this TR ID already exists"
+                if isinstance(e, errors.ForeignKeyViolation):
+                    str_e = str(e)
+                    if 'tr_id' in str_e:
+                        error = "No people exists with this TR ID"
+                    elif 'faculty_id' in str_e:
+                        error = "No faculty exists with this Faculty ID"
+                    elif 'department_id' in str_e:
+                        error = "No department exists with this Department ID"
+                return render_template("edit_instructor.html", form=form, title="Edit Instructor",
+                                       error=error)
+            return redirect(url_for("instructors_page"))
+    if request.method == 'POST' and request.form['btn'] == 'delete':
         try:
-            db.update_instructor(id, instructor)
+            db.delete_instructor(id)
+            return redirect(url_for("courses_page"))
         except Error as e:
-            if isinstance(e, errors.UniqueViolation):
-                return render_template("edit_instructor.html", form=form, title="Update Instructor",
-                                       error="An instructor with this TR ID already exists")
+            error = type(e).__name__ + '----' + str(e)
             if isinstance(e, errors.ForeignKeyViolation):
-                return render_template("edit_instructor.html", form=form, title="Update Instructor",
-                                       error="No people exists with this TR ID")
-            else:
-                return render_template("edit_instructor.html", form=form, title="Update Instructor",
-                                       error=type(e).__name__ + "-----" + str(e))
-        return redirect(url_for("instructors_page"))
+                str_e = str(e)
+                if 'course' in str_e:
+                    error = "There are courses given by this instructor! It can not be deleted!"
+                elif 'assistant' in str_e:
+                    error = "There are assistants supervised by this instructor! It can not be deleted!"
+            return render_template("edit_instructor.html", form=form, title="Edit Instructor",
+                                   error=error)
+
     instructor = db.get_instructor(id)
     form.tr_id.data = instructor.tr_id
     form.room_id.data = instructor.room_id
@@ -573,17 +656,41 @@ def update_instructor_page(id):
     return render_template("edit_instructor.html", form=form, title="Update Instructor", error=None)
 
 
-def delete_instructor(id):
-    db = current_app.config['db']
-    db.delete_instructor(id)
-    # TODO:https://stackoverflow.com/questions/18290142/multiple-forms-in-a-single-page-using-flask-and-wtforms
-    #   fix referential integrity problems
-    return redirect(url_for("instructors_page"))
-
-
 def test_page():
     return render_template("test.html")
 
+
+def course_info_page(crn):
+    db = current_app.config["db"]
+    taken_course_students = db.get_taken_course_by_crn(crn)
+    course = db.get_course(crn)
+    department= db.get_department(course.department_id)
+    faculty= db.get_faculty(department.faculty_id)
+    students = []
+    for student in taken_course_students:
+        std = db.get_student_via_student_id(student.student_id)
+        std.grade = student.grade
+        pers = db.get_person(std.tr_id)
+        student_name = pers.name
+        student_last_name = pers.surname
+        std.tr_id = pers.tr_id
+        std.name = student_name + " "+student_last_name
+        students.append(std)
+    context={
+        'students' : students,
+        'course' : course,
+        'department':department,
+        'faculty':faculty,
+    }
+    if(request.method == "POST"):
+        for taken_course in taken_course_students:
+            strm = 'std'+str(taken_course.student_id)
+            print(request.form)
+            taken_course.grade = request.form[strm]
+            if(taken_course.grade!="None"):
+                db.update_taken_course(taken_course.id,taken_course)
+        return redirect(url_for('course_info_page', crn = crn))
+    return render_template("course_inf.html",context= context)
 
 def validation_staff(form):
     form.data = {}

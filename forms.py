@@ -15,6 +15,9 @@ class CourseForm(FlaskForm):
     name = StringField("Course Name", validators=[InputRequired(), Length(max=100)])
     start_time = TimeField("Start Time", validators=[InputRequired()])
     end_time = TimeField("End Time", validators=[InputRequired()])
+    def validate_end_time(self, field):
+        if self.start_time.data >= field.data:
+            raise ValidationError("End time can not be equal or lower than Start Time")
     day = SelectField("Day", choices=[('Monday', 'Monday'), ('Tuesday', 'Tuesday'),
                                       ('Wednesday', 'Wednesday'), ('Thursday', 'Thursday'),
                                       ('Friday', 'Friday')])
@@ -25,6 +28,7 @@ class CourseForm(FlaskForm):
     classroom_id = IntegerField("Classroom ID", validators=[InputRequired()])
     instructor_id = IntegerField("Instructor ID", validators=[InputRequired()])
     department_id = IntegerField("Department ID", validators=[InputRequired()])
+    info = TextAreaField("Course Information", validators=[InputRequired()])
 
 
 class ClassroomForm(FlaskForm):
@@ -38,9 +42,11 @@ class ClassroomForm(FlaskForm):
     #         raise ValidationError("There exists is a classroom with this door number!")
     floor = StringField(u"Floor", validators=[Length(max=2)])
     board_count = IntegerField(u"Board Count")
-    has_projection = BooleanField(u"Has Projection")
+    has_projection = RadioField(u"Has Projection", choices=[('true', 'Yes'), ('false', 'No')], default='false')
+    # has_projection = BooleanField(u"Has Projection")
     renewed = BooleanField(u"Renewed")
     air_conditioner = BooleanField(u"Has Air Conditioner")
+
 
 class InstructorForm(FlaskForm):
     tr_id = IntegerField(u"TR ID", validators=[InputRequired()]) # , Length(min=11, max=11, message="TR ID's length must be 11")

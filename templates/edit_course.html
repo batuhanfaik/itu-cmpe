@@ -24,7 +24,7 @@
         {% for field in form if field.widget.input_type != 'hidden' %}
             <tr class="form-group" scope="row">
                 <td><label for="{{ field.id }}" class="mr-sm-2">{{ field.label }}</label></td>
-                <td>{{ field(class="form-control mb-2 mr-sm-2") }}</td>
+                <td>{{ field(class="form-control mb-2 mr-sm-2", readonly=(field.id == 'crn') and title == 'Edit Course')}}</td>
                 <td class="text-danger hr-bold">
                     {% for error in field.errors %}
                         {{ error }}
@@ -37,11 +37,11 @@
     <button type="submit" class="button btn-primary mb-2">Add Classroom</button>
      </form>
     {% else %}
-    <button type="submit" class="button btn-primary mb-2">Update Classroom</button>
+    <button type="submit" class="button btn-primary mb-2" value="update" name="btn">Update Classroom</button>
     </form>
-    <form action="./delete" method="post">
+    <form action="" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <button type="submit" class="button btn-danger mb-2">Delete Classroom</button>
+        <button type="submit" class="button btn-danger mb-2" value="delete" name="btn">Delete Classroom</button>
     </form>
     {% endif %}
    </div>

@@ -138,8 +138,9 @@ INIT_STATEMENTS = [
         credits         REAL        NOT NULL,
         language        CHAR(2)     default('en'),
         classroom_id    INT         NOT NULL,
-        instructor_id   INT      NOT NULL,
+        instructor_id   INT         NOT NULL,
         department_id   INT         NOT NULL,
+        info            TEXT        NULL,
         FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id),
         FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id),
         FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id)
@@ -159,19 +160,12 @@ INIT_STATEMENTS = [
         id SERIAL PRIMARY KEY,
         student_id BIGINT NOT NULL,
         crn CHAR(6) NOT NULL,
+        grade REAL NULL,
         datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (student_id) REFERENCES STUDENT (student_id),
         FOREIGN KEY (crn) REFERENCES COURSE (crn), 
-        UNIQUE(student_id, crn)
-    );
-    CREATE TABLE IF NOT EXISTS COMPETED_COURSE(
-        id                  SERIAL      NOT NULL PRIMARY KEY,
-        student_id          BIGINT      NOT NULL,
-        crn                 CHAR(6)     NOT NULL,
-        grade               CHAR(2)     NOT NULL,
-        FOREIGN KEY (student_id) REFERENCES STUDENT (student_id),
-        FOREIGN KEY (crn) REFERENCES COURSE (crn),
-        UNIQUE(student_id, crn)
+        UNIQUE(student_id, crn),
+        CHECK ( grade >= 0 and grade <= 4 ) 
     );
     CREATE TABLE IF NOT EXISTS ADMINISTRATOR(
         tr_id           BIGINT          NOT NULL,
@@ -183,7 +177,7 @@ INIT_STATEMENTS = [
         id				    SERIAL 		NOT NULL,
         campus_id           SERIAL      NOT NULL,
         name 				VARCHAR(40)	NOT NULL,
-        shortened_name 		VARCHAR(6),
+        shortened_name 		VARCHAR(6)	NOT NULL,
         number_of_workers	INT,
         size             	INT,
         expenses    		INT,
@@ -395,8 +389,17 @@ INIT_STATEMENTS = [
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('33', 'Manager3', '1', '2019-12-12','12345','Information Tech','1');""",
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('44', 'Manager4', '0', '2019-12-12','12344','Service Tech','2');""",
 
-    #Add facility
-    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, "size", expenses) values (1, 1, 'Yemekhane', 'YMK', '50', '1400', '50000')"""
+    # Insert Taken Courses
+    """insert into taken_course (id,student_id,crn) values ('1','150180704','11111');""",
+    """insert into taken_course (id,student_id,crn) values ('2','150180705','11111');""",
+    """insert into taken_course (id,student_id,crn) values ('3','150180707','22222');""",
+    """insert into taken_course (id,student_id,crn) values ('4','150150150','22222');""",
+
+    # Add facility
+    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, "size", expenses) values (1, 1, 'Yemekhane', 'YMK', '50', '1400', '70000')"""
+    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, "size", expenses) values (2, 2, 'Kütüphane', 'LIB', '50', '1400', '50000')"""
+    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, "size", expenses) values (3, 4, 'Bilgi İşlem', 'BIDB', '50', '1400', '80000')"""
+
 
 ]
 
