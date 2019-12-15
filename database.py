@@ -730,3 +730,12 @@ class Database:
                 facility = Facility(*row[:])
                 facilities.append(facility)
         return facilities
+
+    def update_facility(self,facility):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "update facility set  id = %s, campus_id = %s, name = %s, shortened_name = %s,number_of_workers = %s, size = %s, expenses = %s where (id = %s)"
+            cursor.execute(query, (facility.id, facility.campus_id, facility.name, facility.shortened_name, facility.number_of_workers,
+                                   facility.size,
+                                   facility.expenses))
+            connection.commit

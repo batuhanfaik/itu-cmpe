@@ -103,20 +103,17 @@
 
     {% endif %}
     {% if facility %}
+
+    <br>
 <form action="" method="POST" name="delete_facility" style="display: contents">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <input type="hidden" name="facility_id" value="{{facility.id}}">
     <input class="btn btn-danger ml-auto" type="submit" id="delete_facility" name='delete_facility' value="Delete Facility">
 </form>
-
-    <h1 class="mb-3">Update Facility</h1>
-
 <br><br>
-
+    <h1 class="mb-3">Update Facility</h1>
     <form action="" method="post" name="update_facility" class="form-inline needs-validation">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-
-
 
       <div class="form-group" >
         <label for="id" class="mr-sm-2">Facility id:</label>

@@ -1,5 +1,5 @@
 class Facility:
-    def __init__(self,id,name,shortened_name,size,number_of_workers,expenses,campus_id):
+    def __init__(self,id,campus_id,name,shortened_name,number_of_workers, size,expenses):
         self.id=id
         self.name = name
         self.shortened_name=shortened_name

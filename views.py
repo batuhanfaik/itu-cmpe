@@ -900,6 +900,24 @@ def facility_page():
         return render_template("facility_search.html", facilities=facilities, campus_name = c_name,
                                by_campus = 1 ,values=request.form)
 
+    elif 'update_facility' in request.form:
+
+        id = request.form.get("id")
+        campus_id = request.form.data["campus_id"]
+        name = request.form.data["name"]
+        short_name = request.form.data["shortened_name"]
+        num_worker = request.form.data["number_of_workers"]
+        size = request.form.data["size"]
+        expense = request.form.data["expenses"]
+        new_facil = Facility(id=id, campus_id=campus_id, name=name, shortened_name=short_name,
+                             number_of_workers=num_worker, size=size, expenses=expense)
+
+        db.update_facility(new_facil)
+
+        flash('Facility Updated!')
+        all_staff = db.get_all_staff()
+        return render_template("staff.html",staffs=all_staff,
+                               values=request.form)
 
     else:
         valid = validation_facility(request.form)
