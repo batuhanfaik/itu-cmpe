@@ -582,6 +582,6 @@ class Database:
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "update staff set  manager_name = %s, absences = %s, hire_date = %s, authority_lvl = %s,department = %s, social_sec_no = %s where (id = %s)"
-            cursor.execute(query, (staff.id, staff.manager_name, staff.absences, staff.hire_date, staff.authority_lvl, staff.department,
-                                   staff.social_sec_no))
+            cursor.execute(query, ( staff.manager_name, staff.absences, staff.hire_date, staff.authority_lvl, staff.department,
+                                   staff.social_sec_no, staff.id))
             connection.commit
