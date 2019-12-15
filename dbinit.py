@@ -127,7 +127,7 @@ INIT_STATEMENTS = [
         unique (assistant_id)
     );
     CREATE TABLE IF NOT EXISTS COURSE (
-        crn             CHAR(6)     NOT NULL PRIMARY KEY,
+        crn             CHAR(5)     NOT NULL PRIMARY KEY,
         code            CHAR(3)     NOT NULL,
         name            VARCHAR(100) NOT NULL,
         start_time      TIME        NOT NULL,
@@ -138,7 +138,7 @@ INIT_STATEMENTS = [
         credits         REAL        NOT NULL,
         language        CHAR(2)     default('en'),
         classroom_id    INT         NOT NULL,
-        instructor_id   BIGINT      NOT NULL,
+        instructor_id   INT      NOT NULL,
         department_id   INT         NOT NULL,
         FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id),
         FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id),
