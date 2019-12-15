@@ -432,7 +432,8 @@ def add_classroom_page(faculty_id):
         return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
     return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Add Classroom", error=None)
 
-def update_classroom_page(faculty_id, id):
+
+def update_classroom_page(faculty_id, id, error=None):
     form = ClassroomForm()
     db = current_app.config['db']
     if form.validate_on_submit():
@@ -458,8 +459,18 @@ def update_classroom_page(faculty_id, id):
     form.renewed.data = classroom.renewed
     form.board_count.data = classroom.board_count
     form.air_conditioner.data = classroom.air_conditioner
-    return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Update Classroom", error=None)
+    return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Update Classroom",
+                           error=error)
 
+
+def delete_classroom(faculty_id, id):
+    db = current_app.config['db']
+    try:
+        db.delete_classroom(id)
+    except Error as e:
+        # TODO Find a way to show errors about referential integrity problems
+        return redirect(url_for("update_classroom_page", faculty_id=faculty_id, id=id))
+    return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
 
 
 # instructor pages#
