@@ -495,6 +495,29 @@ def add_course_page():
     return render_template("edit_course.html", form=form, error=None, title="Add Course")
 
 
+def edit_course_page(crn):
+    db = current_app.config["db"]
+    course = db.get_course(crn)
+    form = CourseForm(data=course.__dict__)
+    form.crn(readonly=True)
+    if form.validate_on_submit():
+        if request.form['btn'] == 'update':
+            args = []
+            for key, value in form.data.items():
+                if key != 'csrf_token':
+                    args.append(value)
+            course = Course(*args)
+            course.crn = crn
+            db.update_course(crn, course)
+            return redirect(url_for("courses_page"))
+    if request.method == 'POST' and request.form['btn'] == 'delete':
+        db.delete_course(crn)
+        return redirect(url_for("courses_page"))
+    return render_template("edit_course.html", form=form, error=None, title="Edit Course")
+
+
+
+
 # instructor pages#
 def instructors_page():
     db = current_app.config["db"]

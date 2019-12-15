@@ -154,10 +154,10 @@ class Database:
             cursor = connection.cursor()
             query = """update course set crn = %s, code = %s, name = %s, start_time = %s, end_time = %s,
                         day = %s, capacity = %s, enrolled = %s, credits = %s, language = %s, classroom_id = %s, 
-                        faculty_id = %s, instructor_id = %s, department_id = %s where (crn = %s)"""
-            cursor.execute(query, (course.crn, course.code, course.name, course.start_time, course.end_time,
+                        instructor_id = %s, department_id = %s where (crn = %s)"""
+            cursor.execute(query, (crn, course.code, course.name, course.start_time, course.end_time,
                                    course.day, course.capacity, course.enrolled, course.credits, course.language,
-                                   course.classroom_id, course.faculty_id, course.instructor_id,
+                                   course.classroom_id, course.instructor_id,
                                    course.department_id, crn))
         return course.crn
 
