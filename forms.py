@@ -42,9 +42,11 @@ class ClassroomForm(FlaskForm):
     #         raise ValidationError("There exists is a classroom with this door number!")
     floor = StringField(u"Floor", validators=[Length(max=2)])
     board_count = IntegerField(u"Board Count")
-    has_projection = BooleanField(u"Has Projection")
+    has_projection = RadioField(u"Has Projection", choices=[('true', 'Yes'), ('false', 'No')], default='false')
+    # has_projection = BooleanField(u"Has Projection")
     renewed = BooleanField(u"Renewed")
     air_conditioner = BooleanField(u"Has Air Conditioner")
+
 
 class InstructorForm(FlaskForm):
     tr_id = IntegerField(u"TR ID", validators=[InputRequired()]) # , Length(min=11, max=11, message="TR ID's length must be 11")

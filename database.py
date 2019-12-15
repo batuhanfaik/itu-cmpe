@@ -262,6 +262,7 @@ class Database:
                 course.door_number = row[18]
                 courses.append(course)
         return courses
+
     ########################
     def add_person(self, person):
         with dbapi2.connect(self.dbfile) as connection:
