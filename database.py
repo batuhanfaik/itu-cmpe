@@ -8,7 +8,7 @@ from instructor import Instructor
 from staff import Staff
 from classroom import Classroom
 from course import Course
-
+from taken_course import TakenCourse
 
 class Database:
     def __init__(self, dbfile):
@@ -51,6 +51,16 @@ class Database:
             cursor.execute(query, (id,))
 
         pass
+    def get_taken_course_students(self,crn):
+        students = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from taken_course where (crn = %s)"
+            cursor.execute(query, (crn,))
+            for row in cursor:
+                taken_course = TakenCourse(*row[:])
+                student.append((taken_course.id, taken_course))
+        return students     
 
     def get_instructor(self, id):
         with dbapi2.connect(self.dbfile) as connection:
