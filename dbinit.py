@@ -159,20 +159,14 @@ INIT_STATEMENTS = [
         id SERIAL PRIMARY KEY,
         student_id BIGINT NOT NULL,
         crn CHAR(6) NOT NULL,
+        grade REAL NULL,
         datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (student_id) REFERENCES STUDENT (student_id),
         FOREIGN KEY (crn) REFERENCES COURSE (crn), 
-        UNIQUE(student_id, crn)
+        UNIQUE(student_id, crn),
+        CHECK ( grade >= 0 and grade <= 4 ) 
     );
-    CREATE TABLE IF NOT EXISTS COMPLETED_COURSE(
-        id                  SERIAL      NOT NULL PRIMARY KEY,
-        student_id          BIGINT      NOT NULL,
-        crn                 CHAR(6)     NOT NULL,
-        grade               CHAR(2)     NOT NULL,
-        FOREIGN KEY (student_id) REFERENCES STUDENT (student_id),
-        FOREIGN KEY (crn) REFERENCES COURSE (crn),
-        UNIQUE(student_id, crn)
-    );
+
     CREATE TABLE IF NOT EXISTS ADMINISTRATOR(
         tr_id           BIGINT          NOT NULL,
         faculty_id 	    INT             NOT NULL, 
@@ -396,6 +390,7 @@ INIT_STATEMENTS = [
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('44', 'Manager4', '0', '2019-12-12','12344','Service Tech','2');""",
 
 ]
+
 
 
 def reset_db(url):

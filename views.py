@@ -677,7 +677,7 @@ def course_inf_page(crn):
     }
     if(request.method == "POST"):
         for taken_course in taken_course_students:
-            taken_course.grade = requeest.form['std'.join(taken_course.student_id)]
+            taken_course.grade = request.form['std'.join(taken_course.student_id)]
             db.update_taken_course(taken_course)
         return redirect(url_for(course_inf_page),crn = crn)
     return render_template("course_inf.html",context= context)

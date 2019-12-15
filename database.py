@@ -8,7 +8,7 @@ from instructor import Instructor
 from staff import Staff
 from classroom import Classroom
 from course import Course
-from taken_course import TakenCourse
+from course import TakenCourse
 
 class Database:
     def __init__(self, dbfile):
@@ -22,6 +22,35 @@ class Database:
         self.staffs = {}
 
     # faati's cruds #
+    # taken_course crud#
+    def add_taken_course(self, student_id, crn):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """insert into taken_course (student_id, crn) values (%s, %s)"""
+            cursor.execute(query, (student_id, crn))
+        pass
+
+    def update_taken_course(self, id, takencourse):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """update taken_course set student_id = %s, crn = %s, grade = %s,
+                        where (id = %s)"""
+            cursor.execute(query, (takencourse.student_id, takencourse.crn, takencourse.grade, id))
+        return id
+
+    def delete_taken_course(self, id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """delete from taken_course where (id = %s)"""
+            cursor.execute(query, (id,))
+
+    def get_taken_course(self, id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """select * from taken_course where (id = %s)"""
+            cursor.execute(query, (id,))
+            return TakenCourse(*cursor.fetchone)
+
     # instructor crud #
     def add_instructor(self, instructor):
         with dbapi2.connect(self.dbfile) as connection:
@@ -60,7 +89,7 @@ class Database:
             for row in cursor:
                 taken_course = TakenCourse(*row[:])
                 student.append((taken_course.id, taken_course))
-        return students     
+        return students
 
     def get_instructor(self, id):
         with dbapi2.connect(self.dbfile) as connection:
