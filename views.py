@@ -432,6 +432,35 @@ def add_classroom_page(faculty_id):
         return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
     return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Add Classroom", error=None)
 
+def update_classroom_page(faculty_id, id):
+    form = ClassroomForm()
+    db = current_app.config['db']
+    if form.validate_on_submit():
+        capacity = form.data['capacity']
+        has_projection = form.data['has_projection']
+        door_number = form.data['door_number']
+        floor = form.data['floor']
+        renewed = form.data['renewed']
+        board_count = form.data['board_count']
+        air_conditioner = form.data['air_conditioner']
+        classroom = db.get_classroom_by_door_and_faculty(faculty_id, door_number)
+        if (classroom is not None) and (classroom.id != int(id)):
+            return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Update Classroom",
+                                   error="There exists a classroom with this door number in this faculty!")
+        db.update_classroom(id, Classroom(None, capacity, has_projection, door_number, floor, renewed,
+                                   board_count, air_conditioner, faculty_id))
+        return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+    classroom = db.get_classroom(id)
+    form.capacity.data = classroom.capacity
+    form.has_projection.data = classroom.has_projection
+    form.door_number.data = classroom.door_number
+    form.floor.data = classroom.floor
+    form.renewed.data = classroom.renewed
+    form.board_count.data = classroom.board_count
+    form.air_conditioner.data = classroom.air_conditioner
+    return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Update Classroom", error=None)
+
+
 
 # instructor pages#
 def instructors_page():
