@@ -400,7 +400,7 @@
         </thead>
         {% for classroom in classrooms %}
             <tr class="text-center">
-                <td><a href="{{ url_for('update_classroom_page', faculty_id=context.Faculty.id, id=classroom.id)}}">{{ classroom.id }}</a></td>
+                <td><a href="{{ url_for('edit_classroom_page', faculty_id=context.Faculty.id, id=classroom.id)}}">{{ classroom.id }}</a></td>
                 <td>{{ classroom.capacity }}</td>
                 <td>{{ classroom.door_number }}</td>
                 <td>{{ classroom.floor }}</td>
