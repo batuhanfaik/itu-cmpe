@@ -95,4 +95,4 @@ if __name__ == "__main__":
     host = app.config.get("HOST")
     port = app.config.get("PORT")
     debug = app.config.get("DEBUG")
-    app.run(host=host, port=port, debug=debug)
+    app.run(host=host, port=8000, debug=debug)

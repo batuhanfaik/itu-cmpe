@@ -377,6 +377,63 @@
 
         
         </div>
+    <hr>
+    <h1>Classrooms</h1>
+    </hr>
+    <div class="row">
+    <table>
+{#            <a href="{{ url_for("add_classroom_page") }}"> Add Classroom </a>#}
+<table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Capacity</th>
+            <th scope="col">Door Number</th>
+            <th scope="col">Floor</th>
+            <th scope="col">Board Count</th>
+            <th scope="col">Has Projection</th>
+            <th scope="col">Renewed</th>
+            <th scope="col">Air Conditioning</th>
+        </tr>
+        </thead>
+        {% for classroom in classrooms %}
+            <tr class="text-center">
+{#                <td><a href="{{ url_for('update_classroom_page', id=instructor.id) }}">{{ classroom.id }}</a></td>#}
+                <td>{{ classroom.id }}</td>
+                <td>{{ classroom.capacity }}</td>
+                <td>{{ classroom.door_number }}</td>
+                <td>{{ classroom.floor }}</td>
+                <td>{{ classroom.board_count }}</td>
+                <td>
+                    {% if classroom.has_projection %}
+                        <i class="fas fa-check"></i>
+                    {% else %}
+                        <i class="fas fa-times"></i>
+                    {% endif %}
+                </td>
+                   <td>
+                    {% if classroom.renewed %}
+                        <i class="fas fa-check"></i>
+                    {% else %}
+                        <i class="fas fa-times"></i>
+                    {% endif %}
+                </td>
+                   <td>
+                    {% if classroom.air_conditioner %}
+                        <i class="fas fa-check"></i>
+                    {% else %}
+                        <i class="fas fa-times"></i>
+                    {% endif %}
+                </td>
+            </tr>
+
+        {% endfor %}
+    </table>
+    </table>
+
+
+    </div>
+
     </div> 
 </div>
 

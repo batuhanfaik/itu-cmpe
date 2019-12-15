@@ -120,6 +120,14 @@ class Database:
         classroom = Classroom(*cursor.fetchone())  # Inline unpacking of a tuple
         return classroom
 
+    def get_all_classrooms(self):
+        classrooms = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            cursor.execute("select * from classroom order by (id);")
+            for row in cursor:
+                classrooms.append(Classroom(*row))
+        return classrooms
     # course crud #
     def add_course(self, course):
         with dbapi2.connect(self.dbfile) as connection:

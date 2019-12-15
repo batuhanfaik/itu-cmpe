@@ -114,7 +114,8 @@ def campus_detailed(campus_id):
         return redirect(url_for('campus_detailed', campus_id=campus.id))
     elif request.method == "POST" and 'redirect_edit_page' in request.form:
         faculty_form_id = request.form['redirect_edit_page']
-        return redirect(url_for('faculty_detailed', faculty_id=faculty_form_id))
+        classrooms = db.get_all_classrooms()
+        return redirect(url_for('faculty_detailed', faculty_id=faculty_form_id, classrooms=classrooms))
     print(campus.img_data)
     if(campus.img_data is None):
         image = ""
@@ -149,6 +150,7 @@ def findNumberOfCampus():
 
 def faculty_detailed(faculty_id):
     db = current_app.config["db"]
+    classrooms = db.get_all_classrooms()
     faculty = db.get_faculty(faculty_id)
     edit_faculty_form = add_faculty_form()
     add_department = add_department_form()
@@ -164,21 +166,21 @@ def faculty_detailed(faculty_id):
             department = Department(0, faculty_id, add_department.name.data, add_department.shortened_name.data, add_department.block_number.data,
                                     add_department.budget.data, add_department.foundation_date.data, add_department.phone_number.data)
             db.add_department(department)
-        return redirect(url_for('faculty_detailed', faculty_id=faculty.id))
+        return redirect(url_for('faculty_detailed', faculty_id=faculty.id, classrooms=classrooms))
     elif request.method == "POST" and 'edit_faculty_form' in request.form:
         if(edit_faculty_form.validate()):
             updated_faculty = Faculty(faculty_id, faculty.campus_id, edit_faculty_form.name.data, edit_faculty_form.shortened_name.data,
                                       edit_faculty_form.address.data, edit_faculty_form.foundation_date.data, edit_faculty_form.phone_number.data)
             db.update_faculty(updated_faculty)
-        return redirect(url_for('faculty_detailed', faculty_id=faculty.id))
+        return redirect(url_for('faculty_detailed', faculty_id=faculty.id, classrooms=classrooms))
     elif request.method == "POST" and 'delete_department_flag' in request.form:
         db.delete_department(request.form['delete_department_flag'])
-        return redirect(url_for('faculty_detailed', faculty_id=faculty.id))
+        return redirect(url_for('faculty_detailed', faculty_id=faculty.id, classrooms=classrooms))
     elif request.method == "POST" and 'redirect_edit_page' in request.form:
         department_form_id = request.form['redirect_edit_page']
         return redirect(url_for('department_detailed', department_id=department_form_id))
 
-    return render_template('/campuses/faculty_detailed.html', context=context)
+    return render_template('/campuses/faculty_detailed.html', context=context, classrooms=classrooms)
 
 
 def department_detailed(department_id):
