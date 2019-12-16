@@ -58,7 +58,7 @@ INIT_STATEMENTS = [
         foundation_date 	DATE,
         phone_number		CHAR(11),
         PRIMARY KEY(id),
-        FOREIGN KEY(campus_id) REFERENCES CAMPUS(id)
+        FOREIGN KEY(campus_id) REFERENCES CAMPUS(id) on delete cascade
     );
     CREATE TABLE IF NOT EXISTS DEPARTMENT(
         id				    SERIAL 		NOT NULL,
@@ -70,7 +70,7 @@ INIT_STATEMENTS = [
         foundation_date 	DATE,
         phone_number		CHAR(11),
         PRIMARY KEY(id),
-        FOREIGN KEY(faculty_id) REFERENCES FACULTY(id)
+        FOREIGN KEY(faculty_id) REFERENCES FACULTY(id) on delete cascade
     );
     CREATE TABLE IF NOT EXISTS CLASSROOM(
         id              SERIAL      NOT NULL PRIMARY KEY,
@@ -82,7 +82,7 @@ INIT_STATEMENTS = [
         board_count     INT,
         air_conditioner BOOLEAN     DEFAULT false,
         faculty_id      INT         NOT NULL,
-        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
+        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id) on delete cascade,
         unique(door_number, faculty_id)
     );
     CREATE TABLE IF NOT EXISTS STUDENT (
@@ -141,9 +141,9 @@ INIT_STATEMENTS = [
         instructor_id   INT         NOT NULL,
         department_id   INT         NOT NULL,
         info            TEXT        NULL,
-        FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id),
-        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id),
-        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id)
+        FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id) on delete cascade,
+        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id) on delete cascade,
+        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id) on delete cascade
     );
     CREATE TABLE IF NOT EXISTS SYLLABUS (
         crn             char(5)         PRIMARY KEY,
@@ -191,7 +191,7 @@ INIT_STATEMENTS = [
         facility_id	    BIGINT          NOT NULL, 
         staff_id        BIGINT          NOT NULL,
         duty         	VARCHAR(20)	    NOT NULL,
-        FOREIGN KEY(facility_id) REFERENCES FACILITY (id),
+        FOREIGN KEY(facility_id) REFERENCES FACILITY (id) on delete cascade,
         FOREIGN KEY(staff_id) REFERENCES STAFF (id) on delete cascade, 
         PRIMARY KEY(facility_id,staff_id)
     );
