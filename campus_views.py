@@ -183,12 +183,21 @@ def campus_detailed(campus_id):
             campus_id = campus.id
             updated_campus = Campus(campus_id, edit_campus_form.name.data, edit_campus_form.address.data, edit_campus_form.city.data, edit_campus_form.size.data,
                                     edit_campus_form.foundation_date.data, edit_campus_form.phone_number.data, campus.img_extension, campus.img_data)
-            try:
-                db.update_campus(updated_campus)
-                return redirect(url_for('campus_detailed', campus_id=campus.id))
-            except Error as e:
-                error = type(e).__name__ + '----' + str(e)
-                pass
+            if(edit_campus_form.validate()):
+                try:
+                    db.update_campus(updated_campus)
+                    return redirect(url_for('campus_detailed', campus_id=campus.id))
+                except Error as e:
+                    error = type(e).__name__ + '----' + str(e)
+                    pass
+                add_faculty = add_faculty_form()
+                edit_campus_form = add_campus_form()
+                if('too long' in error):
+                    error = "One of the input value is too long!"
+            else:
+                if('address' in edit_campus_form.errors):
+                    error = 'Address field cannot be longer than 80 characters'
+                error = edit_campus_form.errors
             context = {
                 'Campus': campus,
                 'edit_campus_form': edit_campus_form,
