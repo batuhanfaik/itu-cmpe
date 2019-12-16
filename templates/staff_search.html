@@ -29,7 +29,7 @@
 <br><br>
 
 
-        <h1 class="mb-3">Staff Work Information</h1>
+        <h1 class="mb-3">Staff General Information</h1>
                 <table class="table is-striped is-fullwidth table-hover">
                 <thead>
                 <tr>
@@ -61,7 +61,7 @@
                 <table class="table is-striped is-fullwidth table-hover">
                 <thead>
                 <tr>
-                    <th scope="col">TR IDe</th>
+                    <th scope="col">TR ID</th>
                     <th scope="col">Staff Name</th>
                     <th scope="col">Staff Surname</th>
                     <th scope="col">Phone Number</th>
@@ -91,6 +91,16 @@
     <input class="btn btn-danger ml-auto" type="submit" id="delete_staff" name='delete_staff' value="Delete Staff">
 </form>
 
+
+<br><br>
+        <h1 class="mb-3">More Information</h1>
+    <label>*Click on to get detailed information about this staff</label>
+    <br><br>
+            <form action="" method="POST" name="More Info" style="display: contents">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <input style=" font-size: 16px; padding: 12px 25px; margin: 6px 3px;" class="btn btn-primary mb-2" type="submit" id="more_info" name='more_info' value="More Info">
+            </form>
+            <br/>
 
 <br><br>
 

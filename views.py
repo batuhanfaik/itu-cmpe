@@ -778,6 +778,9 @@ def staff_add_page():
         return render_template("staff.html",staffs=all_staff,
                                values=request.form)
 
+    elif 'more_info' in request.form:
+        return render_template("staff_facility.html", staff=staff,staff_id = staff_id,
+                                   values=request.form,person_info= person_info)
 
     else:
         valid = validation_staff(request.form)
