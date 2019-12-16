@@ -161,7 +161,6 @@ INIT_STATEMENTS = [
         UNIQUE(student_id, crn),
         CHECK ( grade >= 0 and grade <= 4 ) 
     );
-
     CREATE TABLE IF NOT EXISTS FACILITY(
         id				    SERIAL 		NOT NULL,
         campus_id           SERIAL      NOT NULL,
@@ -174,13 +173,13 @@ INIT_STATEMENTS = [
         FOREIGN KEY(campus_id) REFERENCES CAMPUS (id) on delete cascade
     );
     CREATE TABLE IF NOT EXISTS STAFF(
-        id              BIGINT             NOT NULL,
+        id              BIGINT,
         manager_name    VARCHAR(40), 
         absences	    INT, 
-        hire_date      	DATE            NOT NULL,
+        hire_date      	DATE,
         authority_lvl   INT,
         department      VARCHAR(40),
-        social_sec_no   SERIAL          NOT NULL,
+        social_sec_no   SERIAL,
         PRIMARY KEY(id),
         FOREIGN KEY(id) REFERENCES PEOPLE (tr_id) on delete cascade
     );
@@ -192,7 +191,7 @@ INIT_STATEMENTS = [
         facility_id	    BIGINT          NOT NULL, 
         staff_id        BIGINT          NOT NULL,
         duty         	VARCHAR(20)	    NOT NULL,
-        FOREIGN KEY(facility_id) REFERENCES FACILITY (id),
+        FOREIGN KEY(facility_id) REFERENCES FACILITY (id) on delete cascade,
         FOREIGN KEY(staff_id) REFERENCES STAFF (id) on delete cascade, 
         PRIMARY KEY(facility_id,staff_id)
     );
@@ -388,6 +387,28 @@ INIT_STATEMENTS = [
     """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (1, 1, 'Yemekhane', 'YMK', '50', '1400', '70000')""",
     """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (2, 2, 'Kütüphane', 'LIB', '50', '1400', '50000')""",
     """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (3, 4, 'Bilgi İşlem', 'BIDB', '50', '1400', '80000')""",
+    # Add Staff-facility connection
+    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('leader', '2019-12-12', '2019-12-12', '2000', 1, 1, 'something')""",
+    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('security','2019-12-12', '2019-12-12', '2000', 2, 2, 'leader')""",
+    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('member', '2019-12-12', '2019-12-12', '2000', 2, 3, 'member')""",
+
+    #Staff
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+        birth_date, id_reg_city, id_reg_district) values (1111,'fstaff', 'fatih', '1', 
+        'fstaff@itu.edu.tr','fatih',
+        '1', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+        birth_date, id_reg_city, id_reg_district) values (2222,'bstaff', 'batu', '1', 
+        'bstaff@itu.edu.tr','batu',
+        '1', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+        birth_date, id_reg_city, id_reg_district) values (3333,'cstaff', 'cihat', '1', 
+        'cstaff@itu.edu.tr','cihat',
+        '1', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+        birth_date, id_reg_city, id_reg_district) values (4444,'zstaff', 'zeynep', '1', 
+        'zstaff@itu.edu.tr','zeynep',
+        '1', '2019-10-10', 'a','b');""",
 
 
 ]
