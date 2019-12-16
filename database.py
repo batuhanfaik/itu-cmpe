@@ -10,6 +10,7 @@ from classroom import Classroom
 from course import Course
 from course import TakenCourse
 from facility import Facility
+from staff_facil import Staff_facil
 
 class Database:
     def __init__(self, dbfile):
@@ -739,6 +740,26 @@ class Database:
                 facility = Facility(*row[:])
                 facilities.append(facility)
         return facilities
+
+    def get_facility_from_staff(self, staff_id):
+        staff_facilities = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from staff_facil where (staff_id = %s) order by staff_id asc"
+            cursor.execute(query, (staff_id,))
+            for row in cursor:
+                SF = Staff_facil(*row[:])
+                staff_facilities.append(SF)
+        return staff_facilities
+    def add_staff_facility(self,staff_facil):
+        with dbapi2.connect(self.dbfile) as connection:
+            print("TRYİNG TO ADD:")
+            print("----------")
+            cursor = connection.cursor()
+            query = "insert into staff_facil (title,from_date,to_date,salary,facility_id,staff_id,duty) values (%s, %s, %s, %s, %s, %s,%s)"
+            cursor.execute(query, (staff_facil.title, staff_facil.from_date, staff_facil.to_date, staff_facil.salary,
+                                   staff_facil.facility_id, staff_facil.staff_id, staff_facil.duty))
+            connection.commit
 
     def update_facility(self,facility):
         with dbapi2.connect(self.dbfile) as connection:

@@ -17,6 +17,7 @@ from staff import Staff
 from classroom import Classroom
 from course import Course
 from facility import Facility
+from staff_facil import Staff_facil
 
 
 def landing_page():
@@ -791,10 +792,73 @@ def staff_add_page():
                                values=request.form)
 
     elif 'more_info' in request.form:
-        return render_template("staff_facility.html", staff=staff,staff_id = staff_id,
-                                   values=request.form,person_info= person_info)
+        s_id = request.form["staff_id"]
+        staff_facilities = db.get_facility_from_staff(s_id)
+        print("\n staff id: ",s_id," facility length", len(staff_facilities))
+        the_staff = db.get_staff(s_id)
+        facils = []
+        for SF in staff_facilities:
+            facility_ = db.get_facility(SF.facility_id)
+            facils.append(facility_)
+        if(len(facils) is None ):
+            flash('No facility information is given for this Staff')
+        return render_template("staff_facility.html", staff = the_staff, facilities = facils,
+                                 staff_facils = staff_facilities,values=request.form)
+    elif 'add_staff_facil' in request.form:
+        #Check validation
+        #add Delete/update
+        s_id = request.form["staff_id"]
+        staff_facilities = db.get_facility_from_staff(s_id)
+        print("\n staff id: ", s_id, " facility length", len(staff_facilities))
+        the_staff = db.get_staff(s_id)
+        facils = []
+        for SF in staff_facilities:
+            facility_ = db.get_facility(SF.facility_id)
+            print("\n id of current facility", facility_.id)
+            facils.append(facility_)
+        print("\nLength of facilities array: ", len(facils))
+        title = request.form.get("title")
+        from_date = request.form.get("from_date")
+        to_date = request.form.get("to_date")
+        salary = request.form.get("salary")
+        facility_id = request.form.get("facility_id")
+        staff_id = request.form.get("staff_id")
+        duty = request.form.get("duty")
+        new_SF = Staff_facil(title=title, from_date=from_date, to_date=to_date, salary=salary,
+                             facility_id=facility_id, staff_id=staff_id, duty=duty)
 
-    else:
+        try:
+            db.add_staff_facility(new_SF)
+            flash('Staff-Facility Connection successfully added!')
+            staff_facilities = db.get_facility_from_staff(s_id)
+            print("\nLength of staff_facilities array:",len(staff_facilities))
+            facils=[]
+        except Error as e:
+            flash('Staff-Facility Connection Not added!')
+            print("\nERROR:",type(e))
+            if isinstance(e, errors.UniqueViolation):
+                flash('This connection already exists')
+                return render_template("staff_facility.html", staff=the_staff, facilities=facils,
+                                       staff_facils=staff_facilities, values=request.form,
+                                           error="ID already exists")
+            if isinstance(e, errors.ForeignKeyViolation):
+                flash('Could not find the given staff Id or Facility Id' )
+                return render_template("staff_facility.html", staff=the_staff, facilities=facils,
+                                       staff_facils=staff_facilities, values=request.form,
+                                           error="No ID")
+
+            else:
+                return render_template("staff_facility.html", staff = the_staff, facilities = facils,
+                                 staff_facils = staff_facilities,values=request.form,
+                                           error=type(e).__name__ + "-----" + str(e))
+        for SF in staff_facilities:
+            facility_ = db.get_facility(SF.facility_id)
+            print("\n id of current facility", facility_.id)
+            facils.append(facility_)
+        return render_template("staff_facility.html", staff=the_staff, facilities=facils,
+                                   staff_facils=staff_facilities, values=request.form)
+
+    else:#Staff addition
         valid = validation_staff(request.form)
         if not valid:
             flash('Input NOT Valid!')

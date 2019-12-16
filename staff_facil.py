@@ -1,5 +1,5 @@
 class Staff_facil:
-    def __init__(self,title,staff_id,from_date,to_date,salary,facility_id,duty):
+    def __init__(self,title,from_date,to_date,salary,facility_id,staff_id,duty):
         self.title = title
         self.staff_id = staff_id
         self.to_date =to_date

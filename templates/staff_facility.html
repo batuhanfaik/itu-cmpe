@@ -57,34 +57,12 @@
                 </tr>
                 </tbody>
             </table>
-    <h1 class="mb-3">Staff Personal Information</h1>
-                <table class="table is-striped is-fullwidth table-hover">
-                <thead>
-                <tr>
-                    <th scope="col">TR ID</th>
-                    <th scope="col">Staff Name</th>
-                    <th scope="col">Staff Surname</th>
-                    <th scope="col">Phone Number</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Category</th>
 
-
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr>
-                <td>{{ person_info.tr_id }}</td>
-                <td>{{ person_info.name }}</td>
-                <td>{{ person_info.surname }}</td>
-                <td>{{ person_info.phone_number }}</td>
-                <td>{{ person_info.email }}</td>
-                <td>{{ person_info.person_category }}</td>
-
-                </tr>
-                </tbody>
-            </table>
             <br/>
+
+
+
+
 <form action="" method="POST" name="deleteStaff" style="display: contents">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <input type="hidden" name="staff_id" value="{{staff.id}}">
@@ -93,24 +71,57 @@
 
 
 <br><br>
-        <h1 class="mb-3">More Information</h1>
-    <label>*Click on to get detailed information about this staff</label>
-    <br><br>
-            <form action="" method="POST" name="More Info" style="display: contents">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-             <input type="hidden" name="staff_id" value="{{staff.id}}">
-            <input style=" font-size: 16px; padding: 12px 25px; margin: 6px 3px;" class="btn btn-primary mb-2" type="submit" id="more_info" name='more_info' value="More Info">
-            </form>
+
+
+
+        <h1 class="mb-3">Facilities that this staff works</h1>
+                <table class="table is-striped is-fullwidth table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Staff id</th>
+                    <th scope="col">Facility Name</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Starting Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Salary</th>
+                    <th scope="col">Duty</th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+
+                {% for SF in staff_facils %}
+                {% for facility in facilities %}
+                {% if  facility.id  == SF.facility_id %}
+                <tr>
+
+                <td>{{ SF.staff_id }}</td>
+                <td>{{ facility.name }}</td>
+                <td>{{ SF.title }}</td>
+                <td>{{ SF.from_date }}</td>
+                <td>{{ SF.to_date }}</td>
+                <td>{{ SF.salary }}</td>
+                <td>{{ SF.duty }}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+
             <br/>
 
-<br><br>
+<br><br><br>
 
 
- <h1 class="mb-3">Update Staff</h1>
+     <h1 class="mb-3">Does this staff started working at another job in another facility? Add it!</h1>
 
 
 
-    <form action="" method="post" name="update_staff" class="form-inline needs-validation">
+    <form action="" method="post" name="add_staff_facil" class="form-inline needs-validation">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
 
@@ -118,9 +129,9 @@
 
 
         <br>
-        <label for="manager_name" class="mr-sm-2">Manager Name:</label>
+        <label for="title" class="mr-sm-2">Title:</label>
         <div class="control"  style="  width: 1200px; display: inline-block;" >
-          <input type="text" name="manager_name" class="form-control mb-2 mr-sm-2" required="required" id="manager_name"/>
+          <input type="text" name="title" class="form-control mb-2 mr-sm-2" required="required" id="title"/>
 
 
         </div>
@@ -131,9 +142,9 @@
         <br><br>
 
 
-        <label for="hire_date" class="mr-sm-2">Hire date:</label>
+        <label for="from_date" class="mr-sm-2">Starting date:</label>
         <div class="form-group" style="  width: 600px; display: inline-block;">
-          <input type="date" name="hire_date" class="form-control mb-2 mr-sm-2" id="hire_date" required="required"  />
+          <input type="date" name="from_date" class="form-control mb-2 mr-sm-2" id="from_date" required="required"  />
 
         </div>
 
@@ -141,9 +152,9 @@
 
 
       <div class="form-group">
-        <label for="department" class="mr-sm-2">Department:</label>
+        <label for="to_date" class="mr-sm-2">Ending Date:</label>
         <div class="control" style="  width: 600px; display: inline-block;">
-          <input type="text" name="department" class="form-control mb-2 mr-sm-2" id="department" required="required"/>
+          <input type="date" name="to_date" class="form-control mb-2 mr-sm-2" id="to_date" required="required"/>
 
         </div>
       </div>
@@ -151,9 +162,9 @@
 
 
       <div class="form-group">
-        <label for="social_sec_no" class="mr-sm-2">Social Security Number:</label>
+        <label for="salary" class="mr-sm-2">Salary:</label>
         <div class="control" style="  width: 600px; display: inline-block;">
-          <input type="number" name="social_sec_no" class="form-control mb-2 mr-sm-2" required="required" id="social_sec_no"/>
+          <input type="number" name="salary" class="form-control mb-2 mr-sm-2" required="required" id="salary"/>
 
         </div>
       </div>
@@ -161,9 +172,9 @@
 
 
       <div class="form-group">
-        <label for="authority_lvl" class="mr-sm-2">Authority level:</label>
+        <label for="facility_id" class="mr-sm-2">Facility ID:</label>
         <div class="control" style="  width: 600px; display: inline-block;">
-          <input type="number" name="authority_lvl" class="form-control mb-2 mr-sm-2" required="required" id="authority_lvl"/>
+          <input type="number" name="facility_id" class="form-control mb-2 mr-sm-2" required="required" id="facility_id"/>
 
         </div>
 
@@ -172,9 +183,9 @@
 
 
       <div class="form-group">
-        <label for="absences" class="mr-sm-2">Absences:</label>
+        <label for="duty" class="mr-sm-2">Duty:</label>
         <div class="control" style="  width: 1200px; display: inline-block;">
-          <input type="number" name="absences" class="form-control mb-2 mr-sm-2" id="absences" required="required"/>
+          <input type="text" name="duty" class="form-control mb-2 mr-sm-2" id="duty" required="required"/>
 
         </div>
       </div>
@@ -183,7 +194,7 @@
       <div class="field is-grouped">
         <div class="control">
             <input type="hidden" name="staff_id" value="{{staff.id}}">
-          <button class="btn btn-primary mb-2" id="update_staff" name="update_staff">Update Staff</button>
+          <button class="btn btn-primary mb-2" id="add_staff_facil" name="add_staff_facil">Add New Facility For This Staff</button>
         </div>
       </div>
     </form>
