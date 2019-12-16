@@ -189,6 +189,15 @@ class Database:
             for row in cursor:
                 classrooms.append(Classroom(*row))
         return classrooms
+    
+    def get_all_classrooms_by_faculty(self, faculty_id):
+        classrooms = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            cursor.execute("select * from classroom where (faculty_id = %s) order by (id);", (faculty_id,))
+            for row in cursor:
+                classrooms.append(Classroom(*row))
+        return classrooms
 
     def is_classroom_available(self, start_time, end_time, classroom_id):
         with dbapi2.connect(self.dbfile) as connection:

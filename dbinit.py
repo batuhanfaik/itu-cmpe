@@ -145,6 +145,11 @@ INIT_STATEMENTS = [
         FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id),
         FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id)
     );
+    CREATE TABLE IF NOT EXISTS SYLLABUS (
+        crn             char(5)         PRIMARY KEY,
+        file            bytea           default null,
+        foreign key (crn) references course(crn) on delete cascade
+    );
     CREATE TABLE IF NOT EXISTS COURSE_ASSISTED (
         crn char(6) primary key references COURSE(crn) not null,
         assistant_id bigint references ASSISTANT(assistant_id) not null,

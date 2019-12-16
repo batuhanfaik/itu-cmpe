@@ -76,28 +76,24 @@ city_selections = [('Adana', 'Adana'),('Adıyaman', 'Adıyaman'),('Ağrı', 'Ağ
 
 
 class add_campus_form(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
-    address = TextAreaField('address', validators=[Length(min=4, max=50)])
+    name = StringField('name', validators=[DataRequired(),Length(max=50)])
+    address = TextAreaField('address', validators=[DataRequired(),Length(max=80)])
     city = SelectField(choices=city_selections)
     size = DecimalField('size')
-    foundation_date = DateField('foundation_date', validators=[
-                                DataRequired()])
+    foundation_date = DateField('foundation_date', validators=[])
     phone_number = StringField('phone_number', validators=[
                                Length(10)])
     add_image_checkbox = BooleanField('add_image_checkbox')
-    image = FileField('image')
+    image = FileField('image',)
 
     def save(form, image):
         print('HETYHEYHE', image)
         file_name = secure_filename(image.filename)
         # or ByteIO, whatever you like
         bin_file = image.read()
-        print(bin_file)
         campus = Campus(0, form.name.data, form.address.data, form.city.data,
                         form.size.data, form.foundation_date.data, form.phone_number.data, file_name, image)
         validate_image(image)
-        print('ADDEDDDDD->', name.data)
-        print('Added to database')
 
 
 # class upload_campus_image_form(FlaskForm):

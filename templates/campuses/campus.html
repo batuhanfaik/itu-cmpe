@@ -8,6 +8,11 @@
           name="campus_add" enctype="multipart/form-data">
           {{ context.form.csrf_token }}
         <input type="hidden" name="add_campus_form"/>
+        {% if context.error %}  
+        <div class="container" style="background:tomato;border:1px solid gray">
+            <p>{{context.error}}</p>
+        </div>
+         {% endif %} 
           <div class="form-group inline">
             <label for="name" class="mr-sm-2"><i class="fas fa-university"></i> Campus Name:</label>
          <!--   <input type="text" class="form-control mb-2 mr-sm-2" style="width:80%;" id="name"

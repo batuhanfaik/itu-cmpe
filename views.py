@@ -18,6 +18,7 @@ from classroom import Classroom
 from course import Course
 from facility import Facility
 
+
 def landing_page():
     return render_template("index.html")
 
@@ -444,6 +445,7 @@ def add_classroom_page(faculty_id):
 
 
 def edit_classroom_page(faculty_id, id):
+    error = ""
     form = ClassroomForm()
     db = current_app.config['db']
     if form.validate_on_submit():
@@ -478,8 +480,7 @@ def edit_classroom_page(faculty_id, id):
                 str_e = str(e)
                 if 'course' in str_e:
                     error = "There are courses given in this classroom!"
-            return render_template("edit_classroom.html", form=form, title="Edit Classroom",
-                                   error=error)
+            pass
     classroom = db.get_classroom(id)
     form.capacity.data = classroom.capacity
     form.has_projection.data = classroom.has_projection
@@ -489,7 +490,7 @@ def edit_classroom_page(faculty_id, id):
     form.board_count.data = classroom.board_count
     form.air_conditioner.data = classroom.air_conditioner
     return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Update Classroom",
-                           error=None)
+                           error=error)
 
 
 # course pages#
@@ -535,6 +536,7 @@ def add_course_page():
 
 
 def edit_course_page(crn):
+    error = ""
     db = current_app.config["db"]
     course = db.get_course(crn)
     form = CourseForm(data=course.__dict__)
@@ -547,12 +549,24 @@ def edit_course_page(crn):
                     args.append(value)
             course = Course(*args)
             course.crn = crn
-            db.update_course(crn, course)
-            return redirect(url_for("courses_page"))
+            try:
+                db.update_course(crn, course)
+                return redirect(url_for("courses_page"))
+            except Error as e:
+                error = type(e).__name__ + '----' + str(e)
+                str_e = str(e)
+                if isinstance(e, errors.ForeignKeyViolation):
+                    if 'classroom' in str_e:
+                        error = "There is no classroom with given id"
+                    if 'department' in str_e:
+                        error = "There is no department with given id"
+                    if 'instructor' in str_e:
+                        error = "There is no instructor with given id"
+                pass
     if request.method == 'POST' and request.form['btn'] == 'delete':
         db.delete_course(crn)
         return redirect(url_for("courses_page"))
-    return render_template("edit_course.html", form=form, error=None, title="Edit Course")
+    return render_template("edit_course.html", form=form, error=error, title="Edit Course")
 
 
 # instructor pages#
@@ -598,6 +612,7 @@ def add_instructor_page():
 
 
 def edit_instructor_page(id):
+    error = ""
     db = current_app.config["db"]
     form = InstructorForm()
     if form.validate_on_submit():
@@ -614,6 +629,7 @@ def edit_instructor_page(id):
                                     bachelors, masters, doctorates, room_id)
             try:
                 db.update_instructor(id, instructor)
+                return redirect(url_for("instructors_page"))
             except Error as e:
                 error = type(e).__name__ + "-----" + str(e)
                 if isinstance(e, errors.UniqueViolation):
@@ -626,13 +642,11 @@ def edit_instructor_page(id):
                         error = "No faculty exists with this Faculty ID"
                     elif 'department_id' in str_e:
                         error = "No department exists with this Department ID"
-                return render_template("edit_instructor.html", form=form, title="Edit Instructor",
-                                       error=error)
-            return redirect(url_for("instructors_page"))
+                pass
     if request.method == 'POST' and request.form['btn'] == 'delete':
         try:
             db.delete_instructor(id)
-            return redirect(url_for("courses_page"))
+            return redirect(url_for("instructors_page"))
         except Error as e:
             error = type(e).__name__ + '----' + str(e)
             if isinstance(e, errors.ForeignKeyViolation):
@@ -641,9 +655,7 @@ def edit_instructor_page(id):
                     error = "There are courses given by this instructor! It can not be deleted!"
                 elif 'assistant' in str_e:
                     error = "There are assistants supervised by this instructor! It can not be deleted!"
-            return render_template("edit_instructor.html", form=form, title="Edit Instructor",
-                                   error=error)
-
+            pass
     instructor = db.get_instructor(id)
     form.tr_id.data = instructor.tr_id
     form.room_id.data = instructor.room_id
@@ -653,7 +665,7 @@ def edit_instructor_page(id):
     form.specialization.data = instructor.specialization
     form.department_id.data = instructor.department_id
     form.faculty_id.data = instructor.faculty_id
-    return render_template("edit_instructor.html", form=form, title="Update Instructor", error=None)
+    return render_template("edit_instructor.html", form=form, title="Update Instructor", error=error)
 
 
 def test_page():
