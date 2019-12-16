@@ -510,7 +510,7 @@ def my_courses_page():
     if current_user.student_id is not None:
         courses = db.get_courses_taken_by_student(current_user.student_id)
     elif current_user.instructor_id is not None:
-        courses = db.get_course_via_instructor_id(current_user.instructor_id)
+        courses = db.get_courses_by_instructor_id(current_user.instructor_id)
     return render_template("courses.html", courses=courses)
 
 @login_required

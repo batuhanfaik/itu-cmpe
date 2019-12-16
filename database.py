@@ -297,6 +297,29 @@ class Database:
         course = Course(*cursor.fetchone())
         return course
 
+    def get_courses_by_instructor_id(self, instructor_id):
+        courses = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """select course.*, faculty.shortened_name, department.shortened_name,
+                            people.name, people.surname, classroom.door_number
+                            from course, classroom, faculty, instructor, department, people
+                            where (course.department_id = department.id
+                            and course.instructor_id = instructor.id
+                            and classroom.faculty_id = faculty.id
+                            and course.classroom_id = classroom.id
+                            and people.tr_id = instructor.tr_id
+                            and course.instructor_id = %s) order by (course.crn);"""
+            cursor.execute(query, (instructor_id,))
+            for row in cursor:
+                course = Course(*row[:14])
+                course.faculty_name = row[14]
+                course.department_name = row[15]
+                course.instructor_name = row[16] + " " + row[17]
+                course.door_number = row[18]
+                courses.append(course)
+        return courses
+
     def get_all_courses(self):
         courses = []
         with dbapi2.connect(self.dbfile) as connection:
