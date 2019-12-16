@@ -173,13 +173,13 @@ INIT_STATEMENTS = [
         FOREIGN KEY(campus_id) REFERENCES CAMPUS (id) on delete cascade
     );
     CREATE TABLE IF NOT EXISTS STAFF(
-        id              BIGINT,
+        id              BIGINT             NOT NULL,
         manager_name    VARCHAR(40), 
         absences	    INT, 
-        hire_date      	DATE,
+        hire_date      	DATE            NOT NULL,
         authority_lvl   INT,
         department      VARCHAR(40),
-        social_sec_no   SERIAL,
+        social_sec_no   SERIAL          NOT NULL,
         PRIMARY KEY(id),
         FOREIGN KEY(id) REFERENCES PEOPLE (tr_id) on delete cascade
     );
@@ -387,7 +387,6 @@ INIT_STATEMENTS = [
     """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (1, 1, 'Yemekhane', 'YMK', '50', '1400', '70000')""",
     """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (2, 2, 'Kütüphane', 'LIB', '50', '1400', '50000')""",
     """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (3, 4, 'Bilgi İşlem', 'BIDB', '50', '1400', '80000')""",
-
     # Add Staff-facility connection
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('leader', '2019-12-12', '2019-12-12', '2000', 1, 1, 'something')""",
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('security','2019-12-12', '2019-12-12', '2000', 2, 2, 'leader')""",

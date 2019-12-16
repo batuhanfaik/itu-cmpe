@@ -1,4 +1,5 @@
 import psycopg2 as dbapi2
+from psycopg2 import Error
 
 from assistant import Assistant
 from campus import Campus, Faculty, Department
@@ -103,7 +104,15 @@ class Database:
                 return None
         instructor = Instructor(*cursor.fetchone())  # Inline unpacking of a tuple
         return instructor
-
+    def get_instructor_via_tr_id(self, tr_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from instructor where (tr_id = %s)"
+            cursor.execute(query, (tr_id,))
+            if cursor.rowcount == 0:
+                return None
+        instructor = Instructor(*cursor.fetchone())  # Inline unpacking of a tuple
+        return instructor
     def get_all_instructors(self):
         instructors = []
         with dbapi2.connect(self.dbfile) as connection:
@@ -248,6 +257,16 @@ class Database:
             cursor = connection.cursor()
             query = "select * from course where (crn = %s)"
             cursor.execute(query, (crn,))
+            if cursor.rowcount == 0:
+                return None
+        course = Course(*cursor.fetchone())
+        return course
+
+    def get_course_via_instructor_id(self, instructor_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from course where (instructor_id = %s)"
+            cursor.execute(query, (instructor_id,))
             if cursor.rowcount == 0:
                 return None
         course = Course(*cursor.fetchone())
@@ -485,8 +504,19 @@ class Database:
             user.role = "staff"
         elif user.person_category == 2:
             user.role = "instructor"
+            try:
+                user.instructor_id = self.get_instructor_via_tr_id(user.tr_id).id
+            except Error as e:
+                user.instructor_id = None
+                print(e)
         else:
             user.role = "student"
+            try:
+                user.student_id = self.get_student(user.tr_id).student_id
+            except Error as e:
+                user.student_id = None
+                print(e)
+
         return user
 
     def add_campus(self, campus):

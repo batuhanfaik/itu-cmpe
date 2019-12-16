@@ -81,8 +81,7 @@ class add_campus_form(FlaskForm):
     city = SelectField(choices=city_selections)
     size = DecimalField('size')
     foundation_date = DateField('foundation_date', validators=[])
-    phone_number = StringField('phone_number', validators=[
-                               Length(10)])
+    phone_number = StringField('phone_number', validators=[])
     add_image_checkbox = BooleanField('add_image_checkbox')
     image = FileField('image',)
 
@@ -104,9 +103,9 @@ class add_campus_form(FlaskForm):
 
 
 class add_faculty_form(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
+    name = StringField('name', validators=[DataRequired(),Length(max=100)])
     shortened_name = StringField('shortened_name', validators=[DataRequired()])
-    address = TextAreaField('address', validators=[Length(min=4, max=50)])
+    address = TextAreaField('address', validators=[Length(max=80)])
     foundation_date = DateField('foundation_date')
     phone_number = StringField('phone_number')
 

@@ -501,7 +501,10 @@ def courses_page():
     return render_template("courses.html", courses=courses)
 
 
+@login_required
 def add_course_page():
+    if current_user.role != 'admin':
+        return redirect(url_for("landing_page"))
     form = CourseForm()
     if form.validate_on_submit():
         db = current_app.config['db']
@@ -536,7 +539,10 @@ def add_course_page():
     return render_template("edit_course.html", form=form, error=None, title="Add Course")
 
 
+@login_required
 def edit_course_page(crn):
+    if current_user.role != 'admin':
+        return redirect(url_for("landing_page"))
     error = ""
     db = current_app.config["db"]
     course = db.get_course(crn)
@@ -571,13 +577,19 @@ def edit_course_page(crn):
 
 
 # instructor pages#
+@login_required
 def instructors_page():
+    if current_user.role != 'admin':
+        return redirect(url_for("landing_page"))
     db = current_app.config["db"]
     instructors = db.get_all_instructors()
     return render_template("instructors.html", instructors=instructors)
 
 
+@login_required
 def add_instructor_page():
+    if current_user.role != 'admin':
+        return redirect(url_for("landing_page"))
     form = InstructorForm()
     if form.validate_on_submit():
         db = current_app.config["db"]
@@ -612,7 +624,10 @@ def add_instructor_page():
     return render_template("edit_instructor.html", form=form, title="Add Instructor", error=None)
 
 
+@login_required
 def edit_instructor_page(id):
+    if current_user.role != 'admin':
+        return redirect(url_for("landing_page"))
     error = ""
     db = current_app.config["db"]
     form = InstructorForm()
@@ -680,6 +695,14 @@ def course_info_page(crn):
     department= db.get_department(course.department_id)
     faculty= db.get_faculty(department.faculty_id)
     students = []
+    give_permission_to_see = False
+    if(current_user.is_authenticated):
+        instructor = db.get_instructor_via_tr_id(current_user.tr_id)
+        give_permission_to_see = False
+        if(not instructor is None):
+            is_this_course = db.get_course_via_instructor_id(instructor.id)
+            if(not is_this_course is None):
+                give_permission_to_see = True
     for student in taken_course_students:
         std = db.get_student_via_student_id(student.student_id)
         std.grade = student.grade
@@ -694,8 +717,11 @@ def course_info_page(crn):
         'course' : course,
         'department':department,
         'faculty':faculty,
+        'give_permission_to_see':give_permission_to_see
     }
-    if(request.method == "POST"):
+    if(request.method == "POST" and "redirect_course_edit_page" in request.form):
+        return redirect(url_for('edit_course_page',crn=crn))    
+    if(request.method == "POST" and "post_grade_form" in request.form):
         for taken_course in taken_course_students:
             strm = 'std'+str(taken_course.student_id)
             print(request.form)

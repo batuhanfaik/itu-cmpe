@@ -54,9 +54,11 @@
                 <li class="nav-item {% if request.path==url_for("assistants_page") %} active {% endif %}">
                     <a class="nav-link" href="{{ url_for("assistants_page") }}">Assistants</a>
                 </li>
+                {% if current_user.is_admin %}
                 <li class="nav-item {% if request.path==url_for("campus") %} active {% endif %}">
                     <a class="nav-link" href="{{ url_for("campus") }}">Campuses</a>
                 </li>
+                {% endif %}
                 <li class="nav-item {% if request.path==url_for("staff_add_page") %} active {% endif %}">
                     <a class="nav-link" href="{{ url_for("staff_add_page") }}">Staff</a>
                 </li>
