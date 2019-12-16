@@ -699,8 +699,7 @@ def course_info_page(crn):
         instructor = db.get_instructor_via_tr_id(current_user.tr_id)
         give_permission_to_see = False
         if(not instructor is None):
-            is_this_course = db.get_course_via_instructor_id(instructor.id)
-            if(not is_this_course is None):
+            if(course.instructor_id == instructor.id):
                 give_permission_to_see = True
     for student in taken_course_students:
         std = db.get_student_via_student_id(student.student_id)
@@ -870,8 +869,6 @@ def validation_facility(form):
 
     form_id = form.get("id")
     form_campus_id = form.get("campus_id")
-
-
     if db.get_facility(form_id):
         form.errors["id"] = "This facility is already registered with the given id."
         flash('This facility is already registered with the given id')
@@ -966,11 +963,6 @@ def facility_page():
             #flash('Input NOT Valid!')
             return render_template("facility.html", facilities=all_facilities,
                                    values=request.form)
-
-
-
-
-
         else:
             id = request.form.get("id")
             campus_id = request.form.data["campus_id"]
