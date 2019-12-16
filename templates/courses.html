@@ -8,7 +8,9 @@
         {% if current_user.role == 'admin' %}
              <button class="button btn-success" onClick=" window.location.href = '{{url_for("add_course_page") }}'"> Add Course </button>
         {% endif %}
-
+        {% if not courses %}
+        <h1 class="warning-color"> No courses </h1>
+        {% endif %}
         </div>
         <table class="table mt-1 is-striped is-fullwidth table-hover table-sm">
             <thead>
@@ -27,6 +29,9 @@
                 <th scope="col">Capacity</th>
                 <th scope="col">Credits</th>
                 <th scope="col">Language</th>
+                {% if current_user.role == "student" %}
+                <th scope="col">Grade</th>
+                {% endif %}
             </tr>
             </thead>
             {% for course in courses %}
@@ -48,6 +53,9 @@
                     <td>{{ course.capacity }}</td>
                     <td>{{ course.credits }}</td>
                     <td>{{ course.language }}</td>
+                    {% if current_user.role == 'student' %}
+                    <td>{{ course.grade }}</td>
+                    {% endif %}
                 </tr>
 
             {% endfor %}

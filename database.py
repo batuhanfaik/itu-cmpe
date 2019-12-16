@@ -65,6 +65,31 @@ class Database:
                 students.append(taken_course)
         return students
 
+    def get_courses_taken_by_student(self, student_id):
+        courses = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """select course.*, faculty.shortened_name, department.shortened_name,
+                            people.name, people.surname, classroom.door_number, taken_course.grade
+                            from course, classroom, faculty, instructor, department, people, taken_course
+                            where (course.department_id = department.id
+                            and course.instructor_id = instructor.id
+                            and classroom.faculty_id = faculty.id
+                            and course.classroom_id = classroom.id
+                            and people.tr_id = instructor.tr_id
+                            and taken_course.crn = course.crn
+                            and student_id = %s) order by (course.crn);"""
+            cursor.execute(query, (student_id,))
+            for row in cursor:
+                course = Course(*row[:14])
+                course.faculty_name = row[14]
+                course.department_name = row[15]
+                course.instructor_name = row[16] + " " + row[17]
+                course.door_number = row[18]
+                course.grade = row[19]
+                courses.append(course)
+        return courses
+
     # instructor crud #
     def add_instructor(self, instructor):
         with dbapi2.connect(self.dbfile) as connection:
@@ -271,6 +296,29 @@ class Database:
                 return None
         course = Course(*cursor.fetchone())
         return course
+
+    def get_courses_by_instructor_id(self, instructor_id):
+        courses = []
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """select course.*, faculty.shortened_name, department.shortened_name,
+                            people.name, people.surname, classroom.door_number
+                            from course, classroom, faculty, instructor, department, people
+                            where (course.department_id = department.id
+                            and course.instructor_id = instructor.id
+                            and classroom.faculty_id = faculty.id
+                            and course.classroom_id = classroom.id
+                            and people.tr_id = instructor.tr_id
+                            and course.instructor_id = %s) order by (course.crn);"""
+            cursor.execute(query, (instructor_id,))
+            for row in cursor:
+                course = Course(*row[:14])
+                course.faculty_name = row[14]
+                course.department_name = row[15]
+                course.instructor_name = row[16] + " " + row[17]
+                course.door_number = row[18]
+                courses.append(course)
+        return courses
 
     def get_all_courses(self):
         courses = []
@@ -498,6 +546,8 @@ class Database:
             if cursor.rowcount == 0:
                 return None
         user = Person(*cursor.fetchone())
+        user.instructor_id = None
+        user.student_id = None
         if user.person_category == 0:
             user.role = "admin"
         elif user.person_category == 1:
@@ -507,14 +557,12 @@ class Database:
             try:
                 user.instructor_id = self.get_instructor_via_tr_id(user.tr_id).id
             except Error as e:
-                user.instructor_id = None
                 print(e)
         else:
             user.role = "student"
             try:
                 user.student_id = self.get_student(user.tr_id).student_id
             except Error as e:
-                user.student_id = None
                 print(e)
 
         return user

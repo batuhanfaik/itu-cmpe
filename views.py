@@ -1,23 +1,24 @@
+from os import getenv
+
 from flask import current_app, render_template, request, redirect, url_for, abort, flash
 from flask_login import login_required, logout_user, login_user, current_user
 from passlib.hash import pbkdf2_sha256 as hash_machine
-from werkzeug.utils import secure_filename
-from os import getenv
 from psycopg2 import errors, Error
-import dbinit
+from werkzeug.utils import secure_filename
 
+import dbinit
 from assistant import Assistant
 from campus import Campus
-from faculty import Faculty
-from forms import login_form, InstructorForm, ClassroomForm, CourseForm
-from person import Person
-from student import Student
-from instructor import Instructor
-from staff import Staff
 from classroom import Classroom
 from course import Course
 from facility import Facility
+from faculty import Faculty
+from forms import login_form, InstructorForm, ClassroomForm, CourseForm
+from instructor import Instructor
+from person import Person
+from staff import Staff
 from staff_facil import Staff_facil
+from student import Student
 
 
 def landing_page():
@@ -96,6 +97,8 @@ def people_page():
     if request.method == "GET":
         return render_template("people.html", people=sorted(people), values=request.form)
     else:
+        if current_user.role != 'admin':
+            return redirect(url_for("landing_page"))
         valid = validate_people_form(request.form)
         if not valid:
             return render_template("people.html", people=sorted(people),
@@ -140,7 +143,6 @@ def people_page():
                 #flash('Staff could not created!')
                 #print(type(e))
                 #flash(type(e))
-
         people = db.get_people()
         return render_template("people.html", people=sorted(people), values={})
 
@@ -153,6 +155,8 @@ def person_page(tr_id):
     if request.method == "GET":
         return render_template("person.html", person=person)
     else:
+        if current_user.role != 'admin':
+            return redirect(url_for("landing_page"))
         if request.form["update_button"] == "update":
             form_tr_id = request.form["tr_id"]
             form_name = request.form["name"]
@@ -225,6 +229,8 @@ def students_page():
     if request.method == "GET":
         return render_template("students.html", students=sorted(students), values=request.form)
     else:
+        if current_user.role != 'admin':
+            return redirect(url_for("landing_page"))
         valid = validate_students_form(request.form)
         if not valid:
             return render_template("students.html", students=sorted(students), values=request.form)
@@ -254,6 +260,8 @@ def student_page(tr_id):
     if request.method == "GET":
         return render_template("student.html", student=student)
     else:
+        if current_user.role != 'admin':
+            return redirect(url_for("landing_page"))
         if request.form["update_button"] == "update":
             form_tr_id = request.form["tr_id"]
             form_faculty_id = request.form["faculty_id"]
@@ -308,6 +316,8 @@ def assistants_page():
         return render_template("assistants.html", assistants=sorted(assistants),
                                values=request.form)
     else:
+        if current_user.role != 'admin':
+            return redirect(url_for("landing_page"))
         valid = validate_assistants_form(request.form)
         if not valid:
             return render_template("assistants.html", assistants=sorted(assistants),
@@ -341,6 +351,8 @@ def assistant_page(tr_id):
     if request.method == "GET":
         return render_template("assistant.html", assistant=assistant)
     else:
+        if current_user.role != 'admin':
+            return redirect(url_for("landing_page"))
         if request.form["update_button"] == "update":
             form_tr_id = request.form["tr_id"]
             form_faculty_id = request.form["faculty_id"]
@@ -367,6 +379,7 @@ def assistant_page(tr_id):
 def manage_campuses():
     db = current_app.config["db"]
     campuses = db.get_campuses()
+
     if request.method == "GET":
         return render_template("manage_campuses.html", campuses=campuses)
     else:
@@ -509,6 +522,18 @@ def courses_page():
     courses = db.get_all_courses()
     return render_template("courses.html", courses=courses)
 
+
+@login_required
+def my_courses_page():
+    if current_user.role != 'student' and current_user.role != 'instructor':
+        return redirect(url_for("landing_page"))
+    db = current_app.config['db']
+    courses = []
+    if current_user.student_id is not None:
+        courses = db.get_courses_taken_by_student(current_user.student_id)
+    elif current_user.instructor_id is not None:
+        courses = db.get_courses_by_instructor_id(current_user.instructor_id)
+    return render_template("courses.html", courses=courses)
 
 @login_required
 def add_course_page():
@@ -708,8 +733,9 @@ def course_info_page(crn):
     if(current_user.is_authenticated):
         instructor = db.get_instructor_via_tr_id(current_user.tr_id)
         give_permission_to_see = False
-        if(not instructor is None):
-            if(course.instructor_id == instructor.id):
+        if (not instructor is None):
+            is_this_course = db.get_course_via_instructor_id(instructor.id)
+            if (not is_this_course is None):
                 give_permission_to_see = True
     for student in taken_course_students:
         std = db.get_student_via_student_id(student.student_id)
@@ -728,7 +754,7 @@ def course_info_page(crn):
         'give_permission_to_see':give_permission_to_see
     }
     if(request.method == "POST" and "redirect_course_edit_page" in request.form):
-        return redirect(url_for('edit_course_page',crn=crn))    
+        return redirect(url_for('edit_course_page',crn=crn))
     if(request.method == "POST" and "post_grade_form" in request.form):
         for taken_course in taken_course_students:
             strm = 'std'+str(taken_course.student_id)
@@ -907,13 +933,11 @@ def staff_add_page():
             department = request.form.data["department"]
             social_sec = request.form.data["social_sec_no"]
             new_staff = Staff(id=staff_id,manager_name= manager_name,absences= absences,hire_date= hire_date,social_sec_no= social_sec,department= department,authority_lvl= authority)
-            print("\n\n new staff info: ",new_staff.id, new_staff.manager_name)
             try:
                 db.add_staff(new_staff)
                 flash('Staff successfully added!')
             except Error as e:
                 flash('Staff NOT added!')
-                print("\n, error: ", type(e))
                 if isinstance(e, errors.UniqueViolation):
                     flash('A staff with this ID already exists')
                     return render_template("staff.html", form=request.form,staffs = all_staff,values=request.form,
@@ -944,6 +968,7 @@ def validation_facility(form):
 
     form_id = form.get("id")
     form_campus_id = form.get("campus_id")
+
     if db.get_facility(form_id):
         form.errors["id"] = "This facility is already registered with the given id."
         flash('This facility is already registered with the given id')
@@ -1038,6 +1063,11 @@ def facility_page():
             #flash('Input NOT Valid!')
             return render_template("facility.html", facilities=all_facilities,
                                    values=request.form)
+
+
+
+
+
         else:
             id = request.form.get("id")
             campus_id = request.form.data["campus_id"]
@@ -1067,4 +1097,3 @@ def facility_page():
                     return render_template("facility.html", form=request.form, facilities=all_facilities, values=request.form,
                                            error=type(e).__name__ + "-----" + str(e))
             return redirect(url_for("facility_page", facilities=all_facilities, values=request.form))
-
