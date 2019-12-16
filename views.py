@@ -717,6 +717,7 @@ def test_page():
 def course_info_page(crn):
     db = current_app.config["db"]
     taken_course_students = db.get_taken_course_by_crn(crn)
+    db.update_course_enrollment(crn)
     course = db.get_course(crn)
     department= db.get_department(course.department_id)
     faculty= db.get_faculty(department.faculty_id)

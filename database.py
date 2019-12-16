@@ -341,6 +341,14 @@ class Database:
                 courses.append(course)
         return courses
 
+    def update_course_enrollment(self, crn):
+        with dbapi2.connect(self, dbapi2) as connection:
+            cursor = connection.cursor()
+            cursor.execute("""select count(student_id) from taken_course where crn = %s;""", (crn,))
+            number = cursor.fetchone()
+            cursor.execute("""update course set enrolled = %s where crn = %s""", (number, crn))
+        return number
+
     ########################
     def add_person(self, person):
         with dbapi2.connect(self.dbfile) as connection:
