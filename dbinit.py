@@ -392,6 +392,7 @@ INIT_STATEMENTS = [
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('22', 'Manager2', '0', '2019-12-12','12344','Information Tech','2');""",
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('33', 'Manager3', '1', '2019-12-12','12345','Information Tech','1');""",
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('44', 'Manager4', '0', '2019-12-12','12344','Service Tech','2');""",
+    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('111', null, null , null,null,null,null);""",
 
     # Insert Taken Courses
     """insert into taken_course (id,student_id,crn) values ('1','150180704','11111');""",
@@ -408,7 +409,7 @@ INIT_STATEMENTS = [
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('security','2019-12-12', '2019-12-12', '2000', 2, 2, 'leader')""",
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('member', '2019-12-12', '2019-12-12', '2000', 2, 3, 'member')""",
 
-    # Staff
+    # Staff people
     """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
         birth_date, id_reg_city, id_reg_district) values (1111,'fstaff', 'fatih', '1', 
         'fstaff@itu.edu.tr','fatih',

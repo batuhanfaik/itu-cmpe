@@ -135,14 +135,14 @@ def people_page():
                         photo_data)
         db = current_app.config["db"]
         person_tr_id = db.add_person(person)
-        #if(form_category == 1):
-            #new_staff = Staff(id=form_tr_id)
-            #try:
-                #db.add_staff(new_staff)
-            #except Error as e:
-                #flash('Staff could not created!')
-                #print(type(e))
-                #flash(type(e))
+        if(form_category == 1):
+            new_staff = Staff(id=form_tr_id,manager_name = None, absences=None,hire_date= None,authority_lvl=None,department=None,social_sec_no=None)
+            try:
+                db.add_staff(new_staff)
+            except Error as e:
+                flash('Staff could not created!')
+                print("PEOPLEEEE", type(e))
+                flash(type(e))
         people = db.get_people()
         return render_template("people.html", people=sorted(people), values={})
 
@@ -777,12 +777,6 @@ def validation_staff(form):
     elif form.get("id") == 0 or form.get("id") ==None:
         form.errors["id"] = "ID cannot be empty."
         flash('ID cannot be empty.')
-    elif form.get("hire_date") == 0:
-        form.errors["hire_date"] = "Hire Date cannot be empty."
-        flash('Hire Date cannot be empty.')
-    elif form.get("social_sec_no") == 0:
-        form.errors["social_sec_no"] = "Social Security Number cannot be empty."
-        flash('Social Security Number cannot be empty')
     elif not db.get_person(form_id):
         form.errors["id"] = "There is no Person with the given ID."
         flash('No people exists with this TR ID')
@@ -932,12 +926,26 @@ def staff_add_page():
             authority = request.form.data["authority_lvl"]
             department = request.form.data["department"]
             social_sec = request.form.data["social_sec_no"]
+            if len(manager_name) == 0:
+                manager_name=None
+            if len(absences) == 0:
+                absences=None
+            if len(hire_date) == 0:
+                hire_date=None
+            if len(authority) == 0:
+                authority=None
+            if len(department) == 0:
+                department=None
+            if len(social_sec) == 0:
+                social_sec=None
             new_staff = Staff(id=staff_id,manager_name= manager_name,absences= absences,hire_date= hire_date,social_sec_no= social_sec,department= department,authority_lvl= authority)
             try:
                 db.add_staff(new_staff)
                 flash('Staff successfully added!')
             except Error as e:
                 flash('Staff NOT added!')
+                print("Error:",type(e))
+                print("\ninfo:", new_staff.id, )
                 if isinstance(e, errors.UniqueViolation):
                     flash('A staff with this ID already exists')
                     return render_template("staff.html", form=request.form,staffs = all_staff,values=request.form,
