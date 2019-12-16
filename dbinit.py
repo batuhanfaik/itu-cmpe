@@ -147,8 +147,8 @@ INIT_STATEMENTS = [
     );
     CREATE TABLE IF NOT EXISTS SYLLABUS (
         crn             char(5)         PRIMARY KEY,
-        syllabus        bytea       null,
-        foreign key (crn) references course(crn)
+        file            bytea           default null,
+        foreign key (crn) references course(crn) on delete cascade
     );
     CREATE TABLE IF NOT EXISTS COURSE_ASSISTED (
         crn char(6) primary key references COURSE(crn) not null,
