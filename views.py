@@ -566,6 +566,13 @@ def add_course_page():
 
 
 @login_required
+def select_courses_page():
+    if current_user.role != 'student':
+        return redirect(url_for("landing_page"))
+    return 'ses'
+
+
+@login_required
 def edit_course_page(crn):
     if current_user.role != 'admin':
         return redirect(url_for("landing_page"))
