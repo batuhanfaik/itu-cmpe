@@ -574,6 +574,13 @@ def add_course_page():
 
 
 @login_required
+def select_courses_page():
+    if current_user.role != 'student':
+        return redirect(url_for("landing_page"))
+    return 'ses'
+
+
+@login_required
 def edit_course_page(crn):
     if current_user.role != 'admin':
         return redirect(url_for("landing_page"))
@@ -725,6 +732,7 @@ def test_page():
 def course_info_page(crn):
     db = current_app.config["db"]
     taken_course_students = db.get_taken_course_by_crn(crn)
+    db.update_course_enrollment(crn)
     course = db.get_course(crn)
     department= db.get_department(course.department_id)
     faculty= db.get_faculty(department.faculty_id)
