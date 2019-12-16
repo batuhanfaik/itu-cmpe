@@ -86,7 +86,7 @@ INIT_STATEMENTS = [
         unique(door_number, faculty_id)
     );
     CREATE TABLE IF NOT EXISTS STUDENT (
-        tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) NOT NULL,
+        tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id)  on delete cascade NOT NULL,
         faculty_id int references FACULTY(id) not null,
         department_id int references DEPARTMENT(id) not null,
         student_id bigint not null,
@@ -107,13 +107,13 @@ INIT_STATEMENTS = [
         masters VARCHAR(80),
         doctorates VARCHAR(80),
         room_id CHAR(4),
-        FOREIGN KEY (tr_id) REFERENCES PEOPLE (tr_id),
+        FOREIGN KEY (tr_id) REFERENCES PEOPLE (tr_id)  on delete cascade,
         FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
         FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id),
         unique(tr_id)
     );
     CREATE TABLE IF NOT EXISTS ASSISTANT (
-        tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) NOT NULL,
+        tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) on delete cascade NOT NULL,
         faculty_id int references FACULTY(id) not null,
         supervisor bigint references INSTRUCTOR(id) not null,
         assistant_id bigint not null,
@@ -167,8 +167,8 @@ INIT_STATEMENTS = [
         crn CHAR(6) NOT NULL,
         grade REAL NULL,
         datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (student_id) REFERENCES STUDENT (student_id),
-        FOREIGN KEY (crn) REFERENCES COURSE (crn), 
+        FOREIGN KEY (student_id) REFERENCES STUDENT (student_id)  on delete cascade,
+        FOREIGN KEY (crn) REFERENCES COURSE (crn)  on delete cascade, 
         UNIQUE(student_id, crn),
         CHECK ( grade >= 0 and grade <= 4 ) 
     );
@@ -176,7 +176,7 @@ INIT_STATEMENTS = [
         tr_id           BIGINT          NOT NULL,
         faculty_id 	    INT             NOT NULL, 
         phone_number 	VARCHAR(40)	    NOT NULL,
-        FOREIGN KEY(tr_id) REFERENCES PEOPLE (tr_id)
+        FOREIGN KEY(tr_id) REFERENCES PEOPLE (tr_id)  on delete cascade
     );
     CREATE TABLE IF NOT EXISTS FACILITY(
         id				    SERIAL 		NOT NULL,
