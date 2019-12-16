@@ -150,17 +150,6 @@ INIT_STATEMENTS = [
         file            bytea           default null,
         foreign key (crn) references course(crn) on delete cascade
     );
-    CREATE TABLE IF NOT EXISTS COURSE_ASSISTED (
-        crn char(6) primary key references COURSE(crn) not null,
-        assistant_id bigint references ASSISTANT(assistant_id) not null,
-        room_id int references CLASSROOM(id) not null,
-        problem_session boolean not null default false,
-        exam boolean not null default false,
-        homework boolean not null default false,
-        quiz boolean not null default false,
-        recitation boolean not null default false,
-        role varchar(60) null
-    );
     CREATE TABLE IF NOT EXISTS TAKEN_COURSE(
         id SERIAL PRIMARY KEY,
         student_id BIGINT NOT NULL,
@@ -172,12 +161,7 @@ INIT_STATEMENTS = [
         UNIQUE(student_id, crn),
         CHECK ( grade >= 0 and grade <= 4 ) 
     );
-    CREATE TABLE IF NOT EXISTS ADMINISTRATOR(
-        tr_id           BIGINT          NOT NULL,
-        faculty_id 	    INT             NOT NULL, 
-        phone_number 	VARCHAR(40)	    NOT NULL,
-        FOREIGN KEY(tr_id) REFERENCES PEOPLE (tr_id)  on delete cascade
-    );
+
     CREATE TABLE IF NOT EXISTS FACILITY(
         id				    SERIAL 		NOT NULL,
         campus_id           SERIAL      NOT NULL,
