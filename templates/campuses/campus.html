@@ -20,7 +20,7 @@
             
                    {{ context.form.name(required=True, autofocus=True,
                     class='form-control mb-2 mr-sm-2',
-                    placeholder='e.g. "Ayazaga Campus"', style='width:80%', id='name') }} {% for error in
+                    placeholder='e.g. "Ayazaga"', style='width:80%', id='name') }} {% for error in
                     context.form.name.errors %}
                     <div class="invalid-feedback">s{{ error }}</div>
                     {% endfor %}           
