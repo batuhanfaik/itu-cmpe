@@ -500,7 +500,10 @@ def courses_page():
     return render_template("courses.html", courses=courses)
 
 
+@login_required
 def add_course_page():
+    if current_user.role != 'admin':
+        return redirect(url_for("landing_page"))
     form = CourseForm()
     if form.validate_on_submit():
         db = current_app.config['db']
@@ -535,7 +538,10 @@ def add_course_page():
     return render_template("edit_course.html", form=form, error=None, title="Add Course")
 
 
+@login_required
 def edit_course_page(crn):
+    if current_user.role != 'admin':
+        return redirect(url_for("landing_page"))
     error = ""
     db = current_app.config["db"]
     course = db.get_course(crn)
@@ -570,13 +576,19 @@ def edit_course_page(crn):
 
 
 # instructor pages#
+@login_required
 def instructors_page():
+    if current_user.role != 'admin':
+        return redirect(url_for("landing_page"))
     db = current_app.config["db"]
     instructors = db.get_all_instructors()
     return render_template("instructors.html", instructors=instructors)
 
 
+@login_required
 def add_instructor_page():
+    if current_user.role != 'admin':
+        return redirect(url_for("landing_page"))
     form = InstructorForm()
     if form.validate_on_submit():
         db = current_app.config["db"]
@@ -611,7 +623,10 @@ def add_instructor_page():
     return render_template("edit_instructor.html", form=form, title="Add Instructor", error=None)
 
 
+@login_required
 def edit_instructor_page(id):
+    if current_user.role != 'admin':
+        return redirect(url_for("landing_page"))
     error = ""
     db = current_app.config["db"]
     form = InstructorForm()
