@@ -58,7 +58,7 @@ INIT_STATEMENTS = [
         foundation_date 	DATE,
         phone_number		CHAR(11),
         PRIMARY KEY(id),
-        FOREIGN KEY(campus_id) REFERENCES CAMPUS(id) on delete cascade
+        FOREIGN KEY(campus_id) REFERENCES CAMPUS(id) on delete cascade on update cascade
     );
     CREATE TABLE IF NOT EXISTS DEPARTMENT(
         id				    SERIAL 		NOT NULL,
@@ -70,7 +70,7 @@ INIT_STATEMENTS = [
         foundation_date 	DATE,
         phone_number		CHAR(11),
         PRIMARY KEY(id),
-        FOREIGN KEY(faculty_id) REFERENCES FACULTY(id) on delete cascade
+        FOREIGN KEY(faculty_id) REFERENCES FACULTY(id) on delete cascade on update cascade
     );
     CREATE TABLE IF NOT EXISTS CLASSROOM(
         id              SERIAL      NOT NULL PRIMARY KEY,
@@ -82,11 +82,11 @@ INIT_STATEMENTS = [
         board_count     INT,
         air_conditioner BOOLEAN     DEFAULT false,
         faculty_id      INT         NOT NULL,
-        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id) on delete cascade,
+        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id) on delete cascade on update cascade,
         unique(door_number, faculty_id)
     );
     CREATE TABLE IF NOT EXISTS STUDENT (
-        tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id)  on delete cascade NOT NULL,
+        tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id)  on delete cascade on update cascade NOT NULL,
         faculty_id int references FACULTY(id) not null,
         department_id int references DEPARTMENT(id) not null,
         student_id bigint not null,
@@ -107,13 +107,13 @@ INIT_STATEMENTS = [
         masters VARCHAR(80),
         doctorates VARCHAR(80),
         room_id CHAR(4),
-        FOREIGN KEY (tr_id) REFERENCES PEOPLE (tr_id)  on delete cascade,
-        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id),
-        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id),
+        FOREIGN KEY (tr_id) REFERENCES PEOPLE (tr_id)  on delete cascade on update cascade,
+        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id) on delete cascade on update cascade,
+        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id) on delete cascade on update cascade,
         unique(tr_id)
     );
     CREATE TABLE IF NOT EXISTS ASSISTANT (
-        tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) on delete cascade NOT NULL,
+        tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) on delete cascade on update cascade NOT NULL,
         faculty_id int references FACULTY(id) not null,
         supervisor bigint references INSTRUCTOR(id) not null,
         assistant_id bigint not null,
@@ -141,14 +141,14 @@ INIT_STATEMENTS = [
         instructor_id   INT         NOT NULL,
         department_id   INT         NOT NULL,
         info            TEXT        NULL,
-        FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id) on delete cascade,
-        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id) on delete cascade,
-        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id) on delete cascade
+        FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id) on delete cascade on update cascade,
+        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id) on delete cascade on update cascade,
+        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id) on delete cascade on update cascade
     );
     CREATE TABLE IF NOT EXISTS SYLLABUS (
         crn             char(5)         PRIMARY KEY,
         file            bytea           default null,
-        foreign key (crn) references course(crn) on delete cascade
+        foreign key (crn) references course(crn) on delete cascade on update cascade
     );
     CREATE TABLE IF NOT EXISTS TAKEN_COURSE(
         id SERIAL PRIMARY KEY,
@@ -156,8 +156,8 @@ INIT_STATEMENTS = [
         crn CHAR(6) NOT NULL,
         grade REAL NULL,
         datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (student_id) REFERENCES STUDENT (student_id)  on delete cascade,
-        FOREIGN KEY (crn) REFERENCES COURSE (crn)  on delete cascade, 
+        FOREIGN KEY (student_id) REFERENCES STUDENT (student_id)  on delete cascade on update cascade,
+        FOREIGN KEY (crn) REFERENCES COURSE (crn)  on delete cascade on update cascade, 
         UNIQUE(student_id, crn),
         CHECK ( grade >= 0 and grade <= 4 ) 
     );
@@ -170,18 +170,18 @@ INIT_STATEMENTS = [
         size             	INT,
         expenses    		INT,
         PRIMARY KEY(id),
-        FOREIGN KEY(campus_id) REFERENCES CAMPUS (id) on delete cascade
+        FOREIGN KEY(campus_id) REFERENCES CAMPUS (id) on delete cascade on update cascade
     );
     CREATE TABLE IF NOT EXISTS STAFF(
-        id              BIGINT             NOT NULL,
+        id              BIGINT,
         manager_name    VARCHAR(40), 
         absences	    INT, 
-        hire_date      	DATE            NOT NULL,
+        hire_date      	DATE,
         authority_lvl   INT,
         department      VARCHAR(40),
-        social_sec_no   SERIAL          NOT NULL,
+        social_sec_no   SERIAL,
         PRIMARY KEY(id),
-        FOREIGN KEY(id) REFERENCES PEOPLE (tr_id) on delete cascade
+        FOREIGN KEY(id) REFERENCES PEOPLE (tr_id) on delete cascade on update cascade
     );
     CREATE TABLE IF NOT EXISTS STAFF_FACIL(
         title           VARCHAR(20)     NOT NULL,
@@ -191,8 +191,8 @@ INIT_STATEMENTS = [
         facility_id	    BIGINT          NOT NULL, 
         staff_id        BIGINT          NOT NULL,
         duty         	VARCHAR(20)	    NOT NULL,
-        FOREIGN KEY(facility_id) REFERENCES FACILITY (id) on delete cascade,
-        FOREIGN KEY(staff_id) REFERENCES STAFF (id) on delete cascade, 
+        FOREIGN KEY(facility_id) REFERENCES FACILITY (id) on delete cascade on update cascade,
+        FOREIGN KEY(staff_id) REFERENCES STAFF (id) on delete cascade on update cascade, 
         PRIMARY KEY(facility_id,staff_id)
     );
     """,
@@ -244,7 +244,23 @@ INIT_STATEMENTS = [
     """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
     birth_date, id_reg_city, id_reg_district) values (444,'zstudent', 'zeynep', '1', 
     'zstudent@itu.edu.tr','$pbkdf2-sha256$29000$3RsjZAxByLm3ViqF8F7rXQ$HkPwZXe73FrvDuVJQ3JC1ExmmcIvbAwpbnhzhMmqa0w',
-    '5', '2019-10-10', 'a','b');""",
+    '5', '2019-10-10', 'a','b');
+    insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (11111,'fassistant', 'fatih', '1', 
+    'fassistant@itu.edu.tr','$pbkdf2-sha256$29000$pPQ.RwgB4Nxbq7V2DmGM8Q$4lFUXxu17es8iNJHSD/w/FM6Y/5JaF7bvekDxhRmAeU',
+    '3', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (22222,'bassistant', 'batu', '1', 
+    'bassistant@itu.edu.tr','$pbkdf2-sha256$29000$cc557907RyiFEOK813ovJQ$Xnrg4Tfl5QqpZoeVfHmBaA4A./ZK.6obUc2WXNIIu3g',
+    '3', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (33333,'cassistant', 'cihat', '1', 
+    'cassistant@itu.edu.tr','$pbkdf2-sha256$29000$PMeYc865d641BiBE6N2b8w$BE4L4t9zfdrZvKYuJRX0/EnpkiSA2n/TAIXwfmhTj1c',
+    '3', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+    birth_date, id_reg_city, id_reg_district) values (44444,'zassistant', 'zeynep', '1', 
+    'zassistant@itu.edu.tr','$pbkdf2-sha256$29000$3RsjZAxByLm3ViqF8F7rXQ$HkPwZXe73FrvDuVJQ3JC1ExmmcIvbAwpbnhzhMmqa0w',
+    '3', '2019-10-10', 'a','b');""",
 
     # Create campus
     """insert into campus (name, address,city,size,foundation_date,phone_number) values ('Ayazağa', 'Reşitpaşa, Park Yolu No:2, 34467 Sarıyer','İstanbul','247','01.01.1773','2122853030');""",
@@ -391,6 +407,25 @@ INIT_STATEMENTS = [
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('leader', '2019-12-12', '2019-12-12', '2000', 1, 1, 'something')""",
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('security','2019-12-12', '2019-12-12', '2000', 2, 2, 'leader')""",
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('member', '2019-12-12', '2019-12-12', '2000', 2, 3, 'member')""",
+
+    # Staff
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+        birth_date, id_reg_city, id_reg_district) values (1111,'fstaff', 'fatih', '1', 
+        'fstaff@itu.edu.tr','fatih',
+        '1', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+        birth_date, id_reg_city, id_reg_district) values (2222,'bstaff', 'batu', '1', 
+        'bstaff@itu.edu.tr','batu',
+        '1', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+        birth_date, id_reg_city, id_reg_district) values (3333,'cstaff', 'cihat', '1', 
+        'cstaff@itu.edu.tr','cihat',
+        '1', '2019-10-10', 'a','b');""",
+    """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
+        birth_date, id_reg_city, id_reg_district) values (4444,'zstaff', 'zeynep', '1', 
+        'zstaff@itu.edu.tr','zeynep',
+        '1', '2019-10-10', 'a','b');""",
+
 
 ]
 
