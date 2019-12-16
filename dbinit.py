@@ -44,7 +44,7 @@ INIT_STATEMENTS = [
         city 		        VARCHAR(25),
         size 		        INT,
         foundation_date     DATE,
-        phone_number        VARCHAR(12),   
+        phone_number        CHAR(11),   
         campus_image_extension VARCHAR(10) DEFAULT('NO_IMAGE'),
         campus_image_data   bytea, 
         PRIMARY KEY(id)
