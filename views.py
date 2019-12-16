@@ -632,7 +632,7 @@ def edit_instructor_page(id):
     if request.method == 'POST' and request.form['btn'] == 'delete':
         try:
             db.delete_instructor(id)
-            return redirect(url_for("courses_page"))
+            return redirect(url_for("instructors_page"))
         except Error as e:
             error = type(e).__name__ + '----' + str(e)
             if isinstance(e, errors.ForeignKeyViolation):
