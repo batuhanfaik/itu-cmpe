@@ -102,7 +102,15 @@ class Database:
                 return None
         instructor = Instructor(*cursor.fetchone())  # Inline unpacking of a tuple
         return instructor
-
+    def get_instructor_via_tr_id(self, tr_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from instructor where (tr_id = %s)"
+            cursor.execute(query, (tr_id,))
+            if cursor.rowcount == 0:
+                return None
+        instructor = Instructor(*cursor.fetchone())  # Inline unpacking of a tuple
+        return instructor
     def get_all_instructors(self):
         instructors = []
         with dbapi2.connect(self.dbfile) as connection:
@@ -247,6 +255,16 @@ class Database:
             cursor = connection.cursor()
             query = "select * from course where (crn = %s)"
             cursor.execute(query, (crn,))
+            if cursor.rowcount == 0:
+                return None
+        course = Course(*cursor.fetchone())
+        return course
+
+    def get_course_via_instructor_id(self, instructor_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from course where (instructor_id = %s)"
+            cursor.execute(query, (instructor_id,))
             if cursor.rowcount == 0:
                 return None
         course = Course(*cursor.fetchone())
