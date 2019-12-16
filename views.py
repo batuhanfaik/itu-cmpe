@@ -671,6 +671,7 @@ def edit_instructor_page(id):
 def test_page():
     return render_template("test.html")
 
+
 def course_info_page(crn):
     db = current_app.config["db"]
     taken_course_students = db.get_taken_course_by_crn(crn)
