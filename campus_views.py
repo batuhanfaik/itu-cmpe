@@ -187,7 +187,7 @@ def findNumberOfCampus():
 
 def faculty_detailed(faculty_id):
     db = current_app.config["db"]
-    classrooms = db.get_all_classrooms()
+    classrooms = db.get_all_classrooms_by_faculty(faculty_id)
     faculty = db.get_faculty(faculty_id)
     edit_faculty_form = add_faculty_form()
     add_department = add_department_form()
