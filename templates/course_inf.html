@@ -77,8 +77,16 @@ body %}
       </div>
     </div>
   </div>
+  {% if current_user.is_authenticated %}
+  {% if context.give_permission_to_see %}
   <div class="container">
-    <h1>Student List</h1>
+    <form method="POST" name="redirect_course_edit_page">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <input type="hidden" name="redirect_course_edit_page" value={{context.course.crn}}/>
+      <button type="submit" class="btn btn-primary">Edit Class Information</button>
+    </form>
+    <hr/>
+   <div class="container" style="display:inline"><h1>Student List</h1> </div> 
     <hr />
 
             <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
@@ -92,7 +100,7 @@ body %}
                 </tr>
                 </thead>
                 <tbody>
-                <form method="POST">
+                <form method="POST" name="post_grade_form">
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
                 {% for student in context.students %}
@@ -103,10 +111,10 @@ body %}
                         <td>{{ student.department_id }}</td>
                         <td>{{ student.gpa }}</td>
                         <td>{{ student.semester }}</td>
-                        <td>{% if student.grade == "None" %} There is no Grade {% else %} {{ student.grade }} {% endif %}  &nbsp;&nbsp;<select name="std{{student.student_id}}" ,style="width:40px"><option value="None">Select Note</option><option id="0" ,value="0">0</option><option id="1", value="1">1</option><option id="2", value="2">2</option><option id="3", value="3">3</option><option id="4",value="4">4</option></select></td>
+                        <td>{% if student.grade == "None" %} There is no Grade {% else %} {{ student.grade }} {% endif %}  &nbsp;&nbsp;<select name="std{{student.student_id}}" ,style="width:40px"><option value="None">Select Note</option><option id="0" ,value="0">0</option><option id="0.5" ,value="0.5">0.5</option><option id="1", value="1">1</option><option id="1.5" ,value="1.5">1.5</option><option id="2", value="2">2</option><option id="2.5" ,value="2.5">2.5</option><option id="3", value="3">3</option><option id="3.5" ,value="3.5">3.5</option><option id="4",value="4">4</option></select></td>
                     </tr>
                     <script>
-                      window.onload()={
+                      window.onload=()=>{
                         document.getElementById("{{student.grade}}").value="{{student.grade}}"
                       }
                     </script>
@@ -116,6 +124,8 @@ body %}
             <button type="submit" class="btn btn-danger">Save</button>
         </form>
   </div>
+  {% endif %}
+  {%endif %}
 </div>
 
 {% endblock %}
