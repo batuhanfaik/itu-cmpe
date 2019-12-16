@@ -1,4 +1,5 @@
 import psycopg2 as dbapi2
+from psycopg2 import Error
 
 from assistant import Assistant
 from campus import Campus, Faculty, Department
@@ -502,8 +503,19 @@ class Database:
             user.role = "staff"
         elif user.person_category == 2:
             user.role = "instructor"
+            try:
+                user.instructor_id = self.get_instructor_via_tr_id(user.tr_id).id
+            except Error as e:
+                user.instructor_id = None
+                print(e)
         else:
             user.role = "student"
+            try:
+                user.student_id = self.get_student(user.tr_id).student_id
+            except Error as e:
+                user.student_id = None
+                print(e)
+
         return user
 
     def add_campus(self, campus):
