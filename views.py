@@ -502,6 +502,18 @@ def courses_page():
 
 
 @login_required
+def my_courses_page():
+    if current_user.role != 'student' and current_user.role != 'instructor':
+        return redirect(url_for("landing_page"))
+    db = current_app.config['db']
+    courses = []
+    if current_user.student_id is not None:
+        courses = db.get_courses_taken_by_student(current_user.student_id)
+    elif current_user.instructor_id is not None:
+        courses = db.get_course_via_instructor_id(current_user.instructor_id)
+    return render_template("courses.html", courses=courses)
+
+@login_required
 def add_course_page():
     if current_user.role != 'admin':
         return redirect(url_for("landing_page"))
