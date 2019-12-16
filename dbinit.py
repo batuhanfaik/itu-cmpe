@@ -58,7 +58,7 @@ INIT_STATEMENTS = [
         foundation_date 	DATE,
         phone_number		CHAR(11),
         PRIMARY KEY(id),
-        FOREIGN KEY(campus_id) REFERENCES CAMPUS(id) on delete cascade
+        FOREIGN KEY(campus_id) REFERENCES CAMPUS(id) on delete cascade on update cascade
     );
     CREATE TABLE IF NOT EXISTS DEPARTMENT(
         id				    SERIAL 		NOT NULL,
@@ -70,7 +70,7 @@ INIT_STATEMENTS = [
         foundation_date 	DATE,
         phone_number		CHAR(11),
         PRIMARY KEY(id),
-        FOREIGN KEY(faculty_id) REFERENCES FACULTY(id) on delete cascade
+        FOREIGN KEY(faculty_id) REFERENCES FACULTY(id) on delete cascade on update cascade
     );
     CREATE TABLE IF NOT EXISTS CLASSROOM(
         id              SERIAL      NOT NULL PRIMARY KEY,
@@ -82,11 +82,11 @@ INIT_STATEMENTS = [
         board_count     INT,
         air_conditioner BOOLEAN     DEFAULT false,
         faculty_id      INT         NOT NULL,
-        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id) on delete cascade,
+        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id) on delete cascade on update cascade,
         unique(door_number, faculty_id)
     );
     CREATE TABLE IF NOT EXISTS STUDENT (
-        tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id)  on delete cascade NOT NULL,
+        tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id)  on delete cascade on update cascade NOT NULL,
         faculty_id int references FACULTY(id) not null,
         department_id int references DEPARTMENT(id) not null,
         student_id bigint not null,
@@ -107,13 +107,13 @@ INIT_STATEMENTS = [
         masters VARCHAR(80),
         doctorates VARCHAR(80),
         room_id CHAR(4),
-        FOREIGN KEY (tr_id) REFERENCES PEOPLE (tr_id)  on delete cascade,
-        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id) on delete cascade,
-        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id) on delete cascade,
+        FOREIGN KEY (tr_id) REFERENCES PEOPLE (tr_id)  on delete cascade on update cascade,
+        FOREIGN KEY (faculty_id) REFERENCES FACULTY (id) on delete cascade on update cascade,
+        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id) on delete cascade on update cascade,
         unique(tr_id)
     );
     CREATE TABLE IF NOT EXISTS ASSISTANT (
-        tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) on delete cascade NOT NULL,
+        tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) on delete cascade on update cascade NOT NULL,
         faculty_id int references FACULTY(id) not null,
         supervisor bigint references INSTRUCTOR(id) not null,
         assistant_id bigint not null,
@@ -141,14 +141,14 @@ INIT_STATEMENTS = [
         instructor_id   INT         NOT NULL,
         department_id   INT         NOT NULL,
         info            TEXT        NULL,
-        FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id) on delete cascade,
-        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id) on delete cascade,
-        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id) on delete cascade
+        FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id) on delete cascade on update cascade,
+        FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id) on delete cascade on update cascade,
+        FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id) on delete cascade on update cascade
     );
     CREATE TABLE IF NOT EXISTS SYLLABUS (
         crn             char(5)         PRIMARY KEY,
         file            bytea           default null,
-        foreign key (crn) references course(crn) on delete cascade
+        foreign key (crn) references course(crn) on delete cascade on update cascade
     );
     CREATE TABLE IF NOT EXISTS TAKEN_COURSE(
         id SERIAL PRIMARY KEY,
@@ -156,8 +156,8 @@ INIT_STATEMENTS = [
         crn CHAR(6) NOT NULL,
         grade REAL NULL,
         datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (student_id) REFERENCES STUDENT (student_id)  on delete cascade,
-        FOREIGN KEY (crn) REFERENCES COURSE (crn)  on delete cascade, 
+        FOREIGN KEY (student_id) REFERENCES STUDENT (student_id)  on delete cascade on update cascade,
+        FOREIGN KEY (crn) REFERENCES COURSE (crn)  on delete cascade on update cascade, 
         UNIQUE(student_id, crn),
         CHECK ( grade >= 0 and grade <= 4 ) 
     );
@@ -170,7 +170,7 @@ INIT_STATEMENTS = [
         size             	INT,
         expenses    		INT,
         PRIMARY KEY(id),
-        FOREIGN KEY(campus_id) REFERENCES CAMPUS (id) on delete cascade
+        FOREIGN KEY(campus_id) REFERENCES CAMPUS (id) on delete cascade on update cascade
     );
     CREATE TABLE IF NOT EXISTS STAFF(
         id              BIGINT,
@@ -181,7 +181,7 @@ INIT_STATEMENTS = [
         department      VARCHAR(40),
         social_sec_no   SERIAL,
         PRIMARY KEY(id),
-        FOREIGN KEY(id) REFERENCES PEOPLE (tr_id) on delete cascade
+        FOREIGN KEY(id) REFERENCES PEOPLE (tr_id) on delete cascade on update cascade
     );
     CREATE TABLE IF NOT EXISTS STAFF_FACIL(
         title           VARCHAR(20)     NOT NULL,
@@ -191,8 +191,8 @@ INIT_STATEMENTS = [
         facility_id	    BIGINT          NOT NULL, 
         staff_id        BIGINT          NOT NULL,
         duty         	VARCHAR(20)	    NOT NULL,
-        FOREIGN KEY(facility_id) REFERENCES FACILITY (id) on delete cascade,
-        FOREIGN KEY(staff_id) REFERENCES STAFF (id) on delete cascade, 
+        FOREIGN KEY(facility_id) REFERENCES FACILITY (id) on delete cascade on update cascade,
+        FOREIGN KEY(staff_id) REFERENCES STAFF (id) on delete cascade on update cascade, 
         PRIMARY KEY(facility_id,staff_id)
     );
     """,
@@ -392,7 +392,7 @@ INIT_STATEMENTS = [
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('security','2019-12-12', '2019-12-12', '2000', 2, 2, 'leader')""",
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('member', '2019-12-12', '2019-12-12', '2000', 2, 3, 'member')""",
 
-    #Staff
+    # Staff
     """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
         birth_date, id_reg_city, id_reg_district) values (1111,'fstaff', 'fatih', '1', 
         'fstaff@itu.edu.tr','fatih',
