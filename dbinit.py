@@ -187,7 +187,7 @@ INIT_STATEMENTS = [
         size             	INT,
         expenses    		INT,
         PRIMARY KEY(id),
-        FOREIGN KEY(campus_id) REFERENCES CAMPUS (id)
+        FOREIGN KEY(campus_id) REFERENCES CAMPUS (id) on delete cascade
     );
     CREATE TABLE IF NOT EXISTS STAFF(
         id              BIGINT             NOT NULL,
@@ -198,7 +198,7 @@ INIT_STATEMENTS = [
         department      VARCHAR(40),
         social_sec_no   SERIAL          NOT NULL,
         PRIMARY KEY(id),
-        FOREIGN KEY(id) REFERENCES PEOPLE (tr_id)
+        FOREIGN KEY(id) REFERENCES PEOPLE (tr_id) on delete cascade
     );
     CREATE TABLE IF NOT EXISTS STAFF_FACIL(
         title           VARCHAR(20)     NOT NULL,
@@ -209,7 +209,7 @@ INIT_STATEMENTS = [
         staff_id        BIGINT          NOT NULL,
         duty         	VARCHAR(20)	    NOT NULL,
         FOREIGN KEY(facility_id) REFERENCES FACILITY (id),
-        FOREIGN KEY(staff_id) REFERENCES STAFF (id),
+        FOREIGN KEY(staff_id) REFERENCES STAFF (id) on delete cascade, 
         PRIMARY KEY(facility_id,staff_id)
     );
     """,
