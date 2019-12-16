@@ -132,6 +132,15 @@ def people_page():
                         photo_data)
         db = current_app.config["db"]
         person_tr_id = db.add_person(person)
+        if(form_category == 1):
+            new_staff = Staff(id=form_tr_id,manager_name= "",absences= "",hire_date= "",social_sec_no= "",department= "",authority_lvl= "")
+            try:
+                db.add_staff(new_staff)
+            except Error as e:
+                flash('Staff could not created!')
+                print(type(e))
+                flash(type(e))
+
         people = db.get_people()
         return render_template("people.html", people=sorted(people), values={})
 
