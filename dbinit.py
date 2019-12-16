@@ -173,13 +173,13 @@ INIT_STATEMENTS = [
         FOREIGN KEY(campus_id) REFERENCES CAMPUS (id) on delete cascade
     );
     CREATE TABLE IF NOT EXISTS STAFF(
-        id              BIGINT,
-        manager_name    VARCHAR(40), 
-        absences	    INT, 
-        hire_date      	DATE,
-        authority_lvl   INT,
-        department      VARCHAR(40),
-        social_sec_no   SERIAL,
+        id              BIGINT not null,
+        manager_name    VARCHAR(40) null, 
+        absences	    INT null, 
+        hire_date      	DATE null,
+        authority_lvl   INT null,
+        department      VARCHAR(40) null,
+        social_sec_no   INT null,
         PRIMARY KEY(id),
         FOREIGN KEY(id) REFERENCES PEOPLE (tr_id) on delete cascade
     );

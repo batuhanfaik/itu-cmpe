@@ -132,14 +132,14 @@ def people_page():
                         photo_data)
         db = current_app.config["db"]
         person_tr_id = db.add_person(person)
-        if(form_category == 1):
-            new_staff = Staff(id=form_tr_id,manager_name= "",absences= "",hire_date= "",social_sec_no= "",department= "",authority_lvl= "")
-            try:
-                db.add_staff(new_staff)
-            except Error as e:
-                flash('Staff could not created!')
-                print(type(e))
-                flash(type(e))
+        #if(form_category == 1):
+            #new_staff = Staff(id=form_tr_id)
+            #try:
+                #db.add_staff(new_staff)
+            #except Error as e:
+                #flash('Staff could not created!')
+                #print(type(e))
+                #flash(type(e))
 
         people = db.get_people()
         return render_template("people.html", people=sorted(people), values={})
@@ -907,11 +907,13 @@ def staff_add_page():
             department = request.form.data["department"]
             social_sec = request.form.data["social_sec_no"]
             new_staff = Staff(id=staff_id,manager_name= manager_name,absences= absences,hire_date= hire_date,social_sec_no= social_sec,department= department,authority_lvl= authority)
+            print("\n\n new staff info: ",new_staff.id, new_staff.manager_name)
             try:
                 db.add_staff(new_staff)
                 flash('Staff successfully added!')
             except Error as e:
                 flash('Staff NOT added!')
+                print("\n, error: ", type(e))
                 if isinstance(e, errors.UniqueViolation):
                     flash('A staff with this ID already exists')
                     return render_template("staff.html", form=request.form,staffs = all_staff,values=request.form,
