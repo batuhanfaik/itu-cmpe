@@ -141,10 +141,14 @@ INIT_STATEMENTS = [
         instructor_id   INT         NOT NULL,
         department_id   INT         NOT NULL,
         info            TEXT        NULL,
-        syllabus        bytea       NULL,
         FOREIGN KEY (classroom_id) REFERENCES CLASSROOM (id),
         FOREIGN KEY (instructor_id) REFERENCES INSTRUCTOR (id),
         FOREIGN KEY (department_id) REFERENCES DEPARTMENT (id)
+    );
+    CREATE TABLE IF NOT EXISTS SYLLABUS (
+        crn             char(5)         PRIMARY KEY,
+        syllabus        bytea       null,
+        foreign key (crn) references course(crn)
     );
     CREATE TABLE IF NOT EXISTS COURSE_ASSISTED (
         crn char(6) primary key references COURSE(crn) not null,
