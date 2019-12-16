@@ -17,6 +17,11 @@ img.responsive { height: auto; }
       <input type="hidden" name="edit_campus_form"/>
 
       <div class="form-group">
+        {% if context.update_error %}  
+        <div class="container" style="background:tomato;border:1px solid gray">
+            <p>{{context.update_error}}</p>
+        </div>
+        {% endif %}
         <h1 class="mb-3">Manage <p id="campus_name" style="display:inline" value="{{context.Campus.name}}">{{context.Campus.name}}</p> Campus <i id="campus_name_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></h1>
         {{ context.edit_campus_form.name(required=True, autofocus=True,
           class='form-control mb-2 mr-sm-2',
@@ -95,7 +100,7 @@ img.responsive { height: auto; }
           value={{context.Campus.phone_number}} name="campus_phone_number_edit" required>-->
           {{ context.edit_campus_form.foundation_date(type="date",format='%Y-%m-%d',required=True, autofocus=True,
           class='form-control mb-2 mr-sm-2',
-          style='width:80%;visibility:hidden;', onload="()=>{return console.log('ebeniz')}", id='campus_foundation_date_edit') }} {% for error in
+          style='width:80%;visibility:hidden;',value=context.Campus.foundation_date, id='campus_foundation_date_edit') }} {% for error in
           context.edit_campus_form.foundation_date.errors %}      
             <div class="invalid-feedback">{{ error }}</div>
             {%endfor%}
@@ -174,7 +179,7 @@ img.responsive { height: auto; }
         if(document.getElementById('campus_foundation_date_edit').style.visibility == "visible"){
           document.getElementById('campus_foundation_date_edit').style.visibility = "hidden";
         }else{
-          document.getElementById('campus_foundation_date_edit').value = document.getElementById('campus_phone_number').innerText;
+          document.getElementById('campus_foundation_date_edit').value = document.getElementById('campus_foundation_date_edit').value;
           document.getElementById('campus_foundation_date_edit').style.visibility = "visible";
           document.getElementById('edit_save_button').style.visibility="visible";
         }
@@ -232,9 +237,9 @@ img.responsive { height: auto; }
         <p style="text-align: center;">
             Change Picture <i id="change_picture_icon" class="far fa-edit"  style="cursor: pointer;"></i>
           </p>
-          <p style="text-align: center;">
-              Remove Picture <i id="change_picture_icon" class="far fa-edit"  style="cursor: pointer;"></i>
-          </p>
+ <!--         <p style="text-align: center;">
+              Remove Picture <i id="remove_picture_icon" class="fas fa-trash-alt"  style="cursor: pointer;"></i>
+          </p> -->
         {% endif %}
         <div id ="upload_image" style="visibility: hidden;">
           <input name="image" type="file" />
@@ -253,11 +258,17 @@ img.responsive { height: auto; }
           document.getElementById('upload_image').style.visibility= "visible";
         }
       });
+
       </script>
   <hr/>
 
   <h2>Manage faculties in {{ context.Campus.name }} Campus</h2>
-  <hr/>
+  <hr/> 
+  {% if context.remove_error %}  
+  <div class="container" style="background:tomato;border:1px solid gray">
+      <p>{{context.remove_error}}</p>
+  </div>
+  {% endif %}
   <div class="row">   
     <div class="col-lg-6 col-sm-12 col-md-12">
         <form class="form needs-validation" method="post" id="form_add_faculty"
@@ -393,6 +404,7 @@ img.responsive { height: auto; }
                             <input type="hidden" value={{id}} name="delete_faculty_flag"/>
                             <button type="submit" name="delete_faculty_flag" class="btn btn-primary">Delete Now</button>
                         </form>
+                        
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                       </div>
                     </div>
@@ -460,9 +472,11 @@ img.responsive { height: auto; }
     document.getElementById('campus_phone_number').innerText = "{{ context.Campus.phone_number }}";
     document.getElementById('campus_phone_number_edit').value = document.getElementById('campus_phone_number').innerText;
     document.getElementById('campus_foundation_date').innerText = "{{ context.Campus.foundation_date }}";
-    document.getElementById('campus_foundation_date_edit').value = new Date(this).today;
-    console.log('hey')
-
+    document.getElementById('campus_foundation_date_edit').value = "{{ context.Campus.foundation_date }}";
   }
+</script>
+
+<script>
+
 </script>
 {% endblock %}
