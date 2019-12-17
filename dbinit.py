@@ -464,5 +464,5 @@ if __name__ == "__main__":
     if url is None:
         print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
         sys.exit(1)
-    reset_db(url)
+    # reset_db(url)
     print("Successfully initialized the DataBees!")
