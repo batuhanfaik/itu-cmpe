@@ -25,6 +25,33 @@ class Database:
         self.staffs = {}
 
     # faati's cruds #
+    # syllabus #
+    def add_syllabus(self, crn, syllabus):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """insert into syllabus (crn, file) values (%s, %s);"""
+            cursor.execute(query, (crn, syllabus))
+        pass
+
+    def update_syllabus(self, crn, syllabus):
+        self.delete_syllabus(crn)
+        self.add_syllabus(crn, syllabus)
+
+    def delete_syllabus(self, crn):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """delete from syllabus where crn = %s"""
+            cursor.execute(query, (crn, ))
+        pass
+
+    def get_syllabus(self, crn):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """select file from syllabus where crn = %s;"""
+            cursor.execute(query, (crn,))
+            syllabus = cursor.fetchone()
+
+
     # taken_course crud#
     def add_taken_course(self, student_id, crn):
         with dbapi2.connect(self.dbfile) as connection:

@@ -582,7 +582,7 @@ def add_course_page():
         db = current_app.config['db']
         args = []
         for key, value in form.data.items():
-            if key != 'csrf_token':
+            if key != 'csrf_token' and key != 'syllabus':
                 args.append(value)
         course = Course(*args)
         if not db.is_classroom_available(course.start_time, course.end_time, course.day,
@@ -594,6 +594,9 @@ def add_course_page():
             return render_template("edit_course.html", form=form, error=error, title="Add Course")
         try:
             db.add_course(course)
+            if len(form.syllabus.data.filename) != 0:
+                syllabus = request.files['syllabus'].read()
+                db.add_syllabus(course.crn, syllabus)
             return redirect(url_for('courses_page'))
         except Error as e:
             error = type(e).__name__ + '----' + str(e)
@@ -688,12 +691,15 @@ def edit_course_page(crn):
         if request.form['btn'] == 'update':
             args = []
             for key, value in form.data.items():
-                if key != 'csrf_token':
+                if key != 'csrf_token' and key != 'syllabus':
                     args.append(value)
             course = Course(*args)
             course.crn = crn
             try:
                 db.update_course(crn, course)
+                if len(form.syllabus.data.filename) != 0:
+                    syllabus = request.files['syllabus'].read()
+                    db.update_syllabus(course.crn, syllabus)
                 return redirect(url_for("courses_page"))
             except Error as e:
                 error = type(e).__name__ + '----' + str(e)
@@ -708,6 +714,7 @@ def edit_course_page(crn):
                 pass
     if request.method == 'POST' and request.form['btn'] == 'delete':
         db.delete_course(crn)
+        db.delete_syllabus(crn)
         return redirect(url_for("courses_page"))
     return render_template("edit_course.html", form=form, error=error, title="Edit Course")
 

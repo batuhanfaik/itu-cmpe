@@ -11,7 +11,7 @@
             {{ error }}
         </div>
     {% endif %}
-    <form action="" method="post" name="edit_course" class="form-inline">
+    <form action="" method="post" name="edit_course" class="form-inline" enctype="multipart/form-data">
     {{ form.csrf_token }}
         <table class="w-100">
         <thead>
