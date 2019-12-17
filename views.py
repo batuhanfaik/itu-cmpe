@@ -1,13 +1,17 @@
 import re
 from os import getenv
 
-from flask import current_app, render_template, request, redirect, url_for, abort, flash
+from flask import current_app, render_template, request, redirect, url_for, abort, flash, send_file, Response
 from flask_login import login_required, logout_user, login_user, current_user
 from passlib.hash import pbkdf2_sha256 as hash_machine
 from psycopg2 import errors, Error
+from werkzeug.wsgi import FileWrapper
 from werkzeug.utils import secure_filename
 
+from tempfile import TemporaryFile
 import dbinit
+
+from io import BytesIO
 from assistant import Assistant
 from classroom import Classroom
 from course import Course
@@ -603,7 +607,7 @@ def add_course_page():
         db = current_app.config['db']
         args = []
         for key, value in form.data.items():
-            if key != 'csrf_token':
+            if key != 'csrf_token' and key != 'syllabus':
                 args.append(value)
         course = Course(*args)
         if not db.is_classroom_available(course.start_time, course.end_time, course.day,
@@ -616,6 +620,9 @@ def add_course_page():
             return render_template("edit_course.html", form=form, error=error, title="Add Course")
         try:
             db.add_course(course)
+            if len(form.syllabus.data.filename) != 0:
+                syllabus = request.files['syllabus'].read()
+                db.add_syllabus(course.crn, syllabus)
             return redirect(url_for('courses_page'))
         except Error as e:
             error = type(e).__name__ + '----' + str(e)
@@ -710,12 +717,15 @@ def edit_course_page(crn):
         if request.form['btn'] == 'update':
             args = []
             for key, value in form.data.items():
-                if key != 'csrf_token':
+                if key != 'csrf_token' and key != 'syllabus':
                     args.append(value)
             course = Course(*args)
             course.crn = crn
             try:
                 db.update_course(crn, course)
+                if len(form.syllabus.data.filename) != 0:
+                    syllabus = request.files['syllabus'].read()
+                    db.update_syllabus(course.crn, syllabus)
                 return redirect(url_for("courses_page"))
             except Error as e:
                 error = type(e).__name__ + '----' + str(e)
@@ -730,9 +740,16 @@ def edit_course_page(crn):
                 pass
     if request.method == 'POST' and request.form['btn'] == 'delete':
         db.delete_course(crn)
+        db.delete_syllabus(crn)
         return redirect(url_for("courses_page"))
     return render_template("edit_course.html", form=form, error=error, title="Edit Course")
 
+
+def download_syllabus(crn):
+    db = current_app.config['db']
+    file_data = db.get_syllabus(crn)[0].tobytes()
+    return send_file(BytesIO(file_data), mimetype='application/pdf', as_attachment=True,
+                     attachment_filename='syllabus.pdf')
 
 # instructor pages#
 @login_required
@@ -753,7 +770,7 @@ def add_instructor_page():
         db = current_app.config["db"]
         id = None
         tr_id = form.data['tr_id']
-        department_id = form.data['department_id']
+        department_id=form.data['department_id']
         faculty_id = form.data['faculty_id']
         specialization = form.data['specialization']
         bachelors = form.data['bachelors']
@@ -872,24 +889,28 @@ def course_info_page(crn):
         std.tr_id = pers.tr_id
         std.name = student_name + " " + student_last_name
         students.append(std)
-    context = {
-        'students': students,
-        'course': course,
-        'department': department,
-        'faculty': faculty,
-        'give_permission_to_see': give_permission_to_see
+    context={
+        'students' : students,
+        'course' : course,
+        'department':department,
+        'faculty':faculty,
+        'give_permission_to_see':give_permission_to_see,
     }
-    if (request.method == "POST" and "redirect_course_edit_page" in request.form):
+    if db.get_syllabus(crn) is not None:
+        context['syllabus'] = True
+    else:
+        context['syllabus'] = False
+    if(request.method == "POST" and "redirect_course_edit_page" in request.form):
         return redirect(url_for('edit_course_page', crn=crn))
-    if (request.method == "POST" and "post_grade_form" in request.form):
+    if(request.method == "POST" and "post_grade_form" in request.form):
         for taken_course in taken_course_students:
-            strm = 'std' + str(taken_course.student_id)
-            print('hey', request.form)
+            strm = 'std'+str(taken_course.student_id)
+            print('hey',request.form)
             taken_course.grade = request.form[strm]
-            if (taken_course.grade != "None"):
-                db.update_taken_course(taken_course.id, taken_course)
-        return redirect(url_for('course_info_page', crn=crn))
-    return render_template("course_inf.html", context=context)
+            if(taken_course.grade!="None"):
+                db.update_taken_course(taken_course.id,taken_course)
+        return redirect(url_for('course_info_page', crn = crn))
+    return render_template("course_inf.html",context= context)
 
 
 def validation_staff(form):
@@ -973,7 +994,7 @@ def staff_add_page():
 
         flash('Staff Updated!')
         all_staff = db.get_all_staff()
-        return render_template("staff.html", staffs=all_staff,
+        return render_template("staff.html",staffs=all_staff,
                                values=request.form)
 
     elif 'more_info' in request.form:
@@ -1148,7 +1169,7 @@ def validation_facility(form):
     if db.get_facility(form_id):
         form.errors["id"] = "This facility is already registered with the given id."
         flash('This facility is already registered with the given id')
-    elif form.get("id") == 0 or form.get("id") == None:
+    elif form.get("id") == 0 or form.get("id") ==None:
         form.errors["id"] = "ID cannot be empty."
         flash('ID cannot be empty.')
     elif form.get("campus_id") == 0:
@@ -1190,7 +1211,7 @@ def facility_page():
         else:
             flash('Facility found!')
             return render_template("facility_search.html", facility=facil, facility_id=facil.id,
-                                   by_campus=0, values=request.form)
+                                    by_campus= 0, values=request.form)
 
     elif 'delete_facility' in request.form:
         f_id = request.form["facility_id"]

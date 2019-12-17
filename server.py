@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, current_app
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 
@@ -94,6 +94,7 @@ def create_app(db_url):
                      view_func=views.edit_course_page, methods=['POST', 'GET'])
     app.add_url_rule(
         "/course/<crn>", view_func=views.course_info_page, methods=['POST', 'GET'])
+    app.add_url_rule("/course/<crn>/download_syllabus", view_func=views.download_syllabus, methods=['GET'])
     app.add_url_rule("/my_courses", view_func=views.my_courses_page, methods=['GET'])
     app.add_url_rule("/select_courses", view_func=views.select_courses_page, methods=['GET', 'POST'])
     db = init_db(db_url)
@@ -101,15 +102,16 @@ def create_app(db_url):
     lm.init_app(app)
     lm.login_view = "login_page"
 
-    @lm.user_loader
-    def load_user(id):
-        return db.get_user(id)
-
     return app
 
 
 db_url = os.getenv("DATABASE_URL")
 app = create_app(db_url)
+
+@lm.user_loader
+def load_user(id):
+    db = current_app.config['db']
+    return db.get_user(id)
 
 if __name__ == "__main__":
     host = app.config.get("HOST")

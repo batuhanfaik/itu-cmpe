@@ -76,6 +76,13 @@ body %}
         <p id="door_number">{{context.course.info}}</p>
       </div>
     </div>
+    {% if context['syllabus'] %}
+    <div class="col-lg-4 col-sm-6">
+      <div class="container-fluid">
+        <a href="{{ url_for('download_syllabus', crn=context.course.crn)}}"><h3 for="door_number">Download Syllabus</h3></a>
+      </div>
+    </div>
+    {% endif %}
   </div>
   {% if current_user.is_authenticated %}
   {% if context.give_permission_to_see %}
