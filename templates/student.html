@@ -5,6 +5,12 @@ body %}
     <div class="container mt-3">
         <h1>This Student</h1>
 
+        {% if error %}
+            <div class="alert alert-danger mb-2" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+
         <form
                 class="form-inline needs-validation"
                 action=""

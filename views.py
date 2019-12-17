@@ -1,3 +1,4 @@
+import re
 from os import getenv
 
 from flask import current_app, render_template, request, redirect, url_for, abort, flash
@@ -13,7 +14,7 @@ from classroom import Classroom
 from course import Course
 from facility import Facility
 from faculty import Faculty
-from forms import login_form, InstructorForm, ClassroomForm, CourseForm
+from forms import login_form, InstructorForm, ClassroomForm, CourseForm, SelectCourseForm
 from instructor import Instructor
 from person import Person
 from staff import Staff
@@ -61,6 +62,15 @@ def logout_page():
     return redirect(url_for("landing_page"))
 
 
+def tidy_error(error):
+    error_ = type(error).__name__ + '----' + str(error)
+    error_ = re.findall(r":\s{1}([A-z\s\W\d]*)", error_)[0]
+    if error_ is None:
+        error_ = "There was an error completing your request. Please try again later!" + "\n" + type(
+            error).__name__ + "\n" + str(error)
+    return error_
+
+
 def validate_people_form(form):
     form.data = {}
     form.errors = {}
@@ -91,6 +101,7 @@ def validate_people_form(form):
     return len(form.errors) == 0
 
 
+@login_required
 def people_page():
     db = current_app.config["db"]
     people = db.get_people()
@@ -135,18 +146,11 @@ def people_page():
                         photo_data)
         db = current_app.config["db"]
         person_tr_id = db.add_person(person)
-        if(form_category == 1):
-            new_staff = Staff(id=form_tr_id,manager_name = None, absences=None,hire_date= None,authority_lvl=None,department=None,social_sec_no=None)
-            try:
-                db.add_staff(new_staff)
-            except Error as e:
-                flash('Staff could not created!')
-                print("PEOPLEEEE", type(e))
-                flash(type(e))
         people = db.get_people()
         return render_template("people.html", people=sorted(people), values={})
 
 
+@login_required
 def person_page(tr_id):
     db = current_app.config["db"]
     person = db.get_person(tr_id)
@@ -188,12 +192,21 @@ def person_page(tr_id):
                             form_bdate, form_id_regcity, form_id_regdist, filename, file_extension,
                             photo_data)
             db = current_app.config["db"]
-            db.update_person(person, tr_id)
-            return redirect(url_for("person_page", tr_id=person.tr_id))
+            try:
+                db.update_person(person, tr_id)
+                return redirect(url_for("person_page", tr_id=person.tr_id, error=None))
+            except Error as e:
+                error = tidy_error(e)
+                person = db.get_person(tr_id)
+                return render_template("person.html", tr_id=tr_id, error=error, person=person)
         elif request.form["update_button"] == "delete":
-            db.delete_person(tr_id)
-            people = db.get_people()
-            return redirect(url_for("people_page", people=sorted(people), values={}))
+            try:
+                db.delete_person(tr_id)
+                people = db.get_people()
+                return redirect(url_for("people_page", people=sorted(people), values={}))
+            except Error as e:
+                error = tidy_error(e)
+                return render_template("person.html", tr_id=tr_id, error=error, person=person)
 
 
 def validate_students_form(form):
@@ -223,6 +236,7 @@ def validate_students_form(form):
     return len(form.errors) == 0
 
 
+@login_required
 def students_page():
     db = current_app.config["db"]
     students = db.get_students()
@@ -247,11 +261,18 @@ def students_page():
         student = Student(form_tr_id, form_faculty_id, form_department_id, form_student_id,
                           form_semester, form_grade, form_gpa, form_credits_taken, form_minor)
         db = current_app.config["db"]
-        student_tr_id = db.add_student(student)
-        students = db.get_students()
-        return render_template("students.html", students=sorted(students), values={})
+        try:
+            db.add_student(student)
+            students = db.get_students()
+            return render_template("students.html", students=sorted(students), values={},
+                                   error=None)
+        except Error as e:
+            error = tidy_error(e)
+            return render_template("students.html", students=sorted(students), values={},
+                                   error=error)
 
 
+@login_required
 def student_page(tr_id):
     db = current_app.config["db"]
     student = db.get_student(tr_id)
@@ -276,12 +297,23 @@ def student_page(tr_id):
             student = Student(form_tr_id, form_faculty_id, form_department_id, form_student_id,
                               form_semester, form_grade, form_gpa, form_credits_taken, form_minor)
             db = current_app.config["db"]
-            db.update_student(student, tr_id)
-            return redirect(url_for("student_page", tr_id=student.tr_id))
+            try:
+                db.update_student(student, tr_id)
+                return redirect(url_for("student_page", tr_id=student.tr_id, error=None))
+            except Error as e:
+                error = tidy_error(e)
+                student = db.get_student(tr_id)
+                return render_template("student.html", tr_id=tr_id, error=error, student=student)
         elif request.form["update_button"] == "delete":
-            db.delete_student(tr_id)
-            students = db.get_students()
-            return redirect(url_for("students_page", students=sorted(students), values={}))
+            try:
+                db.delete_student(tr_id)
+                students = db.get_students()
+                return redirect(
+                    url_for("students_page", students=sorted(students), values={}, error=None))
+            except Error as e:
+                error = tidy_error(e)
+                student = db.get_student(tr_id)
+                return render_template("student.html", tr_id=tr_id, error=error, student=student)
 
 
 def validate_assistants_form(form):
@@ -309,6 +341,7 @@ def validate_assistants_form(form):
     return len(form.errors) == 0
 
 
+@login_required
 def assistants_page():
     db = current_app.config["db"]
     assistants = db.get_assistants()
@@ -338,11 +371,18 @@ def assistants_page():
                               form_bachelors, form_degree, form_grad_gpa, form_research_area,
                               form_office_day, form_office_hour_start, form_office_hour_end)
         db = current_app.config["db"]
-        assistant_tr_id = db.add_assistant(assistant)
-        assistants = db.get_assistants()
-        return render_template("assistants.html", assistants=sorted(assistants), values={})
+        try:
+            db.add_assistant(assistant)
+            assistants = db.get_assistants()
+            return render_template("assistants.html", assistants=sorted(assistants), values={},
+                                   error=None)
+        except Error as e:
+            error = tidy_error(e)
+            return render_template("assistants.html", assistants=sorted(assistants), values={},
+                                   error=error)
 
 
+@login_required
 def assistant_page(tr_id):
     db = current_app.config["db"]
     assistant = db.get_assistant(tr_id)
@@ -368,12 +408,25 @@ def assistant_page(tr_id):
                                   form_semester, form_grade, form_gpa, form_credits_taken,
                                   form_minor)
             db = current_app.config["db"]
-            db.update_assistant(assistant, tr_id)
-            return redirect(url_for("assistant_page", tr_id=assistant.tr_id))
+            try:
+                db.update_assistant(assistant, tr_id)
+                return redirect(url_for("assistant_page", tr_id=assistant.tr_id, error=None))
+            except Error as e:
+                error = tidy_error(e)
+                assistant = db.get_assistant(tr_id)
+                return render_template("assistant.html", tr_id=tr_id, error=error,
+                                       assistant=assistant)
         elif request.form["update_button"] == "delete":
-            db.delete_assistant(tr_id)
-            assistants = db.get_assistants()
-            return redirect(url_for("assistants_page", assistants=sorted(assistants), values={}))
+            try:
+                db.delete_assistant(tr_id)
+                assistants = db.get_assistants()
+                return redirect(url_for("assistants_page", assistants=sorted(assistants), values={},
+                                        error=None))
+            except Error as e:
+                error = tidy_error(e)
+                assistant = db.get_assistant(tr_id)
+                return render_template("assistant.html", tr_id=tr_id, error=error,
+                                       assistant=assistant)
 
 
 def manage_campuses():
@@ -547,11 +600,11 @@ def add_course_page():
             if key != 'csrf_token':
                 args.append(value)
         course = Course(*args)
-        if not db.is_classroom_available(course.start_time, course.end_time,
+        if not db.is_classroom_available(course.start_time, course.end_time, course.day,
                                                         course.classroom_id):
             error = "There is already a course given in that classroom at that time!"
             return render_template("edit_course.html", form=form, error=error, title="Add Course")
-        if not db.is_instructor_available(course.start_time, course.end_time, course.instructor_id):
+        if not db.is_instructor_available(course.start_time, course.end_time, course.day, course.instructor_id):
             error = "The instructor already has a course at that time!"
             return render_template("edit_course.html", form=form, error=error, title="Add Course")
         try:
@@ -577,7 +630,64 @@ def add_course_page():
 def select_courses_page():
     if current_user.role != 'student':
         return redirect(url_for("landing_page"))
-    return 'ses'
+    db = current_app.config['db']
+    form = SelectCourseForm()
+    results = []
+    if form.validate_on_submit():
+        if request.form['btn'] == 'add':
+            crn_list = []
+            for key, value in form.data.items():
+                if key != 'csrf_token' and value != 0:
+                    crn_list.append(str(value))
+            for crn in crn_list:
+                result = {'crn': crn}
+                try:
+                    course = db.get_course(crn)
+                    if course is not None:
+                        if db.student_can_take_course(current_user.student_id, course):
+                            db.add_taken_course(current_user.student_id, crn)
+                            result['result'] = "You have been added to this course!"
+                            db.update_course_enrollment(crn)
+                        else:
+                            result['result'] = "This course conflicts with another course you have"
+                    else:
+                        result['result'] = "This course does not exists"
+                except Error as e:
+                    error = type(e).__name__ + '----' + str(e)
+                    str_e = str(e)
+                    if isinstance(e, errors.UniqueViolation):
+                        error = "You already have this course"
+                    if isinstance(e, errors.ForeignKeyViolation):
+                        if 'course' in str_e:
+                            error = "This CRN does not belongs to any course"
+                    result['result'] = error
+                results.append(result)
+        else:
+            crn_list = []
+            for key, value in form.data.items():
+                if key != 'csrf_token' and value != 0:
+                    crn_list.append(str(value))
+            for crn in crn_list:
+                result = {'crn': crn}
+                try:
+                    if db.get_course(crn) is not None:
+                        db.delete_taken_course(current_user.student_id, crn)
+                        result['result'] = "Successfully dropped course"
+                        db.update_course_enrollment(crn)
+                    else:
+                        result['result'] = "This CRN does not belongs to any course"
+                except Error as e:
+                    error = type(e).__name__ + '----' + str(e)
+                    str_e = str(e)
+                    if isinstance(e, errors.UniqueViolation):
+                        error = "This CRN does not belongs to any course"
+                    if isinstance(e, errors.ForeignKeyViolation):
+                        if 'course' in str_e:
+                            error = "This CRN does not belongs to any course"
+                    result['result'] = error
+                results.append(result)
+    return render_template("select_courses.html", form=form, results=results, error=None, title="Add/Drop Courses")
+
 
 
 @login_required
@@ -762,7 +872,7 @@ def course_info_page(crn):
         'give_permission_to_see':give_permission_to_see
     }
     if(request.method == "POST" and "redirect_course_edit_page" in request.form):
-        return redirect(url_for('edit_course_page',crn=crn))
+        return redirect(url_for('edit_course_page', crn=crn))
     if(request.method == "POST" and "post_grade_form" in request.form):
         for taken_course in taken_course_students:
             strm = 'std'+str(taken_course.student_id)
@@ -785,6 +895,12 @@ def validation_staff(form):
     elif form.get("id") == 0 or form.get("id") ==None:
         form.errors["id"] = "ID cannot be empty."
         flash('ID cannot be empty.')
+    elif form.get("hire_date") == 0:
+        form.errors["hire_date"] = "Hire Date cannot be empty."
+        flash('Hire Date cannot be empty.')
+    elif form.get("social_sec_no") == 0:
+        form.errors["social_sec_no"] = "Social Security Number cannot be empty."
+        flash('Social Security Number cannot be empty')
     elif not db.get_person(form_id):
         form.errors["id"] = "There is no Person with the given ID."
         flash('No people exists with this TR ID')
@@ -971,18 +1087,6 @@ def staff_add_page():
             authority = request.form.data["authority_lvl"]
             department = request.form.data["department"]
             social_sec = request.form.data["social_sec_no"]
-            if len(manager_name) == 0:
-                manager_name=None
-            if len(absences) == 0:
-                absences=None
-            if len(hire_date) == 0:
-                hire_date=None
-            if len(authority) == 0:
-                authority=None
-            if len(department) == 0:
-                department=None
-            if len(social_sec) == 0:
-                social_sec=None
             new_staff = Staff(id=staff_id,manager_name= manager_name,absences= absences,hire_date= hire_date,social_sec_no= social_sec,department= department,authority_lvl= authority)
             try:
                 db.add_staff(new_staff)
@@ -1155,3 +1259,4 @@ def facility_page():
                     return render_template("facility.html", form=request.form, facilities=all_facilities, values=request.form,
                                            error=type(e).__name__ + "-----" + str(e))
             return redirect(url_for("facility_page", facilities=all_facilities, values=request.form))
+

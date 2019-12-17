@@ -43,11 +43,11 @@
                     <li class="nav-item {% if request.path==url_for("instructors_page") %} active {% endif %}">
                         <a class="nav-link" href="{{ url_for("instructors_page") }}">Instructors</a>
                     </li>
-                    <li class="nav-item {% if request.path==url_for("students_page") %} active {% endif %}">
-                        <a class="nav-link" href="{{ url_for("students_page") }}">Students</a>
-                    </li>
                     <li class="nav-item {% if request.path==url_for("assistants_page") %} active {% endif %}">
                         <a class="nav-link" href="{{ url_for("assistants_page") }}">Assistants</a>
+                    </li>
+                    <li class="nav-item {% if request.path==url_for("students_page") %} active {% endif %}">
+                        <a class="nav-link" href="{{ url_for("students_page") }}">Students</a>
                     </li>
                     <li class="nav-item {% if request.path==url_for("campus") %} active {% endif %}">
                         <a class="nav-link" href="{{ url_for("campus") }}">Campuses</a>
@@ -65,6 +65,9 @@
                 {% elif current_user.role == 'student' %}
                     <li class="nav-item {% if request.path==url_for("my_courses_page") %} active {% endif %}">
                         <a class="nav-link" href="{{ url_for("my_courses_page") }}">My Courses</a>
+                    </li>
+                    <li class="nav-item {% if request.path==url_for("select_courses_page") %} active {% endif %}">
+                        <a class="nav-link" href="{{ url_for("select_courses_page") }}">Add Drop Courses</a>
                     </li>
                 {% endif %}
                 <li class="nav-item {% if request.path==url_for("courses_page") %} active {% endif %}">
