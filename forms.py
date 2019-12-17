@@ -40,6 +40,7 @@ class CourseForm(FlaskForm):
     info = TextAreaField("Course Information", validators=[InputRequired()])
     syllabus = FileField("Syllabus", render_kw={'accept': '.pdf'})
 
+
 class ClassroomForm(FlaskForm):
     faculty_id = None
     capacity = IntegerField(u"Capacity", validators=[InputRequired()], render_kw={'type': 'number'})

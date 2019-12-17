@@ -40,7 +40,7 @@ class Database:
     def delete_syllabus(self, crn):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = """delete from syllabus where crn = %s"""
+            query = """delete from syllabus where crn = %s;"""
             cursor.execute(query, (crn, ))
         pass
 
