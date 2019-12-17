@@ -49,8 +49,10 @@ class Database:
             cursor = connection.cursor()
             query = """select file from syllabus where crn = %s;"""
             cursor.execute(query, (crn,))
+            if cursor.rowcount == 0:
+                return None
             syllabus = cursor.fetchone()
-
+            return syllabus
 
     # taken_course crud#
     def add_taken_course(self, student_id, crn):

@@ -1,13 +1,17 @@
 import re
 from os import getenv
 
-from flask import current_app, render_template, request, redirect, url_for, abort, flash
+from flask import current_app, render_template, request, redirect, url_for, abort, flash, send_file, Response
 from flask_login import login_required, logout_user, login_user, current_user
 from passlib.hash import pbkdf2_sha256 as hash_machine
 from psycopg2 import errors, Error
+from werkzeug.wsgi import FileWrapper
 from werkzeug.utils import secure_filename
 
+from tempfile import TemporaryFile
 import dbinit
+
+from io import BytesIO
 from assistant import Assistant
 from campus import Campus
 from classroom import Classroom
@@ -677,7 +681,6 @@ def select_courses_page():
     return render_template("select_courses.html", form=form, results=results, error=None, title="Add/Drop Courses")
 
 
-
 @login_required
 def edit_course_page(crn):
     if current_user.role != 'admin':
@@ -718,6 +721,12 @@ def edit_course_page(crn):
         return redirect(url_for("courses_page"))
     return render_template("edit_course.html", form=form, error=error, title="Edit Course")
 
+
+def download_syllabus(crn):
+    db = current_app.config['db']
+    file_data = db.get_syllabus(crn)[0].tobytes()
+    return send_file(BytesIO(file_data), mimetype='application/pdf', as_attachment=True,
+                     attachment_filename='syllabus.pdf')
 
 # instructor pages#
 @login_required
@@ -861,8 +870,12 @@ def course_info_page(crn):
         'course' : course,
         'department':department,
         'faculty':faculty,
-        'give_permission_to_see':give_permission_to_see
+        'give_permission_to_see':give_permission_to_see,
     }
+    if db.get_syllabus(crn) is not None:
+        context['syllabus'] = True
+    else:
+        context['syllabus'] = False
     if(request.method == "POST" and "redirect_course_edit_page" in request.form):
         return redirect(url_for('edit_course_page', crn=crn))
     if(request.method == "POST" and "post_grade_form" in request.form):
