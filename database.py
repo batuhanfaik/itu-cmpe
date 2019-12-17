@@ -29,7 +29,7 @@ class Database:
     def add_taken_course(self, student_id, crn):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = """insert into taken_course (student_id, crn) values (%s, %s)"""
+            query = """insert into taken_course (student_id, crn) values (%s, %s);"""
             cursor.execute(query, (student_id, crn))
         pass
 

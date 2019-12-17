@@ -154,7 +154,7 @@ INIT_STATEMENTS = [
     CREATE TABLE IF NOT EXISTS TAKEN_COURSE(
         id SERIAL PRIMARY KEY,
         student_id BIGINT NOT NULL,
-        crn CHAR(6) NOT NULL,
+        crn CHAR(5) NOT NULL,
         grade REAL NULL,
         datetime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (student_id) REFERENCES STUDENT (student_id)  on delete cascade on update cascade,
