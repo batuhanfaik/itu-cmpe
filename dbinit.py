@@ -417,7 +417,7 @@ INIT_STATEMENTS = [
     """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (3, 4, 'Bilgi Işlem', 'BIDB', '50', '1400', '80000')""",
     # Add Staff-facility connection
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Cleaner', '2019-12-12', '2019-12-12', '2000', 1, 1, 'Clean everywhere')""",
-    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Project Leader ','2019-12-12', '2019-12-12', '2000', 1, 44, 'Leads the project')""",
+    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Manager ','2019-12-12', '2019-12-12', '2000', 1, 44, 'Leads staff')""",
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Security', '2019-12-12', '2019-12-12', '2000', 2, 4, 'Secure books')""",
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Project Assistant','2019-12-12', '2019-12-12', '2000', 3, 44, 'Help the group')""",
     """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('member', '2019-12-12', '2019-12-12', '2000', 2, 1, 'member')""",
@@ -464,5 +464,5 @@ if __name__ == "__main__":
     if url is None:
         print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
         sys.exit(1)
-    reset_db(url)
+    # reset_db(url)
     print("Successfully initialized the DataBees!")
