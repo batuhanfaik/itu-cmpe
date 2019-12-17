@@ -1,0 +1,163 @@
+{% extends "layout.html" %}
+
+
+
+{% block title %}Edit Staff-Facility Relation{% endblock %}
+{% block body %}
+
+<div class="container mt-3">
+<br>
+                  {% with messages = get_flashed_messages() %} {% if messages %}
+                  <ul class="flashes">
+                    {% for message in messages %}
+                       <div class="alert alert-warning alert-dismissible" role="alert" >
+                    <li>{{ message }}</li>
+                       </div>
+                    {% endfor %}
+
+                  </ul>
+                    <br>
+                  {% endif %} {% endwith %}
+
+<h1 class="mb-3">Edit this Staff-Facility Relation</h1>
+
+
+
+    <form action="" method="post" name="edit_staff_facil" class="form-inline needs-validation">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+
+      <div class="form-group"  >
+
+
+        <br>
+        <label for="title" class="mr-sm-2">Title:</label>
+        <div class="control"  style="  width: 1200px; display: inline-block;" >
+          <input type="text" name="title" class="form-control mb-2 mr-sm-2"  maxlength="20"required="required" id="title"/>
+
+
+        </div>
+      </div>
+
+
+
+        <br><br>
+
+
+        <label for="from_date" class="mr-sm-2">Starting date:</label>
+        <div class="form-group" style="  width: 600px; display: inline-block;">
+          <input type="date" name="from_date" class="form-control mb-2 mr-sm-2" id="from_date" required="required"  />
+
+        </div>
+
+        <br/><br>
+
+
+      <div class="form-group">
+        <label for="to_date" class="mr-sm-2">Ending Date:</label>
+        <div class="control" style="  width: 600px; display: inline-block;">
+          <input type="date" name="to_date" class="form-control mb-2 mr-sm-2" id="to_date" required="required"/>
+
+        </div>
+      </div>
+        <br><br>
+
+
+      <div class="form-group">
+        <label for="salary" class="mr-sm-2">Salary:</label>
+        <div class="control" style="  width: 600px; display: inline-block;">
+          <input type="number" name="salary" class="form-control mb-2 mr-sm-2" required="required" id="salary"/>
+
+        </div>
+      </div>
+        <br><br>
+
+
+      <div class="form-group">
+        <label for="facility_id" class="mr-sm-2">Facility ID:</label>
+        <div class="control" style="  width: 600px; display: inline-block;">
+          <input type="number" name="facility_id" class="form-control mb-2 mr-sm-2" required="required" id="facility_id"/>
+
+        </div>
+
+      </div>
+        <br><br>
+
+
+      <div class="form-group">
+        <label for="duty" class="mr-sm-2">Duty:</label>
+        <div class="control" style="  width: 1200px; display: inline-block;">
+          <input type="text" name="duty" class="form-control mb-2 mr-sm-2" id="duty"  maxlength="20"required="required"/>
+
+        </div>
+      </div>
+        <br><br>
+
+      <div class="field is-grouped">
+        <div class="control">
+            <input type="hidden" name="staff_id" value="{{the_staff.id}}">
+          <button class="btn btn-primary mb-2" id="edit_staff_facil" name="edit_staff_facil">Edit Relation</button>
+        </div>
+      </div>
+
+    </form>
+    <form>
+    <div class="field is-grouped">
+        <div class="control">
+            <input type="hidden" name="more_info" value="{{the_staff.id}}">
+          <button class="btn btn-danger ml-auto" id="more_info" name="more_info">Cancel</button>
+        </div>
+      </div>
+    </form>
+<br><br><br>
+
+
+<br><br>
+
+
+
+        <h1 class="mb-3">Currently editind this Facilities - Staff Relation </h1>
+                <table class="table is-striped is-fullwidth table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Staff id</th>
+                    <th scope="col">Facility Name</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Starting Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Salary</th>
+                    <th scope="col">Duty</th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+
+                <tr>
+
+                <td>{{ SF.staff_id }}</td>
+                <td>{{ facility.name }}</td>
+                <td>{{ SF.title }}</td>
+                <td>{{ SF.from_date }}</td>
+                <td>{{ SF.to_date }}</td>
+                <td>{{ SF.salary }}</td>
+                <td>{{ SF.duty }}</td>
+                </tr>
+
+
+                </tr>
+                </tbody>
+            </table>
+
+            <br/>
+
+<br><br><br>
+
+
+
+      </div>
+
+
+{% endblock %}
+    </div>

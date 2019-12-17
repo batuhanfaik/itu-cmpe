@@ -845,7 +845,6 @@ def staff_add_page():
 
         new_staff = Staff(id=old_staff_id, manager_name=manager_name, absences=absences, hire_date=hire_date,
                           social_sec_no=social_sec, department=department, authority_lvl=authority)
-        print(new_staff.id, new_staff.manager_name, new_staff.absences,new_staff.hire_date, new_staff.social_sec_no,new_staff.department)
         db.update_staff(new_staff)
 
         flash('Staff Updated!')
@@ -856,7 +855,6 @@ def staff_add_page():
     elif 'more_info' in request.form:
         s_id = request.form["staff_id"]
         staff_facilities = db.get_facility_from_staff(s_id)
-        print("\n staff id: ",s_id," facility length", len(staff_facilities))
         the_staff = db.get_staff(s_id)
         facils = []
         for SF in staff_facilities:
@@ -868,17 +866,14 @@ def staff_add_page():
                                  staff_facils = staff_facilities,values=request.form)
     elif 'add_staff_facil' in request.form:
         #Check validation
-        #add Delete/update
+
         s_id = request.form["staff_id"]
         staff_facilities = db.get_facility_from_staff(s_id)
-        print("\n staff id: ", s_id, " facility length", len(staff_facilities))
         the_staff = db.get_staff(s_id)
         facils = []
         for SF in staff_facilities:
             facility_ = db.get_facility(SF.facility_id)
-            print("\n id of current facility", facility_.id)
             facils.append(facility_)
-        print("\nLength of facilities array: ", len(facils))
         title = request.form.get("title")
         from_date = request.form.get("from_date")
         to_date = request.form.get("to_date")
@@ -897,7 +892,6 @@ def staff_add_page():
             facils=[]
         except Error as e:
             flash('Staff-Facility Connection Not added!')
-            print("\nERROR:",type(e))
             if isinstance(e, errors.UniqueViolation):
                 flash('This connection already exists')
                 return render_template("staff_facility.html", staff=the_staff, facilities=facils,
@@ -915,10 +909,53 @@ def staff_add_page():
                                            error=type(e).__name__ + "-----" + str(e))
         for SF in staff_facilities:
             facility_ = db.get_facility(SF.facility_id)
-            print("\n id of current facility", facility_.id)
             facils.append(facility_)
         return render_template("staff_facility.html", staff=the_staff, facilities=facils,
                                    staff_facils=staff_facilities, values=request.form)
+    elif 'delete_SF' in request.form:
+        staff_id = request.form["staff_id_delete"]
+        facility_id = request.form["facility_id_delete"]
+        db.delete_staff_facil(int(staff_id),facility_id)
+        flash('Staff-Facility Connection Deleted!')
+        the_staff = db.get_staff(staff_id)
+        staff_facilities = db.get_facility_from_staff(staff_id)
+        facils = []
+        for SF in staff_facilities:
+            facility_ = db.get_facility(SF.facility_id)
+            facils.append(facility_)
+        return render_template("staff_facility.html", staff=the_staff, facilities=facils,
+                               staff_facils=staff_facilities, values=request.form)
+
+    elif 'edit_SF' in request.form:
+        staff_id = request.form["staff_id_edit"]
+        staff = db.get_staff(staff_id)
+        facility_id = request.form["facility_id_edit"]
+        staff_facility = db.get_facility_from_staff(staff_id)
+        facil = db.get_facility(facility_id)
+        return render_template("edit_staff_facil.html", the_staff = staff, facility = facil,
+                               SF=staff_facility[0], values=request.form)
+    elif 'edit_staff_facil' in request.form:
+        title = request.form.get("title")
+        from_date = request.form.get("from_date")
+        to_date = request.form.get("to_date")
+        salary = request.form.get("salary")
+        facility_id = request.form.get("facility_id")
+        staff_id = request.form.get("staff_id")
+        duty = request.form.get("duty")
+        new_SF = Staff_facil(title=title, from_date=from_date, to_date=to_date, salary=salary,
+                             facility_id=facility_id, staff_id=staff_id, duty=duty)
+        db.update_SF(new_SF)
+
+        flash('Staff-Facility Connection Updated!')
+        all_SF = db.get_facility_from_staff(staff_id)
+        the_staff = db.get_staff(staff_id)
+        facils = []
+        for SF in staff_facilities:
+            facility_ = db.get_facility(SF.facility_id)
+            facils.append(facility_)
+        return render_template("staff_facility.html", staff=the_staff, facilities=facils,
+                               staff_facils=all_SF, values=request.form)
+
 
     else:#Staff addition
         valid = validation_staff(request.form)
@@ -952,8 +989,6 @@ def staff_add_page():
                 flash('Staff successfully added!')
             except Error as e:
                 flash('Staff NOT added!')
-                print("Error:",type(e))
-                print("\ninfo:", new_staff.id, )
                 if isinstance(e, errors.UniqueViolation):
                     flash('A staff with this ID already exists')
                     return render_template("staff.html", form=request.form,staffs = all_staff,values=request.form,
@@ -967,6 +1002,13 @@ def staff_add_page():
                     return render_template("staff.html", form=request.form,staffs = all_staff,values=request.form,
                                            error=type(e).__name__ + "-----" + str(e))
             return redirect(url_for("staff_add_page",staffs = all_staff,values=request.form))
+
+def staff_facil_page():
+
+    db = current_app.config["db"]
+    all_staff = db.get_all_staff()
+    if request.method == "GET":
+        return render_template("staff.html", staffs=all_staff, values=request.form)
 
 
 def find_campus(campus_id):

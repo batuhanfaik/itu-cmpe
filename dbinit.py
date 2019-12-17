@@ -405,9 +405,9 @@ INIT_STATEMENTS = [
     """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (2, 2, 'Kütüphane', 'LIB', '50', '1400', '50000')""",
     """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (3, 4, 'Bilgi İşlem', 'BIDB', '50', '1400', '80000')""",
     # Add Staff-facility connection
-    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('leader', '2019-12-12', '2019-12-12', '2000', 1, 1, 'something')""",
-    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('security','2019-12-12', '2019-12-12', '2000', 2, 2, 'leader')""",
-    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('member', '2019-12-12', '2019-12-12', '2000', 2, 3, 'member')""",
+    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('leader', '2019-12-12', '2019-12-12', '2000', 1, 1, 'leads the group')""",
+    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('security','2019-12-12', '2019-12-12', '2000', 2, 2, 'Secure books')""",
+    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('member', '2019-12-12', '2019-12-12', '2000', 2, 1, 'member')""",
 
     # Staff people
     """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,

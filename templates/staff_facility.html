@@ -85,6 +85,8 @@
                     <th scope="col">End Date</th>
                     <th scope="col">Salary</th>
                     <th scope="col">Duty</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
 
                 </tr>
                 </thead>
@@ -96,7 +98,6 @@
                 {% for facility in facilities %}
                 {% if  facility.id  == SF.facility_id %}
                 <tr>
-
                 <td>{{ SF.staff_id }}</td>
                 <td>{{ facility.name }}</td>
                 <td>{{ SF.title }}</td>
@@ -104,6 +105,19 @@
                 <td>{{ SF.to_date }}</td>
                 <td>{{ SF.salary }}</td>
                 <td>{{ SF.duty }}</td>
+                <td><form action="" method="POST" name="edit_SF" style="display: contents">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="staff_id_edit" value="{{SF.staff_id}}">
+                <input type="hidden" name="facility_id_edit" value="{{SF.facility_id}}">
+                <input type="hidden" name="staff_facil" value="{{SF}}">
+                <input class="btn btn-primary mb-2" type="submit" id="edit_SF" name='edit_SF' value="Edit ">
+                </form></td>
+                <td><form action="" method="POST" name="delete_SF" style="display: contents">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <input type="hidden" name="staff_id_delete" value="{{SF.staff_id}}">
+                <input type="hidden" name="facility_id_delete" value="{{SF.facility_id}}">
+                <input class="btn btn-danger ml-auto" type="submit" id="delete_SF" name='delete_SF' value="Delete ">
+                </form></td>
                 </tr>
                 {% endif %}
                 {% endfor %}
