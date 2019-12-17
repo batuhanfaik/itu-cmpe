@@ -41,11 +41,11 @@ class Database:
             cursor.execute(query, (takencourse.student_id, takencourse.crn, takencourse.grade, id))
         return id
 
-    def delete_taken_course(self, id):
+    def delete_taken_course(self, student_id, crn):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = """delete from taken_course where (id = %s)"""
-            cursor.execute(query, (id,))
+            query = """delete from taken_course where (student_id = %s and crn = %s)"""
+            cursor.execute(query, (student_id, crn))
 
     def get_taken_course(self, id):
         with dbapi2.connect(self.dbfile) as connection:
@@ -156,13 +156,14 @@ class Database:
                 instructors.append(instructor)
         return instructors
 
-    def is_instructor_available(self, start_time, end_time, instructor_id):
+    def is_instructor_available(self, start_time, end_time, day, instructor_id):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = """select * from course where (instructor_id = %s 
-                                   and ((%s >= start_time and %s < end_time)
-                                       or (%s <= end_time and %s > start_time)));"""
-            cursor.execute(query, (instructor_id, start_time, start_time, end_time, end_time))
+                                   and course.day = %s
+                                    and not (( %s < start_time and %s < start_time)
+                                    or (%s > end_time and %s > end_time)));"""
+            cursor.execute(query, (instructor_id, day, start_time, end_time, start_time, end_time))
             if cursor.rowcount > 0:
                 return False
         return True
@@ -234,13 +235,14 @@ class Database:
                 classrooms.append(Classroom(*row))
         return classrooms
 
-    def is_classroom_available(self, start_time, end_time, classroom_id):
+    def is_classroom_available(self, start_time, end_time, day, classroom_id):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = """select * from course where (classroom_id = %s 
-                        and ((%s >= start_time and %s < end_time)
-                                or (%s <= end_time and %s > start_time)));"""
-            cursor.execute(query, (classroom_id, start_time, start_time, end_time, end_time))
+                        and course.day = %s
+                        and not (( %s < start_time and %s < start_time)
+                                or (%s > end_time and %s > end_time)));"""
+            cursor.execute(query, (classroom_id, day, start_time, end_time, start_time, end_time))
             if cursor.rowcount > 0:
                 return False
         return True
@@ -348,6 +350,21 @@ class Database:
             number = cursor.fetchone()
             cursor.execute("""update course set enrolled = %s where crn = %s""", (number, crn))
         return number
+
+    def student_can_take_course(self, student_id, course):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """select * from course, taken_course where (course.crn = taken_course.crn
+                        and taken_course.student_id = %s
+                        and course.crn <> %s 
+                        and course.day = %s
+                        and not (( %s < start_time and %s < start_time)
+                                or (%s > end_time and %s > end_time)))"""
+            cursor.execute(query, (student_id, course.crn, course.day, course.start_time,
+                                   course.end_time, course.start_time, course.end_time))
+            if cursor.rowcount > 0:
+                return False
+            return True
 
     ########################
     def add_person(self, person):
@@ -782,6 +799,21 @@ class Database:
                                    staff.social_sec_no, staff.id))
             connection.commit
 
+    def delete_staff_facil(self,staff_id, facility_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "delete from staff_facil where (staff_id= %s and facility_id = %s)"
+            cursor.execute(query, (staff_id,facility_id))
+            connection.commit
+
+    def update_SF(self,SF):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "update staff_facil set  title = %s, from_date = %s, to_date= %s, salary = %s, duty = %s where (staff_id = %s and facility_id = %s)"
+            cursor.execute(query, ( staff_facil.title, staff_facil.from_date, staff_facil.to_date, staff_facil.salary,
+                                   staff_facil.duty, staff_facil.staff_id, staff_facil.facility_id))
+            connection.commit
+
     def get_facility(self,facility_id):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
@@ -837,6 +869,13 @@ class Database:
                 SF = Staff_facil(*row[:])
                 staff_facilities.append(SF)
         return staff_facilities
+    def get_a_facility_from_staff(self, staff_id):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = "select * from staff_facil where (staff_id = %s) order by staff_id asc"
+            cursor.execute(query, (staff_id,))
+            connection.commit
+
     def add_staff_facility(self,staff_facil):
         with dbapi2.connect(self.dbfile) as connection:
             print("TRYİNG TO ADD:")
@@ -846,6 +885,10 @@ class Database:
             cursor.execute(query, (staff_facil.title, staff_facil.from_date, staff_facil.to_date, staff_facil.salary,
                                    staff_facil.facility_id, staff_facil.staff_id, staff_facil.duty))
             connection.commit
+
+
+
+
 
     def update_facility(self,facility):
         with dbapi2.connect(self.dbfile) as connection:

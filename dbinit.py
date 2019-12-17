@@ -32,7 +32,8 @@ INIT_STATEMENTS = [
         photo_name varchar(256),
         photo_extension varchar(10),
         photo_data bytea, 
-        unique (tr_id, email)
+        unique (tr_id),
+        unique (email)
     );
     CREATE domain credit as real check (
         ((value >= 0) and (value <=250))
@@ -87,8 +88,8 @@ INIT_STATEMENTS = [
     );
     CREATE TABLE IF NOT EXISTS STUDENT (
         tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id)  on delete cascade on update cascade NOT NULL,
-        faculty_id int references FACULTY(id) not null,
-        department_id int references DEPARTMENT(id) not null,
+        faculty_id int references FACULTY(id) on delete cascade on update cascade not null,
+        department_id int references DEPARTMENT(id) on delete cascade on update cascade not null,
         student_id bigint not null,
         semester smallint not null default 1,
         grade smallint not null default 1,
@@ -114,8 +115,8 @@ INIT_STATEMENTS = [
     );
     CREATE TABLE IF NOT EXISTS ASSISTANT (
         tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) on delete cascade on update cascade NOT NULL,
-        faculty_id int references FACULTY(id) not null,
-        supervisor bigint references INSTRUCTOR(id) not null,
+        faculty_id int references FACULTY(id) on delete cascade on update cascade not null,
+        supervisor bigint references INSTRUCTOR(tr_id) on delete cascade on update cascade not null,
         assistant_id bigint not null,
         bachelors varchar(80) not null,
         degree varchar(80) not null,
@@ -375,6 +376,16 @@ INIT_STATEMENTS = [
     """insert into instructor (tr_id, department_id, faculty_id) values (33, 1, 2);""",
     """insert into instructor (tr_id, department_id, faculty_id) values (44, 1, 3);""",
 
+    # Add assistants
+    """insert into assistant (tr_id, faculty_id, supervisor, assistant_id, bachelors, degree, grad_gpa, research_area, office_day, office_hour_start, office_hour_end) values 
+    (11111, 1, 11, 500180707, 'ITU', 'Computer Engineering', 3.7, 'Machine Learning', 'Monday', '10:30', '12:30');""",
+    """insert into assistant (tr_id, faculty_id, supervisor, assistant_id, bachelors, degree, grad_gpa, research_area, office_day, office_hour_start, office_hour_end) values 
+    (22222, 2, 22, 500180704, 'ITU', 'Computer Engineering', 3.8, 'Machine Learning', 'Tuesday', '12:30', '14:30');""",
+    """insert into assistant (tr_id, faculty_id, supervisor, assistant_id, bachelors, degree, grad_gpa, research_area, office_day, office_hour_start, office_hour_end) values 
+    (33333, 3, 33, 500180705, 'ITU', 'Computer Engineering', 3.9, 'Machine Learning', 'Wednesday', '14:30', '16:30');""",
+    """insert into assistant (tr_id, faculty_id, supervisor, assistant_id, bachelors, degree, grad_gpa, research_area, office_day, office_hour_start, office_hour_end) values 
+    (44444, 4, 44, 500150150, 'ITU', 'Computer Engineering', 4.0, 'Machine Learning', 'Thursday', '16:30', '18:30');""",
+
     # Add Courses
     """insert into course (crn, code, name, start_time, end_time, day, capacity, credits, classroom_id,
       instructor_id, department_id) values ('11111', '101', 'Intro to computing (C)', '12:00:00', '13:00:00',
@@ -392,6 +403,7 @@ INIT_STATEMENTS = [
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('22', 'Manager2', '0', '2019-12-12','12344','Information Tech','2');""",
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('33', 'Manager3', '1', '2019-12-12','12345','Information Tech','1');""",
     """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('44', 'Manager4', '0', '2019-12-12','12344','Service Tech','2');""",
+    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('111', null, null , null,null,null,null);""",
 
     # Insert Taken Courses
     """insert into taken_course (id,student_id,crn) values ('1','150180704','11111');""",
@@ -404,11 +416,11 @@ INIT_STATEMENTS = [
     """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (2, 2, 'Kütüphane', 'LIB', '50', '1400', '50000')""",
     """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (3, 4, 'Bilgi İşlem', 'BIDB', '50', '1400', '80000')""",
     # Add Staff-facility connection
-    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('leader', '2019-12-12', '2019-12-12', '2000', 1, 1, 'something')""",
-    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('security','2019-12-12', '2019-12-12', '2000', 2, 2, 'leader')""",
-    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('member', '2019-12-12', '2019-12-12', '2000', 2, 3, 'member')""",
+    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('leader', '2019-12-12', '2019-12-12', '2000', 1, 1, 'leads the group')""",
+    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('security','2019-12-12', '2019-12-12', '2000', 2, 2, 'Secure books')""",
+    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('member', '2019-12-12', '2019-12-12', '2000', 2, 1, 'member')""",
 
-    # Staff
+    # Staff people
     """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
         birth_date, id_reg_city, id_reg_district) values (1111,'fstaff', 'fatih', '1', 
         'fstaff@itu.edu.tr','fatih',
@@ -428,8 +440,6 @@ INIT_STATEMENTS = [
 
 
 ]
-
-
 def reset_db(url):
     with dbapi2.connect(url) as connection:
         cursor = connection.cursor()
