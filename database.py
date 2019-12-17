@@ -41,11 +41,11 @@ class Database:
             cursor.execute(query, (takencourse.student_id, takencourse.crn, takencourse.grade, id))
         return id
 
-    def delete_taken_course(self, id):
+    def delete_taken_course(self, student_id, crn):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
-            query = """delete from taken_course where (id = %s)"""
-            cursor.execute(query, (id,))
+            query = """delete from taken_course where (student_id = %s and crn = %s)"""
+            cursor.execute(query, (student_id, crn))
 
     def get_taken_course(self, id):
         with dbapi2.connect(self.dbfile) as connection:
@@ -156,13 +156,14 @@ class Database:
                 instructors.append(instructor)
         return instructors
 
-    def is_instructor_available(self, start_time, end_time, instructor_id):
+    def is_instructor_available(self, start_time, end_time, day, instructor_id):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = """select * from course where (instructor_id = %s 
-                                   and ((%s >= start_time and %s < end_time)
-                                       or (%s <= end_time and %s > start_time)));"""
-            cursor.execute(query, (instructor_id, start_time, start_time, end_time, end_time))
+                                   and course.day = %s
+                                    and not (( %s < start_time and %s < start_time)
+                                    or (%s > end_time and %s > end_time)));"""
+            cursor.execute(query, (instructor_id, day, start_time, end_time, start_time, end_time))
             if cursor.rowcount > 0:
                 return False
         return True
@@ -234,13 +235,14 @@ class Database:
                 classrooms.append(Classroom(*row))
         return classrooms
 
-    def is_classroom_available(self, start_time, end_time, classroom_id):
+    def is_classroom_available(self, start_time, end_time, day, classroom_id):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = """select * from course where (classroom_id = %s 
-                        and ((%s >= start_time and %s < end_time)
-                                or (%s <= end_time and %s > start_time)));"""
-            cursor.execute(query, (classroom_id, start_time, start_time, end_time, end_time))
+                        and course.day = %s
+                        and not (( %s < start_time and %s < start_time)
+                                or (%s > end_time and %s > end_time)));"""
+            cursor.execute(query, (classroom_id, day, start_time, end_time, start_time, end_time))
             if cursor.rowcount > 0:
                 return False
         return True
@@ -340,6 +342,29 @@ class Database:
                 course.door_number = row[18]
                 courses.append(course)
         return courses
+
+    def update_course_enrollment(self, crn):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            cursor.execute("""select count(student_id) from taken_course where crn = %s;""", (crn,))
+            number = cursor.fetchone()
+            cursor.execute("""update course set enrolled = %s where crn = %s""", (number, crn))
+        return number
+
+    def student_can_take_course(self, student_id, course):
+        with dbapi2.connect(self.dbfile) as connection:
+            cursor = connection.cursor()
+            query = """select * from course, taken_course where (course.crn = taken_course.crn
+                        and taken_course.student_id = %s
+                        and course.crn <> %s 
+                        and course.day = %s
+                        and not (( %s < start_time and %s < start_time)
+                                or (%s > end_time and %s > end_time)))"""
+            cursor.execute(query, (student_id, course.crn, course.day, course.start_time,
+                                   course.end_time, course.start_time, course.end_time))
+            if cursor.rowcount > 0:
+                return False
+            return True
 
     ########################
     def add_person(self, person):

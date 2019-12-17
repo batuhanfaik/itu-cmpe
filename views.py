@@ -145,15 +145,9 @@ def people_page():
                         form_bdate, form_id_regcity, form_id_regdist, filename, file_extension,
                         photo_data)
         db = current_app.config["db"]
-        try:
-            db.add_person(person)
-            return render_template("people.html", people=sorted(people), values={}, error=None)
-        except Error as e:
-            error = type(e).__name__ + '----' + str(e)
-            error = re.findall(r":\s{1}([A-z\s\W\d]*)", error)[0]
-            if error is None:
-                error = "There was an adding a person. Please check your input!"
-            return render_template("people.html", people=sorted(people), values={}, error=error)
+        person_tr_id = db.add_person(person)
+        people = db.get_people()
+        return render_template("people.html", people=sorted(people), values={})
 
 
 @login_required
@@ -492,7 +486,6 @@ def reset_db():
         dbinit.reset_db(db_url)
     return redirect(url_for("landing_page"))
 
-
 # faati's pages #
 # classroom pages #
 # classrooms_page is inside faculty_detailed page #
@@ -511,23 +504,20 @@ def add_classroom_page(faculty_id):
         air_conditioner = form.data['air_conditioner']
         classroom = db.get_classroom_by_door_and_faculty(faculty_id, door_number)
         if classroom is not None:
-            return render_template("edit_classroom.html", form=form, faculty_id=faculty_id,
-                                   title="Add Classroom",
+            return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Add Classroom",
                                    error="There exists a classroom with this door number in this faculty!")
         try:
             db.add_classroom(Classroom(None, capacity, has_projection, door_number, floor, renewed,
-                                       board_count, air_conditioner, faculty_id))
+                                   board_count, air_conditioner, faculty_id))
             return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
         except Error as e:
             str_e = str(e)
             error = type(e).__name__ + '----' + str_e
             if isinstance(e, errors.UniqueViolation):
                 error = "This classroom already exists in the given building"
-            return render_template("edit_classroom.html", form=form, faculty_id=faculty_id,
-                                   title="Add Classroom",
+            return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Add Classroom",
                                    error=error)
-    return render_template("edit_classroom.html", form=form, faculty_id=faculty_id,
-                           title="Add Classroom", error=None)
+    return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Add Classroom", error=None)
 
 
 def edit_classroom_page(faculty_id, id):
@@ -545,14 +535,11 @@ def edit_classroom_page(faculty_id, id):
             air_conditioner = form.data['air_conditioner']
             classroom = db.get_classroom_by_door_and_faculty(faculty_id, door_number)
             if (classroom is not None) and (classroom.id != int(id)):
-                return render_template("edit_classroom.html", form=form, faculty_id=faculty_id,
-                                       title="Update Classroom",
+                return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Update Classroom",
                                        error="There exists a classroom with this door number in this faculty!")
             try:
-                db.update_classroom(id,
-                                    Classroom(None, capacity, has_projection, door_number, floor,
-                                              renewed,
-                                              board_count, air_conditioner, faculty_id))
+                db.update_classroom(id, Classroom(None, capacity, has_projection, door_number, floor, renewed,
+                                       board_count, air_conditioner, faculty_id))
                 return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
             except Error as e:
                 error = type(e).__name__ + '----' + str(e)
@@ -578,8 +565,7 @@ def edit_classroom_page(faculty_id, id):
     form.renewed.data = classroom.renewed
     form.board_count.data = classroom.board_count
     form.air_conditioner.data = classroom.air_conditioner
-    return render_template("edit_classroom.html", form=form, faculty_id=faculty_id,
-                           title="Update Classroom",
+    return render_template("edit_classroom.html", form=form, faculty_id=faculty_id, title="Update Classroom",
                            error=error)
 
 
@@ -602,7 +588,6 @@ def my_courses_page():
         courses = db.get_courses_by_instructor_id(current_user.instructor_id)
     return render_template("courses.html", courses=courses)
 
-
 @login_required
 def add_course_page():
     if current_user.role != 'admin':
@@ -616,7 +601,7 @@ def add_course_page():
                 args.append(value)
         course = Course(*args)
         if not db.is_classroom_available(course.start_time, course.end_time,
-                                         course.classroom_id):
+                                                        course.classroom_id):
             error = "There is already a course given in that classroom at that time!"
             return render_template("edit_course.html", form=form, error=error, title="Add Course")
         if not db.is_instructor_available(course.start_time, course.end_time, course.instructor_id):
@@ -697,7 +682,7 @@ def add_instructor_page():
         db = current_app.config["db"]
         id = None
         tr_id = form.data['tr_id']
-        department_id = form.data['department_id']
+        department_id=form.data['department_id']
         faculty_id = form.data['faculty_id']
         specialization = form.data['specialization']
         bachelors = form.data['bachelors']
@@ -783,8 +768,7 @@ def edit_instructor_page(id):
     form.specialization.data = instructor.specialization
     form.department_id.data = instructor.department_id
     form.faculty_id.data = instructor.faculty_id
-    return render_template("edit_instructor.html", form=form, title="Update Instructor",
-                           error=error)
+    return render_template("edit_instructor.html", form=form, title="Update Instructor", error=error)
 
 
 def test_page():
@@ -795,11 +779,11 @@ def course_info_page(crn):
     db = current_app.config["db"]
     taken_course_students = db.get_taken_course_by_crn(crn)
     course = db.get_course(crn)
-    department = db.get_department(course.department_id)
-    faculty = db.get_faculty(department.faculty_id)
+    department= db.get_department(course.department_id)
+    faculty= db.get_faculty(department.faculty_id)
     students = []
     give_permission_to_see = False
-    if (current_user.is_authenticated):
+    if(current_user.is_authenticated):
         instructor = db.get_instructor_via_tr_id(current_user.tr_id)
         give_permission_to_see = False
         if (not instructor is None):
@@ -813,27 +797,26 @@ def course_info_page(crn):
         student_name = pers.name
         student_last_name = pers.surname
         std.tr_id = pers.tr_id
-        std.name = student_name + " " + student_last_name
+        std.name = student_name + " "+student_last_name
         students.append(std)
-    context = {
-        'students': students,
-        'course': course,
-        'department': department,
-        'faculty': faculty,
-        'give_permission_to_see': give_permission_to_see
+    context={
+        'students' : students,
+        'course' : course,
+        'department':department,
+        'faculty':faculty,
+        'give_permission_to_see':give_permission_to_see
     }
-    if (request.method == "POST" and "redirect_course_edit_page" in request.form):
-        return redirect(url_for('edit_course_page', crn=crn))
-    if (request.method == "POST" and "post_grade_form" in request.form):
+    if(request.method == "POST" and "redirect_course_edit_page" in request.form):
+        return redirect(url_for('edit_course_page',crn=crn))    
+    if(request.method == "POST" and "post_grade_form" in request.form):
         for taken_course in taken_course_students:
-            strm = 'std' + str(taken_course.student_id)
+            strm = 'std'+str(taken_course.student_id)
             print(request.form)
             taken_course.grade = request.form[strm]
-            if (taken_course.grade != "None"):
-                db.update_taken_course(taken_course.id, taken_course)
-        return redirect(url_for('course_info_page', crn=crn))
-    return render_template("course_inf.html", context=context)
-
+            if(taken_course.grade!="None"):
+                db.update_taken_course(taken_course.id,taken_course)
+        return redirect(url_for('course_info_page', crn = crn))
+    return render_template("course_inf.html",context= context)
 
 def validation_staff(form):
     form.data = {}
@@ -844,7 +827,7 @@ def validation_staff(form):
     if db.get_staff(form_id):
         form.errors["id"] = "This staff is already registered with the given id."
         flash('This staff is already registered with the given id')
-    elif form.get("id") == 0 or form.get("id") == None:
+    elif form.get("id") == 0 or form.get("id") ==None:
         form.errors["id"] = "ID cannot be empty."
         flash('ID cannot be empty.')
     elif form.get("hire_date") == 0:
@@ -869,14 +852,15 @@ def validation_staff(form):
     return len(form.errors) == 0
 
 
+
 def staff_add_page():
     db = current_app.config["db"]
     all_staff = db.get_all_staff()
     if request.method == "GET":
-        return render_template("staff.html", staffs=all_staff, values=request.form)
+        return render_template("staff.html",staffs = all_staff, values=request.form)
 
     elif 'search_staff' in request.form:
-        print("Searching staff.. id:", request.form.get("staff-id"))
+        print("Searching staff.. id:",request.form.get("staff-id"))
         found_staff = db.get_staff(request.form.get("staff-id"))
         person_info = db.get_person(request.form.get("staff-id"))
         if found_staff is None:
@@ -885,16 +869,17 @@ def staff_add_page():
                                    values=request.form)
         else:
             flash('Staff found!')
-            return render_template("staff_search.html", staff=found_staff, staff_id=found_staff.id,
-                                   values=request.form, person_info=person_info)
+            return render_template("staff_search.html", staff=found_staff,staff_id = found_staff.id,
+                                   values=request.form,person_info= person_info)
     elif 'delete_staff' in request.form:
+
 
         staff_id = request.form["staff_id"]
         print("Delete staff!", staff_id)
         db.delete_staff(int(staff_id))
         flash('Staff Deleted!')
         all_staff = db.get_all_staff()
-        return render_template("staff.html", staffs=all_staff,
+        return render_template("staff.html",staffs=all_staff,
                                values=request.form)
 
 
@@ -909,34 +894,32 @@ def staff_add_page():
         department = request.form.get("department")
         social_sec = request.form.get("social_sec_no")
 
-        new_staff = Staff(id=old_staff_id, manager_name=manager_name, absences=absences,
-                          hire_date=hire_date,
+        new_staff = Staff(id=old_staff_id, manager_name=manager_name, absences=absences, hire_date=hire_date,
                           social_sec_no=social_sec, department=department, authority_lvl=authority)
-        print(new_staff.id, new_staff.manager_name, new_staff.absences, new_staff.hire_date,
-              new_staff.social_sec_no, new_staff.department)
+        print(new_staff.id, new_staff.manager_name, new_staff.absences,new_staff.hire_date, new_staff.social_sec_no,new_staff.department)
         db.update_staff(new_staff)
 
         flash('Staff Updated!')
         all_staff = db.get_all_staff()
-        return render_template("staff.html", staffs=all_staff,
+        return render_template("staff.html",staffs=all_staff,
                                values=request.form)
 
     elif 'more_info' in request.form:
         s_id = request.form["staff_id"]
         staff_facilities = db.get_facility_from_staff(s_id)
-        print("\n staff id: ", s_id, " facility length", len(staff_facilities))
+        print("\n staff id: ",s_id," facility length", len(staff_facilities))
         the_staff = db.get_staff(s_id)
         facils = []
         for SF in staff_facilities:
             facility_ = db.get_facility(SF.facility_id)
             facils.append(facility_)
-        if (len(facils) is None):
+        if(len(facils) is None ):
             flash('No facility information is given for this Staff')
-        return render_template("staff_facility.html", staff=the_staff, facilities=facils,
-                               staff_facils=staff_facilities, values=request.form)
+        return render_template("staff_facility.html", staff = the_staff, facilities = facils,
+                                 staff_facils = staff_facilities,values=request.form)
     elif 'add_staff_facil' in request.form:
-        # Check validation
-        # add Delete/update
+        #Check validation
+        #add Delete/update
         s_id = request.form["staff_id"]
         staff_facilities = db.get_facility_from_staff(s_id)
         print("\n staff id: ", s_id, " facility length", len(staff_facilities))
@@ -961,34 +944,34 @@ def staff_add_page():
             db.add_staff_facility(new_SF)
             flash('Staff-Facility Connection successfully added!')
             staff_facilities = db.get_facility_from_staff(s_id)
-            print("\nLength of staff_facilities array:", len(staff_facilities))
-            facils = []
+            print("\nLength of staff_facilities array:",len(staff_facilities))
+            facils=[]
         except Error as e:
             flash('Staff-Facility Connection Not added!')
-            print("\nERROR:", type(e))
+            print("\nERROR:",type(e))
             if isinstance(e, errors.UniqueViolation):
                 flash('This connection already exists')
                 return render_template("staff_facility.html", staff=the_staff, facilities=facils,
                                        staff_facils=staff_facilities, values=request.form,
-                                       error="ID already exists")
+                                           error="ID already exists")
             if isinstance(e, errors.ForeignKeyViolation):
-                flash('Could not find the given staff Id or Facility Id')
+                flash('Could not find the given staff Id or Facility Id' )
                 return render_template("staff_facility.html", staff=the_staff, facilities=facils,
                                        staff_facils=staff_facilities, values=request.form,
-                                       error="No ID")
+                                           error="No ID")
 
             else:
-                return render_template("staff_facility.html", staff=the_staff, facilities=facils,
-                                       staff_facils=staff_facilities, values=request.form,
-                                       error=type(e).__name__ + "-----" + str(e))
+                return render_template("staff_facility.html", staff = the_staff, facilities = facils,
+                                 staff_facils = staff_facilities,values=request.form,
+                                           error=type(e).__name__ + "-----" + str(e))
         for SF in staff_facilities:
             facility_ = db.get_facility(SF.facility_id)
             print("\n id of current facility", facility_.id)
             facils.append(facility_)
         return render_template("staff_facility.html", staff=the_staff, facilities=facils,
-                               staff_facils=staff_facilities, values=request.form)
+                                   staff_facils=staff_facilities, values=request.form)
 
-    else:  # Staff addition
+    else:#Staff addition
         valid = validation_staff(request.form)
         if not valid:
             flash('Input NOT Valid!')
@@ -1002,9 +985,7 @@ def staff_add_page():
             authority = request.form.data["authority_lvl"]
             department = request.form.data["department"]
             social_sec = request.form.data["social_sec_no"]
-            new_staff = Staff(id=staff_id, manager_name=manager_name, absences=absences,
-                              hire_date=hire_date, social_sec_no=social_sec, department=department,
-                              authority_lvl=authority)
+            new_staff = Staff(id=staff_id,manager_name= manager_name,absences= absences,hire_date= hire_date,social_sec_no= social_sec,department= department,authority_lvl= authority)
             try:
                 db.add_staff(new_staff)
                 flash('Staff successfully added!')
@@ -1012,30 +993,26 @@ def staff_add_page():
                 flash('Staff NOT added!')
                 if isinstance(e, errors.UniqueViolation):
                     flash('A staff with this ID already exists')
-                    return render_template("staff.html", form=request.form, staffs=all_staff,
-                                           values=request.form,
+                    return render_template("staff.html", form=request.form,staffs = all_staff,values=request.form,
                                            error="A staff with this ID already exists")
                 if isinstance(e, errors.ForeignKeyViolation):
                     flash('No people exists with this TR ID')
-                    return render_template("staff.html", form=request.form, staffs=all_staff,
-                                           values=request.form,
+                    return render_template("staff.html", form=request.form,staffs = all_staff,values=request.form,
                                            error="No people exists with this TR ID")
 
                 else:
-                    return render_template("staff.html", form=request.form, staffs=all_staff,
-                                           values=request.form,
+                    return render_template("staff.html", form=request.form,staffs = all_staff,values=request.form,
                                            error=type(e).__name__ + "-----" + str(e))
-            return redirect(url_for("staff_add_page", staffs=all_staff, values=request.form))
+            return redirect(url_for("staff_add_page",staffs = all_staff,values=request.form))
 
 
 def find_campus(campus_id):
-    db = current_app.config["db"]
-    campuses = db.get_campuses()
-    for id, campus in campuses:
-        if campus_id == id:
+     db = current_app.config["db"]
+     campuses = db.get_campuses()
+     for id,campus in campuses:
+        if campus_id==id:
             return True
-    return None
-
+     return None
 
 def validation_facility(form):
     form.data = {}
@@ -1048,7 +1025,7 @@ def validation_facility(form):
     if db.get_facility(form_id):
         form.errors["id"] = "This facility is already registered with the given id."
         flash('This facility is already registered with the given id')
-    elif form.get("id") == 0 or form.get("id") == None:
+    elif form.get("id") == 0 or form.get("id") ==None:
         form.errors["id"] = "ID cannot be empty."
         flash('ID cannot be empty.')
     elif form.get("campus_id") == 0:
@@ -1073,24 +1050,25 @@ def validation_facility(form):
     return len(form.errors) == 0
 
 
+
 def facility_page():
     db = current_app.config["db"]
     all_facilities = db.get_all_facility()
 
     if request.method == "GET":
-        return render_template("facility.html", values=request.form, facilities=all_facilities)
+        return render_template("facility.html", values=request.form, facilities = all_facilities)
 
 
     elif 'facility_search' in request.form:
         facil = db.get_facility(request.form.get("facility_id"))
         if facil is None:
             flash('No facility has been found.')
-            return render_template("facility.html", facilities=all_facilities,
-                                   values=request.form)
+            return render_template("facility.html",  facilities=all_facilities,
+                                       values=request.form)
         else:
             flash('Facility found!')
             return render_template("facility_search.html", facility=facil, facility_id=facil.id,
-                                   by_campus=0, values=request.form)
+                                    by_campus= 0, values=request.form)
 
     elif 'delete_facility' in request.form:
         f_id = request.form["facility_id"]
@@ -1102,15 +1080,16 @@ def facility_page():
 
     elif 'search_facility_campus' in request.form:
         campus_id = request.form["find_campus_id"]
-        campus = db.get_campus(campus_id)
-        c_name = campus.name
+        campus= db.get_campus(campus_id)
+        c_name=campus.name
         facilities = db.get_facility_from_campus(campus_id)
         if len(facilities) == 0:
+
             flash('There is no facility in this Campus.')
             return render_template("facility.html", facilities=all_facilities,
                                    values=request.form)
-        return render_template("facility_search.html", facilities=facilities, campus_name=c_name,
-                               by_campus=1, values=request.form)
+        return render_template("facility_search.html", facilities=facilities, campus_name = c_name,
+                               by_campus = 1 ,values=request.form)
 
     elif 'update_facility' in request.form:
 
@@ -1128,13 +1107,13 @@ def facility_page():
 
         flash('Facility Updated!')
         all_staff = db.get_all_staff()
-        return render_template("staff.html", staffs=all_staff,
+        return render_template("staff.html",staffs=all_staff,
                                values=request.form)
 
     else:
         valid = validation_facility(request.form)
         if not valid:
-            # flash('Input NOT Valid!')
+            #flash('Input NOT Valid!')
             return render_template("facility.html", facilities=all_facilities,
                                    values=request.form)
 
@@ -1151,7 +1130,7 @@ def facility_page():
             size = request.form.data["size"]
             expense = request.form.data["expenses"]
             new_facil = Facility(id=id, campus_id=campus_id, name=name, shortened_name=short_name,
-                                 number_of_workers=num_worker, size=size, expenses=expense)
+                              number_of_workers=num_worker, size=size, expenses=expense)
             try:
                 db.add_facility(new_facil)
                 flash('Facility successfully added!')
@@ -1160,18 +1139,15 @@ def facility_page():
                 flash('Facility NOT added!')
                 if isinstance(e, errors.UniqueViolation):
                     flash('A Facility with this ID already exists')
-                    return render_template("facility.html", form=request.form,
-                                           facilities=all_facilities, values=request.form,
+                    return render_template("facility.html", form=request.form, facilities=all_facilities, values=request.form,
                                            error="A Facility with this ID already exists")
                 if isinstance(e, errors.ForeignKeyViolation):
                     flash('No campus exists with this ID')
-                    return render_template("facility.html", form=request.form,
-                                           facilities=all_facilities, values=request.form,
+                    return render_template("facility.html", form=request.form,facilities=all_facilities, values=request.form,
                                            error="No campus exists with this ID")
 
                 else:
-                    return render_template("facility.html", form=request.form,
-                                           facilities=all_facilities, values=request.form,
+                    return render_template("facility.html", form=request.form, facilities=all_facilities, values=request.form,
                                            error=type(e).__name__ + "-----" + str(e))
-            return redirect(
-                url_for("facility_page", facilities=all_facilities, values=request.form))
+            return redirect(url_for("facility_page", facilities=all_facilities, values=request.form))
+
