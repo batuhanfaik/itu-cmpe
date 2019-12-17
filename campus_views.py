@@ -168,7 +168,7 @@ def campus_detailed(campus_id):
                 except Error as e:
                     error = type(e).__name__ + '----' + str(e)
                     pass
-                context = {
+            context = {
                     'Campus': campus,
                     'edit_campus_form': edit_campus_form,
                     'campus_image': image,
@@ -177,7 +177,7 @@ def campus_detailed(campus_id):
                     'faculties': faculties,
                     'image_added': True,
                     'error': error
-                }
+            }
             return render_template('/campuses/campus_detailed.html', context=context)
         elif request.method == "POST" and 'edit_campus_form' in request.form:
             campus_id = campus.id
