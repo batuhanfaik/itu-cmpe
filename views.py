@@ -876,7 +876,7 @@ def course_info_page(crn):
     if(request.method == "POST" and "post_grade_form" in request.form):
         for taken_course in taken_course_students:
             strm = 'std'+str(taken_course.student_id)
-            print(request.form)
+            print('hey',request.form)
             taken_course.grade = request.form[strm]
             if(taken_course.grade!="None"):
                 db.update_taken_course(taken_course.id,taken_course)
