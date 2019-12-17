@@ -96,7 +96,7 @@
                     <li class="nav-item {% if request.path==url_for("person_page", tr_id=current_user.tr_id) %} active {% endif %}">
                         <a class="nav-link"
                            href="{{ url_for("person_page", tr_id=current_user.tr_id) }}">
-                            {{ current_user.name + " " + current_user.surname }}
+                            {{ current_user.name.title() + " " + current_user.surname.title() }}
                         </a>
                     </li>
                     <li class="nav-item">
