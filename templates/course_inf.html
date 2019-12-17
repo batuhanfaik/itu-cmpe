@@ -102,6 +102,7 @@ body %}
                 <tbody>
                 <form method="POST" name="post_grade_form">
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                  <input type="hidden" name="post_grade_form" />
 
                 {% for student in context.students %}
                     <tr>
