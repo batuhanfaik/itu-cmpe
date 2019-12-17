@@ -5,6 +5,12 @@ body %}
     <div class="container mt-3">
         <h1>This Person</h1>
 
+        {% if error %}
+            <div class="alert alert-danger mb-2" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+
         <form
                 class="form-inline needs-validation"
                 action=""
@@ -13,7 +19,7 @@ body %}
                 id="form_update_person"
                 name="form_update_person"
         >
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <div class="form-group">
       <label for="tr_id" class="mr-sm-2">TR ID:</label>
       <input
