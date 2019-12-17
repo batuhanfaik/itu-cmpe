@@ -13,7 +13,6 @@ import dbinit
 
 from io import BytesIO
 from assistant import Assistant
-from campus import Campus
 from classroom import Classroom
 from course import Course
 from facility import Facility
@@ -83,6 +82,10 @@ def validate_people_form(form):
     db = current_app.config["db"]
 
     form_tr_id = form.get("tr_id")
+    if not form_tr_id.isdigit():
+        form.errors["tr_id"] = "Please enter only numeric characters!"
+        return len(form.errors) == 0
+
     if db.get_person(form_tr_id):
         form.errors["tr_id"] = "There exists a person with the given TR ID."
     else:
@@ -235,6 +238,9 @@ def validate_students_form(form):
     db = current_app.config["db"]
 
     form_tr_id = form.get("tr_id")
+    if not form_tr_id.isdigit():
+        form.errors["tr_id"] = "Please enter only numeric characters!"
+        return len(form.errors) == 0
     if db.get_student(form_tr_id):
         form.errors["tr_id"] = "There exists a student with the given TR ID."
     else:
@@ -352,6 +358,9 @@ def validate_assistants_form(form):
     db = current_app.config["db"]
 
     form_tr_id = form.get("tr_id")
+    if not form_tr_id.isdigit():
+        form.errors["tr_id"] = "Please enter only numeric characters!"
+        return len(form.errors) == 0
     if db.get_student(form_tr_id):
         form.errors["tr_id"] = "There exists an assistant with the given TR ID."
     else:
