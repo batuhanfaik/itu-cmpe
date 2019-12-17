@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block body %}
+   <div class="container mt-3">
+   <h1> {{ title }}</h1>
+   <hr>
+   <h2 class="text-danger"> STUDENTS USING "FILL CRN" WILL BE PUNISHED </h2>
+
+    {% if error %}
+        <div class="text-danger hr-bold">
+            {{ error }}
+        </div>
+    {% endif %}
+    <form action="" method="post" name="edit_course" class="form-inline">
+    {{ form.csrf_token }}
+        <table class="w-100">
+            <tr>
+                {% for field in form %}
+                <td scope="col">{{ field(class="form-control col-xs-1") }}</td>
+                {% endfor %}
+            </tr>
+        </table>
+    <button type="submit" class="button btn-primary mb-2" value="add" name="btn">Add Courses</button>
+    <button type="submit" class="button btn-danger mb-2" value="drop" name="btn">Drop Courses</button>
+    </form>
+
+    {% if results %}
+    <table class="table">
+    <thead>
+    <tr>
+        <td>CRN</td>
+        <td>Result</td>
+    </tr>
+    {% for result in results %}
+    <tr>
+        <td>{{ result['crn'] }}</td>
+        <td>{{ result['result'] }}</td>
+    </tr>
+    {% endfor %}
+    </thead>
+
+    </table>
+    </div>
+    {% endif %}
+    <script>
+        let list = document.getElementsByClassName('form-control');
+        for (let i = 0; i<list.length; i++){
+             list[i].addEventListener('keyup', () => {
+            if (list[i].value.length > 5){
+                list[i].value = list[i].value.slice(0,5);
+            }
+        })}
+    </script>
+{% endblock %}

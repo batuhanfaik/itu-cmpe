@@ -13,7 +13,7 @@ from classroom import Classroom
 from course import Course
 from facility import Facility
 from faculty import Faculty
-from forms import login_form, InstructorForm, ClassroomForm, CourseForm
+from forms import login_form, InstructorForm, ClassroomForm, CourseForm, SelectCourseForm
 from instructor import Instructor
 from person import Person
 from staff import Staff
@@ -547,11 +547,11 @@ def add_course_page():
             if key != 'csrf_token':
                 args.append(value)
         course = Course(*args)
-        if not db.is_classroom_available(course.start_time, course.end_time,
+        if not db.is_classroom_available(course.start_time, course.end_time, course.day,
                                                         course.classroom_id):
             error = "There is already a course given in that classroom at that time!"
             return render_template("edit_course.html", form=form, error=error, title="Add Course")
-        if not db.is_instructor_available(course.start_time, course.end_time, course.instructor_id):
+        if not db.is_instructor_available(course.start_time, course.end_time, course.day, course.instructor_id):
             error = "The instructor already has a course at that time!"
             return render_template("edit_course.html", form=form, error=error, title="Add Course")
         try:
@@ -577,7 +577,64 @@ def add_course_page():
 def select_courses_page():
     if current_user.role != 'student':
         return redirect(url_for("landing_page"))
-    return 'ses'
+    db = current_app.config['db']
+    form = SelectCourseForm()
+    results = []
+    if form.validate_on_submit():
+        if request.form['btn'] == 'add':
+            crn_list = []
+            for key, value in form.data.items():
+                if key != 'csrf_token' and value != 0:
+                    crn_list.append(str(value))
+            for crn in crn_list:
+                result = {'crn': crn}
+                try:
+                    course = db.get_course(crn)
+                    if course is not None:
+                        if db.student_can_take_course(current_user.student_id, course):
+                            db.add_taken_course(current_user.student_id, crn)
+                            result['result'] = "You have been added to this course!"
+                            db.update_course_enrollment(crn)
+                        else:
+                            result['result'] = "This course conflicts with another course you have"
+                    else:
+                        result['result'] = "This course does not exists"
+                except Error as e:
+                    error = type(e).__name__ + '----' + str(e)
+                    str_e = str(e)
+                    if isinstance(e, errors.UniqueViolation):
+                        error = "You already have this course"
+                    if isinstance(e, errors.ForeignKeyViolation):
+                        if 'course' in str_e:
+                            error = "This CRN does not belongs to any course"
+                    result['result'] = error
+                results.append(result)
+        else:
+            crn_list = []
+            for key, value in form.data.items():
+                if key != 'csrf_token' and value != 0:
+                    crn_list.append(str(value))
+            for crn in crn_list:
+                result = {'crn': crn}
+                try:
+                    if db.get_course(crn) is not None:
+                        db.delete_taken_course(current_user.student_id, crn)
+                        result['result'] = "Successfully dropped course"
+                        db.update_course_enrollment(crn)
+                    else:
+                        result['result'] = "This CRN does not belongs to any course"
+                except Error as e:
+                    error = type(e).__name__ + '----' + str(e)
+                    str_e = str(e)
+                    if isinstance(e, errors.UniqueViolation):
+                        error = "This CRN does not belongs to any course"
+                    if isinstance(e, errors.ForeignKeyViolation):
+                        if 'course' in str_e:
+                            error = "This CRN does not belongs to any course"
+                    result['result'] = error
+                results.append(result)
+    return render_template("select_courses.html", form=form, results=results, error=None, title="Add/Drop Courses")
+
 
 
 @login_required

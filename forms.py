@@ -9,6 +9,15 @@ from campus import Campus
 from werkzeug.utils import secure_filename
 
 
+class SelectCourseForm(FlaskForm):
+    crn1 = IntegerField("CRN1", render_kw={'type': 'number', 'class': 'crn'}, validators=[InputRequired()])
+    crn2 = IntegerField("CRN2", render_kw={'type': 'number', 'class': 'crn'}, default=0)
+    crn3 = IntegerField("CRN3", render_kw={'type': 'number', 'class': 'crn'}, default=0)
+    crn4 = IntegerField("CRN4", render_kw={'type': 'number', 'class': 'crn'}, default=0)
+    crn5 = IntegerField("CRN5", render_kw={'type': 'number', 'class': 'crn'}, default=0)
+    crn6 = IntegerField("CRN6", render_kw={'type': 'number', 'class': 'crn'}, default=0)
+
+
 class CourseForm(FlaskForm):
     crn = StringField("CRN", validators=[InputRequired(), Length(min=5, max=5)])
     code = StringField("Code", validators=[InputRequired(), Length(min=3, max=3)])
@@ -21,19 +30,19 @@ class CourseForm(FlaskForm):
     day = SelectField("Day", choices=[('Monday', 'Monday'), ('Tuesday', 'Tuesday'),
                                       ('Wednesday', 'Wednesday'), ('Thursday', 'Thursday'),
                                       ('Friday', 'Friday')])
-    capacity = IntegerField("Capacity", validators=[InputRequired()])
+    capacity = IntegerField("Capacity", validators=[InputRequired()], render_kw={'type': 'number'})
     enrolled = HiddenField("Enrolled", default=0)
     credits = DecimalField("Credits", validators=[InputRequired()], places=1)
     language = StringField("Language", validators=[Length(max=2)])
-    classroom_id = IntegerField("Classroom ID", validators=[InputRequired()])
-    instructor_id = IntegerField("Instructor ID", validators=[InputRequired()])
-    department_id = IntegerField("Department ID", validators=[InputRequired()])
+    classroom_id = IntegerField("Classroom ID", validators=[InputRequired()], render_kw={'type': 'number'})
+    instructor_id = IntegerField("Instructor ID", validators=[InputRequired()], render_kw={'type': 'number'})
+    department_id = IntegerField("Department ID", validators=[InputRequired()], render_kw={'type': 'number'})
     info = TextAreaField("Course Information", validators=[InputRequired()])
 
 
 class ClassroomForm(FlaskForm):
     faculty_id = None
-    capacity = IntegerField(u"Capacity", validators=[InputRequired()])
+    capacity = IntegerField(u"Capacity", validators=[InputRequired()], render_kw={'type': 'number'})
     door_number = StringField(u"Door Number", validators=[InputRequired(), Length(max=4)])
     # def validate_door_number(self, field):
     #     db = current_app.config['db']
@@ -41,7 +50,7 @@ class ClassroomForm(FlaskForm):
     #     if classroom is not None:
     #         raise ValidationError("There exists is a classroom with this door number!")
     floor = StringField(u"Floor", validators=[Length(max=2)])
-    board_count = IntegerField(u"Board Count")
+    board_count = IntegerField(u"Board Count", render_kw={'type': 'number'})
     has_projection = RadioField(u"Has Projection", choices=[('true', 'Yes'), ('false', 'No')], default='false')
     # has_projection = BooleanField(u"Has Projection")
     renewed = BooleanField(u"Renewed")
@@ -49,9 +58,9 @@ class ClassroomForm(FlaskForm):
 
 
 class InstructorForm(FlaskForm):
-    tr_id = IntegerField(u"TR ID", validators=[InputRequired()]) # , Length(min=11, max=11, message="TR ID's length must be 11")
-    department_id = IntegerField(u"Department ID", validators=[InputRequired()])
-    faculty_id = IntegerField(u"Faculty ID", validators=[InputRequired()])
+    tr_id = IntegerField(u"TR ID", validators=[InputRequired()], render_kw={'type': 'number'}) # , Length(min=11, max=11, message="TR ID's length must be 11")
+    department_id = IntegerField(u"Department ID", validators=[InputRequired()], render_kw={'type': 'number'})
+    faculty_id = IntegerField(u"Faculty ID", validators=[InputRequired()], render_kw={'type': 'number'})
     specialization = StringField(u"Specialization")
     bachelors = StringField(u"Bachelor's Degree")
     masters = StringField(u"Master's Degree")
