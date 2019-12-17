@@ -88,8 +88,8 @@ INIT_STATEMENTS = [
     );
     CREATE TABLE IF NOT EXISTS STUDENT (
         tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id)  on delete cascade on update cascade NOT NULL,
-        faculty_id int references FACULTY(id) not null,
-        department_id int references DEPARTMENT(id) not null,
+        faculty_id int references FACULTY(id) on delete cascade on update cascade not null,
+        department_id int references DEPARTMENT(id) on delete cascade on update cascade not null,
         student_id bigint not null,
         semester smallint not null default 1,
         grade smallint not null default 1,
@@ -115,8 +115,8 @@ INIT_STATEMENTS = [
     );
     CREATE TABLE IF NOT EXISTS ASSISTANT (
         tr_id BIGINT PRIMARY KEY references PEOPLE(tr_id) on delete cascade on update cascade NOT NULL,
-        faculty_id int references FACULTY(id) not null,
-        supervisor bigint references INSTRUCTOR(tr_id) not null,
+        faculty_id int references FACULTY(id) on delete cascade on update cascade not null,
+        supervisor bigint references INSTRUCTOR(tr_id) on delete cascade on update cascade not null,
         assistant_id bigint not null,
         bachelors varchar(80) not null,
         degree varchar(80) not null,
