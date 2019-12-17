@@ -59,7 +59,7 @@ INIT_STATEMENTS = [
         foundation_date 	DATE,
         phone_number		CHAR(11),
         PRIMARY KEY(id),
-        FOREIGN KEY(campus_id) REFERENCES CAMPUS(id) on delete cascade on update cascade
+        FOREIGN KEY(campus_id) REFERENCES CAMPUS(id)
     );
     CREATE TABLE IF NOT EXISTS DEPARTMENT(
         id				    SERIAL 		NOT NULL,
@@ -71,7 +71,7 @@ INIT_STATEMENTS = [
         foundation_date 	DATE,
         phone_number		CHAR(11),
         PRIMARY KEY(id),
-        FOREIGN KEY(faculty_id) REFERENCES FACULTY(id) on delete cascade on update cascade
+        FOREIGN KEY(faculty_id) REFERENCES FACULTY(id)
     );
     CREATE TABLE IF NOT EXISTS CLASSROOM(
         id              SERIAL      NOT NULL PRIMARY KEY,
@@ -445,6 +445,8 @@ INIT_STATEMENTS = [
 
 
 ]
+
+
 def reset_db(url):
     with dbapi2.connect(url) as connection:
         cursor = connection.cursor()
