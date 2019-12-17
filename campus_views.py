@@ -8,7 +8,7 @@ import io
 from campus import Campus, Faculty, Department
 from base64 import b64encode
 from psycopg2 import errors, Error
-
+from views import tidy_error
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'svg'}
 
 
@@ -32,7 +32,7 @@ def campus():
         campuses = db.get_campuses()
         campus = {}
         form = add_campus_form()
-
+        error = ''
         if request.method == "POST" and 'delete_campus_flag' in request.form:
             campus_id = request.form['delete_campus_flag']
 
@@ -54,8 +54,6 @@ def campus():
             }
             return render_template('/campuses/campus.html', context=context)
         elif request.method == "POST" and 'add_campus_form' in request.form:
-            print('nenenene')
-
             if(form.validate()):
                 image = request.files['image']
                 filename = secure_filename(image.filename)
@@ -69,23 +67,30 @@ def campus():
                     img_data = b''
                 campus = Campus(0, form.name.data, form.address.data, form.city.data, form.size.data,
                                 form.foundation_date.data, form.phone_number.data, file_extension, img_data)
-            print(form.errors)
-            print(campus)
-            db.add_campus(campus)
-            return redirect(url_for('campus'))
+                try:
+                    db.add_campus(campus)
+                    return redirect(url_for('campus'))
+                except Error as e:
+                    error = tidy_error(e)
+                print(error)
+                return redirect(url_for('campus'))
+            else:
+                error = form.errors
+                context = {
+                    # 'form': form,
+                    'campuses': campuses,
+                    'form': form,
+                    'error':error
+                }
+                return render_template('/campuses/campus.html', context=context)
         elif request.method == "POST" and "redirect_edit_page" in request.form:
             campus_form_id = request.form['redirect_edit_page']
             return redirect(url_for('campus_detailed', campus_id=campus_form_id))
-            # img_name = secure_filename(image.filename)
-            # print(bin_img)
-            # agin = io.BytesIO(bin_img)
-
-            # print(byte_img)
-
         context = {
             # 'form': form,
             'campuses': campuses,
             'form': form,
+            'error':error
         }
         return render_template('/campuses/campus.html', context=context)
 
@@ -115,6 +120,7 @@ def campus_detailed(campus_id):
             file_extension = filename.split(".")[-1]
             filename = filename.split(".")[0]
             img_data = b''
+            error=''
             if(validate_image(file_extension)):
                 img_data = request.files['image'].read()
             updated_campus = Campus(campus_id, campus.name, campus.address, campus.city, campus.size,
@@ -123,7 +129,7 @@ def campus_detailed(campus_id):
                 db.update_campus(updated_campus)
                 return redirect(url_for('campus_detailed', campus_id=campus_id))
             except Error as e:
-                error = type(e).__name__ + '----' + str(e)
+                error = tidy_error(e)
                 pass
             context = {
                 'Campus': campus,
@@ -141,11 +147,12 @@ def campus_detailed(campus_id):
             img_data = b""
             updated_campus = Campus(campus_id, campus.name, campus.address, campus.city, campus.size,
                                     campus.foundation_date, campus.phone_number, file_extension, img_data)
+            error =''
             try:
                 db.update_campus(updated_campus)
                 return redirect(url_for('campus_detailed', campus_id=campus_id))
             except Error as e:
-                error = type(e).__name__ + '----' + str(e)
+                error = tidy_error(e)
                 pass
             context = {
                 'Campus': campus,
@@ -159,6 +166,7 @@ def campus_detailed(campus_id):
             }
             return render_template('/campuses/campus_detailed.html', context=context)
         elif request.method == "POST" and 'add_faculty_form' in request.form:
+            error = ''
             if(add_faculty.validate()):
                 faculty = Faculty(0, request.form['add_faculty_form'], add_faculty.name.data, add_faculty.shortened_name.data,
                                   add_faculty.address.data, add_faculty.foundation_date.data, add_faculty.phone_number.data)
@@ -166,9 +174,10 @@ def campus_detailed(campus_id):
                     db.add_faculty(faculty)
                     return redirect(url_for('campus_detailed', campus_id=campus.id))
                 except Error as e:
-                    error = type(e).__name__ + '----' + str(e)
+                    error = tidy_error(e)
                     pass
-                context = {
+                
+            context = {
                     'Campus': campus,
                     'edit_campus_form': edit_campus_form,
                     'campus_image': image,
@@ -177,26 +186,23 @@ def campus_detailed(campus_id):
                     'faculties': faculties,
                     'image_added': True,
                     'error': error
-                }
+            }
             return render_template('/campuses/campus_detailed.html', context=context)
         elif request.method == "POST" and 'edit_campus_form' in request.form:
             campus_id = campus.id
             updated_campus = Campus(campus_id, edit_campus_form.name.data, edit_campus_form.address.data, edit_campus_form.city.data, edit_campus_form.size.data,
                                     edit_campus_form.foundation_date.data, edit_campus_form.phone_number.data, campus.img_extension, campus.img_data)
+            error =''
             if(edit_campus_form.validate()):
                 try:
                     db.update_campus(updated_campus)
                     return redirect(url_for('campus_detailed', campus_id=campus.id))
                 except Error as e:
-                    error = type(e).__name__ + '----' + str(e)
+                    error = tidy_error(e)
                     pass
                 add_faculty = add_faculty_form()
                 edit_campus_form = add_campus_form()
-                if('too long' in error):
-                    error = "One of the input value is too long!"
             else:
-                if('address' in edit_campus_form.errors):
-                    error = 'Address field cannot be longer than 80 characters'
                 error = edit_campus_form.errors
             context = {
                 'Campus': campus,
@@ -212,6 +218,7 @@ def campus_detailed(campus_id):
             return render_template('/campuses/campus_detailed.html', context=context)
         elif request.method == "POST" and 'delete_faculty_flag' in request.form:
             faculty_delete_id = request.form['delete_faculty_flag']
+            error =''
             try:
                 db.delete_faculty(faculty_delete_id)
                 return redirect(url_for('campus_detailed', campus_id=campus.id))
@@ -222,7 +229,6 @@ def campus_detailed(campus_id):
                     if 'department' in str_e:
                         remove_error = "There are departments in this faculty! It can not be deleted!"
                 pass
-            print('ERROR RERERER', error)
             context = {
                 'Campus': campus,
                 'edit_campus_form': edit_campus_form,
@@ -281,13 +287,11 @@ def faculty_detailed(faculty_id):
                     db.add_department(department)
                     return redirect(url_for('faculty_detailed', faculty_id=faculty.id, classrooms=classrooms))
                 except Error as e:
-                    add_error = type(e).__name__ + '----' + str(e)
+                    add_error = tidy_error(e)
                     pass
                 context['add_error'] = add_error
             return render_template('/campuses/faculty_detailed.html', context=context, classrooms=classrooms)
         elif request.method == "POST" and 'edit_faculty_form' in request.form:
-            print('heheryeherthethegr')
-
             if(edit_faculty_form.validate()):
                 updated_faculty = Faculty(faculty_id, faculty.campus_id, edit_faculty_form.name.data, edit_faculty_form.shortened_name.data,
                                           edit_faculty_form.address.data, edit_faculty_form.foundation_date.data, edit_faculty_form.phone_number.data)
@@ -295,9 +299,8 @@ def faculty_detailed(faculty_id):
                     db.update_faculty(updated_faculty)
                     return redirect(url_for('faculty_detailed', faculty_id=faculty.id, classrooms=classrooms))
                 except Error as e:
-                    update_error = type(e).__name__ + '----' + str(e)
+                    update_error = tidy_error(e)
                     pass
-                print('HEHEHEHE', update_error)
                 context['update_error'] = update_error
                 context['faculty'] = updated_faculty
             else:
@@ -341,8 +344,10 @@ def department_detailed(department_id):
                 except Error as e:
                     error = type(e).__name__ + '----' + str(e)
                     pass
-                cout << "error"
                 return redirect(url_for('department_detailed', department_id=department.id))
+            else:
+                context['error']=edit_department_form.errors
+                
         return render_template('/campuses/department_detailed.html', context=context)
 
 

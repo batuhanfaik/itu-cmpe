@@ -269,6 +269,11 @@ img.responsive { height: auto; }
       <p>{{context.remove_error}}</p>
   </div>
   {% endif %}
+  {% if context.error %}  
+  <div class="container" style="background:tomato;border:1px solid gray">
+      <p>{{context.error}}</p>
+  </div>
+  {% endif %}
   <div class="row">   
     <div class="col-lg-6 col-sm-12 col-md-12">
         <form class="form needs-validation" method="post" id="form_add_faculty"
