@@ -37,7 +37,18 @@
                     </a>
                 </li>
                 {% if current_user.role == 'admin' %}
-                    <li class="nav-item {% if request.path==url_for("people_page") %} active {% endif %}">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">People</a>
+                    <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="{{ url_for("people_page") }}">All People</a>
+                      <a class="dropdown-item" href="{{ url_for("staff_add_page") }}">Staff</a>
+                      <a class="dropdown-item" href="{{ url_for("instructors_page") }}">Instructors</a>
+                      <a class="dropdown-item" href="{{ url_for("assistants_page") }}">Assistants</a>
+                      <a class="dropdown-item" href="{{ url_for("students_page") }}">Students</a>
+                    </div>
+                  </li>
+           <!--         <li class="nav-item {% if request.path==url_for("people_page") %} active {% endif %}">
                         <a class="nav-link" href="{{ url_for("people_page") }}">People</a>
                     </li>
                     <li class="nav-item {% if request.path==url_for("instructors_page") %} active {% endif %}">
@@ -48,32 +59,38 @@
                     </li>
                     <li class="nav-item {% if request.path==url_for("students_page") %} active {% endif %}">
                         <a class="nav-link" href="{{ url_for("students_page") }}">Students</a>
-                    </li>
-                    <li class="nav-item {% if request.path==url_for("campus") %} active {% endif %}">
-                        <a class="nav-link" href="{{ url_for("campus") }}">Campuses</a>
-                    </li>
-                    <li class="nav-item {% if request.path==url_for("staff_add_page") %} active {% endif %}">
+                    </li>-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">Management</a>
+                        <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+                          <a class="dropdown-item" href="{{ url_for("campus") }}">Campuses</a>
+                          <a class="dropdown-item" href="{{ url_for("facility_page") }}">Facilities</a>
+                        </div>
+                      </li>
+                    {% endif %}
+                 <!--   <li class="nav-item {% if request.path==url_for("staff_add_page") %} active {% endif %}">
                         <a class="nav-link" href="{{ url_for("staff_add_page") }}">Staff</a>
-                    </li>
-                    <li class="nav-item {% if request.path==url_for("facility_page") %} active {% endif %}">
-                        <a class="nav-link" href="{{ url_for("facility_page") }}">Facilities</a>
-                    </li>
-                {% elif current_user.role == 'instructor' %}
-                    <li class="nav-item {% if request.path==url_for("my_courses_page") %} active {% endif %}">
-                        <a class="nav-link" href="{{ url_for("my_courses_page") }}">My Courses</a>
-                    </li>
-                {% elif current_user.role == 'student' %}
-                    <li class="nav-item {% if request.path==url_for("my_courses_page") %} active {% endif %}">
-                        <a class="nav-link" href="{{ url_for("my_courses_page") }}">My Courses</a>
-                    </li>
-                    <li class="nav-item {% if request.path==url_for("select_courses_page") %} active {% endif %}">
-                        <a class="nav-link" href="{{ url_for("select_courses_page") }}">Add Drop Courses</a>
-                    </li>
-                {% endif %}
-                <li class="nav-item {% if request.path==url_for("courses_page") %} active {% endif %}">
-                        <a class="nav-link" href="{{ url_for("courses_page") }}">Courses</a>
-                </li>
-
+                    </li>-->
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                          aria-haspopup="true" aria-expanded="false">Courses</a>
+                        <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{{ url_for("courses_page") }}">Courses</a>
+                            {% if current_user.role == 'instructor' or current_user.role == 'student' %}
+                            <a class="dropdown-item" href="{{ url_for("my_courses_page") }}">My Courses</a>
+                            {% endif %}
+                            {% if current_user.role == 'student' %}
+                            <a class="dropdown-item" href="{{ url_for("select_courses_page") }}">Add/Drop</a>
+                            {% endif %}
+                        </div>
+                      </li>
+                    {% else %}
+                        <li class="nav-item {% if request.path==url_for("courses_page") %} active {% endif %}">
+                            <a class="nav-link" href="{{ url_for("courses_page") }}">Courses</a>
+                        </li>
+                    {% endif %}
 
                 {% if current_user.is_authenticated %}
                     <li class="nav-item {% if request.path==url_for("person_page", tr_id=current_user.tr_id) %} active {% endif %}">
