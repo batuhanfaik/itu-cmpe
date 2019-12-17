@@ -107,7 +107,11 @@ def validate_people_form(form):
 @login_required
 def people_page():
     db = current_app.config["db"]
-    people = db.get_people()
+    try:
+        people = db.get_people()
+    except Error as e:
+        error = tidy_error(e)
+        return render_template("people.html", people=None, values={}, error=error)
     if request.method == "GET":
         return render_template("people.html", people=sorted(people), values=request.form)
     else:
@@ -148,15 +152,25 @@ def people_page():
                         form_bdate, form_id_regcity, form_id_regdist, filename, file_extension,
                         photo_data)
         db = current_app.config["db"]
-        person_tr_id = db.add_person(person)
-        people = db.get_people()
-        return render_template("people.html", people=sorted(people), values={})
+        try:
+            db.add_person(person)
+            people = db.get_people()
+            return render_template("people.html", people=sorted(people), values={}, error=None)
+        except Error as e:
+            error = tidy_error(e)
+            people = db.get_people()
+            return render_template("people.html", people=sorted(people), values={}, error=error)
 
 
 @login_required
 def person_page(tr_id):
     db = current_app.config["db"]
-    person = db.get_person(tr_id)
+    try:
+        person = db.get_person(tr_id)
+    except Error as e:
+        error = tidy_error(e)
+        people = db.get_people()
+        return render_template("people.html", people=sorted(people), values={})
     if person is None:
         abort(404)
     if request.method == "GET":
@@ -242,7 +256,11 @@ def validate_students_form(form):
 @login_required
 def students_page():
     db = current_app.config["db"]
-    students = db.get_students()
+    try:
+        students = db.get_students()
+    except Error as e:
+        error = tidy_error(e)
+        return render_template("students.html", students=None, values={}, error=error)
     if request.method == "GET":
         return render_template("students.html", students=sorted(students), values=request.form)
     else:
@@ -278,7 +296,13 @@ def students_page():
 @login_required
 def student_page(tr_id):
     db = current_app.config["db"]
-    student = db.get_student(tr_id)
+    try:
+        student = db.get_student(tr_id)
+    except Error as e:
+        error = tidy_error(e)
+        students = db.get_students()
+        return redirect(
+            url_for("students_page", students=sorted(students), values={}, error=error))
     if student is None:
         abort(404)
     if request.method == "GET":
@@ -347,7 +371,11 @@ def validate_assistants_form(form):
 @login_required
 def assistants_page():
     db = current_app.config["db"]
-    assistants = db.get_assistants()
+    try:
+        assistants = db.get_assistants()
+    except Error as e:
+        error = tidy_error(e)
+        return render_template("assistants.html", assistants=None, values={}, error=error)
     if request.method == "GET":
         return render_template("assistants.html", assistants=sorted(assistants),
                                values=request.form)
@@ -388,7 +416,13 @@ def assistants_page():
 @login_required
 def assistant_page(tr_id):
     db = current_app.config["db"]
-    assistant = db.get_assistant(tr_id)
+    try:
+        assistant = db.get_assistant(tr_id)
+    except Error as e:
+        error = tidy_error(e)
+        assistants = db.get_assistants()
+        return redirect(url_for("assistants_page", assistants=sorted(assistants), values={},
+                                error=error))
     if assistant is None:
         abort(404)
     if request.method == "GET":
