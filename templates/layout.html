@@ -67,7 +67,7 @@
                         <a class="nav-link" href="{{ url_for("my_courses_page") }}">My Courses</a>
                     </li>
                     <li class="nav-item {% if request.path==url_for("select_courses_page") %} active {% endif %}">
-                        <a class="nav-link" href="{{ url_for("select_courses_page") }}">Select Courses</a>
+                        <a class="nav-link" href="{{ url_for("select_courses_page") }}">Add Drop Courses</a>
                     </li>
                 {% endif %}
                 <li class="nav-item {% if request.path==url_for("courses_page") %} active {% endif %}">
