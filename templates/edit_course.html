@@ -35,14 +35,14 @@
         {% endfor %}
         </table>
     {% if request.path == url_for('add_course_page') %}
-    <button type="submit" class="button btn-primary mb-2">Add Classroom</button>
+    <button type="submit" class="button btn-primary mb-2">Add Course</button>
      </form>
     {% else %}
-    <button type="submit" class="button btn-primary mb-2" value="update" name="btn">Update Classroom</button>
+    <button type="submit" class="button btn-primary mb-2" value="update" name="btn">Update Course</button>
     </form>
     <form action="" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <button type="submit" class="button btn-danger mb-2" value="delete" name="btn">Delete Classroom</button>
+        <button type="submit" class="button btn-danger mb-2" value="delete" name="btn">Delete Course</button>
     </form>
     {% endif %}
    </div>
