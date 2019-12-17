@@ -64,7 +64,10 @@ def logout_page():
 
 def tidy_error(error):
     error_ = type(error).__name__ + '----' + str(error)
-    error_ = re.findall(r":\s{1}([A-z\s\W\d]*)", error_)[0]
+    try:
+        error_ = re.findall(r":\s{1}([A-z\s\W\d]*)", error_)[0]
+    except IndexError:
+        error_ = None
     if error_ is None:
         error_ = "There was an error completing your request. Please try again later!" + "\n" + type(
             error).__name__ + "\n" + str(error)
@@ -1017,21 +1020,21 @@ def staff_add_page():
                 flash('Could not find the given staff Id or Facility Id' )
                 return render_template("staff_facility.html", staff=the_staff, facilities=facils,
                                        staff_facils=staff_facilities, values=request.form,
-                                           error="No ID")
+                                       error="No ID")
 
             else:
-                return render_template("staff_facility.html", staff = the_staff, facilities = facils,
-                                 staff_facils = staff_facilities,values=request.form,
-                                           error=type(e).__name__ + "-----" + str(e))
+                return render_template("staff_facility.html", staff=the_staff, facilities=facils,
+                                       staff_facils=staff_facilities, values=request.form,
+                                       error=type(e).__name__ + "-----" + str(e))
         for SF in staff_facilities:
             facility_ = db.get_facility(SF.facility_id)
             facils.append(facility_)
         return render_template("staff_facility.html", staff=the_staff, facilities=facils,
-                                   staff_facils=staff_facilities, values=request.form)
+                               staff_facils=staff_facilities, values=request.form)
     elif 'delete_SF' in request.form:
         staff_id = request.form["staff_id_delete"]
         facility_id = request.form["facility_id_delete"]
-        db.delete_staff_facil(int(staff_id),facility_id)
+        db.delete_staff_facil(int(staff_id), facility_id)
         flash('Staff-Facility Connection Deleted!')
         the_staff = db.get_staff(staff_id)
         staff_facilities = db.get_facility_from_staff(staff_id)
