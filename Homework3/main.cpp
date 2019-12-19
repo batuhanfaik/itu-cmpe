@@ -370,12 +370,13 @@ BaseStation* MobileNetwork::find_receiver(BaseStation &bs, int receiver_id) {
             current_mh = current_mh->next;
         }
     }
-    cout << " ";
     if (bs.child) {
+        cout << " ";
         BaseStation *child_bs = bs.child;
         return_bs = find_receiver(*child_bs, receiver_id);
     }
     if (bs.next) {
+        cout << " ";
         BaseStation *next_bs = bs.next;
         return_bs = find_receiver(*next_bs, receiver_id);
     }
@@ -393,12 +394,6 @@ void MobileNetwork::send_msg(Message& message) {
 }
 
 int main(int argc, char **argv) {
-    // TODO Input files as command line argument
-    // TODO Read files
-    // TODO Structure the network
-    // TODO DFS the network
-    // TODO Print paths
-
     // Create the network
     MobileNetwork network = MobileNetwork();
 
