@@ -1,8 +1,9 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "modernize-use-nullptr"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <cstdio>
 #include <cstring>
 
 using namespace std;
@@ -17,35 +18,17 @@ public:
 
     MobileHost(int, int);
 
-    ~MobileHost();
-
     int get_id();
 
-    void set_id(int);
-
     int get_parent_bs_id();
-
-    void set_parent_bs_id(int);
 };
 
 int MobileHost::get_id() {
     return id;
 }
 
-void MobileHost::set_id(int x) {
-    id = x;
-}
-
 int MobileHost::get_parent_bs_id() {
     return parent_bs_id;
-}
-
-void MobileHost::set_parent_bs_id(int x) {
-    parent_bs_id = x;
-}
-
-MobileHost::~MobileHost() {
-    // TODO Implement destructor
 }
 
 MobileHost::MobileHost() {
@@ -72,35 +55,17 @@ public:
 
     BaseStation(int, int);
 
-    ~BaseStation();
-
     int get_id();
 
-    void set_id(int);
-
     int get_parent_id();
-
-    void set_parent_id(int);
 };
 
 int BaseStation::get_id() {
     return id;
 }
 
-void BaseStation::set_id(int x) {
-    id = x;
-}
-
 int BaseStation::get_parent_id() {
     return parent_id;
-}
-
-void BaseStation::set_parent_id(int x) {
-    parent_id = x;
-}
-
-BaseStation::~BaseStation() {
-    // TODO Implement destructor
 }
 
 BaseStation::BaseStation() {
@@ -133,8 +98,6 @@ public:
 
     BaseStation *pop();
 
-    BaseStation *peek();
-
     ~Stack();
 };
 
@@ -165,16 +128,6 @@ BaseStation *Stack::pop() {
         return NULL;
     } else {
         BaseStation *x = stack_array[top--];
-        return x;
-    }
-}
-
-BaseStation *Stack::peek() {
-    if (top < 0) {
-        cout << "Stack is Empty!" << endl;
-        return NULL;
-    } else {
-        BaseStation *x = stack_array[top];
         return x;
     }
 }
@@ -226,7 +179,7 @@ public:
 
     void print_all(BaseStation &);
 
-    BaseStation* find_receiver(BaseStation &, int);
+    static BaseStation* find_receiver(BaseStation &, int);
 
     void send_msg(Message &);
 };
@@ -412,10 +365,10 @@ int main(int argc, char **argv) {
         while (networks >> type >> id >> parent_id) {
 //        cout << "Type: " << type << "\tID: " << id << "\tParent ID: " << parent_id << endl;
             if (type == "BS") {      // Add base station
-                BaseStation *bs = new BaseStation(id, parent_id);
+                auto *bs = new BaseStation(id, parent_id);
                 network.add_bs(*bs);
             } else if (type == "MH") {   // Add mobile host
-                MobileHost *mh = new MobileHost(id, parent_id);
+                auto *mh = new MobileHost(id, parent_id);
                 network.add_mh(*mh);
             } else { cout << "Node type unknown!" << endl; }
         }
@@ -448,7 +401,7 @@ int main(int argc, char **argv) {
             }
             if (i < 2) {     // Add only if there were no abnormalities like empty line or carriage return
 //                cout << "Message: " << msg << "\tReceiver: " << receiver << endl;
-                Message *message = new Message(msg, receiver);
+                auto *message = new Message(msg, receiver);
                 network.send_msg(*message);     // Send the message
             }
         }
