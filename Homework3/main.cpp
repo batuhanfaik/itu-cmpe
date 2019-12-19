@@ -7,14 +7,15 @@ class Stack{
     int size;
 public:
     int* stack_array;
-    void create(int);
+    void initialize(int);
     bool push(int);
     bool is_empty();
     int pop();
     int peek();
+    ~Stack();
 };
 
-void Stack::create(int size_in) {
+void Stack::initialize(int size_in) {
     this->size = size_in;
     this->stack_array = new int[size_in];
     this->top = 0;
@@ -53,6 +54,10 @@ int Stack::peek() {
         int x = stack_array[top];
         return x;
     }
+}
+
+Stack::~Stack() {
+    delete [] stack_array;
 }
 
 class Queue{
