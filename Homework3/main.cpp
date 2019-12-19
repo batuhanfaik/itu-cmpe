@@ -198,7 +198,9 @@ public:
 
     void add_mh(MobileHost &);
 
-    void print(BaseStation &);
+    void print_bs(BaseStation &);
+
+    void print_all(BaseStation &);
 };
 
 MobileNetwork::MobileNetwork() {
@@ -286,19 +288,43 @@ void MobileNetwork::add_mh(MobileHost &mh) {
     }
 }
 
-void MobileNetwork::print(BaseStation& bs) {
+void MobileNetwork::print_bs(BaseStation& bs) {
     if (bs.get_id() == -1){
-        print(*top);
+        print_bs(*top);
+    } else {
+        cout << "Now at BS: " << bs.get_id() << endl;
     }
     if (bs.child){
         BaseStation* child_bs = bs.child;
-        print(*child_bs);
+        print_bs(*child_bs);
     }
     if (bs.next){
         BaseStation* next_bs = bs.next;
-        print(*next_bs);
+        print_bs(*next_bs);
     }
-    cout << "BS ID: " << bs.get_id() << "\tBS Parent: " << bs.get_parent_id() << endl;
+}
+
+void MobileNetwork::print_all(BaseStation& bs) {
+    if (bs.get_id() == -1){
+        print_all(*top);
+    } else {
+        cout << "Now at BS: " << bs.get_id() << endl;
+    }
+    if (bs.child){
+        BaseStation* child_bs = bs.child;
+        print_all(*child_bs);
+    }
+    if (bs.next){
+        BaseStation* next_bs = bs.next;
+        print_all(*next_bs);
+    }
+    if (bs.mh_child){
+        MobileHost* current_mh = bs.mh_child;
+        while (current_mh){
+            cout << "Now at MH: " << current_mh->get_id() << endl;
+            current_mh = current_mh->next;
+        }
+    }
 }
 
 class Message {
@@ -347,6 +373,9 @@ int main(int argc, char** argv) {
         cout << "Unable to open " << networks_file << " file!" << endl;
     }
     networks.close();
+
+    BaseStation* print_bs = new BaseStation();
+    network.print_all(*print_bs);
 
     // Open input file stream for networks file
     ifstream messages(messages_file);
