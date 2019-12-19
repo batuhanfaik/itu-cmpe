@@ -1,5 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "modernize-use-nullptr"
 #include <iostream>
 #include <fstream>
 #include <string>
