@@ -183,6 +183,30 @@ Stack::~Stack() {
     delete[] stack_array;
 }
 
+class Message {
+    string msg;
+    int receiver;
+public:
+    Message(string &, int);
+
+    string get_msg();
+
+    int get_receiver_id();
+};
+
+Message::Message(string &msg_in, int receiver_in) {
+    this->msg = msg_in;
+    this->receiver = receiver_in;
+}
+
+string Message::get_msg() {
+    return this->msg;
+}
+
+int Message::get_receiver_id() {
+    return this->receiver;
+}
+
 class MobileNetwork {
     int bs_amount;
     int mh_amount;
@@ -201,6 +225,10 @@ public:
     void print_bs(BaseStation &);
 
     void print_all(BaseStation &);
+
+    BaseStation* find_receiver(BaseStation &, int);
+
+    void send_msg(Message &);
 };
 
 MobileNetwork::MobileNetwork() {
@@ -288,58 +316,83 @@ void MobileNetwork::add_mh(MobileHost &mh) {
     }
 }
 
-void MobileNetwork::print_bs(BaseStation& bs) {
-    if (bs.get_id() == -1){
+void MobileNetwork::print_bs(BaseStation &bs) {
+    if (bs.get_id() == -1) {
         print_bs(*top);
     } else {
         cout << "Now at BS: " << bs.get_id() << endl;
     }
-    if (bs.child){
-        BaseStation* child_bs = bs.child;
+    if (bs.child) {
+        BaseStation *child_bs = bs.child;
         print_bs(*child_bs);
     }
-    if (bs.next){
-        BaseStation* next_bs = bs.next;
+    if (bs.next) {
+        BaseStation *next_bs = bs.next;
         print_bs(*next_bs);
     }
 }
 
-void MobileNetwork::print_all(BaseStation& bs) {
-    if (bs.get_id() == -1){
+void MobileNetwork::print_all(BaseStation &bs) {
+    if (bs.get_id() == -1) {
         print_all(*top);
     } else {
         cout << "Now at BS: " << bs.get_id() << endl;
     }
-    if (bs.child){
-        BaseStation* child_bs = bs.child;
+    if (bs.child) {
+        BaseStation *child_bs = bs.child;
         print_all(*child_bs);
     }
-    if (bs.next){
-        BaseStation* next_bs = bs.next;
+    if (bs.next) {
+        BaseStation *next_bs = bs.next;
         print_all(*next_bs);
     }
-    if (bs.mh_child){
-        MobileHost* current_mh = bs.mh_child;
-        while (current_mh){
+    if (bs.mh_child) {
+        MobileHost *current_mh = bs.mh_child;
+        while (current_mh) {
             cout << "Now at MH: " << current_mh->get_id() << endl;
             current_mh = current_mh->next;
         }
     }
 }
 
-class Message {
-    string msg;
-    int receiver;
-public:
-    Message(string&, int);
-};
-
-Message::Message(string& msg_in, int receiver_in){
-    this->msg = msg_in;
-    this->receiver = receiver_in;
+BaseStation* MobileNetwork::find_receiver(BaseStation &bs, int receiver_id) {
+    BaseStation* return_bs = NULL;
+    cout << bs.get_id();
+    if (bs.mh_child) {
+        MobileHost *current_mh = bs.mh_child;
+        while (current_mh) {
+//            cout << "Now at MH: " << current_mh->get_id() << endl;
+            if (current_mh->get_id() == receiver_id) {
+                cout << endl;
+                return_bs = &bs;
+                return return_bs;
+            }
+            current_mh = current_mh->next;
+        }
+    }
+    cout << " ";
+    if (bs.child) {
+        BaseStation *child_bs = bs.child;
+        return_bs = find_receiver(*child_bs, receiver_id);
+    }
+    if (bs.next) {
+        BaseStation *next_bs = bs.next;
+        return_bs = find_receiver(*next_bs, receiver_id);
+    }
+    return return_bs;
 }
 
-int main(int argc, char** argv) {
+void MobileNetwork::send_msg(Message& message) {
+    cout << "Traversing:";
+    BaseStation* receiver_bs = find_receiver(*top, message.get_receiver_id());
+    if (!receiver_bs){
+        cout << endl << "Can not be reached the mobile host mh_" << message.get_receiver_id() << " at the moment" << endl;
+    } else {
+        cout << "Message:" << message.get_msg() << " To:0 " << receiver_bs->get_id() << " mh_" <<message.get_receiver_id() << endl;
+    }
+}
+
+int main(int argc, char **argv) {
     // TODO Input files as command line argument
     // TODO Read files
     // TODO Structure the network
@@ -357,47 +410,51 @@ int main(int argc, char** argv) {
 
     // Open input file stream for networks file
     ifstream networks(networks_file);
-    string type; int id; int parent_id;     // Declare types for reading the networks file
+    string type;
+    int id;
+    int parent_id;     // Declare types for reading the networks file
     if (networks.is_open()) {
-        while (networks >> type >> id >> parent_id){
+        while (networks >> type >> id >> parent_id) {
 //        cout << "Type: " << type << "\tID: " << id << "\tParent ID: " << parent_id << endl;
-            if (type == "BS"){      // Add base station
-                BaseStation* bs = new BaseStation(id, parent_id);
+            if (type == "BS") {      // Add base station
+                BaseStation *bs = new BaseStation(id, parent_id);
                 network.add_bs(*bs);
-            } else if (type == "MH"){   // Add mobile host
-                MobileHost* mh = new MobileHost(id, parent_id);
+            } else if (type == "MH") {   // Add mobile host
+                MobileHost *mh = new MobileHost(id, parent_id);
                 network.add_mh(*mh);
-            } else {cout << "Node type unknown!" << endl;}
+            } else { cout << "Node type unknown!" << endl; }
         }
     } else {
         cout << "Unable to open " << networks_file << " file!" << endl;
     }
     networks.close();
 
-    BaseStation* print_bs = new BaseStation();
-    network.print_all(*print_bs);
-
     // Open input file stream for networks file
     ifstream messages(messages_file);
-    string line; string part; string msg; int i; int receiver = 0;     // Declare types for reading the messages file
+    string line;
+    string part;
+    string msg;
+    int i;
+    int receiver = 0;     // Declare types for reading the messages file
     if (messages.is_open()) {
         while (getline(messages, line)) {    // Get the line
             stringstream ss(line);
             i = 0;
-            while (getline(ss, part, '>')){      // Parse it using the delimiter '>'
-                if (part == "\r" || part == "\n"){      // Check if there are any abnormalities
+            while (getline(ss, part, '>')) {      // Parse it using the delimiter '>'
+                if (part == "\r" || part == "\n") {      // Check if there are any abnormalities
                     i = 2;
                 }
-                if (i == 0){    // First item is the message
+                if (i == 0) {    // First item is the message
                     msg = part;
                     i++;
-                } else if (i == 1){     // Second item is the receiver id
+                } else if (i == 1) {     // Second item is the receiver id
                     receiver = stoi(part);
                 }
             }
-            if (i < 2){     // Add only if there were no abnormalities like empty line or carriage return
+            if (i < 2) {     // Add only if there were no abnormalities like empty line or carriage return
 //                cout << "Message: " << msg << "\tReceiver: " << receiver << endl;
-                Message* message = new Message(msg, receiver);
+                Message *message = new Message(msg, receiver);
+                network.send_msg(*message);     // Send the message
             }
         }
     } else {
