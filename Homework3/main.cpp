@@ -145,12 +145,12 @@ void Stack::initialize(int size_in) {
 }
 
 bool Stack::push(BaseStation *x) {
-    if (top >= size - 1) {
+    if (top >= size) {
         cout << "Stack Overflow!" << endl;
         return false;
     } else {
         stack_array[++top] = x;
-        cout << x->get_id() << " is pushed into stack." << endl;
+//        cout << x->get_id() << " is pushed into stack." << endl;
         return true;
     }
 }
@@ -197,6 +197,8 @@ public:
     void add_bs(BaseStation &);
 
     void add_mh(MobileHost &);
+
+    void print(BaseStation &);
 };
 
 MobileNetwork::MobileNetwork() {
@@ -262,6 +264,7 @@ void MobileNetwork::add_bs(BaseStation &bs) {
             }
             current_bs->next = &bs;     // Input base station is added end of the level
         }
+        bs_amount++;
     }
 }
 
@@ -279,13 +282,36 @@ void MobileNetwork::add_mh(MobileHost &mh) {
             }
             current_mh->next = &mh;     // Input mobile host is added end of mobile hosts
         }
+        mh_amount++;
     }
 }
 
-struct Message {
+void MobileNetwork::print(BaseStation& bs) {
+    if (bs.get_id() == -1){
+        print(*top);
+    }
+    if (bs.child){
+        BaseStation* child_bs = bs.child;
+        print(*child_bs);
+    }
+    if (bs.next){
+        BaseStation* next_bs = bs.next;
+        print(*next_bs);
+    }
+    cout << "BS ID: " << bs.get_id() << "\tBS Parent: " << bs.get_parent_id() << endl;
+}
+
+class Message {
     string msg;
     int receiver;
+public:
+    Message(string&, int);
 };
+
+Message::Message(string& msg_in, int receiver_in){
+    this->msg = msg_in;
+    this->receiver = receiver_in;
+}
 
 int main(int argc, char** argv) {
     // TODO Input files as command line argument
@@ -293,22 +319,35 @@ int main(int argc, char** argv) {
     // TODO Structure the network
     // TODO DFS the network
     // TODO Print paths
+
+    // Create the network
+    MobileNetwork network = MobileNetwork();
+
     // Get user inputs via CLI
 //    string networks_file = argv[1];
 //    string messages_file = argv[2];
     string networks_file = "Network.txt";
     string messages_file = "Messages.txt";
+
     // Open input file stream for networks file
     ifstream networks(networks_file);
     string type; int id; int parent_id;     // Declare types for reading the networks file
     if (networks.is_open()) {
         while (networks >> type >> id >> parent_id){
 //        cout << "Type: " << type << "\tID: " << id << "\tParent ID: " << parent_id << endl;
+            if (type == "BS"){      // Add base station
+                BaseStation* bs = new BaseStation(id, parent_id);
+                network.add_bs(*bs);
+            } else if (type == "MH"){   // Add mobile host
+                MobileHost* mh = new MobileHost(id, parent_id);
+                network.add_mh(*mh);
+            } else {cout << "Node type unknown!" << endl;}
         }
     } else {
         cout << "Unable to open " << networks_file << " file!" << endl;
     }
     networks.close();
+
     // Open input file stream for networks file
     ifstream messages(messages_file);
     string line; string part; string msg; int i; int receiver = 0;     // Declare types for reading the messages file
@@ -328,7 +367,8 @@ int main(int argc, char** argv) {
                 }
             }
             if (i < 2){     // Add only if there were no abnormalities like empty line or carriage return
-                cout << "Message: " << msg << "\tReceiver: " << receiver << endl;
+//                cout << "Message: " << msg << "\tReceiver: " << receiver << endl;
+                Message* message = new Message(msg, receiver);
             }
         }
     } else {
