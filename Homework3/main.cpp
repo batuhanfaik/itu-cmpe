@@ -1,3 +1,8 @@
+/* @Author
+Student Name: Batuhan Faik Derinbay
+Student ID: 150180705
+Date: 19.12.2019 */
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -117,7 +122,7 @@ bool Stack::push(BaseStation *x) {
 }
 
 bool Stack::is_empty() {
-    return (top < 0);
+    return (top <= 0);
 }
 
 BaseStation *Stack::pop() {
@@ -180,6 +185,8 @@ public:
     static BaseStation* find_receiver(BaseStation &, int);
 
     void send_msg(Message &);
+
+    void shutdown();
 };
 
 MobileNetwork::MobileNetwork() {
@@ -267,6 +274,7 @@ void MobileNetwork::add_mh(MobileHost &mh) {
     }
 }
 
+// Recursive DFS for printing base stations
 void MobileNetwork::print_bs(BaseStation &bs) {
     if (bs.get_id() == -1) {
         print_bs(*top);
@@ -283,6 +291,7 @@ void MobileNetwork::print_bs(BaseStation &bs) {
     }
 }
 
+// Recursive DFS for printing all nodes of the network
 void MobileNetwork::print_all(BaseStation &bs) {
     if (bs.get_id() == -1) {
         print_all(*top);
@@ -306,6 +315,7 @@ void MobileNetwork::print_all(BaseStation &bs) {
     }
 }
 
+// Recursive DFS search to find the receiver of the message
 BaseStation* MobileNetwork::find_receiver(BaseStation &bs, int receiver_id) {
     BaseStation* return_bs = NULL;
     cout << bs.get_id();
@@ -321,12 +331,12 @@ BaseStation* MobileNetwork::find_receiver(BaseStation &bs, int receiver_id) {
             current_mh = current_mh->next;
         }
     }
-    if (bs.child) {
+    if (bs.child) {     // Go to children nodes
         cout << " ";
         BaseStation *child_bs = bs.child;
         return_bs = find_receiver(*child_bs, receiver_id);
     }
-    if (bs.next) {
+    if (bs.next) {      // Go to sibling nodes
         cout << " ";
         BaseStation *next_bs = bs.next;
         return_bs = find_receiver(*next_bs, receiver_id);
@@ -334,13 +344,55 @@ BaseStation* MobileNetwork::find_receiver(BaseStation &bs, int receiver_id) {
     return return_bs;
 }
 
+// Sending message
 void MobileNetwork::send_msg(Message& message) {
     cout << "Traversing:";
-    BaseStation* receiver_bs = find_receiver(*top, message.get_receiver_id());
+    BaseStation* receiver_bs = find_receiver(*top, message.get_receiver_id());      // Find the receiver
     if (!receiver_bs){
         cout << endl << "Can not be reached the mobile host mh_" << message.get_receiver_id() << " at the moment" << endl;
     } else {
         cout << "Message:" << message.get_msg() << " To:0 " << receiver_bs->get_id() << " mh_" <<message.get_receiver_id() << endl;
+    }
+}
+
+void MobileNetwork::shutdown() {
+    BaseStation *current_bs = top;
+    BaseStation *to_delete = NULL;
+    // Initialization steps for DFS
+    Stack s = Stack();
+    s.initialize(bs_amount);    // Size can be the sum of all the nodes at most
+    int visited[bs_amount];
+    int visited_amount = 1;
+    visited[0] = 0;     // Central controller is the first node
+    s.push(current_bs);
+    // Start searching
+    while (!s.is_empty()) {
+        current_bs = s.pop();
+        // Delete nodes
+        to_delete = current_bs;
+        if (to_delete){
+            // Go through all mobile hosts and delete them
+            while (to_delete->mh_child){
+                MobileHost* mh_to_delete = to_delete->mh_child;
+                to_delete->mh_child = mh_to_delete->next;
+                delete mh_to_delete;
+            }
+            // Delete the base station
+            delete to_delete;
+        }
+        if (!is_visited(visited, visited_amount, current_bs->get_id())) {
+            visited[visited_amount] = current_bs->get_id();      // Mark the node as seen
+            visited_amount++;
+        }
+        if (current_bs->child) {
+            current_bs = current_bs->child;
+            while (current_bs) {     // Look for children at the same level
+                if (!is_visited(visited, visited_amount, current_bs->get_id())) {    // If not seen before push
+                    s.push(current_bs);
+                }
+                current_bs = current_bs->next;      // Next station at the same level
+            }
+        }
     }
 }
 
@@ -349,10 +401,10 @@ int main(int argc, char **argv) {
     MobileNetwork network = MobileNetwork();
 
     // Get user inputs via CLI
-//    string networks_file = argv[1];
-//    string messages_file = argv[2];
-    string networks_file = "Network.txt";
-    string messages_file = "Messages.txt";
+    string networks_file = argv[1];
+    string messages_file = argv[2];
+//    string networks_file = "Network.txt";
+//    string messages_file = "Messages.txt";
 
     // Open input file stream for networks file
     ifstream networks(networks_file);
@@ -401,12 +453,16 @@ int main(int argc, char **argv) {
 //                cout << "Message: " << msg << "\tReceiver: " << receiver << endl;
                 auto *message = new Message(msg, receiver);
                 network.send_msg(*message);     // Send the message
+                delete message;
             }
         }
     } else {
         cout << "Unable to open " << messages_file << " file!" << endl;
     }
     messages.close();
+
+    // Garbage collection for nodes
+    network.shutdown();
 
     return 0;
 }
