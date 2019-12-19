@@ -70,11 +70,67 @@ class MobileNetwork{
 
 class BaseStation{
     // TODO
+    int id;
+    int parent_id;
+public:
+    ~BaseStation();
+    int get_id();
+    void set_id(int);
+    int get_parent_id();
+    void set_parent_id(int);
 };
+
+int BaseStation::get_id() {
+    return id;
+}
+
+void BaseStation::set_id(int x) {
+    id = x;
+}
+
+int BaseStation::get_parent_id() {
+    return parent_id;
+}
+
+void BaseStation::set_parent_id(int x) {
+    parent_id = x;
+}
+
+BaseStation::~BaseStation(){
+    // TODO Implement destructor
+}
 
 class MobileHost{
     // TODO
+    int id;
+    int parent_bs_id;
+public:
+    ~MobileHost();
+    int get_id();
+    void set_id(int);
+    int get_parent_bs_id();
+    void set_parent_bs_id(int);
 };
+
+int MobileHost::get_id() {
+    return id;
+}
+
+void MobileHost::set_id(int x) {
+    id = x;
+}
+
+int MobileHost::get_parent_bs_id() {
+    return parent_bs_id;
+}
+
+void MobileHost::set_parent_bs_id(int x) {
+    parent_bs_id = x;
+}
+
+MobileHost::~MobileHost(){
+    // TODO Implement destructor
+}
 
 int main() {
     // TODO Input files as command line argument
