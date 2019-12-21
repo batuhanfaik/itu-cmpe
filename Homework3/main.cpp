@@ -52,6 +52,7 @@ class BaseStation {
 public:
     BaseStation *next;
     BaseStation *child;
+    BaseStation *parent;
     MobileHost *mh_child;
 
     BaseStation();
@@ -166,6 +167,7 @@ int Message::get_receiver_id() {
 class MobileNetwork {
     int bs_amount;
     int mh_amount;
+    BaseStation *receiver_bs;
     BaseStation *top;
 public:
     MobileNetwork();
@@ -182,7 +184,9 @@ public:
 
     void print_all(BaseStation &);
 
-    static BaseStation* find_receiver(BaseStation &, int);
+    string find_shortest_path(BaseStation &);
+
+    void find_receiver(BaseStation &, int);
 
     void send_msg(Message &);
 
@@ -193,6 +197,7 @@ MobileNetwork::MobileNetwork() {
     top = new BaseStation(0, 0);
     bs_amount = 1;
     mh_amount = 0;
+    receiver_bs = NULL;
 }
 
 bool MobileNetwork::is_visited(const int *visited_list, int visited_amount, int search_id) {
@@ -245,12 +250,14 @@ void MobileNetwork::add_bs(BaseStation &bs) {
     } else {
         if (!parent_bs->child) {     // Input base station is the new child if parent has no child
             parent_bs->child = &bs;
+            bs.parent = parent_bs;
         } else {
             BaseStation *current_bs = parent_bs->child;
             while (current_bs->next) {       // Find the last child
                 current_bs = current_bs->next;
             }
             current_bs->next = &bs;     // Input base station is added end of the level
+            bs.parent = parent_bs;
         }
         bs_amount++;
     }
@@ -315,44 +322,59 @@ void MobileNetwork::print_all(BaseStation &bs) {
     }
 }
 
+// Find the shortest path for printing
+string MobileNetwork::find_shortest_path(BaseStation &bs) {
+    BaseStation *current_bs = &bs;
+    string path;
+    while (current_bs != top) {
+        string id =  to_string(current_bs->get_id()) + " ";
+        path.insert(0, id);
+        current_bs = current_bs->parent;
+    }
+    path.insert(0, "0 ");
+    return path;
+}
+
 // Recursive DFS search to find the receiver of the message
-BaseStation* MobileNetwork::find_receiver(BaseStation &bs, int receiver_id) {
-    BaseStation* return_bs = NULL;
-    cout << bs.get_id();
-    if (bs.mh_child) {
-        MobileHost *current_mh = bs.mh_child;
-        while (current_mh) {
+void MobileNetwork::find_receiver(BaseStation &bs, int receiver_id) {
+    if (!receiver_bs) {
+        cout << bs.get_id();
+        if (bs.mh_child) {
+            MobileHost *current_mh = bs.mh_child;
+            while (current_mh) {
 //            cout << "Now at MH: " << current_mh->get_id() << endl;
-            if (current_mh->get_id() == receiver_id) {
-                cout << endl;
-                return_bs = &bs;
-                return return_bs;
+                if (current_mh->get_id() == receiver_id) {
+                    cout << endl;
+                    receiver_bs = &bs;
+                }
+                current_mh = current_mh->next;
             }
-            current_mh = current_mh->next;
+        }
+        if (bs.child && !receiver_bs) {     // Go to children nodes
+            cout << " ";
+            BaseStation *child_bs = bs.child;
+            find_receiver(*child_bs, receiver_id);
+        }
+        if (bs.next && !receiver_bs) {      // Go to sibling nodes
+            cout << " ";
+            BaseStation *next_bs = bs.next;
+            find_receiver(*next_bs, receiver_id);
         }
     }
-    if (bs.child) {     // Go to children nodes
-        cout << " ";
-        BaseStation *child_bs = bs.child;
-        return_bs = find_receiver(*child_bs, receiver_id);
-    }
-    if (bs.next) {      // Go to sibling nodes
-        cout << " ";
-        BaseStation *next_bs = bs.next;
-        return_bs = find_receiver(*next_bs, receiver_id);
-    }
-    return return_bs;
 }
 
 // Sending message
-void MobileNetwork::send_msg(Message& message) {
+void MobileNetwork::send_msg(Message &message) {
     cout << "Traversing:";
-    BaseStation* receiver_bs = find_receiver(*top, message.get_receiver_id());      // Find the receiver
-    if (!receiver_bs){
-        cout << endl << "Can not be reached the mobile host mh_" << message.get_receiver_id() << " at the moment" << endl;
+    find_receiver(*top, message.get_receiver_id());      // Find the receiver
+    if (!receiver_bs) {
+        cout << endl << "Can not be reached the mobile host mh_" << message.get_receiver_id() << " at the moment"
+             << endl;
     } else {
-        cout << "Message:" << message.get_msg() << " To:0 " << receiver_bs->get_id() << " mh_" <<message.get_receiver_id() << endl;
+        cout << "Message:" << message.get_msg() << " To:" << find_shortest_path(*receiver_bs) << "mh_"
+             << message.get_receiver_id() << endl;
     }
+    receiver_bs = NULL;
 }
 
 void MobileNetwork::shutdown() {
@@ -370,10 +392,10 @@ void MobileNetwork::shutdown() {
         current_bs = s.pop();
         // Delete nodes
         to_delete = current_bs;
-        if (to_delete){
+        if (to_delete) {
             // Go through all mobile hosts and delete them
-            while (to_delete->mh_child){
-                MobileHost* mh_to_delete = to_delete->mh_child;
+            while (to_delete->mh_child) {
+                MobileHost *mh_to_delete = to_delete->mh_child;
                 to_delete->mh_child = mh_to_delete->next;
                 delete mh_to_delete;
             }
@@ -401,10 +423,10 @@ int main(int argc, char **argv) {
     MobileNetwork network = MobileNetwork();
 
     // Get user inputs via CLI
-    string networks_file = argv[1];
-    string messages_file = argv[2];
-//    string networks_file = "Network.txt";
-//    string messages_file = "Messages.txt";
+//    string networks_file = argv[1];
+//    string messages_file = argv[2];
+    string networks_file = "Network.txt";
+    string messages_file = "Messages.txt";
 
     // Open input file stream for networks file
     ifstream networks(networks_file);
