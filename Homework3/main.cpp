@@ -423,10 +423,10 @@ int main(int argc, char **argv) {
     MobileNetwork network = MobileNetwork();
 
     // Get user inputs via CLI
-//    string networks_file = argv[1];
-//    string messages_file = argv[2];
-    string networks_file = "Network.txt";
-    string messages_file = "Messages.txt";
+    string networks_file = argv[1];
+    string messages_file = argv[2];
+//    string networks_file = "Network.txt";
+//    string messages_file = "Messages.txt";
 
     // Open input file stream for networks file
     ifstream networks(networks_file);
