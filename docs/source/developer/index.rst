@@ -7,9 +7,10 @@ Database Design
 **explain the database design of your project**
 
 **include the E/R diagram(s)**
-.. figure:: images/databees_erd_derinbay.jpg
-   :alt: ERD of Derinbay
-   :align: center
+
+.. figure:: ../../images/databees_erd_derinbay.png
+    :alt: ERD of Derinbay
+    :align: center
 
 Code
 ----
@@ -28,4 +29,3 @@ Code
    member2
    member3
    member4
-   member5

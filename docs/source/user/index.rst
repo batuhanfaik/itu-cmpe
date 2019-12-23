@@ -18,5 +18,3 @@ screenshots wherever appropriate**
    member2
    member3
    member4
-   member5
-   
