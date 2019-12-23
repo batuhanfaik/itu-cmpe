@@ -7,6 +7,8 @@ Database Design
 **explain the database design of your project**
 
 **include the E/R diagram(s)**
+.. image:: images/databees_erd_derinbay.jpg
+:alt: ERD of Derinbay
 
 Code
 ----
@@ -15,16 +17,15 @@ Code
 
 **to include a code listing, use the following example**::
 
-   .. code-block:: python
-
-      class Foo:
-
-         def __init__(self, x):
-            self.x = x
+    .. code-block:: python
+    :linenos:
+            class Foo:
+            def __init__(self, x):
+                self.x = x
 
 .. toctree::
 
-   member1
+   Batuhan Faik Derinbay
    member2
    member3
    member4

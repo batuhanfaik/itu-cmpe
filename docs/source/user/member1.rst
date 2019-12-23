@@ -1,2 +1,2 @@
-Parts Implemented by Member Name
-================================
+Parts Implemented by Batuhan Faik Derinbay
+==========================================

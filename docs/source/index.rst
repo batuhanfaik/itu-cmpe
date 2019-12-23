@@ -1,5 +1,5 @@
-Welcome to ITU Databees's documentation!
-=====================================
+Welcome to ITU DataBees' documentation!
+========================================
 
 :Team: ITUCSDB1922
 
@@ -9,9 +9,9 @@ Welcome to ITU Databees's documentation!
    * Member 2
    * Member 3
    * Member 4
-   * Member 5
 
-**project description goes here (a few paragraphs)**
+**Description of the project:**
+This project aims to provide an all in one database solution for university structures. It allows everyone either working or studying in a university to access their related data using one interface. The project’s structure is based on Istanbul Technical University, but it can be easily modified to suit any other university.
 
 Contents:
 

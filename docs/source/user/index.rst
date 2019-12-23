@@ -2,7 +2,7 @@ User Guide
 ==========
 
 **explain how your application works from the user perspective, use
-screenshots whereever appropriate**
+screenshots wherever appropriate**
 
 **to add a picture, use the following example**::
 
@@ -14,7 +14,7 @@ screenshots whereever appropriate**
 
 .. toctree::
 
-   member1
+   Batuhan Faik Derinbay
    member2
    member3
    member4

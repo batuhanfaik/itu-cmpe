@@ -1,17 +1,14 @@
 import re
+from io import BytesIO
 from os import getenv
 
-from flask import current_app, render_template, request, redirect, url_for, abort, flash, send_file, Response
+from flask import current_app, render_template, request, redirect, url_for, abort, flash, send_file
 from flask_login import login_required, logout_user, login_user, current_user
 from passlib.hash import pbkdf2_sha256 as hash_machine
 from psycopg2 import errors, Error
-from werkzeug.wsgi import FileWrapper
 from werkzeug.utils import secure_filename
 
-from tempfile import TemporaryFile
 import dbinit
-
-from io import BytesIO
 from assistant import Assistant
 from classroom import Classroom
 from course import Course
