@@ -1,7 +1,9 @@
 User Guide
 ==========
 
-**This section explains how DataBees works from a user's perspective**
+**This section explains how ITU DataBees works from a user's perspective**
+
+Please follows the links below for detailed explanation of the pages.
 
 .. toctree::
 

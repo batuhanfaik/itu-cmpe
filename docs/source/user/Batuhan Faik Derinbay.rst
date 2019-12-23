@@ -110,6 +110,7 @@ Assistants Page
 On this page, **admins** can add new assistants to the DataBees and every logged in user can see summary of assistant's attributes.
 
 - TR IDs must refer to existent people on People table.
+- Assistant IDs must be unique.
 - Faculty IDs must reference existent faculties on Faculty table.
 - Supervisor must reference existent instructors' TR ID's on Instructor table.
 
@@ -126,6 +127,7 @@ On this page, **admins** can add edit existing assistants in the DataBees or del
 
 - Update
     - TR IDs must refer to existent people on People table.
+    - Assistant IDs must be unique.
     - Faculty IDs must reference existent faculties on Faculty table.
     - Supervisor must reference existent instructors' TR ID's on Instructor table.
 - Delete
@@ -145,6 +147,7 @@ Students Page
 On this page, **admins** can add new students to the DataBees and every logged in user can see summary of student's attributes.
 
 - TR IDs must refer to existent people on People table.
+- Student IDs must be unique.
 - Faculty IDs must reference existent faculties on Faculty table.
 - Department IDs must reference existent departments on Department table.
 
@@ -161,6 +164,7 @@ On this page, **admins** can add edit existing students in the DataBees or delet
 
 - Update
     - TR IDs must refer to existent people on People table.
+    - Student IDs must be unique.
     - Faculty IDs must reference existent faculties on Faculty table.
     - Department IDs must reference existent departments on Department table.
 - Delete

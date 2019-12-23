@@ -1,7 +1,11 @@
-Welcome to ITU DataBees' documentation!
+Welcome to documentation of ITU DataBees!
 ========================================
 
-:Team: ITUCSDB1922
+ .. figure:: ../images/itu_databees_logo.png
+    :alt: Logo
+    :align: center
+
+:Team: **ITUCSDB1922 - ITU DataBees**
 
 :Members:
 
@@ -13,7 +17,7 @@ Welcome to ITU DataBees' documentation!
 **Description of the project:**
 This project aims to provide an all in one database solution for university structures. It allows everyone either working or studying in a university to access their related data using one interface. The project’s structure is based on Istanbul Technical University, but it can be easily modified to suit any other university.
 
-Contents:
+**Contents:**
 
 .. toctree::
    :maxdepth: 1
