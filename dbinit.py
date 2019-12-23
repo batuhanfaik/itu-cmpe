@@ -27,7 +27,7 @@ INIT_STATEMENTS = [
         gender char(1) null,
         birth_city varchar(50) null,
         birth_date date not null,
-        id_reg_city varchar(50) not null,
+        birth_date varchar(50) not null,
         id_reg_district varchar(50) not null,
         photo_name varchar(256),
         photo_extension varchar(10),
