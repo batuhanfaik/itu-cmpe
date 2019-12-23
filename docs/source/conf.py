@@ -151,7 +151,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'ITUCSDB1922', 'ITUCSDB1922 Documentation',
-     author, 'ITUCSDB1922', 'One line description of project.',
+     author, 'ITUCSDB1922', 'An all in one solution to ITU\'s database needs!',
      'Miscellaneous'),
 ]
 

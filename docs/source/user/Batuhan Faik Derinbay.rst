@@ -63,6 +63,8 @@ Related pages of the tables were also implemented.
 
 In order to do any changes on the following tables the user must be logged in with an admin account. Student accounts don't any have permissions but to view the contents of the tables.
 
+After logging in, admins can also re-initialize DataBees using the designated button on the landing page.
+
 Every table has their dedicated pages to add, update and delete content.
 
 Structure follows a relatively simple design with each table having one page to view all of its data as and add new data well as another page to view all of the attributes of a tuple and edit/delete the tuple.
