@@ -43,6 +43,6 @@ ITU DataBees is structed as follows:
 .. toctree::
 
    Batuhan Faik Derinbay
-   member2
+   fatih
    member3
    member4

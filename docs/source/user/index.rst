@@ -8,6 +8,6 @@ Please follows the links below for detailed explanation of the pages.
 .. toctree::
 
    Batuhan Faik Derinbay
-   member2
+   fatih
    member3
    member4
