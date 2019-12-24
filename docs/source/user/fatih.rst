@@ -22,7 +22,7 @@ In this page admins can view all the instructors currently registered in the sys
 
 
 
-Add Instructors Page
+Add Instructor Page
 ++++++++++++++++++++
 On this page, admin users can register instructors to system. Before this operation
 though, new instructor must be added in people page.
@@ -37,7 +37,7 @@ Information about education of the instructor are optional.
 
     Add Instructors Page
 
-Edit Instructors Page
+Edit Instructor Page
 +++++++++++++++++++++
 On this page, admins can manipulate existent instructors' information such as:
 - Change which ``Department`` and ``Faculty`` instructor from
