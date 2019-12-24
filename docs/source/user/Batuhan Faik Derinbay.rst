@@ -36,7 +36,7 @@ Student Table
 Design of the Website
 ---------------------
 
-This user has implemented the design of the user interface, added, setup various frameworks and libraries including but not limited to Bootstrap, MDBootstrap, and JQuery.
+This member has implemented the design of the user interface, added, setup various frameworks and libraries including but not limited to Bootstrap, MDBootstrap, and JQuery.
 
 Landing Page
 ++++++++++++
