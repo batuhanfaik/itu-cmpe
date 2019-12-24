@@ -52,3 +52,86 @@ Also on this page instructors can be deleted by clicking ``Delete Instructor`` b
 
     Edit Instructor Page
 
+Courses Page
+************
+On this page, admins can view all courses registered to the system. When the ``CRN``
+of a course is clicked, admin can edit that course.
+
+The page provides following data is rendered on the page for every course:
+- CRN
+- Course Code
+- Course Name
+- Instructor Name
+- Department which opened this course
+- Where and when the course take place
+- Enrollment status and capacity information
+- Credits
+- Language
+
+ .. figure:: ../../images/altinpinar/courses_list.png
+    :alt: Courses Page
+    :align: center
+
+    Courses Page
+
+Add Course Page
++++++++++++++++
+
+On this page, admins can add users by providing required data for the course:
+- CRN
+- Course code without department acronym
+- Full course name
+- Day and time information
+- Capacity
+- Credits
+- Language
+- Classroom ID, which must refer to an existent classroom in the system
+- Instructor ID, which must refer to an existent instructor in the system
+- Department ID, which must refer to an existent department in the system
+- General course information, learning outcome etc.
+- Syllabus, only pdf files are accepted.
+
+.. note::
+    Except ``course information`` and ``syllabus``, every field must be provided in
+    order to add a course.
+
+
+.. figure:: ../../images/altinpinar/add_course.png
+    :alt: Add Course Page
+    :align: center
+
+    Add Course Page
+
+Edit Course Page
+++++++++++++++++
+
+On this page, admins can manipulate following data fields of each course:
+- Course code without department acronym
+- Full course name
+- Day and time information
+- Capacity
+- Credits
+- Language
+- Classroom ID, which must refer to an existent classroom in the system
+- Instructor ID, which must refer to an existent instructor in the system
+- Department ID, which must refer to an existent department in the system
+- General course information, learning outcome etc.
+- Syllabus, only pdf files are accepted.
+
+.. figure:: ../../images/altinpinar/edit_course.png
+    :alt: Edit Course Page
+    :align: center
+
+    Edit Course Page
+
+Course Info Page
+++++++++++++++++
+
+.. note::
+    In this page only syllabus download link is implemented by this member.
+    For more information about this page go to `Parts Implemented By Cihat Akkiraz` section of the documentation.
+
+Every courses information can be seen on this page.
+Clicking download button will start downloading syllabus uploaded during creation or edition of the course
+The link will not appear if there is not any syllabus added to the course.
+
