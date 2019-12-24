@@ -40,6 +40,7 @@ Information about education of the instructor are optional.
 Edit Instructor Page
 +++++++++++++++++++++
 On this page, admins can manipulate existent instructors' information such as:
+
 - Change which ``Department`` and ``Faculty`` instructor from
 - Change Room ID
 - Change external fields regarding to the instructor's education.
@@ -58,6 +59,7 @@ On this page, admins can view all courses registered to the system. When the ``C
 of a course is clicked, admin can edit that course.
 
 The page provides following data is rendered on the page for every course:
+
 - CRN
 - Course Code
 - Course Name
@@ -78,6 +80,7 @@ Add Course Page
 +++++++++++++++
 
 On this page, admins can add users by providing required data for the course:
+
 - CRN
 - Course code without department acronym
 - Full course name
@@ -106,6 +109,7 @@ Edit Course Page
 ++++++++++++++++
 
 On this page, admins can manipulate following data fields of each course:
+
 - Course code without department acronym
 - Full course name
 - Day and time information
