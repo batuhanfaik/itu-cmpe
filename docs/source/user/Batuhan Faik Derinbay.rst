@@ -19,7 +19,7 @@ Assistant Table
     =========== ========== ============ ============ ============================= ==================== ======== ============= ========== ================= ===============
     tr_id       faculty_id supervisor   assistant_id bachelors                     degree               grad_gpa research_area office_day office_hour_start office_hour_end
     ----------- ---------- ------------ ------------ ----------------------------- -------------------- -------- ------------- ---------- ----------------- ---------------
-    22222222220 3          Şule Öğüdücü 500150001    Istanbul Technical University Computer Engineering 4.0      Big Data      Monday     10:30             12:30
+    22222222220 3          33333333330  500150001    Istanbul Technical University Computer Engineering 4.0      Big Data      Monday     10:30             12:30
     =========== ========== ============ ============ ============================= ==================== ======== ============= ========== ================= ===============
 
 *Holds the assistant related information of every assistant on the site.*
