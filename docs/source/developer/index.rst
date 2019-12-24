@@ -13,6 +13,10 @@ E/R Diagrams of DataBees
     :alt: ERD of Derinbay
     :align: center
 
+.. figure:: ../../images/faati_erd.png
+    :alt: ERD of Altınpınar
+    :align: center
+
 Code
 ----
 
