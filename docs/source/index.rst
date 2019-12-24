@@ -10,7 +10,7 @@ Welcome to documentation of ITU DataBees!
 :Members:
 
    * Batuhan Faik Derinbay
-   * Member 2
+   * Fatih Altınpınar
    * Member 3
    * Member 4
 
