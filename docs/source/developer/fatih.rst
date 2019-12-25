@@ -99,6 +99,517 @@ Tables
         foreign key (crn) references course(crn) on delete cascade on update cascade
     );
 
+Classes
+-------
+
+Classes are python objects for the user types that ITU DataBees uses.
+
+Classes implemented by this user can be examined in detailed with the given source code from various files.
+
+Classes person, assistant and student are created and implemented by this user and their corresponding codes are given below.
+
+Course
+++++++
+.. code-block:: python
+    :linenos:
+    :caption: Course class from ``course.py``
+    class Course:
+        def __init__(self, crn, code, name, start_time, end_time, day, capacity, enrolled, credits,
+                     language, classroom_id, instructor_id, department_id, info):
+            self.crn = crn
+            self.code = code
+            self.name = name
+            self.start_time = start_time
+            self.end_time = end_time
+            self.day = day
+            self.capacity = capacity
+            self.enrolled = enrolled
+            self.credits = credits
+            self.language = language
+            self.classroom_id = classroom_id
+            self.instructor_id = instructor_id
+            self.department_id = department_id
+            self.info = info
+            self.faculty_name = None
+            self.department_name = None
+            self.instructor_name = None
+            self.faculty_name = None
+            self.door_number = None
+
+.. code-block:: python
+    :linenos:
+    :caption: TakenCourse class from ``course.py``
+    class TakenCourse:
+        def __init__(self, id, student_id, crn, grade, datetime):
+            self.id = id
+            self.student_id = student_id
+            self.crn = crn
+            self.grade = grade
+            self.datetime = datetime
+
+
+Instructor
+++++++++++
+.. code-block:: python
+    :linenos:
+    :caption: Instructor class from ``instructor.py``
+    class Instructor:
+        def __init__(self, id, tr_id, department_id, faculty_id, specialization, bachelors,
+                     masters, doctorates, room_id):
+            self.id = id
+            self.tr_id = tr_id
+            self.department_id = department_id
+            self.faculty_id = faculty_id
+            self.specialization = specialization
+            self.bachelors = bachelors
+            self.masters = masters
+            self.department_id = department_id
+            self.doctorates = doctorates
+            self.room_id = room_id
+            self.departmentName = None
+            self.facultyName = None
+            self.name = None
+            self.surname = None
+
+Classroom
++++++++++
+.. code-block:: python
+    :linenos:
+    :caption: Classroom class from ``classroom.py``
+    class Classroom:
+        def __init__(self, id, capacity, has_projection, door_number, floor, renewed,
+                     board_count, air_conditioner, faculty_id):
+            self.renewed = renewed
+            self.air_conditioner = air_conditioner
+            self.faculty_id = faculty_id
+            self.board_count = board_count
+            self.floor = floor
+            self.door_number = door_number
+            self.id = id
+            self.capacity = capacity
+            self.has_projection = has_projection
+
+
+View Models
+-----------
+
+View models handle GET/POST requests and render pages accordingly.
+
+Models implemented by this user can be examined in detailed with the given source code from ``views.py`` file.
+
+Errors from SQL quarries are handled and required information is shown to user.
+
+Given code snippets below are written by this member.
+
+Classroom
++++++++++
+
+.. code-block:: python
+    :linenos:
+    :caption: View for the Add Classroom Page
+
+    def add_classroom_page(faculty_id):
+        form = ClassroomForm()
+        if form.validate_on_submit():
+            db = current_app.config['db']
+            capacity = form.data['capacity']
+            has_projection = form.data['has_projection']
+            door_number = form.data['door_number']
+            floor = form.data['floor']
+            renewed = form.data['renewed']
+            board_count = form.data['board_count']
+            air_conditioner = form.data['air_conditioner']
+            classroom = db.get_classroom_by_door_and_faculty(faculty_id, door_number)
+            if classroom is not None:
+                return render_template("edit_classroom.html", form=form, faculty_id=faculty_id,
+                                       title="Add Classroom",
+                                       error="There exists a classroom with this door number in this faculty!")
+            try:
+                db.add_classroom(Classroom(None, capacity, has_projection, door_number, floor, renewed,
+                                           board_count, air_conditioner, faculty_id))
+                return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+            except Error as e:
+                str_e = str(e)
+                error = type(e).__name__ + '----' + str_e
+                if isinstance(e, errors.UniqueViolation):
+                    error = "This classroom already exists in the given building"
+                return render_template("edit_classroom.html", form=form, faculty_id=faculty_id,
+                                       title="Add Classroom",
+                                       error=error)
+        return render_template("edit_classroom.html", form=form, faculty_id=faculty_id,
+                               title="Add Classroom", error=None)
+
+.. code-block:: python
+    :linenos:
+    :caption: View for the Edit Classroom Page
+
+    def edit_classroom_page(faculty_id, id):
+        error = ""
+        form = ClassroomForm()
+        db = current_app.config['db']
+        if form.validate_on_submit():
+            if request.form['btn'] == 'update':
+                capacity = form.data['capacity']
+                has_projection = form.data['has_projection']
+                door_number = form.data['door_number']
+                floor = form.data['floor']
+                renewed = form.data['renewed']
+                board_count = form.data['board_count']
+                air_conditioner = form.data['air_conditioner']
+                classroom = db.get_classroom_by_door_and_faculty(faculty_id, door_number)
+                if (classroom is not None) and (classroom.id != int(id)):
+                    return render_template("edit_classroom.html", form=form, faculty_id=faculty_id,
+                                           title="Update Classroom",
+                                           error="There exists a classroom with this door number in this faculty!")
+                try:
+                    db.update_classroom(id,
+                                        Classroom(None, capacity, has_projection, door_number, floor,
+                                                  renewed,
+                                                  board_count, air_conditioner, faculty_id))
+                    return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+                except Error as e:
+                    error = type(e).__name__ + '----' + str(e)
+                    str_e = str(e)
+                    if isinstance(e, errors.UniqueViolation):
+                        error = "This classroom already exists in the given building"
+        if request.method == 'POST' and request.form['btn'] == 'delete':
+            try:
+                db.delete_classroom(id)
+                return redirect(url_for("faculty_detailed", faculty_id=faculty_id))
+            except Error as e:
+                error = type(e).__name__ + '----' + str(e)
+                if isinstance(e, errors.ForeignKeyViolation):
+                    str_e = str(e)
+                    if 'course' in str_e:
+                        error = "There are courses given in this classroom!"
+                pass
+        classroom = db.get_classroom(id)
+        form.capacity.data = classroom.capacity
+        form.has_projection.data = classroom.has_projection
+        form.door_number.data = classroom.door_number
+        form.floor.data = classroom.floor
+        form.renewed.data = classroom.renewed
+        form.board_count.data = classroom.board_count
+        form.air_conditioner.data = classroom.air_conditioner
+        return render_template("edit_classroom.html", form=form, faculty_id=faculty_id,
+                               title="Update Classroom",
+                               error=error)
+
+Course
+++++++
+
+.. code-block:: python
+    :linenos:
+    :caption: View for the Courses Page
+    def courses_page():
+        db = current_app.config["db"]
+        courses = db.get_all_courses()
+        return render_template("courses.html", courses=courses)
+
+.. code-block:: python
+    :linenos:
+    :caption: View for the My Courses Page
+
+    @login_required
+    def my_courses_page():
+        if current_user.role != 'student' and current_user.role != 'instructor':
+            return redirect(url_for("landing_page"))
+        db = current_app.config['db']
+        courses = []
+        if current_user.student_id is not None:
+            courses = db.get_courses_taken_by_student(current_user.student_id)
+        elif current_user.instructor_id is not None:
+            courses = db.get_courses_by_instructor_id(current_user.instructor_id)
+        return render_template("courses.html", courses=courses)
+
+.. code-block:: python
+    :linenos:
+    :caption: View for the Add Course Page
+    @login_required
+    def add_course_page():
+        if current_user.role != 'admin':
+            return redirect(url_for("landing_page"))
+        form = CourseForm()
+        if form.validate_on_submit():
+            db = current_app.config['db']
+            args = []
+            for key, value in form.data.items():
+                if key != 'csrf_token' and key != 'syllabus':
+                    args.append(value)
+            course = Course(*args)
+            if not db.is_classroom_available(course.start_time, course.end_time, course.day,
+                                             course.classroom_id):
+                error = "There is already a course given in that classroom at that time!"
+                return render_template("edit_course.html", form=form, error=error, title="Add Course")
+            if not db.is_instructor_available(course.start_time, course.end_time, course.day,
+                                              course.instructor_id):
+                error = "The instructor already has a course at that time!"
+                return render_template("edit_course.html", form=form, error=error, title="Add Course")
+            try:
+                db.add_course(course)
+                if len(form.syllabus.data.filename) != 0:
+                    syllabus = request.files['syllabus'].read()
+                    db.add_syllabus(course.crn, syllabus)
+                return redirect(url_for('courses_page'))
+            except Error as e:
+                error = type(e).__name__ + '----' + str(e)
+                str_e = str(e)
+                if isinstance(e, errors.UniqueViolation):
+                    error = "This course already exists"
+                if isinstance(e, errors.ForeignKeyViolation):
+                    if 'classroom' in str_e:
+                        error = "There is no classroom with given id"
+                    if 'department' in str_e:
+                        error = "There is no department with given id"
+                    if 'instructor' in str_e:
+                        error = "There is no instructor with given id"
+                return render_template("edit_course.html", form=form, error=error, title="Add Course")
+        return render_template("edit_course.html", form=form, error=None, title="Add Course")
+
+.. code-block:: python
+    :linenos:
+    :caption: View for the Edit Course Page
+
+    @login_required
+    def edit_course_page(crn):
+        if current_user.role != 'admin':
+            return redirect(url_for("landing_page"))
+        error = ""
+        db = current_app.config["db"]
+        course = db.get_course(crn)
+        form = CourseForm(data=course.__dict__)
+        form.crn(readonly=True)
+        if form.validate_on_submit():
+            if request.form['btn'] == 'update':
+                args = []
+                for key, value in form.data.items():
+                    if key != 'csrf_token' and key != 'syllabus':
+                        args.append(value)
+                course = Course(*args)
+                course.crn = crn
+                try:
+                    db.update_course(crn, course)
+                    if len(form.syllabus.data.filename) != 0:
+                        syllabus = request.files['syllabus'].read()
+                        db.update_syllabus(course.crn, syllabus)
+                    return redirect(url_for("courses_page"))
+                except Error as e:
+                    error = type(e).__name__ + '----' + str(e)
+                    str_e = str(e)
+                    if isinstance(e, errors.ForeignKeyViolation):
+                        if 'classroom' in str_e:
+                            error = "There is no classroom with given id"
+                        if 'department' in str_e:
+                            error = "There is no department with given id"
+                        if 'instructor' in str_e:
+                            error = "There is no instructor with given id"
+                    pass
+        if request.method == 'POST' and request.form['btn'] == 'delete':
+            db.delete_course(crn)
+            db.delete_syllabus(crn)
+            return redirect(url_for("courses_page"))
+        return render_template("edit_course.html", form=form, error=error, title="Edit Course")
+
+.. code-block:: python
+    :linenos:
+    :caption: View for the Add/Drop Course Page
+    @login_required
+    def select_courses_page():
+        if current_user.role != 'student':
+            return redirect(url_for("landing_page"))
+        db = current_app.config['db']
+        form = SelectCourseForm()
+        results = []
+        if form.validate_on_submit():
+            if request.form['btn'] == 'add':
+                crn_list = []
+                for key, value in form.data.items():
+                    if key != 'csrf_token' and value != 0:
+                        crn_list.append(str(value))
+                for crn in crn_list:
+                    result = {'crn': crn}
+                    try:
+                        course = db.get_course(crn)
+                        if course is not None:
+                            if db.student_can_take_course(current_user.student_id, course):
+                                db.add_taken_course(current_user.student_id, crn)
+                                result['result'] = "You have been added to this course!"
+                                db.update_course_enrollment(crn)
+                            else:
+                                result['result'] = "This course conflicts with another course you have"
+                        else:
+                            result['result'] = "This course does not exists"
+                    except Error as e:
+                        error = type(e).__name__ + '----' + str(e)
+                        str_e = str(e)
+                        if isinstance(e, errors.UniqueViolation):
+                            error = "You already have this course"
+                        if isinstance(e, errors.ForeignKeyViolation):
+                            if 'course' in str_e:
+                                error = "This CRN does not belongs to any course"
+                        result['result'] = error
+                    results.append(result)
+            else:
+                crn_list = []
+                for key, value in form.data.items():
+                    if key != 'csrf_token' and value != 0:
+                        crn_list.append(str(value))
+                for crn in crn_list:
+                    result = {'crn': crn}
+                    try:
+                        if db.get_course(crn) is not None:
+                            db.delete_taken_course(current_user.student_id, crn)
+                            result['result'] = "Successfully dropped course"
+                            db.update_course_enrollment(crn)
+                        else:
+                            result['result'] = "This CRN does not belongs to any course"
+                    except Error as e:
+                        error = type(e).__name__ + '----' + str(e)
+                        str_e = str(e)
+                        if isinstance(e, errors.UniqueViolation):
+                            error = "This CRN does not belongs to any course"
+                        if isinstance(e, errors.ForeignKeyViolation):
+                            if 'course' in str_e:
+                                error = "This CRN does not belongs to any course"
+                        result['result'] = error
+                    results.append(result)
+        return render_template("select_courses.html", form=form, results=results, error=None,
+                               title="Add/Drop Courses")
+
+
+Syllabus
+++++++++
+
+.. code-block:: python
+    :linenos:
+    :caption: Model for downloading syllabus
+
+    def download_syllabus(crn):
+        db = current_app.config['db']
+        file_data = db.get_syllabus(crn)[0].tobytes()
+        return send_file(BytesIO(file_data), mimetype='application/pdf', as_attachment=True,
+                         attachment_filename='syllabus.pdf')
+
+Instructor
+++++++++++
+
+.. code-block:: python
+    :linenos:
+    :caption: View for the Instructors Page
+    # instructor pages#
+    @login_required
+    def instructors_page():
+        if current_user.role != 'admin':
+            return redirect(url_for("landing_page"))
+        db = current_app.config["db"]
+        instructors = db.get_all_instructors()
+        return render_template("instructors.html", instructors=instructors)
+
+.. code-block:: python
+    :linenos:
+    :caption: View for the Add Instructor Page
+    @login_required
+    def add_instructor_page():
+        if current_user.role != 'admin':
+            return redirect(url_for("landing_page"))
+        form = InstructorForm()
+        if form.validate_on_submit():
+            db = current_app.config["db"]
+            id = None
+            tr_id = form.data['tr_id']
+            department_id=form.data['department_id']
+            faculty_id = form.data['faculty_id']
+            specialization = form.data['specialization']
+            bachelors = form.data['bachelors']
+            masters = form.data['masters']
+            doctorates = form.data['doctorates']
+            room_id = form.data['room_id']
+            instructor = Instructor(id, tr_id, department_id, faculty_id, specialization,
+                                    bachelors, masters, doctorates, room_id)
+            try:
+                db.add_instructor(instructor)
+            except Error as e:
+                error = type(e).__name__ + "-----" + str(e)
+                if isinstance(e, errors.UniqueViolation):
+                    error = "An instructor with this TR ID already exists"
+                if isinstance(e, errors.ForeignKeyViolation):
+                    str_e = str(e)
+                    if 'tr_id' in str_e:
+                        error = "No people exists with this TR ID"
+                    elif 'faculty_id' in str_e:
+                        error = "No faculty exists with this Faculty ID"
+                    elif 'department_id' in str_e:
+                        error = "No department exists with this Department ID"
+                return render_template("edit_instructor.html", form=form, title="Add Instructor",
+                                       error=error)
+            return redirect(url_for("instructors_page"))
+        return render_template("edit_instructor.html", form=form, title="Add Instructor", error=None)
+
+.. code-block:: python
+    :linenos:
+    :caption: View for the Edit Instructor Page
+    @login_required
+    def edit_instructor_page(id):
+        if current_user.role != 'admin':
+            return redirect(url_for("landing_page"))
+        error = ""
+        db = current_app.config["db"]
+        form = InstructorForm()
+        if form.validate_on_submit():
+            if request.form['btn'] == 'update':
+                tr_id = form.data['tr_id']
+                department_id = form.data['department_id']
+                faculty_id = form.data['faculty_id']
+                specialization = form.data['specialization']
+                bachelors = form.data['bachelors']
+                masters = form.data['masters']
+                doctorates = form.data['doctorates']
+                room_id = form.data['room_id']
+                instructor = Instructor(id, tr_id, department_id, faculty_id, specialization,
+                                        bachelors, masters, doctorates, room_id)
+                try:
+                    db.update_instructor(id, instructor)
+                    return redirect(url_for("instructors_page"))
+                except Error as e:
+                    error = type(e).__name__ + "-----" + str(e)
+                    if isinstance(e, errors.UniqueViolation):
+                        error = "An instructor with this TR ID already exists"
+                    if isinstance(e, errors.ForeignKeyViolation):
+                        str_e = str(e)
+                        if 'tr_id' in str_e:
+                            error = "No people exists with this TR ID"
+                        elif 'faculty_id' in str_e:
+                            error = "No faculty exists with this Faculty ID"
+                        elif 'department_id' in str_e:
+                            error = "No department exists with this Department ID"
+                    pass
+        if request.method == 'POST' and request.form['btn'] == 'delete':
+            try:
+                db.delete_instructor(id)
+                return redirect(url_for("instructors_page"))
+            except Error as e:
+                error = type(e).__name__ + '----' + str(e)
+                if isinstance(e, errors.ForeignKeyViolation):
+                    str_e = str(e)
+                    if 'course' in str_e:
+                        error = "There are courses given by this instructor! It can not be deleted!"
+                    elif 'assistant' in str_e:
+                        error = "There are assistants supervised by this instructor! It can not be deleted!"
+                pass
+        instructor = db.get_instructor(id)
+        form.tr_id.data = instructor.tr_id
+        form.room_id.data = instructor.room_id
+        form.doctorates.data = instructor.doctorates
+        form.masters.data = instructor.masters
+        form.bachelors.data = instructor.bachelors
+        form.specialization.data = instructor.specialization
+        form.department_id.data = instructor.department_id
+        form.faculty_id.data = instructor.faculty_id
+        return render_template("edit_instructor.html", form=form, title="Update Instructor",
+                               error=error)
+
+
+
 Database Queries
 ----------------
 
