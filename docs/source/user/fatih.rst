@@ -122,6 +122,8 @@ On this page, admins can manipulate following data fields of each course:
 - General course information, learning outcome etc.
 - Syllabus, only pdf files are accepted.
 
+Also course can be deleted from this page by clicking the ``Delete Course`` button.
+
 .. figure:: ../../images/altinpinar/edit_course.png
     :alt: Edit Course Page
     :align: center
@@ -138,4 +140,56 @@ Course Info Page
 Every courses information can be seen on this page.
 Clicking download button will start downloading syllabus uploaded during creation or edition of the course
 The link will not appear if there is not any syllabus added to the course.
+
+Classrooms Page
+***************
+All of the classrooms in a faculty can be viewed under the corresponding faculty page.
+For more information about `Faculty Page` you can refer to `Parts Implemented By Cihat Akkiraz` section of the documentation.
+
+.. figure:: ../../images/altinpinar/classroom_list.png
+    :alt: Classrooms Page
+    :align: center
+
+    Classrooms Page
+
+
+Add Classroom Page
+++++++++++++++++++
+
+On this page, admins can add users by providing required data for the course:
+
+- Capacity
+- Door Mumber
+- Floor
+- Board Count
+- Does classroom have projection system built in?
+- Is classed renewed?
+- Does classroom have air conditioning?
+
+.. figure:: ../../images/altinpinar/add_classroom.png
+    :alt: Add Classroom Page
+    :align: center
+
+    Add Classroom Page
+
+
+Edit Classroom Page
++++++++++++++++++++
+On this page, admins can manipulate following data fields of each course:
+
+- Capacity
+- Door Mumber
+- Floor
+- Board Count
+- Does classroom have projection system built in?
+- Is classed renewed?
+- Does classroom have air conditioning?
+
+Also the classroom can be deleted from this page by clicking the ``Delete Classroom`` button.
+
+.. figure:: ../../images/altinpinar/edit_classroom.png
+    :alt: Edit Classroom Page
+    :align: center
+
+    Edit Classroom Page
 
