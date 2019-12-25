@@ -3,7 +3,11 @@ Parts Implemented by Fatih Altınpınar
 
 Tables
 ------
+Tables implemented by this member can be seen in the ERD diagram below.
 
+.. figure:: ../../images/faati_erd.png
+    :alt: ERD of Altınpınar
+    :align: center
 
 .. code-block:: sql
     :linenos:
