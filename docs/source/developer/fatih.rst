@@ -113,6 +113,7 @@ Course
 .. code-block:: python
     :linenos:
     :caption: Course class from ``course.py``
+
     class Course:
         def __init__(self, crn, code, name, start_time, end_time, day, capacity, enrolled, credits,
                      language, classroom_id, instructor_id, department_id, info):
@@ -139,6 +140,7 @@ Course
 .. code-block:: python
     :linenos:
     :caption: TakenCourse class from ``course.py``
+
     class TakenCourse:
         def __init__(self, id, student_id, crn, grade, datetime):
             self.id = id
@@ -153,6 +155,7 @@ Instructor
 .. code-block:: python
     :linenos:
     :caption: Instructor class from ``instructor.py``
+
     class Instructor:
         def __init__(self, id, tr_id, department_id, faculty_id, specialization, bachelors,
                      masters, doctorates, room_id):
@@ -176,6 +179,7 @@ Classroom
 .. code-block:: python
     :linenos:
     :caption: Classroom class from ``classroom.py``
+
     class Classroom:
         def __init__(self, id, capacity, has_projection, door_number, floor, renewed,
                      board_count, air_conditioner, faculty_id):
@@ -301,6 +305,7 @@ Course
 .. code-block:: python
     :linenos:
     :caption: View for the Courses Page
+
     def courses_page():
         db = current_app.config["db"]
         courses = db.get_all_courses()
@@ -325,6 +330,7 @@ Course
 .. code-block:: python
     :linenos:
     :caption: View for the Add Course Page
+
     @login_required
     def add_course_page():
         if current_user.role != 'admin':
@@ -413,6 +419,7 @@ Course
 .. code-block:: python
     :linenos:
     :caption: View for the Add/Drop Course Page
+
     @login_required
     def select_courses_page():
         if current_user.role != 'student':
@@ -496,7 +503,7 @@ Instructor
 .. code-block:: python
     :linenos:
     :caption: View for the Instructors Page
-    # instructor pages#
+
     @login_required
     def instructors_page():
         if current_user.role != 'admin':
@@ -508,6 +515,7 @@ Instructor
 .. code-block:: python
     :linenos:
     :caption: View for the Add Instructor Page
+
     @login_required
     def add_instructor_page():
         if current_user.role != 'admin':
@@ -548,6 +556,7 @@ Instructor
 .. code-block:: python
     :linenos:
     :caption: View for the Edit Instructor Page
+
     @login_required
     def edit_instructor_page(id):
         if current_user.role != 'admin':
