@@ -193,3 +193,68 @@ Also the classroom can be deleted from this page by clicking the ``Delete Classr
 
     Edit Classroom Page
 
+Instructors
+-----------
+
+Instructors does not have many functionality in the system. They can only view the courses taught by them and do grading operations.
+
+
+My Courses
+**********
+
+Instructors can view courses they teach under ``My Courses`` page. By clicking `CRN` of a lecture
+an instructor can navigate to course info page of a course. Here, if they are the instructor of
+the course that is being viewed; they have the ability to view student lists and give grades to each student.
+For more information about `Course Info` page refer to `Parts Implemented By Cihat Akkiraz` part of the documentation.
+
+.. figure:: ../../images/altinpinar/my_courses_instructors.png
+    :alt: My Courses Page
+    :align: center
+
+    My Courses Page
+
+Students
+--------
+
+My Courses
+**********
+
+On this page, a student can view the courses that they take.
+
+.. figure:: ../../images/altinpinar/my_courses_student.png
+    :alt: My Courses Page
+    :align: center
+
+    My Courses Page
+
+Add/Drop Courses
+****************
+
+On this page, students can add/drop courses by filling form with course `CRN`s. The system
+will automatically check for timing conflicts between courses student is trying to take and courses student already took.
+
+
+.. figure:: ../../images/altinpinar/add_drop.png
+    :alt: Add Courses
+    :align: center
+
+    Student Trying to Add Courses
+
+.. figure:: ../../images/altinpinar/add_drop_2.png
+    :alt: Drop Courses
+    :align: center
+
+    Student Trying to Drop Courses
+
+
+Everyone
+********
+
+Logging in is not required to view courses registered in the system.
+Everyone can view courses and view more information about the course by clicking the `CRN`.
+
+.. figure:: ../../images/altinpinar/courses_list_2.png
+    :alt: Courses Page
+    :align: center
+
+    Courses Page
