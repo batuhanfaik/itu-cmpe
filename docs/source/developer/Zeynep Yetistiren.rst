@@ -62,9 +62,10 @@ Some examples for these tables are shown below. More examples can be seen in ``d
 .. code-block:: sql
     :linenos:
     :caption: Example Data for Staff Table
-"""insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('1', 'Manager1', '1', '2019-12-12','12345','Finance ','1');""",
-    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('2', 'Manager2', '0', '2019-12-12','12344','Information Tech','2');""",
-    """insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('3', 'Manager3', '1', '2019-12-12','12345','Information Tech','1');""",
+
+   insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('1', 'Manager1', '1', '2019-12-12','12345','Finance ','1');
+    insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('2', 'Manager2', '0', '2019-12-12','12344','Information Tech','2');
+    insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('3', 'Manager3', '1', '2019-12-12','12345','Information Tech','1');
 
 
 
@@ -73,17 +74,17 @@ Some examples for these tables are shown below. More examples can be seen in ``d
     :linenos:
     :caption: Example Data for Facility Table
 
-"""insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (1, 1, 'Yemekhane', 'YMK', '50', '1400', '70000')""",
-    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (2, 2, 'Kütüphane', 'LIB', '50', '1400', '50000')""",
-    """insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (3, 4, 'Bilgi Işlem', 'BIDB', '50', '1400', '80000')""",
+   insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (1, 1, 'Yemekhane', 'YMK', '50', '1400', '70000');
+    insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (2, 2, 'Kütüphane', 'LIB', '50', '1400', '50000');
+    insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (3, 4, 'Bilgi Işlem', 'BIDB', '50', '1400', '80000');
 
 .. code-block:: sql
     :linenos:
     :caption: SQL for Inserting Data into Student Table
 
-    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Manager ','2019-12-12', '2019-12-12', '2000', 1, 44, 'Leads staff')""",
-    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Security', '2019-12-12', '2019-12-12', '2000', 2, 4, 'Secure books')""",
-    """insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Project Assistant','2019-12-12', '2019-12-12', '2000', 3, 44, 'Help the group')""",
+    insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Manager ','2019-12-12', '2019-12-12', '2000', 1, 44, 'Leads staff');
+    insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Security', '2019-12-12', '2019-12-12', '2000', 2, 4, 'Secure books');
+    insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Project Assistant','2019-12-12', '2019-12-12', '2000', 3, 44, 'Help the group');
 
 
 Classes
@@ -100,15 +101,16 @@ Staff
     :linenos:
     :caption: Staff Class 
 
-class Staff:
-    def __init__(self,id,manager_name,absences,hire_date,authority_lvl,department,social_sec_no):
-        self.manager_name = manager_name
-        self.id = id
-        self.absences = absences
-        self.hire_date = hire_date
-        self.authority_lvl = authority_lvl
-        self.department = department
-        self.social_sec_no = social_sec_no
+    class Staff:
+        def __init__(self,id,manager_name,absences,hire_date,authority_lvl,department,social_sec_no):
+            self.manager_name = manager_name
+            self.id = id
+            self.absences = absences
+            self.hire_date = hire_date
+            self.authority_lvl = authority_lvl
+            self.department = department
+            self.social_sec_no = social_sec_no
+
 
 Facility
 +++++++++
@@ -117,15 +119,15 @@ Facility
     :linenos:
     :caption: Facility Class
 
-class Facility:
-    def __init__(self,id,campus_id,name,shortened_name,number_of_workers, size,expenses):
-        self.id=id
-        self.name = name
-        self.shortened_name=shortened_name
-        self.size=size
-        self.number_of_workers=number_of_workers
-        self.expenses = expenses
-        self.campus_id = campus_id
+    class Facility:
+        def __init__(self,id,campus_id,name,shortened_name,number_of_workers, size,expenses):
+            self.id=id
+            self.name = name
+            self.shortened_name=shortened_name
+            self.size=size
+            self.number_of_workers=number_of_workers
+            self.expenses = expenses
+            self.campus_id = campus_id
 
 Staff_facil
 +++++++
@@ -134,15 +136,15 @@ Staff_facil
     :linenos:
     :caption: Staff_facil class`
 
-class Staff_facil:
-    def __init__(self,title,from_date,to_date,salary,facility_id,staff_id,duty):
-        self.title = title
-        self.staff_id = staff_id
-        self.to_date =to_date
-        self.from_date = from_date
-        self.salary = salary
-        self.facility_id = facility_id
-        self.duty = duty
+    class Staff_facil:
+        def __init__(self,title,from_date,to_date,salary,facility_id,staff_id,duty):
+            self.title = title
+            self.staff_id = staff_id
+            self.to_date =to_date
+            self.from_date = from_date
+            self.salary = salary
+            self.facility_id = facility_id
+            self.duty = duty
 
 View Models
 -----------
