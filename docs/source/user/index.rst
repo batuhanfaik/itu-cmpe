@@ -9,5 +9,5 @@ Please follows the links below for detailed explanation of the pages.
 
    Batuhan Faik Derinbay
    fatih
-   member3
+   Zeynep Yetistiren
    member4
