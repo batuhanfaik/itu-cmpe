@@ -17,6 +17,10 @@ E/R Diagrams of DataBees
     :alt: ERD of Altınpınar
     :align: center
 
+.. figure:: ../../images/fzeynepyetistiren_ERD.png
+    :alt: ERD of Altınpınar
+    :align: center
+
 Code
 ----
 
@@ -48,5 +52,5 @@ ITU DataBees is structed as follows:
 
    Batuhan Faik Derinbay
    fatih
-   member3
+   Zeynep Yetiştiren
    member4
