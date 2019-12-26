@@ -11,7 +11,7 @@ Welcome to documentation of ITU DataBees!
 
    * Batuhan Faik Derinbay
    * Fatih Altınpınar
-   * Member 3
+   * Zeynep Yetiştiren
    * Member 4
 
 **Description of the project:**
