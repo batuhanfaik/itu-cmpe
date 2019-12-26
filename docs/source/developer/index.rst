@@ -17,8 +17,8 @@ E/R Diagrams of DataBees
     :alt: ERD of Altınpınar
     :align: center
 
-.. figure:: ../../images/fzeynepyetistiren_ERD.png
-    :alt: ERD of Altınpınar
+.. figure:: ../../images/zeynepyetistiren_ERD.png
+    :alt: ERD of Yetistiren
     :align: center
 
 Code
