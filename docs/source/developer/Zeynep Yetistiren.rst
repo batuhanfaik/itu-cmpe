@@ -63,7 +63,7 @@ Some examples for these tables are shown below. More examples can be seen in ``d
     :linenos:
     :caption: Example Data for Staff Table
 
-   insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('1', 'Manager1', '1', '2019-12-12','12345','Finance ','1');
+    insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('1', 'Manager1', '1', '2019-12-12','12345','Finance ','1');
     insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('2', 'Manager2', '0', '2019-12-12','12344','Information Tech','2');
     insert into staff (id,manager_name,absences,hire_date,social_sec_no,department,authority_lvl) values ('3', 'Manager3', '1', '2019-12-12','12345','Information Tech','1');
 
@@ -74,13 +74,13 @@ Some examples for these tables are shown below. More examples can be seen in ``d
     :linenos:
     :caption: Example Data for Facility Table
 
-   insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (1, 1, 'Yemekhane', 'YMK', '50', '1400', '70000');
+    insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (1, 1, 'Yemekhane', 'YMK', '50', '1400', '70000');
     insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (2, 2, 'Kütüphane', 'LIB', '50', '1400', '50000');
     insert into facility (id, campus_id, name, shortened_name, number_of_workers, size, expenses) values (3, 4, 'Bilgi Işlem', 'BIDB', '50', '1400', '80000');
 
 .. code-block:: sql
     :linenos:
-    :caption: SQL for Inserting Data into Student Table
+    :caption: Example Data for Staff-Facility Table
 
     insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Manager ','2019-12-12', '2019-12-12', '2000', 1, 44, 'Leads staff');
     insert into staff_facil (title, from_date, to_date, salary, facility_id, staff_id, duty) values ('Security', '2019-12-12', '2019-12-12', '2000', 2, 4, 'Secure books');
@@ -581,7 +581,7 @@ Staff
     :linenos:
     :caption: CRUD Operations for the Staff table
 
-            def add_staff(self,staff):
+    def add_staff(self,staff):
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             query = "insert into staff (id, manager_name, absences, hire_date, authority_lvl,department, social_sec_no) values (%s, %s, %s, %s, %s, %s,%s)"
