@@ -28,10 +28,11 @@ Creating Campus
 In this part, the user can create filling a form about new campus. When filling out this form, the user should pay attention to the following.
 
 - Campus name cannot be longer than 50 characters.
-- Campus address cannot be longer than 80 characters
+- Campus address cannot be longer than 80 characters.
 
 .. figure:: ../../images/akkiraz/create_new_campus.png
     :alt: Create New Campus
+    :scale: 60%
     :align: center
 
 Displaying Existing Campuses
@@ -42,12 +43,14 @@ This list consists 'Campus Name', 'Campus Phone Number', edit icon and remove ic
 
 .. figure:: ../../images/akkiraz/display_existing_campuses.png
     :alt: Display Existing Campuses
+    :scale: 60%
     :align: center
 
 Clicking edit icon will display a warning about redirecting edit page.
 
 .. figure:: ../../images/akkiraz/redirect_edit_campus_page.png
     :alt: Redirect Edit Campus Page
+    :scale: 60%
     :align: center
 
 Detailed View For Custom Campus
@@ -58,18 +61,21 @@ display all attributes of desired campus.
 
 .. figure:: ../../images/akkiraz/campus_edit_1.png
     :alt: Detailed View For Custom Campus
+    :scale: 60%
     :align: center    
 
 Editing Campus
 ++++++++++++++
 
 There is a edit icon for each campus attributes. Clicking this edit icon will make edit form for desired attribute visible.
+
 .. figure:: ../../images/akkiraz/campus_edit_2.png
     :alt: Edit Campus
     :align: center 
 
 After editing desired attributes, you can click 'Save All Changes' button to save all changes.
 In case you wanna discard all changes, you can click 'Discard all Changes' buttton.
+
 .. figure:: ../../images/akkiraz/campus_edit_3.png
     :alt: Edit Campus
     :align: center
@@ -114,13 +120,15 @@ There is a section for listing existing faculties, in the right of the create fa
 This list consists 'Faculty Name', 'Faculty Phone Number','Faculty Shortened Name', edit icon and remove icon for each faculty.
 
 .. figure:: ../../images/akkiraz/display_existing_faculties.png
-    :alt: Display Existing Faculties    
+    :alt: Display Existing Faculties 
+    :scale: 60%   
     :align: center
 
 Clicking edit icon will display a warning about redirecting edit page.
 
 .. figure:: ../../images/akkiraz/redirect_edit_faculty_page.png
     :alt: Redirect Edit Faculty Page
+    :scale: 60%
     :align: center
 
 Detailed View For Custom Faculty
@@ -131,6 +139,7 @@ display all attributes of desired faculty.
 
 .. figure:: ../../images/akkiraz/faculty_edit_1.png
     :alt: Detailed View For Custom Faculty
+    :scale: 60%
     :align: center    
 
 Editing Faculty
@@ -140,6 +149,7 @@ There is a edit icon for each faculty attributes. Clicking this edit icon will m
 
 .. figure:: ../../images/akkiraz/faculty_edit_2.png
     :alt: Edit Faculty
+    :scale: 60%
     :align: center 
 
 After editing desired attributes, you can click 'Save All Changes' button to save all changes.
@@ -148,13 +158,6 @@ In case you wanna discard all changes, you can click 'Discard all Changes' buttt
 Below these 2 components, there is a section for managing departments in this faculty.
 This two sections will be mentioned Department part of the documentation
 
-Listing Classrooms in faculty
-*****************************
-
-.. figure:: ../../images/akkiraz/list_faculty_classrooms.png
-    :alt: Edit Faculty
-    :align: center 
-
 Removing Faculty
 ++++++++++++++++
 
@@ -162,6 +165,7 @@ In the campus list component, there is a remove icon. Clicking this remove campu
 
 .. figure:: ../../images/akkiraz/remove_faculty_warning.png
     :alt: Display Existing Faculties
+    :scale: 60%
     :align: center
 
 
@@ -180,6 +184,7 @@ Creating Departments
 
 .. figure:: ../../images/akkiraz/create_new_department.png
     :alt: Create New Department
+    :scale: 60%
     :align: center
 
 Displaying Existing Departments
@@ -187,10 +192,12 @@ Displaying Existing Departments
 
 .. figure:: ../../images/akkiraz/display_existing_departments.png
     :alt: Display Existing Departments
+    :scale: 60%
     :align: center
 
 .. figure:: ../../images/akkiraz/redirect_edit_department_page.png
     :alt: Redirect Edit Department Page
+    :scale: 60%
     :align: center
 
 Detailed View For Custom Department
@@ -198,6 +205,7 @@ Detailed View For Custom Department
 
 .. figure:: ../../images/akkiraz/department_edit_1.png
     :alt: Detailed View For Custom Department
+    :scale: 60%
     :align: center    
 
 Editing Department
@@ -205,10 +213,12 @@ Editing Department
 
 .. figure:: ../../images/akkiraz/department_edit_2.png
     :alt: Edit Department
+    :scale: 60%
     :align: center 
 
 .. figure:: ../../images/akkiraz/department_edit_3.png
     :alt: Edit Department
+    :scale: 60%
     :align: center
 
 In this page faculties that are in department can be listed and create new faculties.
@@ -219,4 +229,5 @@ Removing Department
 
 .. figure:: ../../images/akkiraz/remove_department_warning.png
     :alt: Remove Warning For Department
+    :scale: 60%
     :align: center
