@@ -21,6 +21,10 @@ E/R Diagrams of DataBees
     :alt: ERD of Yetistiren
     :align: center
 
+.. figure:: ../../images/akkiraz/cihat_erd.png
+    :alt: ERD of Akkiraz
+    :align: center
+    
 Code
 ----
 
