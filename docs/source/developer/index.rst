@@ -53,4 +53,4 @@ ITU DataBees is structed as follows:
    Batuhan Faik Derinbay
    fatih
    Zeynep Yetistiren
-   member4
+   Cihat Akkiraz
