@@ -20,7 +20,7 @@ In general, tables have list page, add/search page and update/delete pages.
 
 
 
-Staff Add, Search and List Page
+Staff Page
 +++++++++++
 
 This page is the beggining of the Staff pages.
