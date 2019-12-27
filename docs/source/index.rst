@@ -12,7 +12,7 @@ Welcome to documentation of ITU DataBees!
    * Batuhan Faik Derinbay
    * Fatih Altınpınar
    * Zeynep Yetiştiren
-   * Member 4
+   * Cihat Akkiraz
 
 **Description of the project:**
 This project aims to provide an all in one database solution for university structures. It allows everyone either working or studying in a university to access their related data using one interface. The project’s structure is based on Istanbul Technical University, but it can be easily modified to suit any other university.
