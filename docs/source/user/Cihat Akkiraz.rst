@@ -219,9 +219,6 @@ There is a edit icon for each department attributes. Clicking this edit icon wil
 After editing desired attributes, you can click 'Save All Changes' button to save all changes.
 In case you wanna discard all changes, you can click 'Discard all Changes' buttton.
 
-.. figure:: ../../images/akkiraz/department_edit_3.png
-    :alt: Edit Department
-    :align: center
     
 Removing Department
 ***************
