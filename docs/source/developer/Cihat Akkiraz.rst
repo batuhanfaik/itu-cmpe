@@ -6,7 +6,7 @@ Campus, Faculty and Departments tables that are implemented by this team member 
 Campus
 ------
 
-.. figure:: ../../images/cihat_erd.png
+.. figure:: ../../images/akkiraz/cihat_erd.png
     :alt: ERD of Akkiraz
     :align: center
 
