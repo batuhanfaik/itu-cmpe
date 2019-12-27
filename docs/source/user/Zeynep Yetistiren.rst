@@ -23,12 +23,13 @@ In general, tables have list page, add/search page and update/delete pages.
 Staff Page
 +++++++++++
 
-This page is the beggining of the Staff pages.
+This page is the beggining of the Staff pages. This page can be accessed from the People Menu at the navigation bar.
 On this page, **admins** can view a list of staffs and their information in the database, add a new staff or search a specific staff by staff id . Input validation is being done.
 
 - Staff ids must be unique for each staff.
 - Entered staff id must be in present in the people table.
 - Fields other than staff id are optional.
+- Manager name and department attributes cannot be longer than 40 chars.
 
 
 
@@ -60,6 +61,7 @@ For Update:
 - Staff ids must be unique for each staff.
 - Entered staff id must be in present in the people table.
 - Fields other than staff id are optional.
+- Manager name and department attributes cannot be longer than 40 chars.
 
 There is no restriction for the delete operation.
 
@@ -90,6 +92,7 @@ For Addition:
 - Facility id must exist in the facility table
 - Staff id must exist in the staff table
 - Other fields are optional.
+- Title and Duty attributes cannot be longer than 20 chars.
 
 There is no restriction for the delete operation.
 
@@ -119,6 +122,7 @@ For Update:
 - Facility id must exist in the facility table
 - Staff id must exist in the staff table
 - Other fields are optional.
+- Title and Duty attributes cannot be longer than 20 chars.
 
 
 
@@ -135,7 +139,7 @@ For Update:
 Facility Page
 +++++++++++++++
 
-On this page, **admins** can view the facility list and add new facilities to the database. Also, they can search a facility by facility id or search by campus id and see all the facilities in the specified campus.
+On this page, **admins** can view the facility list and add new facilities to the database. Also, they can search a facility by facility id or search by campus id and see all the facilities in the specified campus. This page can be accessed from the Management Menu at the navigation bar.
 
 For Addition:
 
@@ -167,6 +171,8 @@ For Update:
 - Facility id must exist in the facility table
 - Staff id must exist in the staff table
 - Other fields are optional.
+- Name attribute cannot be longer than 40 chars.
+- Shortened name attribute cannot be longer than 6 chars.
 
 There is no restriction for the delete operation.
 
