@@ -4,7 +4,12 @@ Developer Guide
 Database Design
 ---------------
 
-**explain the database design of your project**
+Our database is in 1NF since some of our team members decided to use `TR ID` as a primary
+key for their relations while others preferred an serial integer.
+
+Also there is a table named `syllabus` which has the same primary key `course` does. This `file` attribute
+in `syllabus` table is separated for practical reasons. Since multiple querries occur on the course table that
+does not use syllabus pdf, downloading the pdf file would have decrease system speed.
 
 E/R Diagrams of DataBees
 ++++++++++++++++++++++++
