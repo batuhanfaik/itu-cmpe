@@ -161,4 +161,75 @@ In the faculty list component, there is a remove icon. Clicking this remove camp
     :alt: Display Existing Faculties
     :align: center
 
+Department
+------
 
+In this page, admins can create new departments and display existing departments.
+Also they can delete or edit existing departments.
+
+Creating Department
+*****************
+
+In this part, the user can create filling a form about new department. When filling out this form, the user should pay attention to the following.
+
+- Department name cannot be longer than 100 characters.
+- Department shortened name cannot be longer than 6 characters.
+
+.. figure:: ../../images/akkiraz/create_new_department.png
+    :alt: Create New Department
+    :align: center
+
+After filling this form if the form is valid, new department will be created.
+
+Displaying Existing Departments
+++++++++++++++++++++++++++++
+
+There is a section for listing existing departments, in the right of the create department form.
+This list consists 'Department Name','Shortened Name', 'Block Number','Phone Number', edit icon and remove icon for each department.
+
+.. figure:: ../../images/akkiraz/display_existing_departments.png
+    :alt: Display Existing Departments
+    :align: center
+
+Clicking edit icon will display a warning about redirecting edit page.
+
+.. figure:: ../../images/akkiraz/redirect_edit_department_page.png
+    :alt: Redirect Edit Department Page
+    :align: center
+
+Detailed View For Custom Department
+*******************************
+
+When you click edit page icon you will be redirected edit department page. In this page you can
+display all attributes of desired department. 
+
+.. figure:: ../../images/akkiraz/department_edit_1.png
+    :alt: Detailed View For Custom Department
+    :align: center    
+
+Editing Department
+++++++++++++++
+
+There is a edit icon for each department attributes. Clicking this edit icon will make edit form for desired attribute visible.
+
+.. figure:: ../../images/akkiraz/department_edit_2.png
+    :alt: Edit Department
+    :align: center 
+
+After editing desired attributes, you can click 'Save All Changes' button to save all changes.
+In case you wanna discard all changes, you can click 'Discard all Changes' buttton.
+
+.. figure:: ../../images/akkiraz/department_edit_3.png
+    :alt: Edit Department
+    :align: center
+    
+Removing Department
+***************
+
+In the department list component, there is a remove icon. Clicking this remove department icon will display remove department warning.
+
+.. figure:: ../../images/akkiraz/remove_department_warning.png
+    :alt: Remove Warning For Department
+    :align: center
+
+When you click 'Delete Now' button, the department and all things related to this department will be deleted.
