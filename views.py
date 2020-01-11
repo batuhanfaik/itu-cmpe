@@ -7,6 +7,7 @@ from flask_login import login_required, logout_user, login_user, current_user
 from passlib.hash import pbkdf2_sha256 as hash_machine
 from psycopg2 import errors, Error
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 import dbinit
 from assistant import Assistant
@@ -22,6 +23,12 @@ from student import Student
 
 
 def landing_page():
+    db = current_app.config["db"]
+    now = str(datetime.now().date())
+    if now > db.get_last_opened():
+        db_url = getenv("DATABASE_URL")
+        dbinit.reset_db(db_url)
+        db.update_last_opened(now)
     return render_template("index.html")
 
 

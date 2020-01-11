@@ -13,17 +13,42 @@
         <li>Bootstrap 4.3.1</li>
         <li>jQuery 3.4.1</li>
       </ul>
+      <p class="lead">Demo Accounts</p>
+      <table class="table-borderless">
+      <thead>
+        <th>Username</th>
+        <th>Password</th>
+      </thead>
+          <tbody>
+          <tr>
+              <td>fadmin</td>
+              <td>fatih</td>
+          </tr>
+          <tr>
+              <td>bstudent</td>
+              <td>batuhan</td>
+          </tr>
+          <tr>
+              <td>cinstructor</td>
+              <td>cihat</td>
+          </tr>
+          <tr>
+              <td>zstaff</td>
+              <td>zeynep</td>
+          </tr>
+          </tbody>
+      </table>
     </div>
   </div>
-  {% if current_user.role == "admin" %}
-  <form action="/reset_db" method="post" name="reset_db">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-    <div class="container" style="align-content: center;text-align: center;">
-      <button class="btn btn-danger text-center">
-        Re-Init DataBees!
-      </button>
-    </div>
-  </form>
-  {% endif %}
+{#  {% if current_user.role == "admin" %}#}
+{#  <form action="/reset_db" method="post" name="reset_db">#}
+{#    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />#}
+{#    <div class="container" style="align-content: center;text-align: center;">#}
+{#      <button class="btn btn-danger text-center">#}
+{#        Re-Init DataBees!#}
+{#      </button>#}
+{#    </div>#}
+{#  </form>#}
+{#  {% endif %}#}
 </div>
 {% endblock %}
