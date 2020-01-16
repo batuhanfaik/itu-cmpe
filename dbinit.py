@@ -27,7 +27,7 @@ INIT_STATEMENTS = [
         gender char(1) null,
         birth_city varchar(50) null,
         birth_date date not null,
-        birth_date varchar(50) not null,
+        id_reg_city varchar(50) not null,
         id_reg_district varchar(50) not null,
         photo_name varchar(256),
         photo_extension varchar(10),
@@ -200,7 +200,7 @@ INIT_STATEMENTS = [
         id              INT PRIMARY KEY,
         date            DATE
     );
-    insert into last_opened values (0, "2019-01-20");
+    insert into last_opened (id, date) values (0, '2019-01-20');
     """,
     # DATABASE FILLER #
     """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
