@@ -490,7 +490,11 @@ def assistant_page(tr_id):
 def reset_db():
     db_url = getenv("DATABASE_URL")
     if current_user.is_admin:
+        print("Manual Reset. Resetting Database...")
         dbinit.reset_db(db_url)
+        print("Reset Complete")
+        db = current_app.config['db']
+        db.update_last_opened(datetime.now().date())
     return redirect(url_for("landing_page"))
 
 
