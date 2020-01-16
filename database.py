@@ -13,6 +13,7 @@ from course import TakenCourse
 from facility import Facility
 from staff_facil import Staff_facil
 
+
 class Database:
     def __init__(self, dbfile):
         self.dbfile = dbfile
@@ -28,7 +29,7 @@ class Database:
         with dbapi2.connect(self.dbfile) as connection:
             cursor = connection.cursor()
             cursor.execute("""select date from last_opened where id = 0;""")
-            return cursor.fetchone()
+            return cursor.fetchone()[0]
 
     def update_last_opened(self, date):
         with dbapi2.connect(self.dbfile) as connection:

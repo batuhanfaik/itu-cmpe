@@ -24,10 +24,12 @@ from student import Student
 
 def landing_page():
     db = current_app.config["db"]
-    now = str(datetime.now().date())
+    now = datetime.now().date()
     if now > db.get_last_opened():
         db_url = getenv("DATABASE_URL")
+        print("At least a day passed since this page opened. Resetting Database...")
         dbinit.reset_db(db_url)
+        print("Reset Complete!")
         db.update_last_opened(now)
     return render_template("index.html")
 
