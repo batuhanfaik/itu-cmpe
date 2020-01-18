@@ -7,6 +7,7 @@ from flask_login import login_required, logout_user, login_user, current_user
 from passlib.hash import pbkdf2_sha256 as hash_machine
 from psycopg2 import errors, Error
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 import dbinit
 from assistant import Assistant
@@ -22,6 +23,14 @@ from student import Student
 
 
 def landing_page():
+    db = current_app.config["db"]
+    now = datetime.now().date()
+    if now > db.get_last_opened():
+        db_url = getenv("DATABASE_URL")
+        print("At least a day passed since this page opened. Resetting Database...")
+        dbinit.reset_db(db_url)
+        print("Reset Complete!")
+        db.update_last_opened(now)
     return render_template("index.html")
 
 
@@ -481,7 +490,11 @@ def assistant_page(tr_id):
 def reset_db():
     db_url = getenv("DATABASE_URL")
     if current_user.is_admin:
+        print("Manual Reset. Resetting Database...")
         dbinit.reset_db(db_url)
+        print("Reset Complete")
+        db = current_app.config['db']
+        db.update_last_opened(datetime.now().date())
     return redirect(url_for("landing_page"))
 
 

@@ -27,7 +27,7 @@ INIT_STATEMENTS = [
         gender char(1) null,
         birth_city varchar(50) null,
         birth_date date not null,
-        birth_date varchar(50) not null,
+        id_reg_city varchar(50) not null,
         id_reg_district varchar(50) not null,
         photo_name varchar(256),
         photo_extension varchar(10),
@@ -196,6 +196,11 @@ INIT_STATEMENTS = [
         FOREIGN KEY(staff_id) REFERENCES STAFF (id) on delete cascade on update cascade, 
         PRIMARY KEY(facility_id,staff_id)
     );
+    CREATE TABLE IF NOT EXISTS LAST_OPENED(
+        id              INT PRIMARY KEY,
+        date            DATE
+    );
+    insert into last_opened (id, date) values (0, '2019-01-20');
     """,
     # DATABASE FILLER #
     """insert into people (tr_id, name, surname, phone_number, email, pass, person_category,
