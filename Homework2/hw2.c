@@ -126,16 +126,15 @@ int main(int argc, char **argv) {
 
     // Create NP slave processes
     for (int i = 0; i < PROCESS_AMOUNT; ++i) {
-        int slider = 0;
+        int process_interval_start = process_intervals[i * 2];
+        int process_interval_end = process_intervals[i * 2 + 1];
+        // Check for faulty process interval
+        if (process_interval_end < process_interval_start) {
+            printf("Slave %d: Not required!\n", i + 1);
+            _exit(0);
+        }
         if (fork() == 0) {
             // Slave process starts
-            int process_interval_start = process_intervals[i * 2];
-            int process_interval_end = process_intervals[i * 2 + 1];
-            // Check for faulty process interval
-            if (process_interval_end < process_interval_start) {
-                printf("Slave %d: Not required!\n", i + 1);
-                _exit(0);
-            }
 
             printf("Slave %d: Started. ", i + 1);
             printf("Interval %d-%d\n", process_interval_start, process_interval_end);
