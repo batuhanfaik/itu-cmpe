@@ -1,17 +1,17 @@
- /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * /
- * @ Filename: hw2.c
- * @ Date: 21-Apr-2020
- * @ AUTHOR: Batuhan Faik Derinbay
- * @ Student ID: 150180705
- * @ Copyright (C) 2020 Batuhan Faik Derinbay
- * @ Project: BLG312E Homework 2
- * @ Development Environment: Ubuntu 18.04, GDB 8.3, C Standard 99
- * @ Description: Calculate prime numbers given a range of two integers
- * @ Instructions:
- *      To compile:     gcc hw2.c -o hw2 -std=c99 -pthread
- *      To run:         ./hw2 interval_min interval_max np nt
- *      Example:        ./hw2 101 200 2 2
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * /
+* @ Filename: hw2.c
+* @ Date: 21-Apr-2020
+* @ AUTHOR: Batuhan Faik Derinbay
+* @ Student ID: 150180705
+* @ Copyright (C) 2020 Batuhan Faik Derinbay
+* @ Project: BLG312E Homework 2
+* @ Development Environment: Ubuntu 18.04, GDB 8.3, C Standard 99
+* @ Description: Calculate prime numbers given a range of two integers
+* @ Instructions:
+*      To compile:     gcc hw2.c -o hw2 -std=c99 -pthread
+*      To run:         ./hw2 interval_min interval_max np nt
+*      Example:        ./hw2 101 200 2 2
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,7 +32,7 @@ struct ThreadInfo {
     int memory_offset;
 };
 
-void *thread_func(void *thread_struct){
+void *thread_func(void *thread_struct) {
     struct ThreadInfo *t_info = (struct ThreadInfo *) thread_struct;
 
     printf("Thread %d.%d: ", t_info->process_no, t_info->thread_no);
@@ -43,6 +43,7 @@ void *thread_func(void *thread_struct){
 
     lower_bound = t_info->interval_start;
     upper_bound = t_info->interval_end;
+    upper_bound++;  // This fixes the non-inclusive upper boundary problem of the algorithm
 
     while (lower_bound < upper_bound) {
         not_prime = 0;
@@ -56,7 +57,7 @@ void *thread_func(void *thread_struct){
         }
 
         // Save the prime number in the memory, if not prime, fill the memory space with 0
-        if (not_prime == 0){
+        if (not_prime == 0) {
             t_info->shared_memory[lower_bound - t_info->memory_offset] = lower_bound;
         } else {
             t_info->shared_memory[lower_bound - t_info->memory_offset] = 0;
@@ -85,7 +86,7 @@ int main(int argc, char **argv) {
 
     // Calculate ranges and distribute
     int total_range = INTERVAL_END - INTERVAL_START + 1;
-    int range_per_process =  total_range / PROCESS_AMOUNT;
+    int range_per_process = total_range / PROCESS_AMOUNT;
     int process_intervals[PROCESS_AMOUNT * 2];
     int interval_offset = 0;
     int residue;
@@ -114,9 +115,9 @@ int main(int argc, char **argv) {
     int MEM_KEY = ftok(key_string, 1);
     free(key_string);
 
-    int shmid = shmget(MEM_KEY, total_range*sizeof(int), 0666 | IPC_CREAT);
+    int shmid = shmget(MEM_KEY, total_range * sizeof(int), 0666 | IPC_CREAT);
     if (shmid < 0) {
-        perror("Unable to allocate memory!");
+        perror("Unable to allocate memory!\n");
         exit(1);
     }
 
@@ -128,14 +129,20 @@ int main(int argc, char **argv) {
         int slider = 0;
         if (fork() == 0) {
             // Slave process starts
-            printf("Slave %d: Started. ", i + 1);
             int process_interval_start = process_intervals[i * 2];
             int process_interval_end = process_intervals[i * 2 + 1];
+            // Check for faulty process interval
+            if (process_interval_end < process_interval_start) {
+                printf("Slave %d: Not required!\n", i + 1);
+                _exit(0);
+            }
+
+            printf("Slave %d: Started. ", i + 1);
             printf("Interval %d-%d\n", process_interval_start, process_interval_end);
 
             // Calculate ranges and distribute
             int process_total_range = process_interval_end - process_interval_start + 1;
-            int range_per_thread =  process_total_range / THREAD_AMOUNT;
+            int range_per_thread = process_total_range / THREAD_AMOUNT;
             int thread_intervals[THREAD_AMOUNT * 2];
             int thread_interval_offset = 0;
             int residue_;
@@ -147,7 +154,8 @@ int main(int argc, char **argv) {
                 } else
                     residue_ = 0;
 
-                thread_intervals[k * 2] = process_interval_start + (k * range_per_thread) + thread_interval_offset - residue_;
+                thread_intervals[k * 2] =
+                        process_interval_start + (k * range_per_thread) + thread_interval_offset - residue_;
                 thread_intervals[k * 2 + 1] = thread_intervals[k * 2] + range_per_thread - 1 + residue_;
 
                 // Print the number ranges that are being processed by the slave
@@ -170,7 +178,12 @@ int main(int argc, char **argv) {
                 t_info[j].shared_memory = shared_memory;
                 t_info[j].memory_offset = INTERVAL_START;
 
-                pthread_create(&thread_ids[j], &attr, thread_func, &t_info[j]);
+                // Check for faulty thread interval
+                if (t_info[j].interval_end < t_info[j].interval_start) {
+                    printf("Thread %d.%d: Not required!\n", t_info[j].process_no, t_info[j].thread_no);
+                } else {
+                    pthread_create(&thread_ids[j], &attr, thread_func, &t_info[j]);
+                }
             }
 
             // Wait until all threads are done
