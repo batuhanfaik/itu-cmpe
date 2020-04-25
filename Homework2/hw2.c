@@ -131,11 +131,8 @@ int main(int argc, char **argv) {
         // Check for faulty process interval
         if (process_interval_end < process_interval_start) {
             printf("Slave %d: Not required!\n", i + 1);
-            _exit(0);
-        }
-        if (fork() == 0) {
+        } else if (fork() == 0) {
             // Slave process starts
-
             printf("Slave %d: Started. ", i + 1);
             printf("Interval %d-%d\n", process_interval_start, process_interval_end);
 
