@@ -8,7 +8,7 @@
 * @ Development Environment: Ubuntu 18.04, GDB 8.3, C Standard 99
 * @ Description: The Moneybox Homework
 * @ Instructions:
-*      To compile:     gcc main.c -o hw3 -std=c99
+*      To compile:     gcc hw3.c -o hw3 -std=c99
 *      To run:         ./hw3 N ni nd ti td
 *      Example:        ./hw3 150 4 2 2 4
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -80,11 +80,6 @@ int main(int argc, char **argv) {
     decreaser_amount = (short) atoi(argv[3]);
     increaser_turn = (short) atoi(argv[4]);
     decreaser_turn = (short) atoi(argv[5]);
-//    money_thresh = 150;
-//    increaser_amount = 4;
-//    decreaser_amount = 2;
-//    increaser_turn = 2;
-//    decreaser_turn = 4;
 
     // Handle IPC Keys, create shared memory for semaphores and variables
     char cwd[256];
@@ -277,7 +272,8 @@ int main(int argc, char **argv) {
                     tmp = *money - p_info.fibonacci_vector[1];
                     if (tmp < 0) {  // Decreaser is greater than the money, kill all
                         printf("Decreaser Process %d: Current money is less than %d, signaling master to finish (%dth fibonacci number for decreaser %d)\n",
-                               p_info.process_task_idx, p_info.fibonacci_vector[1], p_info.fibonacci_idx, p_info.process_task_idx);
+                               p_info.process_task_idx, p_info.fibonacci_vector[1], p_info.fibonacci_idx,
+                               p_info.process_task_idx);
                         sem_unlock(master_sync, 1);
                     } else {    // Decrease the money
                         *money = tmp;
@@ -325,7 +321,8 @@ int main(int argc, char **argv) {
                     tmp = *money - p_info.fibonacci_vector[1];
                     if (tmp < 0) {  // Decreaser is greater than the money, kill all
                         printf("Decreaser Process %d: Current money is less than %d, signaling master to finish (%dth fibonacci number for decreaser %d)\n",
-                               p_info.process_task_idx, p_info.fibonacci_vector[1], p_info.fibonacci_idx, p_info.process_task_idx);
+                               p_info.process_task_idx, p_info.fibonacci_vector[1], p_info.fibonacci_idx,
+                               p_info.process_task_idx);
                         sem_unlock(master_sync, 1);
                     } else {    // Decrease the money
                         *money = tmp;
