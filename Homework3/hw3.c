@@ -1,5 +1,5 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * /
-* @ Filename: main.c
+* @ Filename: hw3.c
 * @ Date: 03-Jun-2020
 * @ AUTHOR: Batuhan Faik Derinbay
 * @ Student ID: 150180705
@@ -9,16 +9,18 @@
 * @ Description: The Moneybox Homework
 * @ Instructions:
 *      To compile:     gcc hw3.c -o hw3 -std=c99
-*      To run:         ./hw3 N ni nd ti td
+*      To run:         ./hw3 N Ni Nd ti td
 *      Example:        ./hw3 150 4 2 2 4
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#define _POSIX_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
-#include <sys/signal.h>
+#include <sys/types.h>
+#include <signal.h>
 #include <sys/shm.h>
 #include <unistd.h>
 
