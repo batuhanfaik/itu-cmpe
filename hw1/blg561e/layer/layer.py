@@ -285,8 +285,8 @@ class VanillaSDGOptimizer(object):
             :param m: module with weights to optimize
         '''
          # Your implementation starts
-        l2_term_W = np.sum(np.square(m.W))
-        l2_term_b = np.sum(np.square(m.b))
+        l2_term_W = m.W
+        l2_term_b = m.b
         m.W -= self.lr * (m.dW + self.reg * l2_term_W)
         m.b -= self.lr * (m.db + self.reg * l2_term_b)
         # End of your implementation
@@ -300,7 +300,7 @@ class SGDWithMomentum(VanillaSDGOptimizer):
         self.mu = mu
         # Save velocities for each model in a dict and use them when needed.
         # Modules can be hashed
-        self.velocities = {m: (0, 0) for m in model}
+        self.velocities = {m: 0 for m in model}
 
     def _optimize(self, m):
         '''
@@ -309,13 +309,12 @@ class SGDWithMomentum(VanillaSDGOptimizer):
             :param m: module with weights to optimize
         '''
         # Your implementation starts
-        velocity_W, velocity_b = self.velocities[m]
-        l2_term_W = np.sum(np.square(m.W))
-        l2_term_b = np.sum(np.square(m.b))
+        velocity_W = self.velocities[m]
+        l2_term_W = m.W
+        l2_term_b = m.b
         velocity_W = velocity_W*self.mu - self.lr * (m.dW + self.reg * l2_term_W)
-        velocity_b = velocity_b*self.mu - self.lr * (m.db + self.reg * l2_term_b)
         m.W += velocity_W
-        m.b += velocity_b
-        self.velocities[m] = (velocity_W, velocity_b)
+        m.b -= self.lr * (m.db + self.reg * l2_term_b)
+        self.velocities[m] = velocity_W
         # End of your implementation
         pass
