@@ -285,12 +285,12 @@ class VanillaSDGOptimizer(object):
             :param m: module with weights to optimize
         '''
          # Your implementation starts
-        optim_W = m.W.copy()
-        l2_term = np.sum(np.square(optim_W))
-        optim_W += - self.lr * m.dW + self.reg * l2_term
-        print("L2: {}, W: {}".format(l2_term, optim_W))
-        return optim_W
+        l2_term_W = np.sum(np.square(m.W))
+        l2_term_b = np.sum(np.square(m.b))
+        m.W -= self.lr * (m.dW + self.reg * l2_term_W)
+        m.b -= self.lr * (m.db + self.reg * l2_term_b)
         # End of your implementation
+        pass
        
 class SGDWithMomentum(VanillaSDGOptimizer):
     def __init__(self, model, lr=1e-3, regularization_str=1e-4, mu=.5):
@@ -309,5 +309,11 @@ class SGDWithMomentum(VanillaSDGOptimizer):
             :param m: module with weights to optimize
         '''
         # Your implementation starts
-        pass
+        velocity = self.velocities[m]
+        l2_term_W = np.sum(np.square(m.W))
+        l2_term_b = np.sum(np.square(m.b))
+        velocity = velocity*self.mu - self.lr * (m.dW + self.reg * l2_term_W)
+        m.W += velocity
+        self.velocities[m] = velocity
         # End of your implementation
+        pass
