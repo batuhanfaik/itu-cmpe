@@ -312,7 +312,7 @@ class SGDWithMomentum(VanillaSDGOptimizer):
         velocity_W = self.velocities[m]
         l2_term_W = m.W
         l2_term_b = m.b
-        velocity_W = velocity_W*self.mu - self.lr * (m.dW + self.reg * l2_term_W)
+        velocity_W = velocity_W * self.mu - self.lr * (m.dW + self.reg * l2_term_W)
         m.W += velocity_W
         m.b -= self.lr * (m.db + self.reg * l2_term_b)
         self.velocities[m] = velocity_W
