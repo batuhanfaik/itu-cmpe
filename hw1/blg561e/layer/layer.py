@@ -95,10 +95,8 @@ class YourActivation(Layer):
             :param x: outputs of previous layer
             :return: output of activation
         '''
-        # Lets have an activation of X^2
-        # TODO: CHANGE IT
         self.x = x.copy()
-        out = x ** 2
+        out = x * 1/(1 + np.exp(-x))
         return out
 
     def backward(self, dprev):
@@ -106,9 +104,7 @@ class YourActivation(Layer):
             :param dprev: gradient of next layer:
             :return: downstream gradient
         '''
-        # TODO: CHANGE IT
-        # Example: derivate of X^2 is 2X
-        dx = dprev * self.x * 2
+        dx = dprev * (self.x * 1/(1 + np.exp(-self.x)) + 1/(1 + np.exp(-self.x)) * (1 - self.x * 1/(1 + np.exp(-self.x))))
         return dx
 
 
