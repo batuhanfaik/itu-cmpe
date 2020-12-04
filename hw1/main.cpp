@@ -1,9 +1,9 @@
 #include<iostream>
 #include<fstream>
 #include<string>
-#include <vector>
+#include <vector>   // Unnecessary flex
 
-#include "Sale.h"
+#include "sale.h"
 
 using namespace std;
 

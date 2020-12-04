@@ -4,4 +4,4 @@ project(hw1)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(hw1
-        main.cpp Sale.cpp Sale.h)
+        main.cpp sale.cpp sale.h quicksort.cpp quicksort.h)

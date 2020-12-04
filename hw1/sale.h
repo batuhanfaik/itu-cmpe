@@ -17,6 +17,11 @@ class Sale {
     float total_profit;
 public:
     Sale(string, string, string, int, float);
+    string get_country();
+    string get_item_type();
+    string get_order_id();
+    int get_units_sold() const;
+    float get_total_profit() const;
     void print();
     friend ostream &operator<<(ostream &, Sale const &);
 };
