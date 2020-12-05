@@ -37,14 +37,13 @@ float Sale::get_total_profit() const {
     return this->total_profit;
 }
 
-void Sale::print() {
+void Sale::print() const {
     cout << "Sale Item\nCountry: " << this->country << endl << "Item Type: " << this->item_type << endl
     << "Order ID: " << this->order_id << endl << "Units Sold: " << this->units_sold << endl << "Total Profit: "
     << this->total_profit << endl;
 }
 
-ostream &operator<<(ostream & os, const Sale & sale) {  // Unnecessary flex
-    return os << "Sale Item\nCountry: " << sale.country << endl << "Item Type: " << sale.item_type << endl
-              << "Order ID: " << sale.order_id << endl << "Units Sold: " << sale.units_sold << endl << "Total Profit: "
-              << sale.total_profit << endl;;
+ostream &operator<<(ostream & os, const Sale & sale) {
+    return os << sale.country << "\t" << sale.item_type << "\t" << sale.order_id << "\t" << sale.units_sold << "\t"
+              << sale.total_profit << "\n";
 }

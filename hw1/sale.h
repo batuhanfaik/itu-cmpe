@@ -22,7 +22,7 @@ public:
     string get_order_id();
     int get_units_sold() const;
     float get_total_profit() const;
-    void print();
+    void print() const;
     friend ostream &operator<<(ostream &, Sale const &);
 };
 

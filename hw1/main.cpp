@@ -2,21 +2,24 @@
 #include<fstream>
 #include<string>
 #include <vector>   // Unnecessary flex
+#include <chrono>   // Required to measure time
 
 #include "sale.h"
 #include "quicksort.h"
 
 using namespace std;
 
+bool MEASURE_TIME = true;
+bool PRINT_SORTED = false;
+
 int main(int argc, char** argv) {
-    int N = 100;
+    int N = 10;
     if (argc < 2){
-        cout << "An N value needs to be passed in.\nThis run will assume that N=100" << endl;
+        cout << "An N value needs to be passed in.\nThis run will assume that N=10" << endl;
     } else if (argc > 2){
-        cout << "More than one parameters are passed in.\nThis run will assume that N=100" << endl;
+        cout << "More than one parameters are passed in.\nThis run will assume that N=10" << endl;
     } else {
         N = stoi(argv[1]);
-        cout << "N=" << N << endl;
     }
 
     ifstream file;
@@ -48,12 +51,34 @@ int main(int argc, char** argv) {
         sale_items.push_back(sale_item);
     }
 
-    quickSort(sale_items, 0, N-1);
-
-    // Print sale items using a range based for loop
-    for (const auto & sale_item : sale_items) {
-        cout << sale_item;
+    if (MEASURE_TIME){
+        auto start_time = chrono::high_resolution_clock::now();
+        quickSort(sale_items, 0, N - 1);
+        auto stop_time = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::microseconds>(stop_time - start_time);
+        cout << "For N=" << N << endl << "Elapsed time of execution: " << duration.count() << " microseconds" << endl;
+    } else {
+        quickSort(sale_items, 0, N - 1);
     }
+
+    if (PRINT_SORTED){
+        // Print sale items using a range based for loop
+        for (const auto & sale_item : sale_items) {
+            sale_item.print();
+        }
+    }
+
+    // Write to file
+    ofstream sorted ("sorted.txt");
+    if (sorted.is_open()){
+        sorted << "Country\t"<<"Item Type\t"<<"Order ID\t"<<"Units Sold\t"<<"Total Profit\n";
+        for (const auto & sale_item : sale_items) {
+            sorted << sale_item;
+        }
+        sorted.close();
+    }
+    // Free up the memory
+    sale_items.erase(sale_items.begin(), sale_items.end());
 
     return 0;
 }
