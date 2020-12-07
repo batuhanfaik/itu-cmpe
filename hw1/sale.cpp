@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <utility>
+#include <iomanip>
 
 #include "sale.h"
 
@@ -45,5 +46,5 @@ void Sale::print() const {
 
 ostream &operator<<(ostream & os, const Sale & sale) {
     return os << sale.country << "\t" << sale.item_type << "\t" << sale.order_id << "\t" << sale.units_sold << "\t"
-              << sale.total_profit << "\n";
+              << sale.total_profit << fixed << setprecision(2) << "\n";
 }
