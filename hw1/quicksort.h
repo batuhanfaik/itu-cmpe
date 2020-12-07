@@ -12,6 +12,6 @@
 using namespace std;
 
 int partition(vector<Sale>&, int, int);
-void quickSort(vector<Sale>&, int, int);
+void quicksort(vector<Sale>&, int, int);
 
 #endif //HW1_QUICKSORT_H

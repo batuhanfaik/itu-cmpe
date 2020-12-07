@@ -1,7 +1,10 @@
+// This homework can be compiled using the following command
+// g++ -o a.out main.cpp sale.cpp quicksort.cpp
+
 #include<iostream>
 #include<fstream>
 #include<string>
-#include <vector>   // Unnecessary flex
+#include <vector>
 #include <chrono>   // Required to measure time
 
 #include "sale.h"
@@ -51,14 +54,15 @@ int main(int argc, char** argv) {
         sale_items.push_back(sale_item);
     }
 
+    // Measure time of the sorting algorithm or sort only
     if (MEASURE_TIME){
         auto start_time = chrono::high_resolution_clock::now();
-        quickSort(sale_items, 0, N - 1);
+        quicksort(sale_items, 0, N - 1);
         auto stop_time = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::microseconds>(stop_time - start_time);
         cout << "For N=" << N << endl << "Elapsed time of execution: " << duration.count() << " microseconds" << endl;
     } else {
-        quickSort(sale_items, 0, N - 1);
+        quicksort(sale_items, 0, N - 1);
     }
 
     if (PRINT_SORTED){

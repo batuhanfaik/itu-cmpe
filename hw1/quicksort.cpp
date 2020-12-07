@@ -4,7 +4,7 @@
 * @ AUTHOR: batuhanfaik
 * @ Copyright (C) 2020 Batuhan Faik Derinbay
 * @ Project: hw1
-* @ Description: Not available
+* @ Description: Implementation of the quicksort algorithm
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include <algorithm>
@@ -36,10 +36,10 @@ int partition(vector<Sale> &sale_items, int start_index, int end_index) {
     return pivot_index;
 }
 
-void quickSort(vector<Sale> &sale_items, int start_index, int end_index) {
+void quicksort(vector<Sale> &sale_items, int start_index, int end_index) {
     if (start_index < end_index) {
         int partition_index = partition(sale_items, start_index, end_index);
-        quickSort(sale_items, start_index, partition_index - 1);
-        quickSort(sale_items, partition_index + 1, end_index);
+        quicksort(sale_items, start_index, partition_index - 1);
+        quicksort(sale_items, partition_index + 1, end_index);
     }
 }
