@@ -8,7 +8,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 from . import exceptions
-
+from . import methods
 
 # class GameNotInitiatedCorrectly(exceptions.GameNotInitiatedCorrectly):
 #     pass
