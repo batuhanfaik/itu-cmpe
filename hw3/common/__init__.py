@@ -9,6 +9,7 @@
 
 from . import exceptions
 from . import methods
+from . import detector
 
 # class GameNotInitiatedCorrectly(exceptions.GameNotInitiatedCorrectly):
 #     pass
