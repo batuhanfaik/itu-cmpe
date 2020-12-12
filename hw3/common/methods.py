@@ -30,6 +30,15 @@ def center_of_button_on_screen(button_img_path, button_name=""):
         return pyautogui.center(button)
 
 
+def prepare_web_game(secs=10):
+    if not pyautogui.locateOnScreen("assets/fullscreen-button.png"):
+        pyautogui.alert(text="Please launch the game within the next {} seconds.".format(secs),
+                        title="Game is not ready!", button='OK')
+        time.sleep(secs)
+        if not pyautogui.locateOnScreen("assets/fullscreen-button.png"):
+            raise GameNotInitiatedCorrectly()
+
+
 def go_to_page(button_img_path, button_name=""):
     fullscreen_button = center_of_button_on_screen("assets/fullscreen-button.png", "fullscreen")
     pyautogui.click(fullscreen_button)

@@ -6,20 +6,21 @@
 # @ Project: hw3
 # @ Description: Takes a screenshot of the All shapes, applies Sobel filter and saves
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 import cv2
 import numpy as np
 import pyautogui
-import time
 
 import common.methods as game
 
 if __name__ == "__main__":
-    # Switch to the game (Tested only on Firefox)
-    time.sleep(10)
+    # Switch to the game within 10 seconds (Tested only on Firefox)
+    game.prepare_web_game(10)
 
     # Go to all shapes screen
     all_shapes_button, button_name = "assets/all-shapes-button.png", "all shapes"
     game_region = game.go_to_page(all_shapes_button, button_name)
+    # Take a screenshot of the game
     ss = np.array(pyautogui.screenshot(region=game_region))
     ss_gray = cv2.cvtColor(ss, cv2.COLOR_RGB2GRAY)
 
@@ -41,6 +42,6 @@ if __name__ == "__main__":
     edge_magnitude = np.sqrt(np.square(sobel_x) + np.square(sobel_y))
     edge_magnitude *= 255 / np.max(edge_magnitude)
 
-    cv2.imwrite("output.png", edge_magnitude.astype(np.uint8))
+    cv2.imwrite("output_sobel.png", edge_magnitude.astype(np.uint8))
 
     game.back_to_original_state()
