@@ -11,7 +11,7 @@ import torch.optim as optim
 from torchvision import datasets, models, transforms
 from efficient import EfficientNet
 from collections import OrderedDict
-from model import Net
+
 
 
 
@@ -60,7 +60,7 @@ val_loader = torch.utils.data.DataLoader(DataReader(mode='val', fold_name="folds
 										  num_workers=numworkers, drop_last=True)
 
 
-experiment_name = "experiment_1"
+experiment_name = "experiment_2"
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 os.mkdir(experiment_name)
@@ -117,9 +117,9 @@ optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_deca
 loss = torch.nn.CrossEntropyLoss().to(device)
 
 
-all_tr_losses = np.zeros((num_epochs, 1))
+all_tr_losses = torch.zeros(num_epochs, 1)
 all_tr_accuracies = np.zeros((num_epochs, 1))
-all_test_losses = np.zeros((num_epochs, 1))
+all_test_losses = torch.zeros(num_epochs, 1)
 all_test_accuracies = np.zeros((num_epochs, 1))
 
 for epoch_id in range(1, num_epochs + 1):
@@ -172,7 +172,8 @@ for epoch_id in range(1, num_epochs + 1):
 	print("Time (s): " + str(time.time() - time_start))
 	print("--------------------------------------")
 
-	all_tr_losses[epoch_id] = total_loss.cpu()
+	#all_tr_losses[epoch_id] = total_loss.cpu()
+	all_tr_losses[epoch_id] = total_loss / len(train_loader)
 	all_tr_accuracies[epoch_id] = acc
 
 	save_res(epoch_id,total_loss,len(train_loader),acc,time_start,res_name,"train")
@@ -213,18 +214,20 @@ for epoch_id in range(1, num_epochs + 1):
 		print("Time (s): " + str(time.time() - time_start))
 		print("--------------------------------------")
 
-		all_test_losses[epoch_id] = total_loss.cpu()
+		#all_test_losses[epoch_id] = total_loss.cpu()
+		all_test_losses[epoch_id] = total_loss / len(val_loader)
 		all_test_accuracies[epoch_id] = acc
 
 	save_res(epoch_id,total_loss,len(val_loader),acc,time_start,res_name,"val")
 
-	all_tr_losses[all_tr_losses == 0] = np.nan
-	all_test_losses[all_test_losses == 0] = np.nan
+	trainig_loss = all_tr_losses.numpy()
+	trainig_loss = np.reshape(trainig_loss, (trainig_loss.shape[1] * trainig_loss.shape[0], -1))
 
+	val_loss = all_test_losses.numpy()
+	val_loss = np.reshape(val_loss, (val_loss.shape[1] * val_loss.shape[0], -1))
 
-
-	trainig_loss = np.reshape(all_tr_losses, (all_tr_losses.shape[1] * all_tr_losses.shape[0], -1))
-	val_loss = np.reshape(all_test_losses, (all_test_losses.shape[1] * all_test_losses.shape[0], -1))
+	trainig_loss[trainig_loss == 0] = np.nan
+	val_loss[val_loss == 0] = np.nan
 
 	plt.plot(trainig_loss, label='Train')
 	plt.plot(val_loss, label='Validation')
