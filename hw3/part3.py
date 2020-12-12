@@ -15,14 +15,15 @@ import pyautogui
 import common.methods as game
 
 
-def harris_corner_detector(img, block_size=3, threshold=10000, k=0.05, downscaling_factor=1):
+def corner_detector(img, block_size=3, threshold=10000, k=0.05, downscaling_factor=1,
+                           detector="harris"):
     corners = []
     output_img = cv2.cvtColor(img.copy(), cv2.COLOR_GRAY2RGB)
 
     # Downscale the input image for faster processing
     if downscaling_factor > 1:
-        w = int(img.shape[1] * 1/downscaling_factor)
-        h = int(img.shape[0] * 1/downscaling_factor)
+        w = int(img.shape[1] * 1 / downscaling_factor)
+        h = int(img.shape[0] * 1 / downscaling_factor)
         img = cv2.resize(img, (w, h), interpolation=cv2.INTER_AREA)
         upscale_ratio = downscaling_factor
     else:
@@ -58,12 +59,15 @@ def harris_corner_detector(img, block_size=3, threshold=10000, k=0.05, downscali
             g = np.array([[w_Ixx, w_Ixy], [w_Ixy, w_Iyy]])
 
             # Calculate R = C(G)
-            r = np.linalg.det(g) - k * np.square(np.trace(g))
+            if detector == "shi":
+                r = min(g[0][0], g[1][1])
+            else:
+                r = np.linalg.det(g) - k * np.square(np.trace(g))
             if r > threshold:
                 x_, y_ = int(x * upscale_ratio), int(y * upscale_ratio)
-                p = int(np.ceil(upscale_ratio / 2))    # padding
+                p = int(np.ceil(upscale_ratio / 2))  # padding
                 corners.append([x_, y_, r])
-                output_img[y_-p:y_+p, x_-p:x_+p] = (0, 255, 0)
+                output_img[y_ - p:y_ + p, x_ - p:x_ + p] = (0, 255, 0)
 
     return corners, output_img
 
@@ -99,7 +103,8 @@ if __name__ == "__main__":
     #    Threshold = 150000
     #    k = 0.05
     #    Downscaling factor = 3
-    corners, shapes_marked = harris_corner_detector(shapes, 9, 15000, 0.05, 1)
+    #    Detector = "harris"
+    corners, shapes_marked = corner_detector(shapes, 9, 15000, 0.05, 1, "harris")
     edges_colored = cv2.cvtColor(edges, cv2.COLOR_GRAY2RGB)
     edges_colored[y_upper_bound:y_lower_bound, :] = shapes_marked
 
