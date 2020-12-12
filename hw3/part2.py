@@ -23,7 +23,9 @@ if __name__ == "__main__":
     # Take a screenshot of the game
     ss = np.array(pyautogui.screenshot(region=game_region))
     ss_gray = cv2.cvtColor(ss, cv2.COLOR_RGB2GRAY)
+    game.back_to_original_state()
 
+    # Calculate the edges
     hysteresis_thresholds = (200, 200)
     aperture_size = 5
     l2_gradient = True
@@ -32,4 +34,8 @@ if __name__ == "__main__":
 
     cv2.imwrite("output_canny.png", edges)
 
-    game.back_to_original_state()
+    # Find contours
+    contours, hierarchy = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    # Draw contours
+    cv2.drawContours(ss, contours, -1, (0, 255, 0), 3)
+    cv2.imwrite("output_contours.png", ss)
