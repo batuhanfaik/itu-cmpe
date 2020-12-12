@@ -92,13 +92,14 @@ if __name__ == "__main__":
     y_lower_bound = int(0.62 * game_region[3])
     shapes = edges[y_upper_bound:y_lower_bound, :]
 
-    # The values for the corner detector are as follows:
+    # Optimal values for the corner detector for fast processing are as follows
+    # With the current values, the processing will take some time
     #    Input image = cropped shapes
     #    Block size = 3x3
     #    Threshold = 150000
     #    k = 0.05
     #    Downscaling factor = 3
-    corners, shapes_marked = harris_corner_detector(shapes, 3, 15000, 0.05, 3)
+    corners, shapes_marked = harris_corner_detector(shapes, 9, 15000, 0.05, 1)
     edges_colored = cv2.cvtColor(edges, cv2.COLOR_GRAY2RGB)
     edges_colored[y_upper_bound:y_lower_bound, :] = shapes_marked
 
