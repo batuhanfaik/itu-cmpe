@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import time
+import re
 import torch.nn.functional as F
 from loader import DataReader
 import torch.nn as nn
@@ -41,26 +42,40 @@ def save_res(epoch_id, total_loss, loader_len, acc, time_start, res_name, mode):
         f.write("\n")
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+def prepare_experiment(project_path=".", experiment_name=None):
+    next_experiment_number = 0
+    for directory in os.listdir(project_path):
+        search_result = re.search("experiment_(.*)", directory)
+        if search_result:
+            next_experiment_number = int(search_result[1]) + 1
 
+    if not experiment_name:
+        experiment_name = "experiment_{}".format(next_experiment_number)
+    else:
+        experiment_name = experiment_name
+
+    os.mkdir(experiment_name)
+    os.mkdir(experiment_name + '/graphs/')
+    os.mkdir(experiment_name + '/models/')
+    os.mkdir(experiment_name + '/code/')
+
+    return experiment_name
+
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+DATASET_PATH = "/mnt/sdb1/datasets/cassava-leaf-disease-classification"
 BATCH_SIZE = 8
-numworkers = 1
+num_workers = 1
 
 train_loader = torch.utils.data.DataLoader(
-    DataReader(mode='train', fold_name="folds/fold_1_train.txt"), batch_size=BATCH_SIZE,
-    shuffle=True,
-    num_workers=numworkers, drop_last=True)
-val_loader = torch.utils.data.DataLoader(DataReader(mode='val', fold_name="folds/fold_1_test.txt"),
-                                         batch_size=BATCH_SIZE, shuffle=True,
-                                         num_workers=numworkers, drop_last=True)
+    DataReader(mode='train', fold_name="folds/fold_1_train.txt", path=DATASET_PATH),
+    batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
+val_loader = torch.utils.data.DataLoader(
+    DataReader(mode='val', fold_name="folds/fold_1_test.txt", path=DATASET_PATH),
+    batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 
-experiment_name = "experiment_2"
+experiment_name = prepare_experiment()
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
-
-os.mkdir(experiment_name)
-os.mkdir(experiment_name + '/graphs/')
-os.mkdir(experiment_name + '/models/')
-os.mkdir(experiment_name + '/code/')
 
 all_python_files = os.listdir('.')
 
@@ -72,33 +87,6 @@ num_classes = 5
 num_epochs = 100
 
 model = EfficientNet.from_name('efficientnet-b0')
-
-# Set whether to freeze model parameters (=False : Freeze)
-"""
-for param in model.parameters():
-	param.requires_grad = True
-"""
-
-"""
-# Add fully connected classifier
-classifier = nn.Sequential(OrderedDict([
-	#("fc1", nn.Linear(2560, 1024)),
-	#("fc1", nn.Linear(1408, 1024)),
-	("fc1", nn.Linear(4, 1280)),
-	("relu1", nn.ReLU()),
-	("dropout1", nn.Dropout(0.5)),
-	("fc2", nn.Linear(1280, 512)),
-	("relu2", nn.ReLU()),
-	("dropout2", nn.Dropout(0.5)),
-	("fc3", nn.Linear(512, 256)),
-	("relu3", nn.ReLU()),
-	("dropout3", nn.Dropout(0.5)),
-	("fc4", nn.Linear(256, num_classes))
-	# ("out", nn.LogSoftmax(dim=1))
-]))
-
-model._fc = classifier
-"""
 
 model = model.to(device)
 lr = 0.00256
