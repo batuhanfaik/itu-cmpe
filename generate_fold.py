@@ -1,36 +1,47 @@
 import numpy as np
 import sys
-import random
+import os
 import pandas as pd
-from sklearn.model_selection import KFold
-
-random.seed(324234)  # TODO: Change seed to ITU because why not
+from sklearn.model_selection import KFold, train_test_split
 
 
-def write_to_file(fold, train, test):
-    fname_train = "fold_" + str(fold) + "_train.txt"
-    fname_test = "fold_" + str(fold) + "_test.txt"
+def write_to_file(fold, train, val):
+    if "folds" not in os.listdir("."):
+        os.mkdir("folds")
+    fname_train = "folds/fold_" + str(fold) + "_train.txt"
+    fname_val = "folds/fold_" + str(fold) + "_val.txt"
 
     with open(fname_train, 'w') as file:
         for t in train:
             data = t + "\n"
             file.write(data)
 
-    with open(fname_test, 'w') as file:
-        for t in test:
+    with open(fname_val, 'w') as file:
+        for t in val:
             data = t + "\n"
             file.write(data)
 
 
-df = pd.read_csv("train.csv")
-images = df['image_id']
+DATASET_PATH = "/mnt/sdb1/datasets/cassava-leaf-disease-classification"
+df = pd.read_csv(os.path.join(DATASET_PATH, "train.csv"))
 
-kf = KFold(n_splits=5, shuffle=True)
-kf.get_n_splits(images)
+# Train: 90%, Test: 10%
+image_id, label = df["image_id"], df["label"]
+train, test, train_label, test_label = train_test_split(image_id, label, test_size=0.1,
+                                                        random_state=1773)
+
+# Write the test file
+with open("test.txt", 'w') as file:
+    for t in test:
+        data = t + "\n"
+        file.write(data)
+
+kf = KFold(n_splits=5, shuffle=True, random_state=2020)
+kf.get_n_splits(train)
 
 fold = 1
-
-for train_index, test_index in kf.split(images):
-    X_train, X_test = images[train_index], images[test_index]
-    write_to_file(fold, X_train, X_test)
+for train_index, val_index in kf.split(train):
+    image_train, image_val = train.iloc[train_index], train.iloc[val_index]
+    label_train, label_val = train_label.iloc[train_index], train_label.iloc[val_index]
+    write_to_file(fold, image_train, image_val)
     fold += 1
