@@ -38,8 +38,6 @@ def corner_detector(img, block_size=3, threshold=10000, k=0.05, downscaling_fact
     Ixy = dy * dx
     Iyy = dy * dy
 
-    x_prev, y_prev = -255, -255
-
     for y in range(offset, y_range):
         for x in range(offset, x_range):
             # Coordinates of the window
@@ -65,8 +63,6 @@ def corner_detector(img, block_size=3, threshold=10000, k=0.05, downscaling_fact
                 x_, y_ = int(x * upscale_ratio), int(y * upscale_ratio)
                 p = int(np.ceil(upscale_ratio / 2))  # padding
                 output_img[y_-p:y_+p, x_-p:x_+p] = (0, 255, 0)
-                if not (x_prev-8 < x < x_prev+8 and y_prev-8 < y < y_prev+8):
-                    corners.append([x_, y_, r])
-                    x_prev, y_prev = x, y
+                corners.append([x_, y_, r])
 
     return corners, output_img

@@ -11,9 +11,9 @@ import time
 import cv2
 import numpy as np
 import pyautogui
+from scipy.ndimage import label
 
 import common.methods as game
-from common.detector import corner_detector
 from common.exceptions import GameNotInitiatedCorrectly
 
 
@@ -22,15 +22,18 @@ def check_if_all_pixels_are_black(img, threshold):
 
 
 if __name__ == "__main__":
+    # Ask the user which song they would like to play
+    song = pyautogui.confirm(text="Which song would you like to play?", title="Song Selection",
+                             buttons=['Vabank', 'Shame'])
+
     # Switch to the game within 10 seconds (Tested only on Firefox)
     game.prepare_web_game(10)
 
-    song = 2
-    if song == 1:  # Play "Vabank"
-        vabank_button, button_name = "assets/vabank-button.png", "vabank"
+    if song == "Vabank":  # Play "Vabank"
+        vabank_button, button_name = "assets/vabank-button.png", song
         game_region = game.go_to_page(vabank_button, button_name)
-    elif song == 2:  # Play "Shame"
-        shame_button, button_name = "assets/shame-button.png", "shame"
+    elif song == "Shame":  # Play "Shame"
+        shame_button, button_name = "assets/shame-button.png", song
         game_region = game.go_to_page(shame_button, button_name)
     else:  # No song selected
         print("No song has been selected")
@@ -46,21 +49,30 @@ if __name__ == "__main__":
     while no_of_presses < 18:
         # Take a screenshot around the control region
         ss = np.array(pyautogui.screenshot(region=control_region))
-        if check_if_all_pixels_are_black(ss[patch_h:patch_h+3, patch_w:patch_w+3, :], 100):
+        # Patch that checks if all pixels are black is 3x3
+        if check_if_all_pixels_are_black(ss[patch_h:patch_h+3, patch_w:patch_w+3, :], 10):
             ss_gray = cv2.cvtColor(ss, cv2.COLOR_RGB2GRAY)
-            # Calculate the edges
-            edges = cv2.Canny(ss_gray, 200, 200, apertureSize=5, L2gradient=True)
-            corners, shapes_marked = corner_detector(edges, 3, 15000, 0.05, 3, "harris")
-            if len(corners) > 40:
+            # Get a 2D matrix containing r values for corners
+            dst = cv2.dilate(cv2.cornerHarris(ss_gray, 5, 3, 0.04), None)
+            # Mask corner regions
+            regions = np.zeros(ss_gray.shape)
+            regions[dst > 0.01 * np.max(dst)] = 1
+            # Count the number of corners
+            _, num_corners = label(regions)
+
+            time.sleep(0.2)    # Wait until the object is within the recognition area
+            # Press the necessary keys
+            if num_corners == 10:    # Star
                 pyautogui.press("d")
-            elif len(corners) > 20:
-                pyautogui.press("s")
-            elif len(corners) > 16:
+            elif num_corners == 6:    # Hexagon
                 pyautogui.press("f")
-            else:
+            elif num_corners == 4:    # Square
+                pyautogui.press("s")
+            else:    # Triangle
                 pyautogui.press("a")
 
             no_of_presses += 1
+            time.sleep(0.4)    # Wait until the object disappears
 
     time.sleep(5)    # Wait until the dance is complete
     game.back_to_original_state()
