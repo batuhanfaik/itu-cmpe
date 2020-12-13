@@ -45,7 +45,7 @@ def go_to_page(button_img_path, button_name=""):
     time.sleep(4)    # Wait until fullscreen notification is closed
     button = center_of_button_on_screen(button_img_path, button_name)
     pyautogui.click(button)
-    time.sleep(0.1)    # Wait until shapes appear
+    time.sleep(0.25)    # Wait until shapes appear
     game_size = get_resolution()
     game_region = (0, 0, game_size[0], game_size[1])
 
@@ -62,4 +62,5 @@ def back_to_original_state():
         pyautogui.click(back_button)
         pyautogui.press("esc")
     except GameNotInitiatedCorrectly:
+        pyautogui.press("esc")
         pyautogui.press("esc")

@@ -12,8 +12,8 @@ from pyscreeze import ImageNotFoundException
 
 class GameNotInitiatedCorrectly(ImageNotFoundException):
     def __init__(self, message=""):
-        self.message = "Game is not started correctly or not fully visible.\nP" \
-                       "lease launch it on Firefox, make sure " \
+        self.message = "Game is not started correctly or not fully visible.\n" \
+                       "Please launch it on Firefox, make sure " \
                        "the game is visible and don't enter fullscreen mode. " \
                        "The program will do so automatically.\n"
         self.message += message

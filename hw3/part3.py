@@ -7,7 +7,6 @@
 # @ Description: Implementation of minimum eigenvalue corner detector
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-
 import cv2
 import numpy as np
 import pyautogui
