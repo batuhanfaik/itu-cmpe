@@ -39,3 +39,4 @@ if __name__ == "__main__":
     # Draw contours
     cv2.drawContours(ss, contours, -1, (0, 255, 0), 3)
     cv2.imwrite("output_contours.png", ss)
+    print("Part 2 completed. Check the outputs.")

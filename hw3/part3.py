@@ -39,9 +39,9 @@ if __name__ == "__main__":
     y_lower_bound = int(0.62 * game_region[3])
     shapes = edges[y_upper_bound:y_lower_bound, :]
 
-    # Optimal values for the corner detector for fast processing are as follows
     # With the current values, the processing will take some time
-    #    Input image = cropped shapes
+    # Optimal values for the corner detector for fast processing are as follows:
+    #    Input image = shapes
     #    Block size = 3x3
     #    Threshold = 150000
     #    k = 0.05
@@ -52,3 +52,4 @@ if __name__ == "__main__":
     edges_colored[y_upper_bound:y_lower_bound, :] = shapes_marked
 
     cv2.imwrite("output_corners.png", edges_colored)
+    print("Part 3 completed. Check the outputs.")

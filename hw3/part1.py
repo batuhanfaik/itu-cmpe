@@ -24,6 +24,8 @@ if __name__ == "__main__":
     ss = np.array(pyautogui.screenshot(region=game_region))
     ss_gray = cv2.cvtColor(ss, cv2.COLOR_RGB2GRAY)
 
+    game.back_to_original_state()
+
     # Define filters (sizes available are 3 and 5)
     filter_size = 3
     if filter_size == 5:
@@ -44,4 +46,4 @@ if __name__ == "__main__":
 
     cv2.imwrite("output_sobel.png", edge_magnitude.astype(np.uint8))
 
-    game.back_to_original_state()
+    print("Part 1 completed. Check the outputs.")

@@ -6,8 +6,8 @@
 # @ Project: hw3
 # @ Description Play the dancing game
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-import time
 
+import time
 import cv2
 import numpy as np
 import pyautogui
@@ -23,8 +23,10 @@ def check_if_all_pixels_are_black(img, threshold):
 
 if __name__ == "__main__":
     # Ask the user which song they would like to play
+    print("Waiting for the user to choose a song...")
     song = pyautogui.confirm(text="Which song would you like to play?", title="Song Selection",
                              buttons=['Vabank', 'Shame'])
+    print("Now playing: {}".format(song))
 
     # Switch to the game within 10 seconds (Tested only on Firefox)
     game.prepare_web_game(10)
@@ -36,9 +38,9 @@ if __name__ == "__main__":
         shame_button, button_name = "assets/shame-button.png", song
         game_region = game.go_to_page(shame_button, button_name)
     else:  # No song selected
-        print("No song has been selected")
-        raise GameNotInitiatedCorrectly()
+        raise GameNotInitiatedCorrectly("No song has been selected")
 
+    # Capturing region calculations
     region_left, region_top = game_region[2] // 2, int(game_region[3] * 0.76)  # w, h
     region_w, region_h = int(game_region[2] * 0.115), int(game_region[3] - region_top)
     control_region = (region_left + region_w // 2.4, region_top, int(region_w + region_w // 2), region_h)
@@ -74,5 +76,7 @@ if __name__ == "__main__":
             no_of_presses += 1
             time.sleep(0.4)    # Wait until the object disappears
 
+    print("Song finished. Check the accuracy.")
     time.sleep(5)    # Wait until the dance is complete
     game.back_to_original_state()
+    print("Part 4 completed.")
