@@ -1,0 +1,5 @@
+pyautogui~=0.9.48
+opencv-python~=4.4.0.46
+numpy~=1.19.4
+pyscreeze~=0.1.26
+scipy~=1.1.0
