@@ -71,7 +71,7 @@ train_loader = torch.utils.data.DataLoader(
     DataReader(mode='train', fold_name="folds/fold_1_train.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 val_loader = torch.utils.data.DataLoader(
-    DataReader(mode='val', fold_name="folds/fold_1_test.txt", path=DATASET_PATH),
+    DataReader(mode='val', fold_name="folds/fold_1_val.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 
 experiment_name = prepare_experiment()
