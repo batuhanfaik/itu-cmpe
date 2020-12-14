@@ -41,28 +41,36 @@ def prepare_web_game(secs=10):
             raise GameNotInitiatedCorrectly()
 
 
-def go_to_page(button_img_path, button_name=""):
+def go_to_page(page_name):
     fullscreen_button = center_of_button_on_screen("assets/fullscreen-button.png", "fullscreen")
     pyautogui.click(fullscreen_button)
     time.sleep(4)    # Wait until fullscreen notification is closed
-    button = center_of_button_on_screen(button_img_path, button_name)
-    pyautogui.click(button)
-    time.sleep(0.25)    # Wait until shapes appear
+
     game_size = get_resolution()
     game_region = (0, 0, game_size[0], game_size[1])
 
-    # Check if the button is within the game region
-    if not button[0] < game_size[0] and button[1] < game_size[1]:
-        raise GameSizeNotCorrect("Please set the game_size variable manually.")
+    all_shapes_coords = (int(game_size[0] * 0.97), int(game_size[1] * 0.17))
+    vabank_coords = (int(game_size[0] * 0.97), int(game_size[1] * 0.27))
+    shame_coords = (int(game_size[0] * 0.97), int(game_size[1] * 0.38))
+
+    if page_name == "All-Shapes":
+        button = all_shapes_coords
+    elif page_name == "Vabank":
+        button = vabank_coords
+    elif page_name == "Shame":
+        button = shame_coords
+    else:
+        raise Exception("Button is not valid")
+
+    pyautogui.click(button)
+    time.sleep(0.25)    # Wait until shapes appear
 
     return game_region
 
 
 def back_to_original_state():
-    try:
-        back_button = center_of_button_on_screen("assets/back-button.png", "back")
-        pyautogui.click(back_button)
-        pyautogui.press("esc")
-    except GameNotInitiatedCorrectly:
-        pyautogui.press("esc")
-        pyautogui.press("esc")
+    game_size = get_resolution()
+    back_coords = (int(game_size[0] * 0.97), int(game_size[1] * 0.95))
+    pyautogui.click(back_coords)
+    pyautogui.press("esc")
+    pyautogui.press("esc")

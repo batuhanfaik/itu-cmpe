@@ -20,8 +20,7 @@ if __name__ == "__main__":
     game.prepare_web_game(10)
 
     # Go to all shapes screen
-    all_shapes_button, button_name = "assets/all-shapes-button.png", "all shapes"
-    game_region = game.go_to_page(all_shapes_button, button_name)
+    game_region = game.go_to_page("All-Shapes")
     # Take a screenshot of the game
     ss = np.array(pyautogui.screenshot(region=game_region))
     ss_gray = cv2.cvtColor(ss, cv2.COLOR_RGB2GRAY)

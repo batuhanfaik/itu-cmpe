@@ -31,11 +31,9 @@ if __name__ == "__main__":
     game.prepare_web_game(10)
 
     if song == "Vabank":  # Play "Vabank"
-        vabank_button, button_name = "assets/vabank-button.png", song
-        game_region = game.go_to_page(vabank_button, button_name)
+        game_region = game.go_to_page(song)
     elif song == "Shame":  # Play "Shame"
-        shame_button, button_name = "assets/shame-button.png", song
-        game_region = game.go_to_page(shame_button, button_name)
+        game_region = game.go_to_page(song)
     else:  # No song selected
         raise GameNotInitiatedCorrectly("No song has been selected")
 
