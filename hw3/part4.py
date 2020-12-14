@@ -11,7 +11,6 @@ import time
 import cv2
 import numpy as np
 import pyautogui
-from scipy.ndimage import label
 
 import common.methods as game
 from common.exceptions import GameNotInitiatedCorrectly
@@ -57,10 +56,12 @@ if __name__ == "__main__":
             # Get a 2D matrix containing r values for corners
             dst = cv2.dilate(cv2.cornerHarris(ss_gray, 5, 3, 0.04), None)
             # Mask corner regions
-            regions = np.zeros(ss_gray.shape)
+            regions = np.zeros(ss_gray.shape, dtype=np.uint8)
             regions[dst > 0.01 * np.max(dst)] = 1
             # Count the number of corners
-            _, num_corners = label(regions)
+            num_corners, _ = cv2.connectedComponents(regions)
+            # Subtract the label of background from the number of corners
+            num_corners -= 1
 
             time.sleep(0.2)    # Wait until the object is within the recognition area
             # Press the necessary keys
