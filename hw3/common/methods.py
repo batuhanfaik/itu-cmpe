@@ -46,6 +46,11 @@ def prepare_web_game(secs=5):
                 title="Mode Selection",
                 buttons=['Fullscreen Manually', 'Try Again'])
             if "Fullscreen Manually" == fs_mode:
+                pyautogui.alert(
+                    text="Game should be put into fullscreen mode manually. Failure to do so "
+                         "within {} seconds will cause the program to malfunction, and likely "
+                         "crash. Do you acknowledge?".format(secs),
+                    title="Fullscreen Alert", button='Yes')
                 print("OK! Waiting for the user to put the game in "
                       "fullscreen mode for {} seconds.".format(secs))
                 time.sleep(secs)
@@ -64,7 +69,7 @@ def go_to_page(page_name, mode=0):
     if not mode:
         fullscreen_button = center_of_button_on_screen("assets/fullscreen-button.png", "fullscreen")
         pyautogui.click(fullscreen_button)
-        time.sleep(4)  # Wait until fullscreen notification is closed
+    time.sleep(4)  # Wait until fullscreen notification is closed
 
     game_size = get_resolution()
     game_region = (0, 0, game_size[0], game_size[1])
