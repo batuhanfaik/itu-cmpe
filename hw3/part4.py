@@ -27,13 +27,11 @@ if __name__ == "__main__":
                              buttons=['Vabank', 'Shame'])
     print("Now playing: {}".format(song))
 
-    # Switch to the game within 10 seconds (Tested only on Firefox)
-    game.prepare_web_game(10)
+    # Switch to the game within 5 seconds (Tested only on Firefox)
+    mode = game.prepare_web_game(5)
 
-    if song == "Vabank":  # Play "Vabank"
-        game_region = game.go_to_page(song)
-    elif song == "Shame":  # Play "Shame"
-        game_region = game.go_to_page(song)
+    if song == "Vabank" or song == "Shame":  # Play the song
+        game_region = game.go_to_page(song, mode)
     else:  # No song selected
         raise GameNotInitiatedCorrectly("No song has been selected")
 

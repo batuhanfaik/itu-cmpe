@@ -14,11 +14,11 @@ import pyautogui
 import common.methods as game
 
 if __name__ == "__main__":
-    # Switch to the game within 10 seconds (Tested only on Firefox)
-    game.prepare_web_game(10)
+    # Switch to the game within 5 seconds (Tested only on Firefox)
+    mode = game.prepare_web_game(5)
 
     # Go to all shapes screen
-    game_region = game.go_to_page("All-Shapes")
+    game_region = game.go_to_page("All-Shapes", mode)
     # Take a screenshot of the game
     ss = np.array(pyautogui.screenshot(region=game_region))
     ss_gray = cv2.cvtColor(ss, cv2.COLOR_RGB2GRAY)
