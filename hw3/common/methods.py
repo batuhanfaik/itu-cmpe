@@ -60,7 +60,7 @@ def prepare_web_game(secs=5):
     return mode
 
 
-def go_to_page(page_name, mode):
+def go_to_page(page_name, mode=0):
     if not mode:
         fullscreen_button = center_of_button_on_screen("assets/fullscreen-button.png", "fullscreen")
         pyautogui.click(fullscreen_button)
