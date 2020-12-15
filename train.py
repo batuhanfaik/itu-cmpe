@@ -63,18 +63,18 @@ def prepare_experiment(project_path=".", experiment_name=None):
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-DATASET_PATH = "/home/ufuk/cassava-leaf-disease-classification"
+DATASET_PATH = "/mnt/sdb1/datasets/cassava-leaf-disease-classification"
 BATCH_SIZE = 8
 num_workers = 1
 
 train_loader = torch.utils.data.DataLoader(
-    DataReader(mode='train', fold_name="folds/fold_5_train.txt", path=DATASET_PATH),
+    DataReader(mode='train', fold_name="folds/fold_1_train.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 val_loader = torch.utils.data.DataLoader(
-    DataReader(mode='val', fold_name="folds/fold_5_val.txt", path=DATASET_PATH),
+    DataReader(mode='val', fold_name="folds/fold_1_val.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 
-experiment_name = prepare_experiment(experiment_name="experiment_3")
+experiment_name = prepare_experiment()
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
@@ -87,6 +87,59 @@ num_classes = 5
 num_epochs = 100
 
 model = EfficientNet.from_name('efficientnet-b0')
+
+# model_ft = models.vgg19_bn(pretrained=True)
+num_features = model.in_channels
+
+half_in_size = round(num_features / 2)
+layer_width = 20  # Small for Resnet, large for VGG
+
+
+class EfficientSpinalNet(nn.Module):
+    def __init__(self):
+        super(EfficientSpinalNet, self).__init__()
+
+        self.fc_spinal_layer1 = nn.Sequential(
+            nn.Dropout(p=0.5),
+            nn.Linear(half_in_size, layer_width),
+            nn.BatchNorm1d(layer_width),
+            nn.ReLU(inplace=True), )
+        self.fc_spinal_layer2 = nn.Sequential(
+            nn.Dropout(p=0.5),
+            nn.Linear(half_in_size + layer_width, layer_width),
+            nn.BatchNorm1d(layer_width),
+            nn.ReLU(inplace=True), )
+        self.fc_spinal_layer3 = nn.Sequential(
+            nn.Dropout(p=0.5),
+            nn.Linear(half_in_size + layer_width, layer_width),
+            nn.BatchNorm1d(layer_width),
+            nn.ReLU(inplace=True), )
+        self.fc_spinal_layer4 = nn.Sequential(
+            nn.Dropout(p=0.5),
+            nn.Linear(half_in_size + layer_width, layer_width),
+            nn.BatchNorm1d(layer_width),
+            nn.ReLU(inplace=True), )
+        self.fc_out = nn.Sequential(
+            nn.Dropout(p=0.5),
+            nn.Linear(layer_width * 4, num_classes), )
+
+    def forward(self, x):
+        x1 = self.fc_spinal_layer1(x[:, 0:half_in_size])
+        x2 = self.fc_spinal_layer2(torch.cat([x[:, half_in_size:2 * half_in_size], x1], dim=1))
+        x3 = self.fc_spinal_layer3(torch.cat([x[:, 0:half_in_size], x2], dim=1))
+        x4 = self.fc_spinal_layer4(torch.cat([x[:, half_in_size:2 * half_in_size], x3], dim=1))
+
+        x = torch.cat([x1, x2], dim=1)
+        x = torch.cat([x, x3], dim=1)
+        x = torch.cat([x, x4], dim=1)
+
+        x = self.fc_out(x)
+        return x
+
+
+model._fc = EfficientSpinalNet()
+
+# model = EfficientNet.from_name('efficientnet-b0')
 
 model = model.to(device)
 lr = 0.00256
