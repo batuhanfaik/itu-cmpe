@@ -46,7 +46,7 @@ def prepare_experiment(project_path=".", experiment_name=None):
     next_experiment_number = 0
     for directory in os.listdir(project_path):
         search_result = re.search("experiment_(.*)", directory)
-        if search_result:
+        if search_result and next_experiment_number < int(search_result[1]) + 1:
             next_experiment_number = int(search_result[1]) + 1
 
     if not experiment_name:
@@ -63,18 +63,18 @@ def prepare_experiment(project_path=".", experiment_name=None):
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-DATASET_PATH = "/mnt/sdb1/datasets/cassava-leaf-disease-classification"
+DATASET_PATH = "/home/ufuk/cassava-leaf-disease-classification"
 BATCH_SIZE = 8
 num_workers = 1
 
 train_loader = torch.utils.data.DataLoader(
-    DataReader(mode='train', fold_name="folds/fold_1_train.txt", path=DATASET_PATH),
+    DataReader(mode='train', fold_name="folds/fold_5_train.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 val_loader = torch.utils.data.DataLoader(
-    DataReader(mode='val', fold_name="folds/fold_1_val.txt", path=DATASET_PATH),
+    DataReader(mode='val', fold_name="folds/fold_5_val.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 
-experiment_name = prepare_experiment()
+experiment_name = prepare_experiment(experiment_name="experiment_3")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
