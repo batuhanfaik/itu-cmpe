@@ -1,16 +1,21 @@
+import shutil
+
 import numpy as np
 import torch
 import time
 import re
 import torch.nn.functional as F
-from loader import DataReader
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+
+from loader import DataReader, GenericDataReader
 import torch.nn as nn
 import os
 import datetime
 import matplotlib.pyplot as plt
 import torch.optim as optim
 from torchvision import datasets, models, transforms
-from efficient import EfficientNet
+from efficientnet import EfficientNet
+import resnet
 from collections import OrderedDict
 
 
@@ -50,31 +55,33 @@ def prepare_experiment(project_path=".", experiment_name=None):
             next_experiment_number = int(search_result[1]) + 1
 
     if not experiment_name:
-        experiment_name = "experiment_{}".format(next_experiment_number)
+        exp_name = "experiment_{}".format(next_experiment_number)
     else:
-        experiment_name = experiment_name
+        exp_name = experiment_name
+        if os.path.exists(experiment_name) and os.path.isdir(experiment_name):
+            shutil.rmtree(exp_name)
 
-    os.mkdir(experiment_name)
-    os.mkdir(experiment_name + '/graphs/')
-    os.mkdir(experiment_name + '/models/')
-    os.mkdir(experiment_name + '/code/')
+    os.mkdir(exp_name)
+    os.mkdir(exp_name + '/graphs/')
+    os.mkdir(exp_name + '/models/')
+    os.mkdir(exp_name + '/code/')
 
-    return experiment_name
+    return exp_name
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-DATASET_PATH = "/home/ufuk/cassava-leaf-disease-classification"
-BATCH_SIZE = 8
+DATASET_PATH = "/mnt/sdb1/datasets/cassava-leaf-disease-classification"
+BATCH_SIZE = 128
 num_workers = 1
 
 train_loader = torch.utils.data.DataLoader(
-    DataReader(mode='train', fold_name="folds/fold_5_train.txt", path=DATASET_PATH),
+    GenericDataReader(mode='train', fold_name="folds/fold_1_train.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 val_loader = torch.utils.data.DataLoader(
-    DataReader(mode='val', fold_name="folds/fold_5_val.txt", path=DATASET_PATH),
+    GenericDataReader(mode='val', fold_name="folds/fold_1_val.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 
-experiment_name = prepare_experiment(experiment_name="experiment_3")
+experiment_name = prepare_experiment(experiment_name="resnet_0")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
@@ -86,13 +93,13 @@ for i in range(len(all_python_files)):
 num_classes = 5
 num_epochs = 100
 
-model = EfficientNet.from_name('efficientnet-b0')
-
+model = resnet.resnet34(pretrained=False, progress=True, num_classes=5)
 model = model.to(device)
-lr = 0.00256
-optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-5,
-                            nesterov=True)
 
+lr = 0.00256
+base_optimizer = torch.optim.SGD
+optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-5, nesterov=True)
+scheduler = ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=5, min_lr=1e-10)
 loss = torch.nn.CrossEntropyLoss().to(device)
 
 all_tr_losses = torch.zeros(num_epochs, 1)
@@ -101,7 +108,6 @@ all_test_losses = torch.zeros(num_epochs, 1)
 all_test_accuracies = np.zeros((num_epochs, 1))
 
 for epoch_id in range(1, num_epochs + 1):
-
     model.train()
 
     if epoch_id % 20 == 0:
@@ -127,14 +133,13 @@ for epoch_id in range(1, num_epochs + 1):
 
         loss_value = loss(output, img_class)
         loss_value.backward()
-
         optimizer.step()
 
         total_loss += loss_value.data
         total_true += torch.sum(prediction == img_class.data)
         total_false += torch.sum(prediction != img_class.data)
 
-        if (i + 1) % 200 == 0:
+        if (i + 1) % 20 == 0:
             print("Pre-report Epoch:", epoch_id)
             print("Loss: %f" % loss_value.data)
             print("Status -> %d / %d" % (i + 1, len(train_loader)))
@@ -159,6 +164,7 @@ for epoch_id in range(1, num_epochs + 1):
 
         model.eval()
 
+        val_losses = 0
         total_loss = 0
         total_true = 0
         total_false = 0
@@ -176,7 +182,9 @@ for epoch_id in range(1, num_epochs + 1):
 
             _, prediction = torch.max(output.data, 1)
 
-            total_loss += loss(output, img_class).data
+            val_loss = loss(output, img_class)
+            val_losses += val_loss
+            total_loss += val_loss.data
             total_true += torch.sum(prediction == img_class.data)
             total_false += torch.sum(prediction != img_class.data)
 
@@ -194,6 +202,8 @@ for epoch_id in range(1, num_epochs + 1):
         # all_test_losses[epoch_id] = total_loss.cpu()
         all_test_losses[epoch_id] = total_loss / len(val_loader)
         all_test_accuracies[epoch_id] = acc
+
+    scheduler.step(val_loss)
 
     save_res(epoch_id, total_loss, len(val_loader), acc, time_start, res_name, "val")
 
