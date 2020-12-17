@@ -1,3 +1,4 @@
+import shutil
 import numpy as np
 import torch
 import time
@@ -10,7 +11,7 @@ import datetime
 import matplotlib.pyplot as plt
 import torch.optim as optim
 from torchvision import datasets, models, transforms
-from efficient import EfficientNet
+from efficientnet import EfficientNet
 from collections import OrderedDict
 
 
@@ -50,31 +51,33 @@ def prepare_experiment(project_path=".", experiment_name=None):
             next_experiment_number = int(search_result[1]) + 1
 
     if not experiment_name:
-        experiment_name = "experiment_{}".format(next_experiment_number)
+        exp_name = "experiment_{}".format(next_experiment_number)
     else:
-        experiment_name = experiment_name
+        exp_name = experiment_name
+        if os.path.exists(experiment_name) and os.path.isdir(experiment_name):
+            shutil.rmtree(exp_name)
 
-    os.mkdir(experiment_name)
-    os.mkdir(experiment_name + '/graphs/')
-    os.mkdir(experiment_name + '/models/')
-    os.mkdir(experiment_name + '/code/')
+    os.mkdir(exp_name)
+    os.mkdir(exp_name + '/graphs/')
+    os.mkdir(exp_name + '/models/')
+    os.mkdir(exp_name + '/code/')
 
-    return experiment_name
+    return exp_name
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-DATASET_PATH = "/mnt/sdb1/datasets/cassava-leaf-disease-classification"
+device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+DATASET_PATH = "/home/ufuk/cassava-leaf-disease-classification"
 BATCH_SIZE = 8
 num_workers = 1
 
 train_loader = torch.utils.data.DataLoader(
-    DataReader(mode='train', fold_name="folds/fold_1_train.txt", path=DATASET_PATH),
+    DataReader(mode='train', fold_name="folds/fold_5_train.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 val_loader = torch.utils.data.DataLoader(
-    DataReader(mode='val', fold_name="folds/fold_1_val.txt", path=DATASET_PATH),
+    DataReader(mode='val', fold_name="folds/fold_5_val.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 
-experiment_name = prepare_experiment()
+experiment_name = prepare_experiment(".", "efficient-spinal_fold5")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
@@ -88,7 +91,6 @@ num_epochs = 100
 
 model = EfficientNet.from_name('efficientnet-b0')
 
-# model_ft = models.vgg19_bn(pretrained=True)
 num_features = model.in_channels
 
 half_in_size = round(num_features / 2)
