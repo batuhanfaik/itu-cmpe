@@ -203,7 +203,7 @@ for epoch_id in range(1, num_epochs + 1):
         all_test_losses[epoch_id] = total_loss / len(val_loader)
         all_test_accuracies[epoch_id] = acc
 
-    scheduler.step(val_loss)
+    scheduler.step(val_losses / len(val_loader))
 
     save_res(epoch_id, total_loss, len(val_loader), acc, time_start, res_name, "val")
 
