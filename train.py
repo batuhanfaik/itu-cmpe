@@ -69,19 +69,24 @@ def prepare_experiment(project_path=".", experiment_name=None):
     return exp_name
 
 
+def get_lr(optimizer):
+    for param_group in optimizer.param_groups:
+        return param_group['lr']
+
+
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-DATASET_PATH = "/mnt/sdb1/datasets/cassava-leaf-disease-classification"
+DATASET_PATH = "/home/ufuk/cassava-leaf-disease-classification"
 BATCH_SIZE = 128
 num_workers = 1
 
 train_loader = torch.utils.data.DataLoader(
-    GenericDataReader(mode='train', fold_name="folds/fold_1_train.txt", path=DATASET_PATH),
+    GenericDataReader(mode='train', fold_name="folds/fold_5_train.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 val_loader = torch.utils.data.DataLoader(
-    GenericDataReader(mode='val', fold_name="folds/fold_1_val.txt", path=DATASET_PATH),
+    GenericDataReader(mode='val', fold_name="folds/fold_5_val.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 
-experiment_name = prepare_experiment(experiment_name="resnet_0")
+experiment_name = prepare_experiment(experiment_name="baseline_resnet_fold5")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
@@ -96,10 +101,10 @@ num_epochs = 100
 model = resnet.resnet34(pretrained=False, progress=True, num_classes=5)
 model = model.to(device)
 
-lr = 0.00256
+lr = 1e-1
 base_optimizer = torch.optim.SGD
-optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-5, nesterov=True)
-scheduler = ReduceLROnPlateau(optimizer, 'min', factor=0.5, patience=5, min_lr=1e-10)
+optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-4, nesterov=True)
+scheduler = ReduceLROnPlateau(optimizer, 'min', factor=0.1, patience=5, min_lr=1e-10)
 loss = torch.nn.CrossEntropyLoss().to(device)
 
 all_tr_losses = torch.zeros(num_epochs, 1)
@@ -109,10 +114,6 @@ all_test_accuracies = np.zeros((num_epochs, 1))
 
 for epoch_id in range(1, num_epochs + 1):
     model.train()
-
-    if epoch_id % 20 == 0:
-        for param_group in optimizer.param_groups:
-            param_group["lr"] = param_group["lr"] / 1.5
 
     total_loss = 0
     total_true = 0
@@ -151,6 +152,7 @@ for epoch_id in range(1, num_epochs + 1):
     print("Epoch %d scores:" % epoch_id)
     print("Loss: %f" % (total_loss / len(train_loader)))
     print("Accuracy: %f" % acc)
+    print("LR: %f" % get_lr(optimizer))
     print("Time (s): " + str(time.time() - time_start))
     print("--------------------------------------")
 
