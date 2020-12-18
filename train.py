@@ -98,7 +98,7 @@ for i in range(len(all_python_files)):
 num_classes = 5
 num_epochs = 100
 
-model = resnet.resnet34(pretrained=False, progress=True, num_classes=5)
+model = EfficientNet.from_name("efficientnet-b0", num_classes=num_classes)
 model = model.to(device)
 
 lr = 1e-1
