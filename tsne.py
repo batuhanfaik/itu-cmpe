@@ -1,8 +1,8 @@
+import os
 import torch
 import numpy as np
 from loader import GenericDataReader
 import matplotlib.pyplot as plt
-import matplotlib.patheffects as path_effects
 import seaborn as sns
 from sklearn.manifold import TSNE
 
@@ -10,6 +10,9 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 DATASET_PATH = "/mnt/sdb1/datasets/cassava-leaf-disease-classification"
 MODEL_PATH = "models/effnet-b0_baseline.pt"
 BATCH_SIZE = 32
+
+if not os.path.exists("tsne"):
+    os.mkdir("tsne")
 
 output_path = "tsne/output.npy"
 target_path = "tsne/target.npy"
@@ -45,15 +48,6 @@ output_array = np.concatenate(out_output, axis=0)
 target_array = np.concatenate(out_target, axis=0)
 np.save(output_path, output_array, allow_pickle=False)
 np.save(target_path, target_array, allow_pickle=False)
-
-# tsne = TSNE(n_components=2, init="pca", random_state=0)
-# output_array = tsne.fit_transform(output_array)
-# plt.rcParams["figure.figsize"] = 10, 10
-# plt.scatter(output_array[:, 0], output_array[:, 1], c=target_array[:, 0])
-# title = "TSNE_Legend"
-# plt.title(title)
-# plt.legend(loc="best")
-# plt.savefig('tsne/{}.png'.format(title), bbox_inches="tight")
 
 tsne = TSNE(n_components=2, init="pca", random_state=0)
 print("Starting t-SNE Transform")
