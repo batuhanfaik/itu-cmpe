@@ -71,10 +71,10 @@ BATCH_SIZE = 16
 num_workers = 1
 
 train_loader = torch.utils.data.DataLoader(
-    DataReader(mode='train', fold_name="folds/fold_1_train.txt", path=DATASET_PATH),
+    GenericDataReader(mode='train', fold_name="folds/fold_1_train.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 val_loader = torch.utils.data.DataLoader(
-    DataReader(mode='val', fold_name="folds/fold_1_val.txt", path=DATASET_PATH),
+    GenericDataReader(mode='val', fold_name="folds/fold_1_val.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 
 experiment_name = prepare_experiment(".", "base_w_resize_fold1")
@@ -92,7 +92,6 @@ num_epochs = 100
 model = EfficientNet.from_name('efficientnet-b0')
 
 num_features = model.in_channels
-
 half_in_size = round(num_features / 2)
 layer_width = 20  # Small for Resnet, large for VGG
 
@@ -139,12 +138,10 @@ class EfficientSpinalNet(nn.Module):
         return x
 
 
-#model._fc = EfficientSpinalNet()
-
-# model = EfficientNet.from_name('efficientnet-b0')
+model._fc = EfficientSpinalNet()
 
 model = model.to(device)
-lr = 0.00256
+lr = 1
 optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-5,
                             nesterov=True)
 
