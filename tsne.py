@@ -8,7 +8,7 @@ from sklearn.manifold import TSNE
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 DATASET_PATH = "/mnt/sdb1/datasets/cassava-leaf-disease-classification"
-MODEL_PATH = "models/effnet-b0_baseline.pt"
+MODEL_PATH = "models/effnet-b0_sam.pt"
 BATCH_SIZE = 32
 
 if not os.path.exists("tsne"):
@@ -55,11 +55,10 @@ output_array = tsne.fit_transform(output_array)
 print("Transform complete")
 
 labels = ["Bacterial Blight (CBB)", "Brown Streak Disease (CBSD)", "Green Mottle (CGM)", "Mosaic Disease (CMD)", "Healthy"]
-palette = sns.color_palette("hls", 5)
+palette = sns.color_palette("bright", 5)
 hue = target_array.flatten()
-sns.scatterplot(x=output_array[:, 0], y=output_array[:, 1], hue=hue, palette=palette,
-                legend='full')
-title = "t-SNE of EfficientNet-B0"
+sns.scatterplot(x=output_array[:, 0], y=output_array[:, 1], hue=hue, palette=palette, legend="full")
+title = "t-SNE of EfficientNet-B0 with SAM"
 plt.title(title)
 plt.axis('off')
 plt.legend(labels=labels, loc='upper center', bbox_to_anchor=(0.5, -0.05), fancybox=True, ncol=3)
