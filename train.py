@@ -67,17 +67,17 @@ def prepare_experiment(project_path=".", experiment_name=None):
 
 device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
 DATASET_PATH = "/home/ufuk/cassava-leaf-disease-classification"
-BATCH_SIZE = 8
+BATCH_SIZE = 16
 num_workers = 1
 
 train_loader = torch.utils.data.DataLoader(
-    DataReader(mode='train', fold_name="folds/fold_5_train.txt", path=DATASET_PATH),
+    DataReader(mode='train', fold_name="folds/fold_1_train.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 val_loader = torch.utils.data.DataLoader(
-    DataReader(mode='val', fold_name="folds/fold_5_val.txt", path=DATASET_PATH),
+    DataReader(mode='val', fold_name="folds/fold_1_val.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 
-experiment_name = prepare_experiment(".", "efficient-spinal_fold5")
+experiment_name = prepare_experiment(".", "base_w_resize_fold1")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
@@ -139,7 +139,7 @@ class EfficientSpinalNet(nn.Module):
         return x
 
 
-model._fc = EfficientSpinalNet()
+#model._fc = EfficientSpinalNet()
 
 # model = EfficientNet.from_name('efficientnet-b0')
 
@@ -236,7 +236,7 @@ for epoch_id in range(1, num_epochs + 1):
             total_false += torch.sum(prediction != img_class.data)
 
         acc = total_true.item() * 1.0 / (total_true.item() + total_false.item())
-        if acc > 0.8:
+        if acc > 0.65:
             model_path = experiment_name + "/models/model_epoch_" + str(epoch_id) + '.pt'
             torch.save(model, model_path)
         print("Test:", datetime.datetime.now())
