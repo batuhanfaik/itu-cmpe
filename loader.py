@@ -1,6 +1,6 @@
 import torch
 import glob, os
-import torch.utils.data
+import torch.utils.data as data
 from PIL import Image
 from torchvision import transforms
 import numpy as np
@@ -13,7 +13,7 @@ def load_input_img(filepath):
     return img
 
 
-class DataReader(torch.utils.data.Dataset):
+class DataReader(data.Dataset):
     def __init__(self, mode, fold_name, path=""):
         super(DataReader, self).__init__()
 

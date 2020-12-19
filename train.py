@@ -4,7 +4,9 @@ import torch
 import time
 import re
 import torch.nn.functional as F
-from loader import DataReader
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+
+from loader import DataReader, GenericDataReader
 import torch.nn as nn
 import os
 import datetime
@@ -67,17 +69,17 @@ def prepare_experiment(project_path=".", experiment_name=None):
 
 device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
 DATASET_PATH = "/home/ufuk/cassava-leaf-disease-classification"
-BATCH_SIZE = 16
+BATCH_SIZE = 64
 num_workers = 1
 
 train_loader = torch.utils.data.DataLoader(
-    GenericDataReader(mode='train', fold_name="folds/fold_1_train.txt", path=DATASET_PATH),
+    GenericDataReader(mode='train', fold_name="folds/fold_2_train.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 val_loader = torch.utils.data.DataLoader(
-    GenericDataReader(mode='val', fold_name="folds/fold_1_val.txt", path=DATASET_PATH),
+    GenericDataReader(mode='val', fold_name="folds/fold_2_val.txt", path=DATASET_PATH),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers, drop_last=True)
 
-experiment_name = prepare_experiment(".", "base_w_resize_fold1")
+experiment_name = prepare_experiment(".", "effnet_spinal_fold2")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
@@ -141,10 +143,10 @@ class EfficientSpinalNet(nn.Module):
 model._fc = EfficientSpinalNet()
 
 model = model.to(device)
-lr = 1
+lr = 1e-1
 optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-5,
                             nesterov=True)
-
+scheduler = ReduceLROnPlateau(optimizer, 'min', factor=0.1, patience=5, min_lr=1e-10)
 loss = torch.nn.CrossEntropyLoss().to(device)
 
 all_tr_losses = torch.zeros(num_epochs, 1)
@@ -153,12 +155,7 @@ all_test_losses = torch.zeros(num_epochs, 1)
 all_test_accuracies = np.zeros((num_epochs, 1))
 
 for epoch_id in range(1, num_epochs + 1):
-
     model.train()
-
-    if epoch_id % 20 == 0:
-        for param_group in optimizer.param_groups:
-            param_group["lr"] = param_group["lr"] / 1.5
 
     total_loss = 0
     total_true = 0
@@ -208,9 +205,9 @@ for epoch_id in range(1, num_epochs + 1):
     save_res(epoch_id, total_loss, len(train_loader), acc, time_start, res_name, "train")
 
     with torch.no_grad():
-
         model.eval()
 
+        val_losses = 0
         total_loss = 0
         total_true = 0
         total_false = 0
@@ -228,7 +225,9 @@ for epoch_id in range(1, num_epochs + 1):
 
             _, prediction = torch.max(output.data, 1)
 
-            total_loss += loss(output, img_class).data
+            val_loss = loss(output, img_class)
+            val_losses += val_loss
+            total_loss += val_loss.data
             total_true += torch.sum(prediction == img_class.data)
             total_false += torch.sum(prediction != img_class.data)
 
@@ -247,6 +246,7 @@ for epoch_id in range(1, num_epochs + 1):
         all_test_losses[epoch_id] = total_loss / len(val_loader)
         all_test_accuracies[epoch_id] = acc
 
+    scheduler.step(val_losses / len(val_loader))
     save_res(epoch_id, total_loss, len(val_loader), acc, time_start, res_name, "val")
 
     trainig_loss = all_tr_losses.numpy()
