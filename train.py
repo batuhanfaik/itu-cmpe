@@ -74,9 +74,9 @@ def get_lr(optimizer):
         return param_group['lr']
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
 DATASET_PATH = "/home/ufuk/cassava-leaf-disease-classification"
-BATCH_SIZE = 128
+BATCH_SIZE = 64
 num_workers = 1
 
 train_loader = torch.utils.data.DataLoader(
@@ -98,7 +98,7 @@ for i in range(len(all_python_files)):
 num_classes = 5
 num_epochs = 100
 
-model = EfficientNet.from_name("efficientnet-b0", num_classes=num_classes)
+model = resnet.resnet34(pretrained=False, progress=True, num_classes=5)
 model = model.to(device)
 
 lr = 1e-1
@@ -191,7 +191,7 @@ for epoch_id in range(1, num_epochs + 1):
             total_false += torch.sum(prediction != img_class.data)
 
         acc = total_true.item() * 1.0 / (total_true.item() + total_false.item())
-        if acc > 0.8:
+        if acc > 0.65:
             model_path = experiment_name + "/models/model_epoch_" + str(epoch_id) + '.pt'
             torch.save(model, model_path)
         print("Test:", datetime.datetime.now())

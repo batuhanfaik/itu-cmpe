@@ -11,6 +11,7 @@ from sklearn.manifold import TSNE
 num_features = EfficientNet.from_name("efficientnet-b0").in_channels
 half_in_size = round(num_features / 2)
 layer_width = 20
+num_classes = 5
 
 
 class EfficientSpinalNet(nn.Module):
@@ -103,11 +104,12 @@ print("Starting t-SNE Transform")
 output_array = tsne.fit_transform(output_array)
 print("Transform complete")
 
-labels = ["Bacterial Blight (CBB)", "Brown Streak Disease (CBSD)", "Green Mottle (CGM)",
+labels = ["", "Bacterial Blight (CBB)", "Brown Streak Disease (CBSD)", "Green Mottle (CGM)",
           "Mosaic Disease (CMD)", "Healthy"]
 palette = sns.color_palette("bright", 5)
 hue = target_array.flatten()
 sns.scatterplot(x=output_array[:, 0], y=output_array[:, 1], hue=hue, palette=palette, legend="full")
+# g = sns.relplot(x=output_array[:, 0], y=output_array[:, 1], hue=hue, palette=palette, legend="full", kind="scatter")
 title = "t-SNE of EfficientNet-B0 with SAM and Spinal FC"
 plt.title(title)
 plt.axis('off')
