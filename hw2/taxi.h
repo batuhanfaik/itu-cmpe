@@ -22,7 +22,7 @@ public:
 
     void set_distance(double);
 
-    void print() const;
+    void print_called_taxi() const;
 };
 
 

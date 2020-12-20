@@ -67,16 +67,21 @@ void Heap::update_random_taxi(int index, double decrease_distance) {
 }
 
 double Heap::call_taxi() {
-    // Store the distance of the taxi in a local variable
-    double distance = taxis.front().get_distance();
-    // Print the taxi that is being called
-    taxis.front().print();
-    // Delete the taxi from the list
-    taxis.erase(taxis.begin());
-    size = taxis.size();
-    // Reorder the heap (heapify)
-    min_heapify(0);
-    return distance;
+    // There is a p^100 chance of having an empty heap, therefore it should be considered
+    if (taxis.empty()) {
+        // The reverse logic here is intentional due to compiler optimizations
+    } else {
+        // Store the distance of the taxi in a local variable
+        double distance = taxis.at(0).get_distance();
+        // Print the taxi that is being called
+        taxis.at(0).print_called_taxi();
+        // Delete the taxi from the list
+        taxis.erase(taxis.begin());
+        size = taxis.size();
+        // Reorder the heap (heapify)
+        min_heapify(0);
+        return distance;
+    }
 }
 
 int Heap::get_size() const {

@@ -18,18 +18,18 @@
 using namespace std;
 
 template <typename T>
-T get_random_real(T range_from, T range_to) {
+T get_random_real(T start, T end) {
     random_device rand_device;
     mt19937 generator(rand_device());
-    uniform_real_distribution<T> distribution(range_from, range_to);
+    uniform_real_distribution<T> distribution(start, end);
     return distribution(generator);
 }
 
 template <typename T>
-T get_random_int(T range_from, T range_to) {
+T get_random_int(T start, T end) {
     random_device rand_device;
     mt19937 generator(rand_device());
-    uniform_int_distribution<T> distribution(range_from, range_to);
+    uniform_int_distribution<T> distribution(start, end);
     return distribution(generator);
 }
 
@@ -82,8 +82,9 @@ int main(int argc, char** argv) {
             taxi_heap.add_taxi(Taxi(taxi_long, taxi_lat, hotel_long, hotel_lat));
             taxi_additions++;
         }
-        if (i % 99 == 0)    // Call a taxi (remove from heap)
+        if ((i + 1) % 100 == 0) {   // Call a taxi (remove from heap)
             taxi_heap.call_taxi();
+        }
     }
     // Close the filestream
     file.close();
@@ -91,7 +92,7 @@ int main(int argc, char** argv) {
     auto stop_time = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(stop_time - start_time);
     // Print required outputs
-    cout << "For m=" << m << " and p=" << p << endl << "Number of taxi additions: " << taxi_additions << endl <<
+    cout << "\nFor m=" << m << " and p=" << p << endl << "Number of taxi additions: " << taxi_additions << endl <<
     "Number of distance updates: " << distance_updates << endl <<
     "Elapsed time of execution: " << duration.count() << " microseconds" << endl;
 
