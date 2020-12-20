@@ -21,6 +21,10 @@ double Taxi::get_distance() const {
     return distance_to_hotel;
 }
 
+void Taxi::set_distance(double distance) {
+    distance_to_hotel = distance;
+}
+
 void Taxi::print() const {
     cout << "Distance to hotel: " << distance_to_hotel << endl;
 }

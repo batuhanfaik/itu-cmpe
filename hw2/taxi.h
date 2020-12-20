@@ -15,8 +15,13 @@ class Taxi {
     double distance_to_hotel;
 public:
     Taxi(double, double, double, double);
+
     double calculate_distance_to_hotel(double, double) const;
+
     double get_distance() const;
+
+    void set_distance(double);
+
     void print() const;
 };
 

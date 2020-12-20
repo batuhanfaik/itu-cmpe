@@ -17,11 +17,19 @@
 
 using namespace std;
 
-template<typename T>
-T get_random(T range_from, T range_to) {
-    random_device rand_dev;
-    mt19937 generator(rand_dev());
+template <typename T>
+T get_random_real(T range_from, T range_to) {
+    random_device rand_device;
+    mt19937 generator(rand_device());
     uniform_real_distribution<T> distribution(range_from, range_to);
+    return distribution(generator);
+}
+
+template <typename T>
+T get_random_int(T range_from, T range_to) {
+    random_device rand_device;
+    mt19937 generator(rand_device());
+    uniform_int_distribution<T> distribution(range_from, range_to);
     return distribution(generator);
 }
 
@@ -50,32 +58,42 @@ int main(int argc, char** argv) {
 
     string line;
     int taxi_additions = 0, distance_updates = 0;
-    double taxi_long, taxi_lat, rand_number;
+    double taxi_long, taxi_lat, rand_real;
+    Heap taxi_heap = Heap();
     getline(file, line); // this is the header line
 
     // Get the current time
     auto start_time = chrono::high_resolution_clock::now();
     // Start simulation
     for (int i = 0; i < m; i++) {
-        rand_number = get_random(double(0), double(1));
-        if (rand_number <= p){    // Update taxi (decrease the distance)
-            Heap::update_random_taxi();
-            distance_updates++;
+        rand_real = get_random_real(double(0), double(1));
+        if (rand_real <= p){    // Update taxi (decrease the distance)
+            if (!taxi_heap.get_size()) {    // If the heap is empty don't update taxis
+                // The reverse logic here is intentional due to compiler optimizations
+            } else {
+                int rand_index = get_random_int(0, taxi_heap.get_size() - 1);
+                taxi_heap.update_random_taxi(rand_index, 0.01);
+                distance_updates++;
+            }
         } else {    // Read a new taxi object (add to heap)
             file >> taxi_long; // longitude of the taxi (float)
             file >> taxi_lat; // latitude of the taxi (float)
             getline(file, line, '\n'); // this is for reading the \n character into dummy variable.
-            Heap::add_taxi(Taxi(taxi_long, taxi_lat, hotel_long, hotel_lat));
+            taxi_heap.add_taxi(Taxi(taxi_long, taxi_lat, hotel_long, hotel_lat));
             taxi_additions++;
         }
         if (i % 99 == 0)    // Call a taxi (remove from heap)
-            Heap::call_taxi();
+            taxi_heap.call_taxi();
     }
-    // Simulation ends, so print execution time
+    // Close the filestream
+    file.close();
+    // Simulation ends
     auto stop_time = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(stop_time - start_time);
-    cout << "For m=" << m << " and p=" << p << endl << "Elapsed time of execution: " << duration.count()
-         << " microseconds" << endl;
+    // Print required outputs
+    cout << "For m=" << m << " and p=" << p << endl << "Number of taxi additions: " << taxi_additions << endl <<
+    "Number of distance updates: " << distance_updates << endl <<
+    "Elapsed time of execution: " << duration.count() << " microseconds" << endl;
 
     return 0;
 }
