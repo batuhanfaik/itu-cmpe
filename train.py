@@ -209,16 +209,16 @@ for epoch_id in range(1, num_epochs + 1):
 
     save_res(epoch_id, total_loss, len(val_loader), acc, time_start, res_name, "val")
 
-    trainig_loss = all_tr_losses.numpy()
-    trainig_loss = np.reshape(trainig_loss, (trainig_loss.shape[1] * trainig_loss.shape[0], -1))
+    training_loss = all_tr_losses.numpy()
+    training_loss = np.reshape(training_loss, (training_loss.shape[1] * training_loss.shape[0], -1))
 
     val_loss = all_test_losses.numpy()
     val_loss = np.reshape(val_loss, (val_loss.shape[1] * val_loss.shape[0], -1))
 
-    trainig_loss[trainig_loss == 0] = np.nan
+    training_loss[training_loss == 0] = np.nan
     val_loss[val_loss == 0] = np.nan
 
-    plt.plot(trainig_loss, label='Train')
+    plt.plot(training_loss, label='Train')
     plt.plot(val_loss, label='Validation')
     plt.legend()
     fig_path = experiment_name + "/graphs/train_val_loss_epoch_" + str(epoch_id) + '.png'
