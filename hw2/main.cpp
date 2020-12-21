@@ -5,6 +5,8 @@
 * @ Copyright (C) 2020 Batuhan Faik Derinbay
 * @ Project: hw2
 * @ Description: Read from locations (driver code)
+* @ Compiling: g++ -o a.out main.cpp heap.cpp taxi.cpp
+* @ Running: ./a.out $m $p (E.g., ./a.out 1000 0.2)
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 #include <iostream>
 #include <fstream>
