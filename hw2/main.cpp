@@ -88,11 +88,11 @@ int main(int argc, char** argv) {
             taxi_heap.call_taxi();
         }
     }
-    // Close the filestream
-    file.close();
     // Simulation ends
     auto stop_time = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(stop_time - start_time);
+    // Close the filestream
+    file.close();
     // Print required outputs
     cout << "\nFor m=" << m << " and p=" << p << endl << "Number of taxi additions: " << taxi_additions << endl <<
     "Number of distance updates: " << distance_updates << endl <<

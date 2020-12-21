@@ -82,6 +82,7 @@ double Heap::call_taxi() {
         min_heapify(0);
         return distance;
     }
+    return -1;    // Return a distinguishable value in case the heap is empty
 }
 
 int Heap::get_size() const {
