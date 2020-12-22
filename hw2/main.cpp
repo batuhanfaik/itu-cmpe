@@ -100,11 +100,12 @@ int main(int argc, char** argv) {
     // Close the filestream
     file.close();
     // Print required outputs
-    cout << "\nFor m=" << m << " and p=" << p << endl << "Number of taxi additions: " << taxi_additions << endl <<
-    "Number of distance updates: " << distance_updates << endl <<
-    "Number of successful taxi calls: " << taxi_call << endl <<
-    "Number of times a taxi is failed to update\nbecause no taxis are available: " << empty_heap << endl <<
-    "Elapsed time of execution: " << duration.count() << " microseconds" << endl;
+    cout << "\n~o~ For m=" << m << " and p=" << p << " ~o~" << endl <<
+    "* Number of taxi additions: " << taxi_additions << endl <<
+    "* Number of distance updates: " << distance_updates << endl <<
+    "* Number of successful taxi calls: " << taxi_call << endl <<
+    "* Number of operations skipped\ndue to no taxis being available: " << empty_heap << endl <<
+    "* Elapsed time of execution: " << duration.count() << " microseconds" << endl;
 
     return 0;
 }
