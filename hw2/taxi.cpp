@@ -22,7 +22,11 @@ double Taxi::get_distance() const {
 }
 
 void Taxi::set_distance(double distance) {
-    distance_to_hotel = distance;
+    if (distance < 0){
+        distance_to_hotel = 0;
+    } else {
+        distance_to_hotel = distance;
+    }
 }
 
 void Taxi::print_called_taxi() const {

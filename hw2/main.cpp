@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
     double hotel_lat = 39.19001;
 
     string line;
-    int taxi_additions = 0, distance_updates = 0;
+    int taxi_additions = 0, distance_updates = 0, taxi_call = 0, empty_heap = 0;
     double taxi_long, taxi_lat, rand_real;
     Heap taxi_heap = Heap();
     getline(file, line); // this is the header line
@@ -89,7 +89,9 @@ int main(int argc, char** argv) {
             taxi_additions++;
         }
         if ((i + 1) % 100 == 0) {   // Call a taxi (remove from heap)
-            taxi_heap.call_taxi();
+            if(taxi_heap.call_taxi() != -1) {    // Check if the call was successful
+                taxi_call++;
+            }
         }
     }
     // Simulation ends
@@ -100,6 +102,8 @@ int main(int argc, char** argv) {
     // Print required outputs
     cout << "\nFor m=" << m << " and p=" << p << endl << "Number of taxi additions: " << taxi_additions << endl <<
     "Number of distance updates: " << distance_updates << endl <<
+    "Number of successful taxi calls: " << taxi_call << endl <<
+    "Number of times a taxi is failed to update\nbecause no taxis are available: " << empty_heap << endl <<
     "Elapsed time of execution: " << duration.count() << " microseconds" << endl;
 
     return 0;
