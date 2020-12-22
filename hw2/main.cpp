@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
     double hotel_lat = 39.19001;
 
     string line;
-    int taxi_additions = 0, distance_updates = 0, taxi_call = 0, empty_heap = 0;
+    int taxi_additions = 0, distance_updates = 0, taxi_call = 0, skipped_update = 0;
     double taxi_long, taxi_lat, rand_real;
     Heap taxi_heap = Heap();
     getline(file, line); // this is the header line
@@ -101,11 +101,11 @@ int main(int argc, char** argv) {
     file.close();
     // Print required outputs
     cout << "\n~o~ For m=" << m << " and p=" << p << " ~o~" << endl <<
-    "* Number of taxi additions: " << taxi_additions << endl <<
-    "* Number of distance updates: " << distance_updates << endl <<
-    "* Number of successful taxi calls: " << taxi_call << endl <<
-    "* Number of operations skipped\ndue to no taxis being available: " << empty_heap << endl <<
-    "* Elapsed time of execution: " << duration.count() << " microseconds" << endl;
+         "* Number of taxi additions: " << taxi_additions << endl <<
+         "* Number of distance updates: " << distance_updates << endl <<
+         "* Number of successful taxi calls: " << taxi_call << endl <<
+         "* Number of skipped updates: " << skipped_update << endl <<
+         "* Elapsed time of execution: " << duration.count() << " microseconds" << endl;
 
     return 0;
 }
