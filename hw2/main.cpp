@@ -71,7 +71,11 @@ int main(int argc, char** argv) {
         rand_real = get_random_real(double(0), double(1));
         if (rand_real <= p){    // Update taxi (decrease the distance)
             if (!taxi_heap.get_size()) {    // If the heap is empty don't update taxis
-                // The reverse logic here is intentional due to compiler optimizations
+                /* The reverse logic here is intentional due to compiler optimizations
+                * Execution of this scope is possibly only if no operations can be made, and there has to be m number
+                * of operations. So in order to satisfy the number of total operations, m is increased below.
+                * By doing so the empty queue at the start problem is solved as well. */
+                m++;
             } else {
                 int rand_index = get_random_int(0, taxi_heap.get_size() - 1);
                 taxi_heap.update_random_taxi(rand_index, 0.01);

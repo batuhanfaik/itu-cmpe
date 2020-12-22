@@ -70,6 +70,7 @@ double Heap::call_taxi() {
     // There is a p^100 chance of having an empty heap, therefore it should be considered
     if (taxis.empty()) {
         // The reverse logic here is intentional due to compiler optimizations
+        return -1;    // Return a distinguishable value in case the heap is empty
     } else {
         // Store the distance of the taxi in a local variable
         double distance = taxis.at(0).get_distance();
@@ -82,7 +83,6 @@ double Heap::call_taxi() {
         min_heapify(0);
         return distance;
     }
-    return -1;    // Return a distinguishable value in case the heap is empty
 }
 
 int Heap::get_size() const {
