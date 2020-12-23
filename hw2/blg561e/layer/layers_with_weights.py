@@ -1,4 +1,4 @@
-#Adapted from Stanford CS231n Course
+# Adapted from Stanford CS231n Course
 
 from .layer import Layer
 from copy import copy
@@ -7,9 +7,9 @@ import numpy as np
 
 
 class LayerWithWeights(Layer):
-    '''
+    """
         Abstract class for layer with weights(CNN, Affine etc...)
-    '''
+    """
 
     def __init__(self, input_size, output_size, seed=None):
         if seed is not None:
@@ -30,6 +30,7 @@ class LayerWithWeights(Layer):
 
     def __repr__(self):
         return 'Abstract layer class'
+
 
 class Conv2d(LayerWithWeights):
     def __init__(self, in_size, out_size, kernel_size, stride, padding):
@@ -53,13 +54,23 @@ class Conv2d(LayerWithWeights):
                                    (self.padding, self.padding)), 'constant')
 
         # Calculate output's H and W according to your lecture notes
-        out_H = np.int(((H + 2*self.padding - FH) / self.stride) + 1)
-        out_W = np.int(((W + 2*self.padding - FW) / self.stride) + 1)
+        out_H = np.int(((H + 2 * self.padding - FH) / self.stride) + 1)
+        out_W = np.int(((W + 2 * self.padding - FW) / self.stride) + 1)
 
         # Initiliaze the output
         out = np.zeros([N, F, out_H, out_W])
 
         # TO DO: Do cross-correlation by using for loops
+        for instance in range(N):  # for each input data
+            for filter in range(F):  # per filter
+                for height in range(out_H):
+                    for width in range(out_W):
+                        h = height * self.stride  # Starting height
+                        w = width * self.stride  # Starting width
+                        window = padded_x[instance, :, h:h + FH, w:w + FW]  # get the region to crop
+                        # Calculate forward (x_*w[f]+b[f])
+                        result = np.add(np.sum(np.multiply(window, self.W[filter])), self.b[filter])
+                        out[instance, filter, height, width] = result
 
         return out
 
@@ -75,13 +86,30 @@ class Conv2d(LayerWithWeights):
         dw = np.zeros_like(self.W).astype(np.float32)
         db = np.zeros_like(self.b).astype(np.float32)
 
-        db = None
-        dw = None
-        dx = None
 
         # Your implementation here
+        padded_dx = np.pad(dx_temp, ((0, 0), (0, 0), (self.padding, self.padding),
+                                     (self.padding, self.padding)), 'constant')
+        for instance in range(N):  # for each input data
+            for filter in range(F):  # per filter
+                for height in range(out_H):
+                    for width in range(out_W):
+                        h = height * self.stride  # Starting height
+                        w = width * self.stride  # Starting width
+                        # Get regions to backprop
+                        window = padded_x[instance, :, h:h + FH, w:w + FW]
+                        dx_window = padded_dx[instance, :, h:h + FH, w:w + FW]
+                        dprev_window = dprev[instance, filter, height, width]
+                        # Calculate backprop
+                        dw[filter] = np.add(dw[filter], np.multiply(window, dprev_window))
+                        db[filter] = np.add(db[filter], dprev_window)
+                        dx_window = np.add(dx_window, np.multiply(self.W[filter], dprev_window))
+                        # Replace the values in dx
+                        padded_dx[instance, :, h:h + FH, w:w + FW] = dx_window
+
+        # Remove padding
+        dx = padded_dx[:, :, self.padding:self.padding + out_H, self.padding:self.padding + out_W]
 
         self.db = db.copy()
         self.dW = dw.copy()
         return dx, dw, db
-
