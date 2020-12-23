@@ -1,4 +1,4 @@
-#Adapted from Stanford CS231n Course
+# Adapted from Stanford CS231n Course
 import numpy as np
 from abc import ABC, abstractmethod
 from .helpers import flatten_unflatten
@@ -42,27 +42,31 @@ class Dropout(Layer):
             np.random.seed(seed)
         # YOUR CODE STARTS
         if self.mode == 'train':
-            out = None
-
             # Create a dropout mask
-            mask = None
+            # The mask is divided with the probability to regularize the output
+            mask = (np.random.rand(*np.shape(x)) < self.p) / self.p
 
             # Do not forget to save the created mask for dropout in order to use it in backward
             self.mask = mask.copy()
 
-            out = None
+            out = np.multiply(x, mask)
 
             return out
         elif self.mode == 'test':
-            out = None
+            # Don't apply dropout when testing
+            out = x
             return out
         # YOUR CODE ENDS
         else:
             raise ValueError('Invalid argument!')
 
     def backward(self, dprev):
-
-        dx = None
+        if self.mode == "train":
+            dx = np.multiply(dprev, self.mask)
+        elif self.mode == "test":
+            dx = dprev
+        else:
+            raise ValueError('Invalid argument!')
         return dx
 
 
@@ -89,7 +93,6 @@ class BatchNorm(Layer):
             if gamma is not None:
                 self.gamma = gamma.copy()
             if beta is not None:
-
                 self.beta = beta.copy()
 
             # Normalise our batch
@@ -110,7 +113,7 @@ class BatchNorm(Layer):
             self.running_mean = running_mean.copy()
             self.running_var = running_var.copy()
 
-            self.ivar = 1./np.sqrt(sample_var + 1e-5)
+            self.ivar = 1. / np.sqrt(sample_var + 1e-5)
             self.sqrtvar = np.sqrt(sample_var + 1e-5)
 
             return out
@@ -174,4 +177,3 @@ class Flatten(Layer):
 
     def backward(self, dprev):
         return dprev.reshape(self.N, self.C, self.H, self.W)
-
