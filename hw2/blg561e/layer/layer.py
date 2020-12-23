@@ -150,7 +150,15 @@ class MaxPool2d(Layer):
         out = np.zeros([N, C, out_H, out_W])
 
         # Implement MaxPool
-        # YOUR CODE HERE
+        for instance in range(N):  # for each input data
+            for channel in range(C):  # per filter
+                for height in range(out_H):
+                    for width in range(out_W):
+                        h = height * self.stride  # Starting height
+                        w = width * self.stride  # Starting width
+                        window = x[instance, channel, h:h + self.pool_height, w:w + self.pool_width]
+                        # Get max window
+                        out[instance, channel, height, width] = np.max(window)
 
         return out
 
@@ -163,6 +171,18 @@ class MaxPool2d(Layer):
 
         # Calculate the gradient (dx)
         # YOUR CODE HERE
+        for instance in range(N):  # for each input data
+            for channel in range(C):  # per filter
+                for height in range(dprev_H):
+                    for width in range(dprev_W):
+                        h = height * self.stride  # Starting height
+                        w = width * self.stride  # Starting width
+                        window = x[instance, channel, h:h + self.pool_height, w:w + self.pool_width]
+                        # Get max window (max window is recalculated because switches are not being
+                        # used in this implementation)
+                        activation_window = np.max(window)
+                        neurons_to_activate = activation_window == window
+                        dx[instance, channel, h:h + self.pool_height, w:w + self.pool_width] = np.multiply(neurons_to_activate, dprev[instance, channel, height, width])
         return dx
 
 
