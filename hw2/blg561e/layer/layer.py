@@ -96,18 +96,16 @@ class BatchNorm(Layer):
                 self.beta = beta.copy()
 
             # Normalise our batch
-            self.normalized = ((x - sample_mean) /
-                               np.sqrt(sample_var + 1e-5)).copy()
+            self.normalized = ((x - sample_mean) / np.sqrt(sample_var + 1e-5)).copy()
             self.x_sub_mean = x - sample_mean
 
             # YOUR CODE HERE
-
             # Update our running mean and variance then store.
 
-            running_mean = None
-            running_var = None
+            running_mean = self.running_mean * self.momentum + sample_mean * (1 - self.momentum)
+            running_var = self.running_var * self.momentum + sample_var * (1 - self.momentum)
 
-            out = None
+            out = self.gamma * self.normalized + self.beta
 
             # YOUR CODE ENDS
             self.running_mean = running_mean.copy()
@@ -118,7 +116,7 @@ class BatchNorm(Layer):
 
             return out
         elif self.mode == 'test':
-            out = None
+            out = self.gamma * ((x - self.running_mean) / np.sqrt(self.running_var + 1e-5)) + self.beta
         else:
             raise Exception(
                 "INVALID MODE! Mode should be either test or train")
@@ -128,6 +126,16 @@ class BatchNorm(Layer):
         N, D = dprev.shape
         # YOUR CODE HERE
         dx, dgamma, dbeta = None, None, None
+        # Partial derivatives of gamme and beta
+        # Below formulae are obtained from the original batch norm paper in section 3, par. 8
+        dgamma = np.sum(np.multiply(dprev, self.normalized), axis=0)
+        dbeta = np.sum(dprev, axis=0)
+        # Intermediary partial derivatives
+        # For relatively large multiplications I prefer numpy's multiply method over python multiply
+        dx_ = np.multiply(dprev, self.gamma)
+        # Below formula is obtained from the original batch norm paper in section 3, par. 8
+        # Formula: 1/(N*var)*(N*dXhat-\Sigma(dXhat)-X_norm*\Sigma(dXhat*X_norm))
+        dx = 1/N * self.ivar * (N * dx_ - np.sum(dx_, axis=0) - np.multiply(self.normalized, np.sum(np.multiply(dx_, self.normalized), axis=0)))
         # Calculate the gradients
         return dx, dgamma, dbeta
 
