@@ -44,11 +44,12 @@ class Dropout(Layer):
         if self.mode == 'train':
             # Create a dropout mask
             # The mask is divided with the probability to regularize the output
+            # p is the probability that a random neuron will be kept
             mask = (np.random.rand(*np.shape(x)) < self.p) / self.p
 
             # Do not forget to save the created mask for dropout in order to use it in backward
             self.mask = mask.copy()
-
+            # Apply the mask
             out = np.multiply(x, mask)
 
             return out
@@ -62,8 +63,10 @@ class Dropout(Layer):
 
     def backward(self, dprev):
         if self.mode == "train":
+            # Use dropout
             dx = np.multiply(dprev, self.mask)
         elif self.mode == "test":
+            # Don't use dropout
             dx = dprev
         else:
             raise ValueError('Invalid argument!')
@@ -101,10 +104,11 @@ class BatchNorm(Layer):
 
             # YOUR CODE HERE
             # Update our running mean and variance then store.
-
+            # Running mean and variance are calculated to use in backprop
             running_mean = self.running_mean * self.momentum + sample_mean * (1 - self.momentum)
             running_var = self.running_var * self.momentum + sample_var * (1 - self.momentum)
-
+            # Below formula is obtained from the original batch norm paper in section 3, algo. 1
+            # y_i = \gamma*Xhat+\beta
             out = self.gamma * self.normalized + self.beta
 
             # YOUR CODE ENDS
