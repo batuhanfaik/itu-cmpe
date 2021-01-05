@@ -2,13 +2,14 @@
 // Created by batuhanfaik on 04/01/2021.
 //
 
+#include <iostream>
 #include "player.h"
 
 using namespace std;
 
 Player::Player() {
-    full_name = nullptr;
-    team = nullptr;
+    full_name = "NIL";
+    team = "NIL";
     rebound = -1;
     assist = -1;
     point = -1;
@@ -40,4 +41,8 @@ Player* Player::get_null_player() {
 void Player::nodify_player(Player* player,Player* null_player) {
     player->left_child = null_player;
     player->right_child = null_player;
+}
+
+void Player::print_player() {
+    cout << full_name << " " << team << " " << rebound << " " << assist << " " << point << endl;
 }

@@ -2,6 +2,7 @@
 // Created by batuhanfaik on 04/01/2021.
 //
 
+#include <iostream>
 #include "playerdatabase.h"
 #include "player.h"
 
@@ -11,8 +12,18 @@ PlayerDatabase::PlayerDatabase() {
     Player* null_player = Player::get_null_player();
     this->root = null_player;
     this->nil = null_player;
-    this->first_season = nullptr;
-    this->current_season = nullptr;
+    this->first_season = "";
+    this->current_season = "";
+    this->max_rebound = 0;
+    this->max_rebound_name = "";
+    this->max_assist = 0;
+    this->max_assist_name = "";
+    this->max_point = 0;
+    this->max_point_name = "";
+}
+
+string PlayerDatabase::get_first_season() {
+    return first_season;
 }
 
 string PlayerDatabase::get_season() {
@@ -24,10 +35,31 @@ void PlayerDatabase::set_first_season(string season) {
 }
 
 void PlayerDatabase::set_season(string season) {
+    string prev_season = current_season;
     this->current_season = season;
+    if (!first_season.empty())
+        print_season_bests(prev_season);
+}
+
+void PlayerDatabase::update_season_bests(Player* player_in) {
+    // Update season statistics
+    if (player_in->rebound > max_rebound) {
+        max_rebound = player_in->rebound;
+        max_rebound_name = player_in->full_name;
+    }
+    if (player_in->assist > max_assist) {
+        max_assist = player_in->assist;
+        max_assist_name = player_in->full_name;
+    }
+    if (player_in->point > max_point) {
+        max_point = player_in->point;
+        max_point_name = player_in->full_name;
+    }
 }
 
 void PlayerDatabase::add_player(Player* player_in) {
+    // Update season statistics
+    update_season_bests(player_in);
     // Turn the player into a tree node
     Player::nodify_player(player_in, nil);
     // Find where to insert the new player using binary search tree insertion (iterative method)
@@ -50,20 +82,50 @@ void PlayerDatabase::add_player(Player* player_in) {
         player_in->color = 0;    // Root of RB tree is always black
         root = player_in;
         return;
-    } else if (player_in->full_name < parent_player->full_name) {
+    } else if (player_in->full_name < parent_player->full_name) {    // Should be the left child
         parent_player->left_child = player_in;
-    } else {
+    } else {    // Should be the right child
         parent_player->right_child = player_in;
     }
-    // If the height is less than two the tree is complete, otherwise reset the red-black properties
+    // If the height of the node is less than or equal to two the tree is complete,
+    // otherwise reset the red-black properties
     if (player_in->parent->parent){
         // Fix (reset) the database
         fix_database(player_in);
     } else {
-        // Height is two
+        // Height is more then two
         return;
     }
 
+}
+
+void PlayerDatabase::update_player(Player* player_in) {
+    // Update season statistics
+    update_season_bests(player_in);
+    // Turn the player into a tree node
+    Player::nodify_player(player_in, nil);
+    // Get the player to update
+    Player* player_update;
+    player_update = search_player(root, player_in->full_name);
+    if (player_update == nil) {    // The player isn't in the database
+        cout << "Player " << player_in->full_name << " can't be found!" << endl;
+    } else {    // Update the player
+        player_update->team = player_in->team;
+        player_update->rebound = player_in->rebound;
+        player_update->assist = player_in->assist;
+        player_update->point = player_in->point;
+    }
+    delete (player_in);
+}
+
+Player* PlayerDatabase::search_player(Player* player_in, const string& player_name){
+    if (player_name == player_in->full_name || player_in == nil){    // Found the player
+        return player_in;
+    } else if (player_name < player_in->full_name) {    // Go to left child
+        return search_player(player_in->left_child, player_name);
+    } else {    // Go to right child
+        return search_player(player_in->right_child, player_name);
+    }
 }
 
 void PlayerDatabase::rotate_left(Player* current){
@@ -111,7 +173,7 @@ void PlayerDatabase::rotate_right(Player* current){
 void PlayerDatabase::fix_database(Player* player_in) {
     Player* temp_player;
 
-    while (player_in->parent->color == 1 && player_in != root){
+    while (player_in->parent && player_in != root && player_in->parent->color == 1){
         if (player_in->parent == player_in->parent->parent->right_child) {
             temp_player = player_in->parent->parent->left_child;    // Uncle
             if (temp_player->color == 1) {
@@ -134,20 +196,64 @@ void PlayerDatabase::fix_database(Player* player_in) {
         } else {
             temp_player = player_in->parent->parent->right_child;    // Uncle
             if (temp_player->color == 1){
-                // Case 3.2.2
-                player_in = player_in->parent;
-                rotate_left(player_in);
+                // Case 3.1
+                temp_player->color = 0;
+                player_in->parent->color = 0;
+                player_in->parent->parent->color = 1;
+                player_in = player_in->parent->parent;
+            } else {
+                if (player_in == player_in->parent->right_child) {
+                    // Case 3.2.2
+                    player_in = player_in->parent;
+                    rotate_left(player_in);
+                }
+                // Case 3.2.1
+                player_in->parent->color = 0;
+                player_in->parent->parent->color = 1;
+                rotate_right(player_in->parent->parent);
             }
-            // Case 3.2.1
-            player_in->parent->color = 0;
-            player_in->parent->parent->color = 1;
-            rotate_right(player_in->parent->parent);
         }
     }
     // In case the root is replaced, make sure it is black
     root->color = 0;
 }
 
+void PlayerDatabase::preorder_print(Player* player, string indentation){
+    // Postorder = L R N
+    if (player != nil){
+        string color;
+        if (player->color){
+            color = "(RED) ";
+        } else {
+            color = "(BLACK) ";
+        }
+        cout << indentation << color << player->full_name << endl;
+        indentation += "-";
+        preorder_print(player->left_child, indentation);
+        preorder_print(player->right_child, indentation);
+    }
+}
+
+void PlayerDatabase::print_database() {
+    preorder_print(root, "");
+}
+
+void PlayerDatabase::print_season_bests(const string& season) {
+    cout << "End of the " << season << " Season" << endl;
+    cout << "Max Points: " << max_point << " - Player Name: " << max_point_name << endl
+         << "Max Assists: " << max_assist << " - Player Name: " << max_assist_name << endl
+         << "Max Rebounds: " << max_rebound << " - Player Name: " << max_rebound_name << endl;
+}
+
+void PlayerDatabase::postorder_delete(Player* player_in) {
+    // Postorder = L R N
+    if (player_in != nil){
+        postorder_delete(player_in->left_child);
+        postorder_delete(player_in->right_child);
+        delete (player_in);
+    }
+}
+
 PlayerDatabase::~PlayerDatabase() {
-    // TODO: Implement destructor
+    postorder_delete(root);
 }

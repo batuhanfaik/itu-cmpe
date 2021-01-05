@@ -14,15 +14,30 @@ class PlayerDatabase {
     Player* nil;
     string first_season;
     string current_season;
+    int max_rebound;
+    string max_rebound_name;
+    int max_assist;
+    string max_assist_name;
+    int max_point;
+    string max_point_name;
+    // Methods
+    void update_season_bests(Player*);
+    Player* search_player(Player*, const string&);
+    void rotate_left(Player*);
+    void rotate_right(Player*);
+    void fix_database(Player*);
+    void preorder_print(Player*, string);
+    void print_season_bests(const string&);
+    void postorder_delete(Player*);
 public:
     PlayerDatabase();
+    string get_first_season();
     string get_season();
     void set_first_season(string);
     void set_season(string);
     void add_player(Player*);
-    void rotate_left(Player*);
-    void rotate_right(Player*);
-    void fix_database(Player*);
+    void update_player(Player*);
+    void print_database();
     ~PlayerDatabase();
 };
 

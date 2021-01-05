@@ -29,6 +29,7 @@ class Player {
 public:
     Player(string, string, int, int, int);
     static Player* get_null_player();
+    void print_player();
     // No getter, setter required, db is friended
 };
 
