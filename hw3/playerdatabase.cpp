@@ -22,23 +22,20 @@ PlayerDatabase::PlayerDatabase() {
     this->max_point_name = "";
 }
 
-string PlayerDatabase::get_first_season() {
-    return first_season;
-}
-
 string PlayerDatabase::get_season() {
     return current_season;
-}
-
-void PlayerDatabase::set_first_season(string season) {
-    this->first_season = season;
 }
 
 void PlayerDatabase::set_season(string season) {
     string prev_season = current_season;
     this->current_season = season;
-    if (!first_season.empty())
+    if (first_season.empty()){    // If the first season is not set, set it
+        first_season = season;
+    } else {    // Print the season statistics and the database
         print_season_bests(prev_season);
+        if (prev_season == first_season)    // Print the db for the first season
+            print_database();
+    }
 }
 
 void PlayerDatabase::update_season_bests(Player* player_in) {
@@ -100,8 +97,6 @@ void PlayerDatabase::add_player(Player* player_in) {
 }
 
 void PlayerDatabase::update_player(Player* player_in) {
-    // Update season statistics
-    update_season_bests(player_in);
     // Turn the player into a tree node
     Player::nodify_player(player_in, nil);
     // Get the player to update
@@ -111,11 +106,21 @@ void PlayerDatabase::update_player(Player* player_in) {
         cout << "Player " << player_in->full_name << " can't be found!" << endl;
     } else {    // Update the player
         player_update->team = player_in->team;
-        player_update->rebound = player_in->rebound;
-        player_update->assist = player_in->assist;
-        player_update->point = player_in->point;
+        player_update->rebound += player_in->rebound;
+        player_update->assist += player_in->assist;
+        player_update->point += player_in->point;
     }
+    // Update season statistics
+    update_season_bests(player_update);
     delete (player_in);
+}
+
+bool PlayerDatabase::player_exists(Player* player_in) {
+    if (search_player(root, player_in->full_name) == nil) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 Player* PlayerDatabase::search_player(Player* player_in, const string& player_name){
@@ -171,43 +176,42 @@ void PlayerDatabase::rotate_right(Player* current){
 }
 
 void PlayerDatabase::fix_database(Player* player_in) {
-    Player* temp_player;
-
+    /* While parent of new node is red (other conditions are necessary to stay within the tree)
+    * Violation of 4th property needs to be resolved
+    * The 4th property and the algorithm implemented below can be found on this course's textbook
+    * Thomas H. Cormen, Introduction to Algorithms, 2001 in Chapter 13 */
     while (player_in->parent && player_in != root && player_in->parent->color == 1){
-        if (player_in->parent == player_in->parent->parent->right_child) {
-            temp_player = player_in->parent->parent->left_child;    // Uncle
-            if (temp_player->color == 1) {
-                // Case 3.1
-                temp_player->color = 0;
-                player_in->parent->color = 0;
-                player_in->parent->parent->color = 1;
-                player_in = player_in->parent->parent;
-            } else {
-                if (player_in == player_in->parent->left_child){
-                    // Case 3.2.2
-                    player_in = player_in->parent;
-                    rotate_right(player_in);
+        Player* uncle = player_in->parent->parent->right_child;    // Set the uncle
+        // Check new node's uncle to resolve 4th property
+        if (player_in->parent == uncle) {    // If uncle is parent
+            uncle = uncle->parent->left_child;    // Swap the uncle with its sibling
+            if (uncle->color == 1) {    // If parent and the uncle are red
+                uncle->color = 0;    // Uncle becomes black
+                player_in->parent->color = 0;    // Parent becomes black
+                player_in->parent->parent->color = 1;    // Grandparent becomes red
+                player_in = player_in->parent->parent;    // Update new node (player)
+            } else {    // Parent is red and uncle is black
+                // If R - L condition is satisfied
+                if (player_in == player_in->parent->left_child) {
+                    player_in = player_in->parent;    // Update new node (player)
+                    rotate_right(player_in);    // Perform right rotation
                 }
-                // Case 3.2.1
-                player_in->parent->color = 0;
-                player_in->parent->parent->color = 1;
-                rotate_left(player_in->parent->parent);
+                // Condition is simplified to R - R
+                player_in->parent->color = 0;    // Parent (or previous grandparent) becomes black
+                player_in->parent->parent->color = 1;    // Previous grandparent (new sibling) becomes red
+                rotate_left(player_in->parent->parent);    // Perform left rotation
             }
-        } else {
-            temp_player = player_in->parent->parent->right_child;    // Uncle
-            if (temp_player->color == 1){
-                // Case 3.1
-                temp_player->color = 0;
+        } else {    // If left child of grandparent is the parent, everything should be mirrored
+            if (uncle->color == 1){
+                uncle->color = 0;
                 player_in->parent->color = 0;
                 player_in->parent->parent->color = 1;
                 player_in = player_in->parent->parent;
             } else {
                 if (player_in == player_in->parent->right_child) {
-                    // Case 3.2.2
                     player_in = player_in->parent;
                     rotate_left(player_in);
                 }
-                // Case 3.2.1
                 player_in->parent->color = 0;
                 player_in->parent->parent->color = 1;
                 rotate_right(player_in->parent->parent);
@@ -255,5 +259,6 @@ void PlayerDatabase::postorder_delete(Player* player_in) {
 }
 
 PlayerDatabase::~PlayerDatabase() {
+    // Clean your own memory
     postorder_delete(root);
 }

@@ -38,7 +38,6 @@ int main(int argc, char** argv) {
     auto* player_db = new PlayerDatabase();
     string line, season, full_name, team;
     int rebound, assist, point;
-    bool printed = false;
 
     getline(file, line); // Read the header line
 
@@ -48,8 +47,6 @@ int main(int argc, char** argv) {
         getline(file, season, ',');     // Read season
         if (player_db->get_season() != season) {    // Change the season
             player_db->set_season(season);
-            if (player_db->get_first_season().empty())    // If the first season is not set, set it
-                player_db->set_first_season(season);
         }
         getline(file, full_name, ',');    // Read full name
         getline(file, team, ',');    // Read team
@@ -59,17 +56,12 @@ int main(int argc, char** argv) {
         assist = stoi(line);
         getline(file, line, '\n');    // Read point
         point = stoi(line);
-//        getline(file, line, '\n');    // Read the last new line character
         // Create player
         auto* player = new Player(full_name, team, rebound, assist, point);
-        if (player_db->get_season() == player_db->get_first_season()){    // If it's the first season
+        if (!player_db->player_exists(player)){    // If the player doesn't exist
             // Add player to db (tree)
             player_db->add_player(player);
-        } else {    // For new seasons update players
-            if (!printed) {    // Print the db when the first season ends
-                player_db->print_database();
-                printed = true;
-            }
+        } else {    // If player already exists in the db
             // Update the existing player
             player_db->update_player(player);
         }
