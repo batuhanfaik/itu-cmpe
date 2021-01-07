@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %} Main Page {% endblock title %}
+
+{% block stylesheet %}
+
+    <link href="mainpage.css" rel="stylesheet">
+    
+    {{ block.super }}
+
+{% endblock stylesheet %}
+
+{% block content %}
+    <body>
+    {% include "navbar.html" %}
+      
+      <main role="main" class="container">
+        <div class="jumbotron">
+          <h1>Lorem Ipsum</h1>
+          <p class="lead">Welcome to the Pladat</p>
+          <a class="btn btn-lg btn-primary" href="../components/navbar/" role="button">Ye Ya Yo &raquo;</a>
+        </div>
+      </main>
+      {{ block.super }}
+    </body>
+{% endblock content %}
