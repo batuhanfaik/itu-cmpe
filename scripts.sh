@@ -11,7 +11,3 @@ makemigrations() {
 migrate() {
   python3 manage.py migrate
 }
-
-clearmigrations() {
-  rm /apps/*/migrations -v !("__init__.py")
-}
