@@ -1,11 +1,19 @@
+
+from .models import PladatUser
 from django import forms
 
-USER_TYPE = (
-    (0, 'I want to find internships'),
-    (1, 'I want to find students for my job posting'),
-)
 
-class RegistrationForm(forms.Form):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), label='Please enter your email', required=True)
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}), label='Please enter your password', required=True)
-    user_type = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), choices=USER_TYPE)
+class RegistrationForm(forms.ModelForm):
+    STUDENT = 0
+    COMPANY = 1
+    USER_TYPE = (
+        (STUDENT, 'I want to find internships'),
+        (COMPANY, 'I want to find students for my job posting'),
+    )
+    user_type = forms.ChoiceField(choices=USER_TYPE)
+    email = forms.EmailField(label='Please enter your email', required=True)
+    password = forms.CharField(label='Please enter your password', required=True)
+
+    class Meta:
+        model = PladatUser
+        fields = ['first_name', 'last_name', 'phone_number', 'address', 'city', 'state', 'country']

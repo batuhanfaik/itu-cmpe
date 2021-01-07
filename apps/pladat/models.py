@@ -8,7 +8,6 @@ class PladatUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     first_name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
-    email = models.EmailField(max_length=128)
     phone_number = PhoneNumberField()  # https://pypi.org/project/django-phonenumber-field/
     address = models.CharField(max_length=128)
     city = models.CharField(max_length=128)
