@@ -13,3 +13,12 @@ class PladatUser(models.Model):
     city = models.CharField(max_length=128)
     state = models.CharField(max_length=128, null=True)
     country = CountryField()  # https://pypi.org/project/django-countries/
+    
+    STUDENT = 0
+    COMPANY = 1
+    USER_TYPE = [
+        (STUDENT, 'Student account'),
+        (COMPANY, 'Company account'),
+    ]
+    user_type = models.IntegerField(choices=USER_TYPE)
+
