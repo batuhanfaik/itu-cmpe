@@ -109,25 +109,25 @@ class DataReader(torch.utils.data.Dataset):
 					
 		elif mode == 'val':
 
-			train_input_folder = os.listdir("val")
-			train_input_folder = sorted(train_input_folder)
+			val_input_folder = os.listdir("train")
+			val_input_folder = sorted(val_input_folder)
 
 			normal_counter = 0
 			corona_counter = 0
 
-			for i in range(len(train_input_folder)):
-				if self.dataset_type[train_input_folder[i]] == "VAL":
-					temp_path = "val/" + train_input_folder[i]#input image's path
+			for i in range(len(val_input_folder)):
+				if self.dataset_type[val_input_folder[i]] == "VAL":
+					temp_path = "val/" + val_input_folder[i]#input image's path
 					self.input_img_paths.append(temp_path)
 					
 					if multi_class == True:
-						if self.label_1[train_input_folder[i]] == "Virus":
+						if self.label_1[val_input_folder[i]] == "Virus":
 							self.input_label.append(1)
 							corona_counter += 1
-						elif self.label_1[train_input_folder[i]] == "bacteria":
+						elif self.label_1[val_input_folder[i]] == "bacteria":
 							self.input_label.append(2)
 							corona_counter += 1
-						elif self.label_1[train_input_folder[i]] == "Stress-Smoking":
+						elif self.label_1[val_input_folder[i]] == "Stress-Smoking":
 							self.input_label.append(3)				
 							corona_counter += 1
 						else:
@@ -136,7 +136,7 @@ class DataReader(torch.utils.data.Dataset):
 							normal_counter += 1
 					
 					else:
-						if self.label[train_input_folder[i]] == "Normal":
+						if self.label[val_input_folder[i]] == "Normal":
 							self.input_label.append(0)
 							self.healthy.append(temp_path)
 						else:
@@ -151,25 +151,25 @@ class DataReader(torch.utils.data.Dataset):
 						normal_counter += 1
 					
 		elif mode == 'test':
-			train_input_folder = os.listdir("test")
-			train_input_folder = sorted(train_input_folder)
+			test_input_folder = os.listdir("test")
+			test_input_folder = sorted(test_input_folder)
 
 			normal_counter = 0
 			corona_counter = 0
 
-			for i in range(len(train_input_folder)):
-				if self.dataset_type[train_input_folder[i]] == "TEST":
-					temp_path = "test/" + train_input_folder[i]#input image's path
+			for i in range(len(test_input_folder)):
+				if self.dataset_type[test_input_folder[i]] == "TEST":
+					temp_path = "test/" + test_input_folder[i]#input image's path
 					self.input_img_paths.append(temp_path)
 					
 					if multi_class == True:
-						if self.label_1[train_input_folder[i]] == "Virus":
+						if self.label_1[test_input_folder[i]] == "Virus":
 							self.input_label.append(1)
 							corona_counter += 1
-						elif self.label_1[train_input_folder[i]] == "bacteria":
+						elif self.label_1[test_input_folder[i]] == "bacteria":
 							self.input_label.append(2)
 							corona_counter += 1
-						elif self.label_1[train_input_folder[i]] == "Stress-Smoking":
+						elif self.label_1[test_input_folder[i]] == "Stress-Smoking":
 							self.input_label.append(3)				
 							corona_counter += 1
 						else:
@@ -178,7 +178,7 @@ class DataReader(torch.utils.data.Dataset):
 							normal_counter += 1
 					
 					else:
-						if self.label[train_input_folder[i]] == "Normal":
+						if self.label[test_input_folder[i]] == "Normal":
 							self.input_label.append(0)
 							self.healthy.append(temp_path)
 						else:
