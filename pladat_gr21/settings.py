@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.pladat',
     'django_countries',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [

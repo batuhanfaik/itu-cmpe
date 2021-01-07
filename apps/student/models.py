@@ -4,9 +4,12 @@ from django_countries.fields import CountryField
 class Student(models.Model):
     first_name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
+    email = models.EmailField(max_length=128)
+    phone_number = PhoneNumberField()  # https://pypi.org/project/django-phonenumber-field/
+    address = models.CharField(max_length=128)
     city = models.CharField(max_length=128)
     state = models.CharField(max_length=128, null=True)
-    country = CountryField()    # https://pypi.org/project/django-countries/
+    country = CountryField()  # https://pypi.org/project/django-countries/
     DEGREES = [
         ("bsc", "Bachelor of Science"),
         ("msc", "Master of Science"),
