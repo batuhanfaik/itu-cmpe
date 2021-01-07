@@ -16,9 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from pladat.views import main_page_view
+from apps.pladat.views import main_page_view
 
 urlpatterns = [
-    path('', include('pladat.urls')),
+    path('', include('apps.pladat.urls')),
     path('admin/', admin.site.urls),
 ]
