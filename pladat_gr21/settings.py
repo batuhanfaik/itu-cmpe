@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'apps.company',
+    'apps.jobs',
     'apps.pladat',
+    'apps.student',
     'django_countries',
     'phonenumber_field',
 ]

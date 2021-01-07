@@ -11,14 +11,14 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
+        ('pladat', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PladatUser',
+            name='Student',
             fields=[
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='auth.user')),
+                ('pladatuser', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='pladat.pladatuser')),
                 ('first_name', models.CharField(max_length=128)),
                 ('last_name', models.CharField(max_length=128)),
                 ('email', models.EmailField(max_length=128)),
@@ -27,6 +27,13 @@ class Migration(migrations.Migration):
                 ('city', models.CharField(max_length=128)),
                 ('state', models.CharField(max_length=128, null=True)),
                 ('country', django_countries.fields.CountryField(max_length=2)),
+                ('degree', models.CharField(choices=[('bsc', 'Bachelor of Science'), ('msc', 'Master of Science')], max_length=8)),
+                ('major', models.CharField(choices=[('cmpe', 'Computer Engineering'), ('math', 'Mathematics')], max_length=8)),
+                ('university', models.CharField(choices=[('itu', 'Istanbul Technical University'), ('boun', 'Bogazici University'), ('koc', 'Koc University')], max_length=8)),
+                ('number_of_previous_work_experience', models.IntegerField(default=0)),
+                ('years_worked', models.IntegerField(default=0)),
+                ('is_currently_employed', models.BooleanField(default=False)),
+                ('skills_text', models.TextField(max_length=512)),
             ],
         ),
     ]

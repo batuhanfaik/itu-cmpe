@@ -1,7 +1,14 @@
 from django.db import models
+
 from django_countries.fields import CountryField
+from phonenumber_field.modelfields import PhoneNumberField
+
+from apps.pladat.models import PladatUser
 
 class Student(models.Model):
+
+    pladatuser = models.OneToOneField(PladatUser, on_delete = models.CASCADE, primary_key = True)
+
     first_name = models.CharField(max_length=128)
     last_name = models.CharField(max_length=128)
     email = models.EmailField(max_length=128)
