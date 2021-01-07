@@ -14,7 +14,7 @@ def load_input_img(filepath):
 	return img
 
 class DataReader(torch.utils.data.Dataset):
-	def __init__(self, mode, oversample, multi_class):
+	def __init__(self, mode, path, oversample, multi_class):
 		super(DataReader, self).__init__()
 
 		
@@ -23,7 +23,7 @@ class DataReader(torch.utils.data.Dataset):
 		self.mode = mode		
 		self.multi_class = multi_class
 
-		df = pd.read_csv("Chest_xray_Corona_Metadata.csv")
+		df = pd.read_csv(path)
 		df = df.fillna(0)
 		df_to_dict = df.set_index('X_ray_image_name').to_dict()
 
@@ -117,7 +117,7 @@ class DataReader(torch.utils.data.Dataset):
 
 			for i in range(len(val_input_folder)):
 				if self.dataset_type[val_input_folder[i]] == "VAL":
-					temp_path = "val/" + val_input_folder[i]#input image's path
+					temp_path = "train/" + val_input_folder[i]#input image's path
 					self.input_img_paths.append(temp_path)
 					
 					if multi_class == True:
@@ -141,14 +141,6 @@ class DataReader(torch.utils.data.Dataset):
 							self.healthy.append(temp_path)
 						else:
 							self.input_label.append(1)
-			
-			if oversample == True:
-					num_size = corona_counter - normal_counter
-					random_numbers = np.random.randint(len(self.healthy), size=num_size)
-					for i in random_numbers:
-						self.input_img_paths.append(self.healthy[i])
-						self.input_label.append(0)
-						normal_counter += 1
 					
 		elif mode == 'test':
 			test_input_folder = os.listdir("test")
@@ -183,15 +175,6 @@ class DataReader(torch.utils.data.Dataset):
 							self.healthy.append(temp_path)
 						else:
 							self.input_label.append(1)
-			
-			if oversample == True:
-					num_size = corona_counter - normal_counter
-					random_numbers = np.random.randint(len(self.healthy), size=num_size)
-
-					for i in random_numbers:
-						self.input_img_paths.append(self.healthy[i])
-						self.input_label.append(0)
-						normal_counter += 1
 					
 	def __getitem__(self, index):
 		if self.mode == 'train':
