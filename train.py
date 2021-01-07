@@ -78,10 +78,10 @@ numworkers = 1
 multi_class = True
 oversample = True
 
-train_loader = torch.utils.data.DataLoader(DataReader(mode='train',oversample=oversample, multi_class=multi_class), batch_size=BATCH_SIZE, shuffle=True,
+train_loader = torch.utils.data.DataLoader(DataReader(mode='train',path="folds/fold_1.csv", oversample=oversample, multi_class=multi_class), batch_size=BATCH_SIZE, shuffle=True,
 										   num_workers=numworkers)
 
-val_loader = torch.utils.data.DataLoader(DataReader(mode='test',oversample=oversample, multi_class=multi_class), batch_size=BATCH_SIZE, shuffle=True,
+val_loader = torch.utils.data.DataLoader(DataReader(mode='val', path="folds/fold_1.csv", oversample=oversample, multi_class=multi_class), batch_size=BATCH_SIZE, shuffle=True,
 										   num_workers=numworkers)                                           
 
 experiment_name = prepare_experiment()
