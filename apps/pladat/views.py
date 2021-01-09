@@ -37,7 +37,7 @@ def register_user(data):
     pladatuser = PladatUser.objects.create(**pladatuser_dct)
     pladatuser.save()
 
-    if data['user_type'] == PladatUser.STUDENT:
+    if data['user_type'] == PladatUser.User_Type.STUDENT:
         fields = ['degree', 'major', 'university', 'number_of_previous_work_experience', 'years_worked', 'is_currently_employed', 'skills_text']
         student_dct = {key: data[key] for key in fields}
         student_dct['pladatuser'] = pladatuser
@@ -45,7 +45,7 @@ def register_user(data):
         student = Student.objects.create(**student_dct)
         student.save()
         
-    elif data['user_type'] == PladatUser.COMPANY:
+    elif data['user_type'] == PladatUser.User_Type.COMPANY:
         recruiter = Recruiter.objects.create(pladatuser = pladatuser)
         recruiter.save()
 
@@ -70,7 +70,7 @@ def registration_view(request):
         if registration_form.is_valid():
             email = registration_form.data['email']
 
-            if User.objects.get(email = email):
+            if User.objects.filter(email = email).exists():
                 # Email already in use
                 registration_form.add_error('email', 'Email is already in use')
                 ctx['form'] = registration_form

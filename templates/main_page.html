@@ -3,11 +3,9 @@
 {% block title %} Main Page {% endblock title %}
 
 {% block stylesheet %}
-
-    <link href="mainpage.css" rel="stylesheet">
-    
-    {{ block.super }}
-
+{{ block.super }}
+{% load static %}
+    <link href=" {% static 'pladat/mainpage.css' %}" rel="stylesheet">
 {% endblock stylesheet %}
 
 {% block content %}
@@ -16,5 +14,4 @@
         <p class="lead">Welcome to the Pladat</p>
         <a class="btn btn-lg btn-primary" href="../components/navbar/" role="button">Ye Ya Yo &raquo;</a>
       </div>
-      {{ block.super }}
 {% endblock content %}
