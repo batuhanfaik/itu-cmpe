@@ -13,9 +13,8 @@ from .models import PladatUser
 def main_page_view(request):
     ctx = {}
 
-    if not request.user.is_authenticated:
-        # Check if user logged in
-        ctx = {'user': 'guest'}
+    if request.user.is_authenticated:
+        ctx = {'user': request.user}
 
     return render(request, 'main_page.html', context=ctx)
 
@@ -55,9 +54,7 @@ def register_user(data):
 def registration_view(request):
     ctx = {}
     
-    if not request.user.is_authenticated:
-        ctx['user'] = 'guest'
-    else:
+    if request.user.is_authenticated:
         return HttpResponse('Already a registered user')
 
     if request.method == 'GET':
@@ -89,9 +86,8 @@ def registration_view(request):
 def student_profile_view(request):
     ctx = {}
 
-    # if not request.user.is_authenticated:
-    #     # Check if user logged in
-    #     ctx = {'user': 'guest'}
+    if request.user.is_authenticated:
+        ctx = {'user': request.user}
 
     return render(request, 'student_profile.html', context=ctx)
 

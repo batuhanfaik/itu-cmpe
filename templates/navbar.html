@@ -13,7 +13,7 @@
         </li>
       </ul>
     <ul class="navbar-nav ml-auto justify-content-end" >
-      {% if user == "guest"%}
+      {% if not user %}
         <li class="nav-item active">
             <a class="btn btn-info mr-1 mt-1" href="#">Login</a>
         </li>
