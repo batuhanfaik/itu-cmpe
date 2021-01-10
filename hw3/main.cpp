@@ -58,7 +58,6 @@ class PlayerDatabase {
     void rotate_right(Player*);
     void fix_database(Player*);
     void preorder_print(Player*, string);
-    void print_season_bests(const string&);
     void postorder_delete(Player*);
 public:
     PlayerDatabase();
@@ -67,6 +66,7 @@ public:
     void add_player(Player*);
     void update_player(Player*);
     bool player_exists(Player*);
+    void print_season_bests(const string&);
     void print_database();
     ~PlayerDatabase();
 };
@@ -99,8 +99,13 @@ int main(int argc, char** argv) {
     while (!file.eof()){
         // Read values of the Players
         getline(file, season, ',');     // Read season
-        if (player_db->get_season() != season) {    // Change the season
-            player_db->set_season(season);
+        // Season empty checks ensures the program will work correctly
+        // even if the CSV file has a newline at the end
+        if (season.empty()) {
+            season = player_db->get_season();    // CSV format is not correct
+        } else {
+            if (player_db->get_season() != season)    // Change the season
+                player_db->set_season(season);
         }
         getline(file, full_name, ',');    // Read full name
         getline(file, team, ',');    // Read team
@@ -121,7 +126,14 @@ int main(int argc, char** argv) {
         }
     }
 
+    // Make sure the last season is printed
+    if (player_db->get_season() == season) {    // Change the season
+        player_db->print_season_bests(season);
+    }
+
+    // Delete database
     delete(player_db);
+    // Close the file stream
     file.close();
 
     return 0;
