@@ -30,15 +30,8 @@ class RNNLayer(LayerWithWeights):
             next_h: next hidden state, of shape (N, H)
             cache: Values necessary for backpropagation, tuple
         """
-        #  /$$$$$$$$ /$$$$$$ /$$       /$$
-        # | $$_____/|_  $$_/| $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$$$$     | $$  | $$      | $$
-        # | $$__/     | $$  | $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
-        # |__/      |______/|________/|________/
-        raise NotImplementedError
+        next_h = np.tanh(self.b + np.dot(prev_h, self.Wh) + np.dot(x, self.Wx))
+        cache = (prev_h, next_h, x)
         return next_h, cache
 
     def forward(self, x, h0):
@@ -50,15 +43,20 @@ class RNNLayer(LayerWithWeights):
         Returns:
             h: hidden states of whole sequence, of shape (N, T, H)
         """
-        #  /$$$$$$$$ /$$$$$$ /$$       /$$
-        # | $$_____/|_  $$_/| $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$$$$     | $$  | $$      | $$
-        # | $$__/     | $$  | $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
-        # |__/      |______/|________/|________/
-        raise NotImplementedError
+        N, T, D = x.shape
+        _, H = h0.shape
+        h = np.empty((N, T, H))
+        time = np.arange(T)
+        cache = []
+
+        prev_h = h0
+        for batch in time:
+            next_h, cache_ = self.forward_step(x[:, batch, :], prev_h)
+            cache.append(cache_)
+            h[:, batch, :] = next_h
+            prev_h = next_h
+
+        self.cache = cache.copy()
         return h
         
     def backward_step(self, dnext_h, cache):
@@ -74,15 +72,14 @@ class RNNLayer(LayerWithWeights):
             dWh: gradients of weights Wh, of shape (H, H)
             db: gradients of bias b, of shape (H,)
         """
-        #  /$$$$$$$$ /$$$$$$ /$$       /$$
-        # | $$_____/|_  $$_/| $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$$$$     | $$  | $$      | $$
-        # | $$__/     | $$  | $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
-        # |__/      |______/|________/|________/
-        raise NotImplementedError
+        prev_h, next_h, x = cache
+        dtanh = dnext_h * (1 - np.power(next_h, 2))
+        dprev_h = np.dot(dtanh, np.transpose(self.Wh))
+        dx = np.dot(dtanh, np.transpose(self.Wx))
+        dWh = np.dot(np.transpose(prev_h), dtanh)
+        dWx = np.dot(np.transpose(x), dtanh)
+        db = np.sum(dtanh, axis=0)
+
         return dx, dprev_h, dWx, dWh, db
 
     def backward(self, dh):
@@ -99,15 +96,29 @@ class RNNLayer(LayerWithWeights):
             db: gradients of bias b, of shape (H,)
             }
         """
-        #  /$$$$$$$$ /$$$$$$ /$$       /$$
-        # | $$_____/|_  $$_/| $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$$$$     | $$  | $$      | $$
-        # | $$__/     | $$  | $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
-        # |__/      |______/|________/|________/
-        raise NotImplementedError
+        N, T, H = dh.shape
+        try:
+            D = self.cache[0][2].shape[1]
+        except IndexError:
+            D = None
+            assert "Cache is not valid"
+
+        dprev_t = np.zeros((N, H))
+        dx = np.zeros((N, T, D))
+        dWh = np.zeros((H, H))
+        dWx = np.zeros((D, H))
+        db = np.zeros(H)
+        r_time = np.arange(T-1, -1, -1)    # Backprop through time
+
+        for batch in r_time:
+            dx_t, dprev_t, dWx_t, dWh_t, db_t = self.backward_step(dh[:, batch, :] + dprev_t,
+                                                                   self.cache[batch])
+            dx[:, batch, :] = dx_t
+            dWh += dWh_t
+            dWx += dWx_t
+            db += db_t
+
+        dh0 = dprev_t
         self.grad = {'dx': dx, 'dh0': dh0, 'dWx': dWx, 'dWh': dWh, 'db': db}
         
         
