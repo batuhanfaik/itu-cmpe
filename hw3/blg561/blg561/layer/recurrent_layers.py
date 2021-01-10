@@ -1,4 +1,4 @@
-#Adapted from CS231n
+# Adapted from CS231n
 from .layers_with_weights import LayerWithWeights
 from copy import deepcopy
 from abc import abstractmethod
@@ -7,6 +7,7 @@ import numpy as np
 
 class RNNLayer(LayerWithWeights):
     """ Simple RNN Layer - only calculates hidden states """
+
     def __init__(self, in_size, out_size):
         """ RNN Layer constructor
         Args:
@@ -20,7 +21,7 @@ class RNNLayer(LayerWithWeights):
         self.b = np.random.rand(out_size)
         self.cache = None
         self.grad = {'dx': None, 'dh0': None, 'dWx': None, 'dWh': None, 'db': None}
-        
+
     def forward_step(self, x, prev_h):
         """ Forward pass for a single timestep
         Args:
@@ -44,7 +45,7 @@ class RNNLayer(LayerWithWeights):
             h: hidden states of whole sequence, of shape (N, T, H)
         """
         N, T, D = x.shape
-        _, H = h0.shape
+        H = h0.shape[1]
         h = np.empty((N, T, H))
         time = np.arange(T)
         cache = []
@@ -58,7 +59,7 @@ class RNNLayer(LayerWithWeights):
 
         self.cache = cache.copy()
         return h
-        
+
     def backward_step(self, dnext_h, cache):
         """ Backward pass for a single timestep
         Args:
@@ -103,27 +104,28 @@ class RNNLayer(LayerWithWeights):
             D = None
             assert "Cache is not valid"
 
-        dprev_t = np.zeros((N, H))
+        dprev_h_t = np.zeros((N, H))
         dx = np.zeros((N, T, D))
         dWh = np.zeros((H, H))
         dWx = np.zeros((D, H))
         db = np.zeros(H)
-        r_time = np.arange(T-1, -1, -1)    # Backprop through time
+        r_time = np.arange(T - 1, -1, -1)  # Backprop through time
 
         for batch in r_time:
-            dx_t, dprev_t, dWx_t, dWh_t, db_t = self.backward_step(dh[:, batch, :] + dprev_t,
-                                                                   self.cache[batch])
+            dx_t, dprev_h_t, dWx_t, dWh_t, db_t = self.backward_step(dh[:, batch, :] + dprev_h_t,
+                                                                     self.cache[batch])
             dx[:, batch, :] = dx_t
             dWh += dWh_t
             dWx += dWx_t
             db += db_t
 
-        dh0 = dprev_t
+        dh0 = dprev_h_t
         self.grad = {'dx': dx, 'dh0': dh0, 'dWx': dWx, 'dWh': dWh, 'db': db}
-        
-        
+
+
 class LSTMLayer(LayerWithWeights):
     """ Simple LSTM Layer - only calculates hidden states and cell states """
+
     def __init__(self, in_size, out_size):
         """ LSTM Layer constructor
         Args:
@@ -138,7 +140,8 @@ class LSTMLayer(LayerWithWeights):
         self.cache = None
         self.grad = {'dx': None, 'dh0': None, 'dWx': None,
                      'dWh': None, 'db': None}
-        
+        self.sigmoid = lambda x: 1 / (1 + np.exp(-x))
+
     def forward_step(self, x, prev_h, prev_c):
         """ Forward pass for a single timestep
         Args:
@@ -150,15 +153,25 @@ class LSTMLayer(LayerWithWeights):
             next_c: next cell state, of shape (N, H)
             cache: Values necessary for backpropagation, tuple
         """
-        #  /$$$$$$$$ /$$$$$$ /$$       /$$
-        # | $$_____/|_  $$_/| $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$$$$     | $$  | $$      | $$
-        # | $$__/     | $$  | $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
-        # |__/      |______/|________/|________/
-        raise NotImplementedError
+        H = prev_h.shape[1]
+        a = self.b + np.dot(prev_h, self.Wh) + np.dot(x, self.Wx)
+
+        # Using np.split() works too, this is just more clear so I can debug easier
+        a_i = a[:, 0 * H:1 * H]
+        a_f = a[:, 1 * H:2 * H]
+        a_o = a[:, 2 * H:3 * H]
+        a_g = a[:, 3 * H:4 * H]
+
+        i = self.sigmoid(a_i)
+        f = self.sigmoid(a_f)
+        o = self.sigmoid(a_o)
+        g = np.tanh(a_g)
+
+        next_c = f * prev_c + i * g
+        next_h = o * np.tanh(next_c)
+
+        cache = (prev_h, prev_c, next_h, next_c, x, i, f, o, g, a)
+
         return next_h, next_c, cache
 
     def forward(self, x, h0):
@@ -170,17 +183,24 @@ class LSTMLayer(LayerWithWeights):
         Returns:
             h: hidden states of whole sequence, of shape (N, T, H)
         """
-        #  /$$$$$$$$ /$$$$$$ /$$       /$$
-        # | $$_____/|_  $$_/| $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$$$$     | $$  | $$      | $$
-        # | $$__/     | $$  | $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
-        # |__/      |______/|________/|________/
-        raise NotImplementedError
+        N, T, D = x.shape
+        H = h0.shape[1]
+        h = np.empty((N, T, H))
+        prev_c = np.zeros((N, H))
+        time = np.arange(T)
+        cache = []
+
+        prev_h = h0
+        for batch in time:
+            next_h, next_c, cache_ = self.forward_step(x[:, batch, :], prev_h, prev_c)
+            cache.append(cache_)
+            h[:, batch, :] = next_h
+            prev_h = next_h
+            prev_c = next_c
+
+        self.cache = cache.copy()
         return h
-        
+
     def backward_step(self, dnext_h, dnext_c, cache):
         """ Backward pass for a single timestep
         Args:
@@ -197,15 +217,34 @@ class LSTMLayer(LayerWithWeights):
             dWh: gradients of weights Wh, of shape (H, 4H)
             db: gradients of bias b, of shape (4H,)
         """
-        #  /$$$$$$$$ /$$$$$$ /$$       /$$
-        # | $$_____/|_  $$_/| $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$$$$     | $$  | $$      | $$
-        # | $$__/     | $$  | $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
-        # |__/      |______/|________/|________/
-        raise NotImplementedError
+        # Note that grad of sigmoid is not \sigma * (1-\sigma) because passed in parameters in the
+        #  cache are in sigmoid(x) form
+        grad_sigmoid = lambda x: x * (1 - x)
+        prev_h, prev_c, next_h, next_c, x, i, f, o, g, a = cache
+        H = prev_h.shape[1]
+
+        do = dnext_h * np.tanh(next_c) * grad_sigmoid(o)
+
+        dc = dnext_c + dnext_h * o * (1 - np.power(np.tanh(next_c), 2))
+        dprev_c = dc * f
+
+        df = dc * prev_c * grad_sigmoid(f)
+        di = dc * g * grad_sigmoid(i)
+        dg = dc * i * (1 - np.power(g, 2))
+
+        # np.concatenate() on columns or np.hstack() would work just as fine
+        da = np.empty(a.shape)
+        da[:, 0 * H:1 * H] = di
+        da[:, 1 * H:2 * H] = df
+        da[:, 2 * H:3 * H] = do
+        da[:, 3 * H:4 * H] = dg
+
+        dprev_h = np.dot(da, np.transpose(self.Wh))
+        dx = np.dot(da, np.transpose(self.Wx))
+        dWh = np.dot(np.transpose(prev_h), da)
+        dWx = np.dot(np.transpose(x), da)
+        db = np.sum(da, axis=0)
+
         return dx, dprev_h, dprev_c, dWx, dWh, db
 
     def backward(self, dh):
@@ -222,20 +261,36 @@ class LSTMLayer(LayerWithWeights):
             db: gradients of bias b, of shape (4H,)
             }
         """
-        #  /$$$$$$$$ /$$$$$$ /$$       /$$
-        # | $$_____/|_  $$_/| $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$$$$     | $$  | $$      | $$
-        # | $$__/     | $$  | $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
-        # |__/      |______/|________/|________/
-        raise NotImplementedError
+        N, T, H = dh.shape
+        try:
+            D = self.cache[0][4].shape[1]
+        except IndexError:
+            D = None
+            assert "Cache is not valid"
+
+        dnext_h_t = np.zeros((N, H))
+        dnext_c_t = np.zeros((N, H))
+        dx = np.zeros((N, T, D))
+        dWh = np.zeros((H, 4 * H))
+        dWx = np.zeros((D, 4 * H))
+        db = np.zeros(4 * H)
+        r_time = np.arange(T - 1, -1, -1)  # Backprop through time
+
+        for batch in r_time:
+            dx_t, dnext_h_t, dnext_c_t, dWx_t, dWh_t, db_t = self.backward_step(
+                dh[:, batch, :] + dnext_h_t, dnext_c_t, self.cache[batch])
+            dx[:, batch, :] = dx_t
+            dWh += dWh_t
+            dWx += dWx_t
+            db += db_t
+
+        dh0 = dnext_h_t
         self.grad = {'dx': dx, 'dh0': dh0, 'dWx': dWx, 'dWh': dWh, 'db': db}
-        
+
 
 class GRULayer(LayerWithWeights):
     """ Simple GRU Layer - only calculates hidden states """
+
     def __init__(self, in_size, out_size):
         """ GRU Layer constructor
         Args:
@@ -254,7 +309,7 @@ class GRULayer(LayerWithWeights):
         self.grad = {'dx': None, 'dh0': None, 'dWx': None,
                      'dWh': None, 'db': None, 'dWxi': None,
                      'dWhi': None, 'dbi': None}
-        
+
     def forward_step(self, x, prev_h):
         """ Forward pass for a single timestep
         Args:
@@ -294,7 +349,7 @@ class GRULayer(LayerWithWeights):
         # |__/      |______/|________/|________/
         raise NotImplementedError
         return h
-        
+
     def backward_step(self, dnext_h, cache):
         """ Backward pass for a single timestep
         Args:
@@ -348,5 +403,5 @@ class GRULayer(LayerWithWeights):
         # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
         # |__/      |______/|________/|________/
         raise NotImplementedError
-        self.grad = {'dx': dx, 'dh0': dh0, 'dWx': dWx, 'dWh': dWh, 'db': db, 'dWxi': dWxi, 'dWhi': dWhi, 'dbi': dbi}
-
+        self.grad = {'dx': dx, 'dh0': dh0, 'dWx': dWx, 'dWh': dWh, 'db': db, 'dWxi': dWxi,
+                     'dWhi': dWhi, 'dbi': dbi}
