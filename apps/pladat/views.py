@@ -84,3 +84,22 @@ def registration_view(request):
             return render(request, 'user_register.html', context = ctx)
     
     return HttpResponseForbidden()
+
+
+def student_profile_view(request):
+    ctx = {}
+
+    # if not request.user.is_authenticated:
+    #     # Check if user logged in
+    #     ctx = {'user': 'guest'}
+
+    return render(request, 'student_profile.html', context=ctx)
+
+def student_profile_update_view(request):
+    ctx = {}
+
+    # if not request.user.is_authenticated:
+    #     # Check if user logged in
+    #     ctx = {'user': 'guest'}
+
+    return render(request, 'student_profile_update.html', context=ctx)

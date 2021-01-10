@@ -1,0 +1,101 @@
+{% extends "base.html" %} 
+
+{% block title %} Main Page {% endblock title %} 
+
+{% block stylesheet %}
+{% load static %}
+<link href=" {% static 'pladat/profile_update.css' %}"  rel="stylesheet">
+  {{block.super}} 
+{% endblock stylesheet %} 
+
+{% block content %}
+<div class="container">
+<div class="row gutters">
+	<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+		<div class="card h-100">
+			<div class="card-body">
+				<div class="account-settings">
+					<div class="user-profile">
+						<div class="user-avatar">
+							<img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="Maxwell Admin">
+						</div>
+						<h5 class="user-name">Yuki Hayashi</h5>
+						<h6 class="user-email">yuki@Maxwell.com</h6>
+					</div>
+					<div class="about">
+						<h5 class="mb-2 text-primary">About</h5>
+						<p>I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human experiences.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+		<div class="card h-100">
+			<div class="card-body">
+				<div class="col-12">
+					<div class="row">
+						<h6 class="mb-3 text-primary">General Info</h6>
+					</div>
+					<div class="row">
+						<div class="form-group col-12">
+							<label for="fullName">Full Name</label>
+							<input type="text" class="form-control" id="fullName" placeholder="Enter full name">
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-12">
+							<label for="eMail">Email</label>
+							<input type="email" class="form-control" id="eMail" placeholder="Enter email ID">
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-12">
+							<label for="phone">Phone</label>
+							<input type="text" class="form-control" id="phone" placeholder="Enter phone number">
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-12">
+							<label for="Address">Address</label>
+							<input type="text" class="form-control" id="Address" placeholder="Address">
+						</div>
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="row">
+						<h6 class="mb-3 text-primary">Background</h6>
+					</div>
+					<div class="row">
+						<div class="form-group col-12">
+							<label for="Education">Education</label>
+							<input type="text" class="form-control" id="Education" placeholder="Enter Education">
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-12">
+							<label for="Skills">Skills</label>
+							<select class="selectpicker form-control" multiple title="Select Skills" data-live-search="true">
+								<option>C</option>
+								<option>C++</option>
+								<option>Java</option>
+								<option>Javascript</option>
+								<option>Python</option>
+							  </select>
+						</div>
+					</div>
+				</div>
+				<div class="row gutters">
+					<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+						<div class="text-right">
+							<button type="button" id="submit" name="submit" class="btn btn-secondary">Cancel</button>
+							<button type="button" id="submit" name="submit" class="btn btn-primary">Update</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+{% endblock content %}
