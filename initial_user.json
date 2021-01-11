@@ -1,0 +1,47 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$216000$PynafG92UBUd$MEReH/YoCBd6oDg9WrHIXeA5zGgd0ryFhQJyun3xf5Y=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "testuser@testuser.com",
+        "first_name": "Isim",
+        "last_name": "Soyisim",
+        "email": "testuser@testuser.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2021-01-11T15:10:21.747Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "pladat.pladatuser",
+    "pk": 1,
+    "fields": {
+        "first_name": "Isim",
+        "last_name": "Soyisim",
+        "phone_number": "+447911123456",
+        "address": "Maslak Ayazaga",
+        "city": "Istanbul",
+        "state": 2,
+        "country": "TR",
+        "user_type": 0
+    }
+},
+{
+    "model": "student.student",
+    "pk": 1,
+    "fields": {
+        "degree": "Bachelors in Eng",
+        "major": "Computer Engineering",
+        "university": "Istanbul Technical University",
+        "number_of_previous_work_experience": 0,
+        "years_worked": 0,
+        "is_currently_employed": false,
+        "skills_text": "Python,Django"
+    }
+}
+]
