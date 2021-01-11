@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 
 from django.contrib.auth import authenticate, login
 
-from .forms import RegistrationForm
+from .forms import RegistrationForm, LoginForm
 
 from django.contrib.auth.models import User
 from .models import PladatUser
@@ -17,6 +17,35 @@ def main_page_view(request):
         ctx = {'user': request.user}
 
     return render(request, 'main_page.html', context=ctx)
+
+def login_page_view(request):
+
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            return HttpResponse('Already logged in')
+        login_form = LoginForm()
+        ctx = {'form': login_form}
+        return render(request, 'user_login.html', ctx = ctx)
+    else if request.method == 'POST':
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            email = login_form.data['email']
+            password = login_form.data['password']
+            # We are using emails as also username
+            user = authenticate(username = email, password = password) 
+            if user is not None:
+                login(request, user)
+                return redirect('/')
+            else:
+                login_form.add_error('Not user found with given email and password')
+                ctx['form'] = login_form
+                return render(request, 'user_login.html', ctx = ctx)
+        else:
+            ctx['form'] = login_form
+            return render(request, 'user_login.html', ctx = ctx)
+    else:
+        return HttpResponseForbidden('Forbidden method')
+
 
 
 def register_user(data):

@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from apps.pladat.models import PladatUser
 from .models import Student
 
-
 def profile_view(request, id):
     user = User.objects.filter(pk = id)
 
@@ -16,7 +15,14 @@ def profile_view(request, id):
 
     if user.pladatuser.user_type == PladatUser.UserType.COMPANY:
         return HttpResponse('Trying to look into a company page')
-    
+
+    if not user.pladatuser.student:
+        # Trying to look into their profile but did not completed it yet
+        if request.user.id  == user.id:
+            return redirect('/student/profile/update')
+        else:
+            return HttpResponse('Student did not complete the registration fully, missing information')
+
     # Send the pladatuser object to the template
     ctx = {'user': user}
 

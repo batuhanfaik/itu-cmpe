@@ -22,3 +22,12 @@ class RegistrationForm(forms.ModelForm):
             v.widget.attrs['placeholder'] = v.help_text
             if k=='country':
                 v.widget.empty_label = "Select a country"
+
+class LoginForm(forms.Form):
+    email = forms.EmailField(label='Please enter your email', required=True, 
+        help_text="E-mail"
+    )
+    password = forms.CharField(label='Please enter your password', required=True,
+        help_text="Password"
+    )
+
