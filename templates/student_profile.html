@@ -77,7 +77,7 @@
                           <h6 class="mb-0">Full Name</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            Deneme
+                          {{user.pladatuser.first_name}} {{user.pladatuser.last_name}}
                         </div>
                       </div>
                       <hr>
@@ -86,7 +86,7 @@
                           <h6 class="mb-0">Email</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          fip@jukmuh.al
+                          {{user.email}}
                         </div>
                       </div>
                       <hr>
@@ -95,7 +95,7 @@
                           <h6 class="mb-0">Phone</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          (239) 816-9029
+                          ({{user.pladatuser.phone_number}})
                         </div>
                       </div>
                       <hr>
@@ -104,7 +104,7 @@
                           <h6 class="mb-0">City</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          Nevsehir
+                          {{user.pladatuser.city}}
                         </div>
                       </div>
                       <hr>
@@ -113,7 +113,7 @@
                           <h6 class="mb-0">State</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          Istanbul
+                          {{user.pladatuser.state}}
                         </div>
                       </div>
                       <hr>
@@ -122,7 +122,7 @@
                           <h6 class="mb-0">Country</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          Turkiye
+                          {{user.pladatuser.country}}
                         </div>
                       </div>
                       <hr>
@@ -131,7 +131,7 @@
                           <h6 class="mb-0">Address</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          Bay Area, San Francisco, CA
+                          {{user.pladatuser.address}}
                         </div>
                       </div>
                       <hr/>
@@ -146,7 +146,7 @@
                           <h6 class="mb-0">University</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          Istanbul Technical University
+                          {{user.pladatuser.student.university}}
                         </div>
                       </div>
                       <hr/>
@@ -155,7 +155,7 @@
                           <h6 class="mb-0">Major</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          Computer Engineering
+                          {{user.pladatuser.student.major}}
                         </div>
                       </div>
                       <hr/>

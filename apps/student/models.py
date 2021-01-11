@@ -6,7 +6,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from apps.pladat.models import PladatUser
 
 class Student(models.Model):
-    pladatuser = models.OneToOneField(PladatUser, on_delete = models.CASCADE, primary_key = True)
+    pladatuser = models.OneToOneField(PladatUser, on_delete = models.CASCADE, primary_key = True, related_name='student')
     DEGREES = [
         ("bsc", "Bachelor of Science"),
         ("msc", "Master of Science"),
