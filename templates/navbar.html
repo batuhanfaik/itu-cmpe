@@ -13,16 +13,16 @@
         </li>
       </ul>
     <ul class="navbar-nav ml-auto justify-content-end" >
-      {% if not user %}
+      {% if not user.is_authenticated %}
         <li class="nav-item active">
-            <a class="btn btn-info mr-1 mt-1" href="#">Login</a>
+            <a class="btn btn-info mr-1 mt-1" href="/login">Login</a>
         </li>
         <li class="nav-item">
             <a class="btn btn-info mr-1 mt-1"  href="/register">Sign-up</a>
         </li>
       {% else %}
         <li class="nav-item">
-            <a class="btn btn-info mr-1 mt-1"  href="#">My Profile</a>
+            <a class="btn btn-info mr-1 mt-1"  href="/user/profile/{{user.pk}}">My Profile: {{user}} / {{user.pk}}</a>
         </li>   
         <li class="nav-item">
             <a class="btn btn-info mr-1 mt-1"  href="#">Logout</a>

@@ -4,10 +4,10 @@ from django import forms
 
 class RegistrationForm(forms.ModelForm):
     email = forms.EmailField(label='Please enter your email', required=True, 
-        help_text="E-mail"
+        help_text="E-mail", widget=forms.EmailInput
         )
     password = forms.CharField(label='Please enter your password', required=True,
-        help_text="Password"
+        help_text="Password", widget=forms.PasswordInput
     )
 
     class Meta:
@@ -25,9 +25,16 @@ class RegistrationForm(forms.ModelForm):
 
 class LoginForm(forms.Form):
     email = forms.EmailField(label='Please enter your email', required=True, 
-        help_text="E-mail"
-    )
-    password = forms.CharField(label='Please enter your password', required=True,
-        help_text="Password"
+        help_text="E-mail", widget=forms.EmailInput
     )
 
+    password = forms.CharField(label='Please enter your password', required=True,
+        help_text="Password", widget=forms.PasswordInput
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        for k,v in self.fields.items():
+            # HTML attributes to the form fields can be added here
+            v.widget.attrs['class'] = 'form-control'
+            v.widget.attrs['placeholder'] = v.help_text

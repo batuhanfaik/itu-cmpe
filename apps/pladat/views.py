@@ -12,7 +12,6 @@ from .models import PladatUser
 
 def main_page_view(request):
     ctx = {}
-
     if request.user.is_authenticated:
         ctx = {'user': request.user}
 
@@ -24,7 +23,7 @@ def login_page_view(request):
             return HttpResponse('Already logged in')
         login_form = LoginForm()
         ctx = {'form': login_form}
-        return render(request, 'user_login.html', ctx = ctx)
+        return render(request, 'user_login.html', context = ctx)
     elif request.method == 'POST':
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
@@ -38,10 +37,10 @@ def login_page_view(request):
             else:
                 login_form.add_error('Not user found with given email and password')
                 ctx['form'] = login_form
-                return render(request, 'user_login.html', ctx = ctx)
+                return render(request, 'user_login.html', context = ctx)
         else:
             ctx['form'] = login_form
-            return render(request, 'user_login.html', ctx = ctx)
+            return render(request, 'user_login.html', context = ctx)
     else:
         return HttpResponseForbidden('Forbidden method')
 
