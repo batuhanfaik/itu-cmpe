@@ -19,14 +19,13 @@ def main_page_view(request):
     return render(request, 'main_page.html', context=ctx)
 
 def login_page_view(request):
-
     if request.method == 'GET':
         if request.user.is_authenticated:
             return HttpResponse('Already logged in')
         login_form = LoginForm()
         ctx = {'form': login_form}
         return render(request, 'user_login.html', ctx = ctx)
-    else if request.method == 'POST':
+    elif request.method == 'POST':
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
             email = login_form.data['email']

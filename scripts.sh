@@ -13,12 +13,12 @@ migrate() {
 }
 
 deletemigrationfiles() {
+  # Do not run this
   find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
   find . -path "*/migrations/*.pyc"  -delete
-
 }
 
-clearmigrations() {
+startdb() {
   cd apps/company
   deletemigrationfiles
 
@@ -36,4 +36,6 @@ clearmigrations() {
 
   python3 manage.py makemigrations
   python3 manage.py migrate
+
+  python3 manage.py loaddata initial_user.json
 }
