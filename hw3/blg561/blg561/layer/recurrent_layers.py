@@ -218,7 +218,7 @@ class LSTMLayer(LayerWithWeights):
             db: gradients of bias b, of shape (4H,)
         """
         # Note that grad of sigmoid is not \sigma * (1-\sigma) because passed in parameters in the
-        #  cache are in sigmoid(x) form
+        # cache are in sigmoid(x) form
         grad_sigmoid = lambda x: x * (1 - x)
         prev_h, prev_c, next_h, next_c, x, i, f, o, g, a = cache
         H = prev_h.shape[1]
@@ -309,6 +309,7 @@ class GRULayer(LayerWithWeights):
         self.grad = {'dx': None, 'dh0': None, 'dWx': None,
                      'dWh': None, 'db': None, 'dWxi': None,
                      'dWhi': None, 'dbi': None}
+        self.sigmoid = lambda x: 1 / (1 + np.exp(-x))
 
     def forward_step(self, x, prev_h):
         """ Forward pass for a single timestep
@@ -319,15 +320,19 @@ class GRULayer(LayerWithWeights):
             next_h: next hidden state, of shape (N, H)
             cache: Values necessary for backpropagation, tuple
         """
-        #  /$$$$$$$$ /$$$$$$ /$$       /$$
-        # | $$_____/|_  $$_/| $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$$$$     | $$  | $$      | $$
-        # | $$__/     | $$  | $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
-        # |__/      |______/|________/|________/
-        raise NotImplementedError
+        H = prev_h.shape[1]
+        a = self.b + np.dot(prev_h, self.Wh) + np.dot(x, self.Wx)
+
+        # Using np.split() works too, this is just more clear so I can debug easier
+        a_z = a[:, 0 * H:1 * H]
+        a_r = a[:, 1 * H:2 * H]
+
+        z = self.sigmoid(a_z)
+        r = self.sigmoid(a_r)
+
+        h_candidate = np.tanh(self.bi + np.dot(r * prev_h, self.Whi) + np.dot(x, self.Wxi))
+        next_h = z * prev_h + (1 - z) * h_candidate
+        cache = (prev_h, next_h, x, z, r, a, h_candidate)
         return next_h, cache
 
     def forward(self, x, h0):
@@ -339,15 +344,20 @@ class GRULayer(LayerWithWeights):
         Returns:
             h: hidden states of whole sequence, of shape (N, T, H)
         """
-        #  /$$$$$$$$ /$$$$$$ /$$       /$$
-        # | $$_____/|_  $$_/| $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$$$$     | $$  | $$      | $$
-        # | $$__/     | $$  | $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
-        # |__/      |______/|________/|________/
-        raise NotImplementedError
+        N, T, D = x.shape
+        H = h0.shape[1]
+        h = np.empty((N, T, H))
+        time = np.arange(T)
+        cache = []
+
+        prev_h = h0
+        for batch in time:
+            next_h, cache_ = self.forward_step(x[:, batch, :], prev_h)
+            cache.append(cache_)
+            h[:, batch, :] = next_h
+            prev_h = next_h
+
+        self.cache = cache.copy()
         return h
 
     def backward_step(self, dnext_h, cache):
@@ -366,15 +376,31 @@ class GRULayer(LayerWithWeights):
             dWhi: gradients of weights Whi, of shape (H, H)
             dbi: gradients of bias bi, of shape (H,)
         """
-        #  /$$$$$$$$ /$$$$$$ /$$       /$$
-        # | $$_____/|_  $$_/| $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$$$$     | $$  | $$      | $$
-        # | $$__/     | $$  | $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
-        # |__/      |______/|________/|________/
-        raise NotImplementedError
+        # Note that grad of sigmoid is not \sigma * (1-\sigma) because passed in parameters in the
+        # cache are in sigmoid(x) form
+        grad_sigmoid = lambda x: x * (1 - x)
+        prev_h, next_h, x, z, r, a, h_candidate = cache
+        H = prev_h.shape[1]
+
+        da_z = (dnext_h * (h_candidate - prev_h) + 1) * grad_sigmoid(z)
+        dai = dnext_h * z * (1 - np.power(np.tanh(h_candidate), 2))
+        da_r = np.dot(dai, np.transpose(self.Whi)) * prev_h * grad_sigmoid(r)
+
+        # np.concatenate() on columns or np.hstack() would work just as fine
+        da = np.empty(a.shape)
+        da[:, 0 * H:1 * H] = da_z
+        da[:, 1 * H:2 * H] = da_r
+
+        dprev_h = dnext_h * (1 - z) + np.dot(da, np.transpose(self.Wh))\
+                + r * np.dot(dai, np.transpose(self.Whi))
+        dx = np.dot(da, np.transpose(self.Wx)) + np.dot(dai, np.transpose(self.Wxi))
+        dWh = np.dot(np.transpose(prev_h), da)
+        dWx = np.dot(np.transpose(x), da)
+        db = np.sum(da, axis=0)
+        dWhi = np.dot(np.transpose(prev_h * r), dai)
+        dWxi = np.dot(np.transpose(x), dai)
+        dbi = np.sum(dai, axis=0)
+
         return dx, dprev_h, dWx, dWh, db, dWxi, dWhi, dbi
 
     def backward(self, dh):
@@ -394,14 +420,34 @@ class GRULayer(LayerWithWeights):
             dbi: gradients of bias b, of shape (H,)
             }
         """
-        #  /$$$$$$$$ /$$$$$$ /$$       /$$
-        # | $$_____/|_  $$_/| $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$$$$     | $$  | $$      | $$
-        # | $$__/     | $$  | $$      | $$
-        # | $$        | $$  | $$      | $$
-        # | $$       /$$$$$$| $$$$$$$$| $$$$$$$$
-        # |__/      |______/|________/|________/
-        raise NotImplementedError
+        N, T, H = dh.shape
+        try:
+            D = self.cache[0][4].shape[1]
+        except IndexError:
+            D = None
+            assert "Cache is not valid"
+
+        dnext_h_t = np.zeros((N, H))
+        dx = np.zeros((N, T, D))
+        dWh = np.zeros((H, 2 * H))
+        dWx = np.zeros((D, 2 * H))
+        db = np.zeros(2 * H)
+        dWhi = np.zeros((H, H))
+        dWxi = np.zeros((D, H))
+        dbi = np.zeros(H)
+        r_time = np.arange(T - 1, -1, -1)  # Backprop through time
+
+        for batch in r_time:
+            dx_t, dnext_h_t, dWx_t, dWh_t, db_t, dWxi_t, dWhi_t, dbi_t = self.backward_step(
+                dh[:, batch, :] + dnext_h_t, self.cache[batch])
+            dx[:, batch, :] = dx_t
+            dWh += dWh_t
+            dWx += dWx_t
+            db += db_t
+            dWhi += dWhi_t
+            dWxi += dWxi_t
+            dbi += dbi_t
+
+        dh0 = dnext_h_t
         self.grad = {'dx': dx, 'dh0': dh0, 'dWx': dWx, 'dWh': dWh, 'db': db, 'dWxi': dWxi,
                      'dWhi': dWhi, 'dbi': dbi}
