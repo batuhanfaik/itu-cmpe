@@ -383,7 +383,7 @@ class GRULayer(LayerWithWeights):
         H = prev_h.shape[1]
 
         da_z = (dnext_h * (h_candidate - prev_h) + 1) * grad_sigmoid(z)
-        dai = dnext_h * z * (1 - np.power(np.tanh(h_candidate), 2))
+        dai = dnext_h * z * (1 - np.power(h_candidate, 2))
         da_r = np.dot(dai, np.transpose(self.Whi)) * prev_h * grad_sigmoid(r)
 
         # np.concatenate() on columns or np.hstack() would work just as fine
