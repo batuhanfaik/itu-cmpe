@@ -26,7 +26,7 @@ SECRET_KEY = '^7gw(rtm7r^^h)b(qh6euoccwm+6jm_zghmd4@31*t7tw*r&_f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['swe.fatihaltinpinar.com']
+ALLOWED_HOSTS = ['swe.fatihaltinpinar.com', "localhost"]
 
 
 # Application definition

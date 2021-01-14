@@ -12,10 +12,18 @@ from .models import PladatUser
 
 def main_page_view(request):
     ctx = {}
-    if request.user.is_authenticated:
-        ctx = {'user': request.user}
+    # if request.user.is_authenticated:
+    #     ctx = {'user': request.user}
 
     return render(request, 'main_page.html', context=ctx)
+
+def recruiter_profile_view(request):
+    ctx = {}
+    return render(request, 'recruiter_profile.html', context=ctx)
+
+def recruiter_profile_update_view(request):
+    ctx = {}
+    return render(request, 'recruiter_profile_update.html', context=ctx)
 
 def login_page_view(request):
     if request.method == 'GET':
@@ -111,3 +119,5 @@ def registration_view(request):
             return render(request, 'user_register.html', context = ctx)
     
     return HttpResponseForbidden()
+
+
