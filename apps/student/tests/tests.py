@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from ..models import PladatUser
+from apps.pladat.models import PladatUser
 from django.contrib.auth.models import User
 
 
