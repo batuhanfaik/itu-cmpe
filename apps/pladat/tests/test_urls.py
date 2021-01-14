@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
-from ..views import *
+from apps.pladat.views import *
 
 
 class TestUrls(SimpleTestCase):
