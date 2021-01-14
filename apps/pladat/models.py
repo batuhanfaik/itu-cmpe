@@ -4,11 +4,14 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from django.contrib.auth.models import User
 
+
 class PladatUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='pladatuser')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True,
+                                related_name='pladatuser')
     first_name = models.CharField(max_length=128, help_text='First name')
     last_name = models.CharField(max_length=128, help_text="Last name")
-    phone_number = PhoneNumberField(help_text="Phone number")  # https://pypi.org/project/django-phonenumber-field/
+    phone_number = PhoneNumberField(
+        help_text="Phone number")  # https://pypi.org/project/django-phonenumber-field/
     address = models.CharField(max_length=128, help_text="Addresss")
     city = models.CharField(max_length=128, help_text="City")
     state = models.CharField(max_length=128, null=True, help_text="State")
