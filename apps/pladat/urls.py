@@ -1,9 +1,9 @@
 from django.urls import path
 
-from .views import (main_page_view, 
-    registration_view, 
-    login_page_view, 
-    recruiter_profile_view, 
+from .views import (main_page_view,
+    registration_view,
+    login_page_view,
+    recruiter_profile_view,
     recruiter_profile_update_view,
     logout_page_view)
 
