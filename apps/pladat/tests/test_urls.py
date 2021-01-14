@@ -10,3 +10,19 @@ class TestUrls(SimpleTestCase):
     def test_main_page_view(self):
         url = reverse("main_page_view")
         self.assertEqual(resolve(url).func, main_page_view)
+
+    def test_registration_view(self):
+        url = reverse("registration_view")
+        self.assertEqual(resolve(url).func, registration_view)
+
+    def test_login_page_view(self):
+        url = reverse("login_page_view")
+        self.assertEqual(resolve(url).func, login_page_view)
+
+    def test_recruiter_profile_view(self):
+        url = reverse("recruiter_profile_view")
+        self.assertEqual(resolve(url).func, recruiter_profile_view)
+
+    def recruiter_profile_update_view(self):
+        url = reverse("recruiter_profile_update_view")
+        self.assertEqual(resolve(url).func, recruiter_profile_update_view)
