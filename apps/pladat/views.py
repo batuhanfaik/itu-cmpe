@@ -30,6 +30,7 @@ def recruiter_profile_update_view(request):
     return render(request, 'recruiter_profile_update.html', context=ctx)
 
 def login_page_view(request):
+    ctx = {}
     if request.method == 'GET':
         if request.user.is_authenticated:
             return HttpResponse('''
@@ -54,9 +55,9 @@ def login_page_view(request):
             user = authenticate(username=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('/')
+                return redirect(main_page_view)
             else:
-                login_form.add_error('Not user found with given email and password')
+                login_form.add_error(field="email", error='Not user found with given email and password')
                 ctx['form'] = login_form
                 return render(request, 'user_login.html', context=ctx)
         else:
