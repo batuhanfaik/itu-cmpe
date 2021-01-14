@@ -56,7 +56,7 @@ def profile_update_view(request):
         form1 = UpdatePladatUserForm(request.POST, instance = pladatuser)
         if form1.is_valid():
             form1.save()
-            return HttpResponse('OK!')
+            return redirect('/user/profile/' + str(request.user.id))
         else:
             student = get_object_or_404(Student, pladatuser = pladatuser)
             form2 = UpdateStudentForm(instance = student)
@@ -69,7 +69,7 @@ def profile_update_view(request):
         form2 = UpdateStudentForm(request.POST, instance = student)
         if form2.is_valid():
             form2.save()
-            return HttpResponse('OK!')
+            return redirect('/user/profile/' + str(request.user.id))
         else:
             form1 = UpdatePladatUserForm(instance = pladatuser)
             ctx = {'form1': form1, 'form2': form2}

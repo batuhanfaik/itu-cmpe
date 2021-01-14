@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 from .forms import RegistrationForm, LoginForm
 
@@ -31,7 +31,16 @@ def recruiter_profile_update_view(request):
 def login_page_view(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
-            return HttpResponse('Already logged in')
+            return HttpResponse('''
+                Already logged in
+                <script>
+                    function redirect(){
+                    window.location.href = "/";
+                    }
+                    setTimeout(redirect, 1000);
+                </script>
+            '''
+            )
         login_form = LoginForm()
         ctx = {'form': login_form}
         return render(request, 'user_login.html', context = ctx)
@@ -123,3 +132,7 @@ def registration_view(request):
     return HttpResponseForbidden()
 
 
+def logout_page_view(request):
+    if request.user.is_authenticated:
+        logout(request)
+    return redirect('/')
