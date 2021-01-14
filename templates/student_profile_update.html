@@ -10,6 +10,11 @@
 
 {% block content %}
 <div class="container">
+	<form action='/user/profile/update' method='post'>
+		{% csrf_token %}
+		{{form1.as_p}}
+		<button type="submit" id="submit" name="btnform1" class="btn">Submit</button>
+	</form>
 <div class="row gutters">
 	<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
 		<div class="card h-100">

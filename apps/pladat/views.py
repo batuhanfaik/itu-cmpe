@@ -10,6 +10,9 @@ from .forms import RegistrationForm, LoginForm
 from django.contrib.auth.models import User
 from .models import PladatUser
 
+from apps.student.models import Student
+from apps.company.models import Recruiter
+
 def main_page_view(request):
     ctx = {}
     # if request.user.is_authenticated:
@@ -71,15 +74,14 @@ def register_user(data):
     pladatuser = PladatUser.objects.create(**pladatuser_dct)
     pladatuser.save()
 
-    if data['user_type'] == PladatUser.UserType.STUDENT:
-        fields = ['degree', 'major', 'university', 'number_of_previous_work_experience', 'years_worked', 'is_currently_employed', 'skills_text']
-        student_dct = {key: data[key] for key in fields}
-        student_dct['pladatuser'] = pladatuser
+    if int(data['user_type']) == PladatUser.UserType.STUDENT:
+
+        student_dct = {'pladatuser': pladatuser}
 
         student = Student.objects.create(**student_dct)
         student.save()
         
-    elif data['user_type'] == PladatUser.UserType.COMPANY:
+    elif int(data['user_type']) == PladatUser.UserType.COMPANY:
         recruiter = Recruiter.objects.create(pladatuser = pladatuser)
         recruiter.save()
 
