@@ -105,7 +105,8 @@ def registration_view(request):
     if request.user.is_authenticated:
         # This happens when an logged in user visits the register page
         # We might consider redirecting here instead
-        return HttpResponse('Already a registered user')
+        # return HttpResponse('Already a registered user')
+        return redirect('/')
 
     if request.method == 'GET':
         # Unregistered user trying to access the registration form
@@ -125,7 +126,7 @@ def registration_view(request):
                 return render(request, 'user_register.html', context=ctx)
             else:
                 register_user(registration_form.data)
-                return HttpResponse('Registered successfuly')
+                return HttpResponse('Registered successfully')
         else:
             # Something wrong with form
             ctx['form'] = registration_form
