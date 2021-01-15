@@ -175,6 +175,7 @@ class TestViews(TestCase):
 
 
     #TODO somehow i broke the test, actually how its running?? register_user when returns false?
+    #I check old commit, i did not broke it, it was already broken
     def test_register_user_invalid_data_email(self):
         register_data = {
             'email': 'test.com',
