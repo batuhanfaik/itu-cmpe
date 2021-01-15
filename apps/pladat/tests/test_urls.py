@@ -19,6 +19,10 @@ class TestUrls(SimpleTestCase):
         url = reverse("login_page_view")
         self.assertEqual(resolve(url).func, login_page_view)
 
+    def test_logout_page_view(self):
+        url = reverse("logout_page_view")
+        self.assertEqual(resolve(url).func, logout_page_view)
+
     def test_recruiter_profile_view(self):
         url = reverse("recruiter_profile_view")
         self.assertEqual(resolve(url).func, recruiter_profile_view)
