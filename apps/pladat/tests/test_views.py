@@ -188,3 +188,4 @@ class TestViews(TestCase):
         }
         self.assertFalse(register_user(data=register_data))
 
+    #TODO profile_view test

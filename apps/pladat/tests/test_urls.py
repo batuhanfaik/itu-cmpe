@@ -23,10 +23,6 @@ class TestUrls(SimpleTestCase):
         url = reverse("logout_page_view")
         self.assertEqual(resolve(url).func, logout_page_view)
 
-    def test_recruiter_profile_view(self):
-        url = reverse("recruiter_profile_view")
-        self.assertEqual(resolve(url).func, recruiter_profile_view)
-
-    def recruiter_profile_update_view(self):
-        url = reverse("recruiter_profile_update_view")
-        self.assertEqual(resolve(url).func, recruiter_profile_update_view)
+    def test_profile_view(self):
+        url = reverse("profile_view", kwargs={'id': 1}) #TODO 1 is test user, what to do?
+        self.assertEqual(resolve(url).func, profile_view)

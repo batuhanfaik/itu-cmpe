@@ -88,12 +88,12 @@ def register_user(data):
     if int(data['user_type']) == PladatUser.UserType.STUDENT:
 
         student_dct = {'pladatuser': pladatuser}
-
         student = Student.objects.create(**student_dct)
         student.save()
         
     elif int(data['user_type']) == PladatUser.UserType.COMPANY:
-        recruiter = Recruiter.objects.create(pladatuser = pladatuser)
+        recruiter_dct = {'pladatuser': pladatuser}
+        recruiter = Recruiter.objects.create(**recruiter_dct)
         recruiter.save()
 
     return True
@@ -139,3 +139,43 @@ def logout_page_view(request):
     if request.user.is_authenticated:
         logout(request)
     return redirect('/')
+
+
+def profile_view(request, id):
+    user = User.objects.filter(pk = id)
+
+    ctx = {
+        'owner': id == request.user.id
+    }
+
+    if not user.exists():
+        return HttpResponse('Profile does not exist')
+    else:
+        user = user[0]
+
+    if user.pladatuser.user_type == PladatUser.UserType.STUDENT:
+        try:
+            user.pladatuser.student
+        except:
+            # Trying to look into their profile but did not completed it yet
+            #TODO burasi suan islevsiz, baska bi sekilde bakilmali
+            if ctx['owner']:
+                return redirect('/student/profile/update')
+            else:
+                return HttpResponse('Student did not complete the registration fully, missing information')
+
+        return render(request, 'student_profile.html', context=ctx)
+    if user.pladatuser.user_type == PladatUser.UserType.COMPANY:
+        try:
+            user.pladatuser.recruiter
+        except:
+            # Trying to look into their profile but did not completed it yet
+            #TODO burasi suan islevsiz, baska bi sekilde bakilmali
+            if ctx['owner']:
+                return redirect('/recruiter/profile/update')
+            else:
+                return HttpResponse('Recruiter did not complete the registration fully, missing information')
+
+        return render(request, 'recruiter_profile.html', context=ctx)
+
+

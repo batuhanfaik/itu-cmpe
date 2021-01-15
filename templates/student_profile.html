@@ -71,7 +71,7 @@
                           <h6 class="mb-0">Phone</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          ({{user.pladatuser.phone_number}})
+                          {{user.pladatuser.phone_number}}
                         </div>
                       </div>
                       <hr>
@@ -164,6 +164,11 @@
                         </div>
                       </div>
                       <hr/>
+                    {% if owner %}
+                        <div class="text-center">
+                            <a href="/student/profile/update" class="btn btn-primary">Update Profile</a>
+                        </div>
+                    {% endif %}
                     </div>
                   </div>
                 </div>
