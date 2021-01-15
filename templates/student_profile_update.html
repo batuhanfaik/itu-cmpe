@@ -10,27 +10,20 @@
 
 {% block content %}
 <div class="container">
-<div class="row gutters">
-	<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-		<div class="card h-100">
-			<div class="card-body">
-				<div class="account-settings">
-					<div class="user-profile">
-						<div class="user-avatar">
-							<img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="Maxwell Admin">
-						</div>
-						<h5 class="user-name">Yuki Hayashi</h5>
-						<h6 class="user-email">yuki@Maxwell.com</h6>
-					</div>
-					<div class="about">
-						<h5 class="mb-2 text-primary">About</h5>
-						<p>I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human experiences.</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+<div class="row gutters-sm">
+        <div class="col-md-4 mb-3 ">
+            <div class="card sticky-top" style="top: 4.3rem;">
+                <div class="card-body">
+                    <div class="d-flex flex-column align-items-center text-center">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
+                        <div class="mt-3">
+                          <h4>{{user.pladatuser.first_name}} {{user.pladatuser.last_name}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	<div class="col-md-8">
 		<div class="card h-100">
 			<div class="card-body">
 				<div class="col-12">

@@ -15,7 +15,7 @@ class PladatUser(models.Model):
     address = models.CharField(max_length=128, help_text="Addresss")
     city = models.CharField(max_length=128, help_text="City")
     state = models.CharField(max_length=128, null=True, help_text="State")
-    country = CountryField(blank_label="Country")  # https://pypi.org/project/django-countries/
+    country = CountryField(blank_label="Country", help_text="Country")  # https://pypi.org/project/django-countries/
 
     class UserType(models.IntegerChoices):
         STUDENT = 0, 'Student account'

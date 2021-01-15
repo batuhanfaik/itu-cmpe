@@ -173,6 +173,8 @@ class TestViews(TestCase):
         self.assertEqual(registered_pladat_user.user.email, 'test@test.com')
         self.assertEqual(registered_pladat_user.user_type, 1)
 
+
+    #TODO somehow i broke the test, actually how its running?? register_user when returns false?
     def test_register_user_invalid_data_email(self):
         register_data = {
             'email': 'test.com',
