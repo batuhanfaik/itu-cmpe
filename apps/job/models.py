@@ -16,3 +16,5 @@ class Job(models.Model):
     # TODO: Enable this if it is true
     # recruiter = models.ManyToOneRel(PladatUser, limit_choices_to={'user_type':PladatUser.UserType.COMPANY})
     # Company info also required buy can be derived from recruiter
+
+    #TODO applicants??? many to many ????

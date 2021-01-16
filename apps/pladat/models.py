@@ -19,7 +19,7 @@ class PladatUser(models.Model):
 
     class UserType(models.IntegerChoices):
         STUDENT = 0, 'Student account'
-        COMPANY = 1, 'Company account'
+        RECRUITER = 1, 'Recruiter account'
         __empty__ = 'User type'
 
     user_type = models.IntegerField(choices=UserType.choices, help_text="User type")

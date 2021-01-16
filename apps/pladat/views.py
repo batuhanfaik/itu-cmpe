@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from .models import PladatUser
 
 from apps.student.models import Student
-from apps.company.models import Recruiter
+from apps.recruiter.models import Recruiter
 
 
 def main_page_view(request):
@@ -91,7 +91,7 @@ def register_user(data):
         student = Student.objects.create(**student_dct)
         student.save()
         
-    elif int(data['user_type']) == PladatUser.UserType.COMPANY:
+    elif int(data['user_type']) == PladatUser.UserType.RECRUITER:
         recruiter_dct = {'pladatuser': pladatuser}
         recruiter = Recruiter.objects.create(**recruiter_dct)
         recruiter.save()
@@ -165,7 +165,7 @@ def profile_view(request, id):
                 return HttpResponse('Student did not complete the registration fully, missing information')
 
         return render(request, 'student_profile.html', context=ctx)
-    if user.pladatuser.user_type == PladatUser.UserType.COMPANY:
+    if user.pladatuser.user_type == PladatUser.UserType.RECRUITER:
         try:
             user.pladatuser.recruiter
         except:

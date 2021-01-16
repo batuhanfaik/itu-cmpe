@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from apps.pladat.models import PladatUser
 from apps.pladat.models import User
-from apps.jobs.models import Job
+from apps.job.models import Job
 # Create your views here.
 
 
