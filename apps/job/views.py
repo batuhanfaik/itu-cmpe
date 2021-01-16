@@ -1,11 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_list_or_404, get_object_or_404
 
 from apps.pladat.models import PladatUser
 from apps.pladat.models import User
+from apps.recruiter.models import Recruiter
 from apps.job.models import Job
 from apps.job.forms import UpdateJobForm
 # Create your views here.
 
+def job_list_view(request):
+    recruiter = get_object_or_404(Recruiter, pladatuser=request.user.pladatuser)
+    job_list = get_list_or_404(Job, recruiter=recruiter)
+    ctx = {
+        'job_list':job_list,
+    }
+    if request.method == 'GET':
+        return render(request, 'job_list.html', context=ctx)
 
 def job_update_view(request):
     job = Job.objects.get(id=1)
