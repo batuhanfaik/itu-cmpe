@@ -1,10 +1,27 @@
 from django.shortcuts import render
 
-from apps.pladat.models import PladatUser
-from apps.pladat.models import User
+from apps.pladat.models import PladatUser,User
 from apps.jobs.models import Job
+from apps.jobs.forms import UpdateJobForm
 # Create your views here.
 
+
+def job_update_view(request):
+    job = Job.objects.get(id=1)
+    user = User.objects.get(id=2)
+    recruiter = user.pladatuser
+    ctx = {
+        'job':job,
+        'recruiter':recruiter,
+    }
+    if request.method == 'GET':
+        form = UpdateJobForm(instance=job)
+        ctx['form'] = form
+        return render(request, 'job_update.html', context=ctx)
+    if request.method == 'POST':
+        print('update jobs and shit')
+        # TODO: add recruiter as a field if it is added to the model
+        return render(request, 'job_update.html', context=ctx)
 
 def job_view(request):
     job_application = Job.objects.get(id=1)
