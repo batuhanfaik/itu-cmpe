@@ -13,8 +13,15 @@ def job_view(request):
         'job':job_application,
         # TODO: remove recruiter if job contains a link to recruiter
         'recruiter':recruiter,
+        'student_type':PladatUser.UserType.STUDENT,
     }
     if request.method == 'GET':
+        return render(request, 'job.html', context=ctx)
+    if request.method == 'POST':
+        if 'yes' in request.POST:
+            print('student interested in job')
+        elif 'no' in request.POST:
+            print('student is not interested in job')
         return render(request, 'job.html', context=ctx)
 
 def applicant_profile(request):
