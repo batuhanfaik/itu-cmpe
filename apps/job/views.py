@@ -31,11 +31,11 @@ def job_update_view(request, id):
         return redirect('/')
     job = get_object_or_404(Job, id=id)
     recruiter = request.user.pladatuser.recruiter
-    if recruiter != job.recruiter: # job is another recruiters job
-        return redirect('/') # TODO redirect where?
+    if recruiter != job.recruiter:  # job is another recruiters job
+        return redirect('/')  # TODO redirect where?
     ctx = {
         'job': job,
-        'recruiter': recruiter,
+        'recruiter': recruiter,  # TODO it is unnecessary, job.recruiter exist
     }
     if request.method == 'GET':
         form = UpdateJobForm(instance=job)
@@ -43,11 +43,42 @@ def job_update_view(request, id):
         return render(request, 'job_update.html', context=ctx)
     if request.method == 'POST':
         form = UpdateJobForm(request.POST, instance=job)
+        ctx['form'] = form
         if form.is_valid():
             form.save()
             return redirect(f'/job/{id}')
-        return render(request, 'job_update.html', context=ctx)
+        else:
+            return render(request, 'job_update.html', context=ctx)
     return render(request, 'job_update.html', context=ctx)
+
+
+def job_create_view(request):
+    if not request.user.is_authenticated:
+        return redirect('/')
+    if request.user.pladatuser.user_type == PladatUser.UserType.STUDENT:
+        return redirect('/')
+
+    recruiter = request.user.pladatuser.recruiter
+
+    ctx = {
+        'recruiter': recruiter,
+    }
+    if request.method == 'GET':
+        form = UpdateJobForm()
+        ctx['form'] = form
+        return render(request, 'job_update.html', context=ctx)
+    if request.method == 'POST':
+        form = UpdateJobForm(request.POST)
+        ctx['form'] = form
+        if form.is_valid():
+            job = form.save(commit=False)
+            job.recruiter = recruiter
+            job.save()
+            return redirect(f'/job/{job.id}')
+        else:
+            return render(request, 'job_update.html', context=ctx)
+    return render(request, 'job_update.html', context=ctx)
+
 
 def job_view(request, id):
     if not request.user.is_authenticated:

@@ -21,13 +21,16 @@ def main_page_view(request):
 
     return render(request, 'main_page.html', context=ctx)
 
+
 def recruiter_profile_view(request):
     ctx = {}
     return render(request, 'recruiter_profile.html', context=ctx)
 
+
 def recruiter_profile_update_view(request):
     ctx = {}
     return render(request, 'recruiter_profile_update.html', context=ctx)
+
 
 def login_page_view(request):
     ctx = {}
@@ -42,7 +45,7 @@ def login_page_view(request):
                     setTimeout(redirect, 1000);
                 </script>
             '''
-            )
+                                )
         login_form = LoginForm()
         ctx = {'form': login_form}
         return render(request, 'user_login.html', context=ctx)
@@ -90,7 +93,7 @@ def register_user(data):
         student_dct = {'pladatuser': pladatuser}
         student = Student.objects.create(**student_dct)
         student.save()
-        
+
     elif int(data['user_type']) == PladatUser.UserType.RECRUITER:
         recruiter_dct = {'pladatuser': pladatuser}
         recruiter = Recruiter.objects.create(**recruiter_dct)
@@ -126,7 +129,15 @@ def registration_view(request):
                 return render(request, 'user_register.html', context=ctx)
             else:
                 register_user(registration_form.data)
-                return HttpResponse('Registered successfully')
+                return HttpResponse('''
+                Registered successfully
+                <script>
+                    function redirect(){
+                    window.location.href = "/";
+                    }
+                    setTimeout(redirect, 1000);
+                </script>
+                    ''')
         else:
             # Something wrong with form
             ctx['form'] = registration_form
@@ -142,7 +153,7 @@ def logout_page_view(request):
 
 
 def profile_view(request, id):
-    user = User.objects.filter(pk = id)
+    user = User.objects.filter(pk=id)
 
     ctx = {
         'owner': id == request.user.id
@@ -157,5 +168,3 @@ def profile_view(request, id):
         return render(request, 'student_profile.html', context=ctx)
     if user.pladatuser.user_type == PladatUser.UserType.RECRUITER:
         return render(request, 'recruiter_profile.html', context=ctx)
-
-

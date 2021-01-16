@@ -62,15 +62,13 @@
                       <form method='post'>
                         {% csrf_token %}
                         {% for field in form %}
-                            {% if field.id_for_label != 'id_recruiter' %}
                             <hr>
                             <div class="row">
                                 <div class="form-group col-12">
-                                    <label for={{field.id_for_label}}>{{field.help_text}}</label>
+                                    <label for={{field.id_for_label}}>{{field.help_text}}</label> {{ field.errors }}
                                     {{field}}
                                 </div>
                             </div>
-                            {% endif %}
                         {% endfor %}
                         <div class="text-center">
                             <button type="submit" id="submit" name="submit" class="btn btn-primary">Update</button>
