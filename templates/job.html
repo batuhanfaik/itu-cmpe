@@ -5,7 +5,9 @@
 {% block stylesheet %}
   {% load static %}
 <link href= "{% static 'pladat/profile.css'%}"  rel="stylesheet">
-  {{block.super}} 
+  {{block.super}}
+    {% load static %}
+<link href= "{% static 'pladat/circular-progress.css'%}"  rel="stylesheet">
 {% endblock stylesheet %} 
 
 {% block content %}
@@ -22,23 +24,24 @@
                             <h5>Created by</h5>
                             <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Recruiter" class="rounded-circle" width="150">
                             <h6>{{ job.recruiter.first_name }} {{ job.recruiter.last_name }}</h6>
+                            <hr>
+                            <div class="col-md-3 col-sm-6">
+                                <div class="progress yellow">
+                                    <span class="progress-left">
+                                        <span class="progress-bar"></span>
+                                    </span>
+                                    <span class="progress-right">
+                                        <span class="progress-bar"></span>
+                                    </span>
+                                    <div class="progress-value">75%</div>
+                                </div>
+                            </div>
                         </div>
                       </div>
                     </div>
+
                   </div>
-                {% if is_student %}
-                    <div class="card sticky-top" style="top: 25rem;">
-                      <form class="form-control" method="post">
-                          {% csrf_token %}
-                          <button class="btn btn-md btn-success btn-block" name="yes" type="submit">
-                              Interested
-                          </button>
-                          <button class="btn btn-md btn-dark btn-block" name="no" type="submit">
-                              Not Interested
-                          </button>
-                      </form>
-                  </div>
-                {% endif %}
+
                 </div>
                 <div class="col-md-8">
                   <div class="card mb-3">
@@ -140,6 +143,19 @@
                         <div class="text-center">
                             <a href="./update/{{ job.id }}" class="btn btn-primary">Update Job</a>
                         </div>
+                    {% endif %}
+                    {% if is_student %}
+                    <div>
+                      <form class="form-control" method="post">
+                          {% csrf_token %}
+                          <button class="btn btn-md btn-success btn-block" name="yes" type="submit">
+                              Interested
+                          </button>
+                          <button class="btn btn-md btn-dark btn-block" name="no" type="submit">
+                              Not Interested
+                          </button>
+                      </form>
+                    </div>
                     {% endif %}
                     </div>
                   </div>
