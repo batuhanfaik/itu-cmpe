@@ -2,12 +2,25 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from apps.pladat.models import PladatUser
 from apps.pladat.models import User
-from apps.job.models import Job
+from apps.job.models import Job, AppliedJob
 from apps.recruiter.models import Recruiter
 from apps.job.forms import UpdateJobForm
 from django.shortcuts import get_object_or_404
 # Create your views here.
 
+def find_job_view(request):
+    student = request.user.pladatuser.student
+    pass
+
+def job_find_student_view(request):
+    if request.method != 'GET':
+        return redirect('/')
+    if not request.user.is_authenticated:
+        return redirect('/')
+    if request.user.pladatuser.user_type == PladatUser.UserType.STUDENT:
+        return redirect('/')
+    recruiter = request.user.pladatuser.recruiter
+    pass
 
 def job_list_view(request):
     if request.method != 'GET':
@@ -87,6 +100,7 @@ def job_view(request, id):
     ctx = {
         'job': job,
         'is_student': request.user.pladatuser.user_type == PladatUser.UserType.STUDENT,
+        'match_rate': 100 # TODO: pass match_rate
     }
     if ctx["is_student"]:
         ctx['is_owner'] = False
@@ -96,11 +110,15 @@ def job_view(request, id):
     if request.method == 'GET':
         return render(request, 'job.html', context=ctx)
     if request.method == 'POST' and ctx["is_student"]:
+        application = AppliedJob(
+            applicant=request.user.pladatuser.student,
+            job=job,
+        )
         if 'yes' in request.POST:
-            print('student interested in job')
+            application.is_student_interested = AppliedJob.StudentInterest.INTERESTED
         elif 'no' in request.POST:
-            print('student is not interested in job')
-        # TODO send next job
+            application.is_student_interested = AppliedJob.StudentInterest.NOT_INTERESTED
+        application.save()
         return render(request, 'job.html', context=ctx)
 
     return HttpResponse("You should not be here")
