@@ -20,5 +20,6 @@ urlpatterns = [
     path('', include('apps.pladat.urls')),
     path('student/', include('apps.student.urls')),
     path('recruiter/', include('apps.company.urls')),
+    path('jobs/', include('apps.jobs.urls')),
     path('admin/', admin.site.urls),
 ]

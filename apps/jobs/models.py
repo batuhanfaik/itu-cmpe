@@ -11,3 +11,4 @@ class Job(models.Model):
     city = models.CharField(max_length=128)
     state = models.CharField(max_length=128, null=True)
     country = CountryField()  # https://pypi.org/project/django-countries/
+
