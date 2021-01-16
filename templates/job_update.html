@@ -59,7 +59,7 @@
                           <h4 class="mb-0 text-center">General Info</h4>
                         </div>
                       </div>
-                      <form action='/jobs/job/update' method='post'>
+                      <form method='post'>
                         {% csrf_token %}
                         {% for field in form %}
                             {% if field.id_for_label != 'id_recruiter' %}

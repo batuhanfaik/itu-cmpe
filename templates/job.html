@@ -21,14 +21,14 @@
                           <h4>{{job.title}}</h4>
                             <h5>Created by</h5>
                             <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Recruiter" class="rounded-circle" width="150">
-                            <h6>{{ recruiter.first_name }} {{ recruiter.last_name }}</h6>
+                            <h6>{{ job.recruiter.first_name }} {{ job.recruiter.last_name }}</h6>
                         </div>
                       </div>
                     </div>
                   </div>
-                {% if user.pladatuser.user_type == student_type %}
+                {% if is_student %}
                     <div class="card sticky-top" style="top: 25rem;">
-                      <form class="form-control" action="/jobs/job" method="post">
+                      <form class="form-control" method="post">
                           {% csrf_token %}
                           <button class="btn btn-md btn-success btn-block" name="yes" type="submit">
                               Interested
@@ -114,7 +114,7 @@
                           <h6 class="mb-0">Company Name</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          {{recruiter.recruiter.company_name}}
+                          {{job.recruiter.company_name}}
                         </div>
                       </div>
                       <hr/>
@@ -123,7 +123,7 @@
                           <h6 class="mb-0">Phone Number</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          {{recruiter.recruiter.company_phone_number}}
+                          {{job.recruiter.company_phone_number}}
                         </div>
                       </div>
                       <hr/>
@@ -132,11 +132,11 @@
                           <h6 class="mb-0">Address</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          {{recruiter.recruiter.company_address}}
+                          {{job.recruiter.company_address}}
                         </div>
                       </div>
                       <hr/>
-                    {% if user == recruiter.user %}
+                    {% if is_owner %}
                         <div class="text-center">
                             <a href="./update" class="btn btn-primary">Update Job</a>
                         </div>

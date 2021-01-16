@@ -1,24 +1,38 @@
-from django.shortcuts import render, get_list_or_404, get_object_or_404
-
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from apps.pladat.models import PladatUser
 from apps.pladat.models import User
-from apps.recruiter.models import Recruiter
 from apps.job.models import Job
+from apps.recruiter.models import Recruiter
 from apps.job.forms import UpdateJobForm
+from django.shortcuts import get_object_or_404
+# Create your views here.
+
 
 def job_list_view(request):
-    recruiter = get_object_or_404(Recruiter, pladatuser=request.user.pladatuser)
-    job_list = get_list_or_404(Job, recruiter=recruiter)
+    if request.method != 'GET':
+        return redirect('/')
+    if not request.user.is_authenticated:
+        return redirect('/')
+    if request.user.pladatuser.user_type == PladatUser.UserType.STUDENT:
+        return redirect('/')
+    recruiter = request.user.pladatuser.recruiter
+    job_list = Job.objects.filter(recruiter=recruiter)
     ctx = {
-        'job_list':job_list,
+        'job_list': job_list,
     }
-    if request.method == 'GET':
-        return render(request, 'job_list.html', context=ctx)
+    return render(request, 'job_list.html', context=ctx)
 
-def job_update_view(request):
-    job = Job.objects.get(id=1)
-    user = User.objects.get(id=2)
-    recruiter = user.pladatuser
+
+def job_update_view(request, id):
+    if not request.user.is_authenticated:
+        return redirect('/')
+    if request.user.pladatuser.user_type == PladatUser.UserType.STUDENT:
+        return redirect('/')
+    job = get_object_or_404(Job, id=id)
+    recruiter = request.user.pladatuser.recruiter
+    if recruiter.id != job.recruiter.id: # job is another recruiters job
+        return redirect('/') # TODO redirect where?
     ctx = {
         'job': job,
         'recruiter': recruiter,
@@ -33,25 +47,33 @@ def job_update_view(request):
         return render(request, 'job_update.html', context=ctx)
 
 
-def job_view(request):
-    job_application = Job.objects.get(id=1)
-    recruiter = User.objects.get(id=2).pladatuser
+def job_view(request, id):
+    if not request.user.is_authenticated:
+        return redirect('/')
+    job = get_object_or_404(Job, id=id)
     ctx = {
-        'job': job_application,
-        # TODO: remove recruiter if job contains a link to recruiter
-        'recruiter': recruiter,
-        'student_type': PladatUser.UserType.STUDENT,
+        'job': job,
+        'is_student': request.user.pladatuser.user_type == PladatUser.UserType.STUDENT,
     }
+    if not ctx["is_student"]:
+        ctx['is_owner'] = False
+    else:
+        ctx['is_owner'] = request.user.pladatuser.recruiter.id == job.recruiter.id
+
     if request.method == 'GET':
         return render(request, 'job.html', context=ctx)
-    if request.method == 'POST':
+    if request.method == 'POST' and ctx["is_student"]:
         if 'yes' in request.POST:
             print('student interested in job')
         elif 'no' in request.POST:
             print('student is not interested in job')
+        # TODO send next job
         return render(request, 'job.html', context=ctx)
 
+    return HttpResponse("You should not be here")
 
+
+# TODO i did not look here yet _osman
 def applicant_profile(request):
     user = User.objects.get(email='test@pladat.com')
     applicant = PladatUser.objects.get(user=user)
