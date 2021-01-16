@@ -24,6 +24,7 @@
                             <h5>Created by</h5>
                             <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Recruiter" class="rounded-circle" width="150">
                             <h6>{{ job.recruiter.first_name }} {{ job.recruiter.last_name }}</h6>
+                            {% if is_student %}
                             <hr>
                             <div class="col-md-3 col-sm-6">
                                 <div class="progress yellow">
@@ -33,9 +34,10 @@
                                     <span class="progress-right">
                                         <span class="progress-bar"></span>
                                     </span>
-                                    <div class="progress-value">75%</div>
+                                    <div class="progress-value">{{ match_rate }}</div>
                                 </div>
                             </div>
+                            {% endif %}
                         </div>
                       </div>
                     </div>
