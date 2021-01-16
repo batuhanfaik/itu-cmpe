@@ -5,6 +5,7 @@ class UpdateJobForm(forms.ModelForm):
     class Meta:
         model = Job
         fields = '__all__'
+        exclude = ('recruiter',)
 
     def __init__(self, *args, **kwargs):
         super(UpdateJobForm, self).__init__(*args, **kwargs)

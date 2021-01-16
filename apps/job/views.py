@@ -43,7 +43,6 @@ def job_update_view(request, id):
         return render(request, 'job_update.html', context=ctx)
     if request.method == 'POST':
         form = UpdateJobForm(request.POST, instance=job)
-        form.recruiter = request.user.pladatuser.recruiter
         if form.is_valid():
             form.save()
             return redirect(f'/job/{id}')
