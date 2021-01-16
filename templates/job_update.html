@@ -73,48 +73,9 @@
                             {% endif %}
                         {% endfor %}
                         <div class="text-center">
-                            <button type="submit" id="btnform1" name="btnform1" class="btn btn-primary">Update</button>
+                            <button type="submit" id="submit" name="submit" class="btn btn-primary">Update</button>
                         </div>
                      </form>
-                      <hr/>
-                      <div class="row">
-                        <div class="col-sm-12">
-                          <h4 class="mb-0 text-center">Company Info</h4>
-                        </div>
-                      </div>
-                      <hr/>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Company Name</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{recruiter.recruiter.company_name}}
-                        </div>
-                      </div>
-                      <hr/>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Phone Number</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{recruiter.recruiter.company_phone_number}}
-                        </div>
-                      </div>
-                      <hr/>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Address</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{recruiter.recruiter.company_address}}
-                        </div>
-                      </div>
-                      <hr/>
-                    {% if user == recruiter.user %}
-                        <div class="text-center">
-                            <a href="/jobs/job/update" class="btn btn-primary">Update Job</a>
-                        </div>
-                    {% endif %}
                     </div>
                   </div>
                 </div>

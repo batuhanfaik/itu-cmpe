@@ -154,28 +154,8 @@ def profile_view(request, id):
         user = user[0]
 
     if user.pladatuser.user_type == PladatUser.UserType.STUDENT:
-        try:
-            user.pladatuser.student
-        except:
-            # Trying to look into their profile but did not completed it yet
-            #TODO burasi suan islevsiz, baska bi sekilde bakilmali
-            if ctx['owner']:
-                return redirect('/student/profile/update')
-            else:
-                return HttpResponse('Student did not complete the registration fully, missing information')
-
         return render(request, 'student_profile.html', context=ctx)
     if user.pladatuser.user_type == PladatUser.UserType.RECRUITER:
-        try:
-            user.pladatuser.recruiter
-        except:
-            # Trying to look into their profile but did not completed it yet
-            #TODO burasi suan islevsiz, baska bi sekilde bakilmali
-            if ctx['owner']:
-                return redirect('/recruiter/profile/update')
-            else:
-                return HttpResponse('Recruiter did not complete the registration fully, missing information')
-
         return render(request, 'recruiter_profile.html', context=ctx)
 
 
