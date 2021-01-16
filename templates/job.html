@@ -1,12 +1,11 @@
 {% extends "base.html" %} 
+{% load static %}
 
 {% block title %} Main Page {% endblock title %} 
 
 {% block stylesheet %}
-  {% load static %}
 <link href= "{% static 'pladat/profile.css'%}"  rel="stylesheet">
   {{block.super}}
-    {% load static %}
 <link href= "{% static 'pladat/circular-progress.css'%}"  rel="stylesheet">
 {% endblock stylesheet %} 
 
@@ -24,18 +23,20 @@
                             <h5>Created by</h5>
                             <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Recruiter" class="rounded-circle" width="150">
                             <h6>{{ job.recruiter.first_name }} {{ job.recruiter.last_name }}</h6>
+                            {% if is_student %}
                             <hr>
-                            <div class="col-md-3 col-sm-6">
-                                <div class="progress yellow">
-                                    <span class="progress-left">
-                                        <span class="progress-bar"></span>
-                                    </span>
-                                    <span class="progress-right">
-                                        <span class="progress-bar"></span>
-                                    </span>
-                                    <div class="progress-value">75%</div>
-                                </div>
+                            <div class="progress mx-auto" data-value="{{ match_rate }}">
+                                  <span class="progress-left">
+                                                <span class="progress-bar border-primary"></span>
+                                  </span>
+                                  <span class="progress-right">
+                                                <span class="progress-bar border-primary"></span>
+                                  </span>
+                                  <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                    <div class="h2 font-weight-bold">{{ match_rate }}<sup class="small">%</sup></div>
+                                  </div>
                             </div>
+                            {% endif %}
                         </div>
                       </div>
                     </div>
