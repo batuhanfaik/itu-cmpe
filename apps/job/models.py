@@ -19,3 +19,7 @@ class Job(models.Model):
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
     # Company info also required buy can be derived from recruiter
 
+
+class AppliedJob(models.Model):
+    applicant = models.ForeignKey(Student, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
