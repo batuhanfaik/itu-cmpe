@@ -12,7 +12,7 @@ from .models import PladatUser
 
 from apps.student.models import Student
 from apps.recruiter.models import Recruiter
-
+from django.shortcuts import get_object_or_404
 
 def main_page_view(request):
     ctx = {}
@@ -153,16 +153,12 @@ def logout_page_view(request):
 
 
 def profile_view(request, id):
-    user = User.objects.filter(pk=id)
+    user = get_object_or_404(User, id=id)
 
     ctx = {
-        'owner': id == request.user.id
+        'owner': id == request.user.id,
+        'profile_user': user,
     }
-
-    if not user.exists():
-        return HttpResponse('Profile does not exist')
-    else:
-        user = user[0]
 
     if user.pladatuser.user_type == PladatUser.UserType.STUDENT:
         return render(request, 'student_profile.html', context=ctx)
