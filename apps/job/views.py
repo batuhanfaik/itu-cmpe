@@ -100,10 +100,13 @@ def job_view(request, id):
     ctx = {
         'job': job,
         'is_student': request.user.pladatuser.user_type == PladatUser.UserType.STUDENT,
-        'match_rate': 100 # TODO: pass match_rate
+        'match_rate': 100,  # TODO: pass match_rate
+        'already_applied': False
     }
     if ctx["is_student"]:
         ctx['is_owner'] = False
+        applied = AppliedJob.objects.filter(job=job, student=request.user.pladatuser.student)
+        ctx['already_applied'] = bool(applied)
     else:
         ctx['is_owner'] = request.user.pladatuser.recruiter == job.recruiter
 
