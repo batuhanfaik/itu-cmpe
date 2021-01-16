@@ -43,7 +43,7 @@
 											{% for field in form1 %}
 												<div class="row">
 												<div class="form-group col-12">
-													<label for={{field.id_for_label}}>{{field.help_text}}</label>
+													<label for={{field.id_for_label}}>{{field.help_text}}</label> {{ field.errors }}
 													{{field}}
 												</div>
 											</div>
@@ -60,7 +60,7 @@
 											{% for field in form2 %}
 												<div class="row">
 												<div class="form-group col-12">
-													<label for={{field.id_for_label}}>{{field.help_text}}</label>
+													<label for={{field.id_for_label}}>{{field.help_text}}</label> {{ field.errors }}
 													{{field}}
 												</div>
 											</div>
