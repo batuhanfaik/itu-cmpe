@@ -12,15 +12,15 @@
     <div class="container">
         <div class="main-body">
         
-              <!-- Breadcrumb -->
-              <nav aria-label="breadcrumb" class="main-breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                  <li class="breadcrumb-item"><a href="javascript:void(0)">User</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">User Profile</li>
-                </ol>
-              </nav>
-              <!-- /Breadcrumb -->
+{#              <!-- Breadcrumb -->#}
+{#              <nav aria-label="breadcrumb" class="main-breadcrumb">#}
+{#                <ol class="breadcrumb">#}
+{#                  <li class="breadcrumb-item"><a href="index.html">Home</a></li>#}
+{#                  <li class="breadcrumb-item"><a href="javascript:void(0)">User</a></li>#}
+{#                  <li class="breadcrumb-item active" aria-current="page">User Profile</li>#}
+{#                </ol>#}
+{#              </nav>#}
+{#              <!-- /Breadcrumb -->#}
         
               <div class="row gutters-sm">
                 <div class="col-md-4 mb-3 ">
@@ -59,60 +59,23 @@
                           <h4 class="mb-0 text-center">General Info</h4>
                         </div>
                       </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Title</h6>
+                      <form action='/jobs/job/update' method='post'>
+                        {% csrf_token %}
+                        {% for field in form %}
+                            {% if field.id_for_label != 'id_recruiter' %}
+                            <hr>
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <label for={{field.id_for_label}}>{{field.help_text}}</label>
+                                    {{field}}
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="text-center">
+                            <button type="submit" id="btnform1" name="btnform1" class="btn btn-primary">Update</button>
                         </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{job.title}}
-                        </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Description</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{job.description}}
-                        </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Requirements</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{job.requirements}}
-                        </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">City</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{job.city}}
-                        </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">State</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{job.state}}
-                        </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Country</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{job.country}}
-                        </div>
-                      </div>
+                     </form>
                       <hr/>
                       <div class="row">
                         <div class="col-sm-12">
@@ -149,7 +112,7 @@
                       <hr/>
                     {% if user == recruiter.user %}
                         <div class="text-center">
-                            <a href="./update" class="btn btn-primary">Update Job</a>
+                            <a href="/jobs/job/update" class="btn btn-primary">Update Job</a>
                         </div>
                     {% endif %}
                     </div>
