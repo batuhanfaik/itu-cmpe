@@ -15,7 +15,6 @@ class Job(models.Model):
     city = models.CharField(max_length=128, help_text='City')
     state = models.CharField(max_length=128, null=True, help_text='State')
     country = CountryField(help_text='Country')  # https://pypi.org/project/django-countries/
-
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
     # Company info also required buy can be derived from recruiter
 

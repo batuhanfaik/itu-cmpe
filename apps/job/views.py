@@ -31,7 +31,7 @@ def job_update_view(request, id):
         return redirect('/')
     job = get_object_or_404(Job, id=id)
     recruiter = request.user.pladatuser.recruiter
-    if recruiter.id != job.recruiter.id: # job is another recruiters job
+    if recruiter != job.recruiter: # job is another recruiters job
         return redirect('/') # TODO redirect where?
     ctx = {
         'job': job,
@@ -42,10 +42,13 @@ def job_update_view(request, id):
         ctx['form'] = form
         return render(request, 'job_update.html', context=ctx)
     if request.method == 'POST':
-        print('update jobs and shit')
-        # TODO: add recruiter as a field if it is added to the model
+        form = UpdateJobForm(request.POST, instance=job)
+        form.recruiter = request.user.pladatuser.recruiter
+        if form.is_valid():
+            form.save()
+            return redirect(f'/job/{id}')
         return render(request, 'job_update.html', context=ctx)
-
+    return render(request, 'job_update.html', context=ctx)
 
 def job_view(request, id):
     if not request.user.is_authenticated:
@@ -55,10 +58,10 @@ def job_view(request, id):
         'job': job,
         'is_student': request.user.pladatuser.user_type == PladatUser.UserType.STUDENT,
     }
-    if not ctx["is_student"]:
+    if ctx["is_student"]:
         ctx['is_owner'] = False
     else:
-        ctx['is_owner'] = request.user.pladatuser.recruiter.id == job.recruiter.id
+        ctx['is_owner'] = request.user.pladatuser.recruiter == job.recruiter
 
     if request.method == 'GET':
         return render(request, 'job.html', context=ctx)
