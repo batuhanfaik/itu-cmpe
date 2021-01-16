@@ -105,7 +105,7 @@ def job_view(request, id):
     }
     if ctx["is_student"]:
         ctx['is_owner'] = False
-        applied = AppliedJob.objects.filter(job=job, student=request.user.pladatuser.student)
+        applied = AppliedJob.objects.filter(job=job, applicant=request.user.pladatuser.student)
         ctx['already_applied'] = bool(applied)
     else:
         ctx['is_owner'] = request.user.pladatuser.recruiter == job.recruiter
