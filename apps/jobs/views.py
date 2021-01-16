@@ -4,6 +4,8 @@ from apps.pladat.models import PladatUser
 from apps.pladat.models import User
 # Create your views here.
 
+
+
 def applicant_profile(request):
     user = User.objects.get(email='test@pladat.com')
     applicant = PladatUser.objects.get(user=user)
