@@ -24,10 +24,14 @@ def job_view(request):
             print('student is not interested in job')
         return render(request, 'job.html', context=ctx)
 
+
 def applicant_profile(request):
     user = User.objects.get(email='test@pladat.com')
     applicant = PladatUser.objects.get(user=user)
-    ctx = {'applicant':applicant} #This should contain the PladatUser of the student
+    # TODO: check if student applied for this job!
+    # TODO: check if job belongs to the recruiter(current user)
+    ctx = {
+        'applicant':applicant} #This should contain the PladatUser of the student
     if request.method == 'GET':
         print(ctx)
         return render(request, 'applicant_profile.html', context=ctx)
