@@ -2,9 +2,20 @@ from django.shortcuts import render
 
 from apps.pladat.models import PladatUser
 from apps.pladat.models import User
+from apps.jobs.models import Job
 # Create your views here.
 
 
+def job_view(request):
+    job_application = Job.objects.get(id=1)
+    recruiter = User.objects.get(id=2).pladatuser
+    ctx = {
+        'job':job_application,
+        # TODO: remove recruiter if job contains a link to recruiter
+        'recruiter':recruiter,
+    }
+    if request.method == 'GET':
+        return render(request, 'job.html', context=ctx)
 
 def applicant_profile(request):
     user = User.objects.get(email='test@pladat.com')
