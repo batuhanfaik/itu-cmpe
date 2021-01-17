@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'apps.job',
     'apps.pladat',
     'apps.student',
+    'apps.recommend',
     'django_countries',
     'phonenumber_field',
 ]
