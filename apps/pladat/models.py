@@ -23,3 +23,6 @@ class PladatUser(models.Model):
         __empty__ = 'User type'
 
     user_type = models.IntegerField(choices=UserType.choices, help_text="User type")
+
+    def __str__(self):
+        return self.first_name

@@ -17,6 +17,8 @@ class Job(models.Model):
     country = CountryField(help_text='Country')  # https://pypi.org/project/django-countries/
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
     # Company info also required buy can be derived from recruiter
+    def __str__(self):
+        return self.title
 
 
 class AppliedJob(models.Model):
@@ -35,3 +37,4 @@ class AppliedJob(models.Model):
         INTERESTED = 1, 'Recruiter is interested with this student'
         NOT_INTERESTED = 2, 'Recruiter is not interested with this student'
     recruiter_response = models.IntegerField(choices=RecruiterResponse.choices, default=RecruiterResponse.NO_RESPONSE, help_text="Recruiter Response")
+    
