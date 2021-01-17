@@ -37,10 +37,8 @@ def job_list_view(request):
     }
     return render(request, 'job_list.html', context=ctx)
 
-
+@login_required
 def job_update_view(request, id):
-    if not request.user.is_authenticated:
-        return redirect('/')
     if request.user.pladatuser.user_type == PladatUser.UserType.STUDENT:
         return redirect('/')
     job = get_object_or_404(Job, id=id)
