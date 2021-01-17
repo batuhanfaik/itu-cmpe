@@ -1,0 +1,182 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$216000$Av2l8zHBjgkg$g571db3rSlXKgAjjf0wZjN4o0oPxo3PWaa5Qd7sM2Xk=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "test1@test1.com",
+        "first_name": "",
+        "last_name": "",
+        "email": "test1@test1.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2021-01-17T15:53:28.787Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$216000$jSn7LLdeuy7u$qhmjsZ+FDxz8Bai/Qr2h00Qua/gLy9MDJFiCCT7j/Xs=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "test0@test0.com",
+        "first_name": "",
+        "last_name": "",
+        "email": "test0@test0.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2021-01-17T15:53:56.847Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 1,
+    "fields": {
+        "app_label": "admin",
+        "model": "logentry"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 2,
+    "fields": {
+        "app_label": "auth",
+        "model": "permission"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 3,
+    "fields": {
+        "app_label": "auth",
+        "model": "group"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 4,
+    "fields": {
+        "app_label": "auth",
+        "model": "user"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 5,
+    "fields": {
+        "app_label": "contenttypes",
+        "model": "contenttype"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 6,
+    "fields": {
+        "app_label": "sessions",
+        "model": "session"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 7,
+    "fields": {
+        "app_label": "recruiter",
+        "model": "recruiter"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 8,
+    "fields": {
+        "app_label": "job",
+        "model": "appliedjob"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 9,
+    "fields": {
+        "app_label": "job",
+        "model": "job"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 10,
+    "fields": {
+        "app_label": "pladat",
+        "model": "pladatuser"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 11,
+    "fields": {
+        "app_label": "student",
+        "model": "skill"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 12,
+    "fields": {
+        "app_label": "student",
+        "model": "student"
+    }
+},
+{
+    "model": "recruiter.recruiter",
+    "pk": 1,
+    "fields": {
+        "company_name": "ITU Rektorluk A.Ş",
+        "company_address": "Maslak Ayazaga",
+        "company_phone_number": "+447911123456"
+    }
+},
+{
+    "model": "pladat.pladatuser",
+    "pk": 1,
+    "fields": {
+        "first_name": "Isim2",
+        "last_name": "Soyisim2",
+        "phone_number": "+447911123456",
+        "address": "Maslak Ayazaga",
+        "city": "Istanbul",
+        "state": "Pennsylvania",
+        "country": "TR",
+        "user_type": 1
+    }
+},
+{
+    "model": "pladat.pladatuser",
+    "pk": 2,
+    "fields": {
+        "first_name": "Isim2",
+        "last_name": "Soyisim2",
+        "phone_number": "+447911123456",
+        "address": "Maslak Ayazaga",
+        "city": "Istanbul",
+        "state": "Pennsylvania",
+        "country": "TR",
+        "user_type": 0
+    }
+},
+{
+    "model": "student.student",
+    "pk": 2,
+    "fields": {
+        "degree": "bsc",
+        "major": "cmpe",
+        "university": "itu",
+        "years_worked": 0,
+        "skills": []
+    }
+}
+]
