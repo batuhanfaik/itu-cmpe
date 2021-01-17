@@ -20,6 +20,10 @@ class Job(models.Model):
     @property
     def company_name(self):
         return self.recruiter.company_name
+    
+    def is_applied(self, student):
+        appliedjob = AppliedJob.objects.filter(job = self.job, applicant = student)
+        return appliedjob.exists()
 
 
 class AppliedJob(models.Model):

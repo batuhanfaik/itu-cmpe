@@ -16,23 +16,12 @@ from django.shortcuts import get_object_or_404
 
 def main_page_view(request):
     ctx = {}
-    # if request.user.is_authenticated:
-    #     ctx = {'user': request.user}
-
     return render(request, 'main_page.html', context=ctx)
 
-
-def recruiter_profile_view(request):
-    ctx = {}
-    return render(request, 'recruiter_profile.html', context=ctx)
-
-
-def recruiter_profile_update_view(request):
-    ctx = {}
-    return render(request, 'recruiter_profile_update.html', context=ctx)
-
-
 def login_page_view(request):
+    # TODO: Redirect back to the page it came from (Baris)
+    # TODO: Does not show errors when wrong email / password (Baris)
+    # The page it came from can be reached by request.REQUEST.get('next')
     ctx = {}
     if request.method == 'GET':
         if request.user.is_authenticated:
@@ -44,8 +33,7 @@ def login_page_view(request):
                     }
                     setTimeout(redirect, 1000);
                 </script>
-            '''
-                                )
+            ''')
         login_form = LoginForm()
         ctx = {'form': login_form}
         return render(request, 'user_login.html', context=ctx)
@@ -54,7 +42,6 @@ def login_page_view(request):
         if login_form.is_valid():
             email = login_form.data['email']
             password = login_form.data['password']
-            # We are using emails as also username
             user = authenticate(username=email, password=password)
             if user is not None:
                 login(request, user)
@@ -72,35 +59,31 @@ def login_page_view(request):
 
 def register_user(data):
     # TODO: Add email validation (Baris)
+    try:
+        user_dct = {
+            'username': data['email'],
+            'email': data['email'],
+            'password': data['password'],
+        }
+        user = User.objects.create_user(**user_dct)
 
-    user_dct = {
-        'username': data['email'],
-        'email': data['email'],
-        'password': data['password'],
-    }
-    user = User.objects.create_user(**user_dct)
-    user.save()
+        fields = ['first_name', 'last_name', 'phone_number', 'address', 'city', 'state', 'country',
+                'user_type']
+        pladatuser_dct = {key: data[key] for key in fields}
+        pladatuser_dct['user'] = user
 
-    fields = ['first_name', 'last_name', 'phone_number', 'address', 'city', 'state', 'country',
-              'user_type']
-    pladatuser_dct = {key: data[key] for key in fields}
-    pladatuser_dct['user'] = user
+        pladatuser = PladatUser.objects.create(**pladatuser_dct)
 
-    pladatuser = PladatUser.objects.create(**pladatuser_dct)
-    pladatuser.save()
+        if int(data['user_type']) == PladatUser.UserType.STUDENT:
+            student_dct = {'pladatuser': pladatuser}
+            Student.objects.create(**student_dct)
 
-    if int(data['user_type']) == PladatUser.UserType.STUDENT:
-
-        student_dct = {'pladatuser': pladatuser}
-        student = Student.objects.create(**student_dct)
-        student.save()
-
-    elif int(data['user_type']) == PladatUser.UserType.RECRUITER:
-        recruiter_dct = {'pladatuser': pladatuser}
-        recruiter = Recruiter.objects.create(**recruiter_dct)
-        recruiter.save()
-
-    return True
+        elif int(data['user_type']) == PladatUser.UserType.RECRUITER:
+            recruiter_dct = {'pladatuser': pladatuser}
+            Recruiter.objects.create(**recruiter_dct)
+        return True
+    except:
+        return False
 
 
 def registration_view(request):
@@ -161,7 +144,7 @@ def profile_view(request, id):
         'profile_user': user,
     }
 
-    if user.pladatuser.user_type == PladatUser.UserType.STUDENT:
+    if user.pladatuser.is_student():
         return render(request, 'student_profile.html', context=ctx)
-    if user.pladatuser.user_type == PladatUser.UserType.RECRUITER:
+    else:
         return render(request, 'recruiter_profile.html', context=ctx)
