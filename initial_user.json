@@ -26,7 +26,7 @@
         "phone_number": "+447911123456",
         "address": "Maslak Ayazaga",
         "city": "Istanbul",
-        "state": 2,
+        "state": "Pennsylvania",
         "country": "TR",
         "user_type": 0
     }
@@ -38,10 +38,29 @@
         "degree": "Bachelors in Eng",
         "major": "Computer Engineering",
         "university": "Istanbul Technical University",
-        "number_of_previous_work_experience": 0,
-        "years_worked": 0,
-        "is_currently_employed": false,
-        "skills_text": "Python,Django"
+        "years_worked": 0
+    }
+
+},
+{
+    "model": "student.skill",
+    "pk": 1,
+    "fields": {
+        "name": "Django"
+    }
+},
+{
+    "model": "student.skill",
+    "pk": 2,
+    "fields": {
+        "name": "C++"
+    }
+},
+{
+    "model": "student.skill",
+    "pk": 3,
+    "fields": {
+        "name": "Python"
     }
 }
 ]

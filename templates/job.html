@@ -1,11 +1,12 @@
 {% extends "base.html" %} 
+{% load static %}
 
 {% block title %} Main Page {% endblock title %} 
 
 {% block stylesheet %}
-  {% load static %}
 <link href= "{% static 'pladat/profile.css'%}"  rel="stylesheet">
-  {{block.super}} 
+  {{block.super}}
+<link href= "{% static 'pladat/circular-progress.css'%}"  rel="stylesheet">
 {% endblock stylesheet %} 
 
 {% block content %}
@@ -16,13 +17,32 @@
                   <div class="card sticky-top" style="top: 4.3rem;">
                     <div class="card-body">
                       <div class="d-flex flex-column align-items-center text-center">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
                         <div class="mt-3">
-                          <h4>{{profile_user.pladatuser.first_name}} {{profile_user.pladatuser.last_name}}</h4>
+                            <h3>Job Title</h3>
+                          <h4>{{job.title}}</h4>
+                            <h5>Created by</h5>
+                            <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Recruiter" class="rounded-circle" width="150">
+                            <h6>{{ job.recruiter.first_name }} {{ job.recruiter.last_name }}</h6>
+                            {% if is_student %}
+                            <hr>
+                            <div class="progress mx-auto" data-value="{{ match_rate }}">
+                                  <span class="progress-left">
+                                                <span class="progress-bar border-primary"></span>
+                                  </span>
+                                  <span class="progress-right">
+                                                <span class="progress-bar border-primary"></span>
+                                  </span>
+                                  <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                    <div class="h2 font-weight-bold">{{ match_rate }}<sup class="small">%</sup></div>
+                                  </div>
+                            </div>
+                            {% endif %}
                         </div>
                       </div>
                     </div>
+
                   </div>
+
                 </div>
                 <div class="col-md-8">
                   <div class="card mb-3">
@@ -35,28 +55,28 @@
                       <hr>
                       <div class="row">
                         <div class="col-sm-3">
-                          <h6 class="mb-0">Full Name</h6>
+                          <h6 class="mb-0">Title</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.first_name}} {{profile_user.pladatuser.last_name}}
+                          {{job.title}}
                         </div>
                       </div>
                       <hr>
                       <div class="row">
                         <div class="col-sm-3">
-                          <h6 class="mb-0">Email</h6>
+                          <h6 class="mb-0">Description</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          {{user.email}}
+                          {{job.description}}
                         </div>
                       </div>
                       <hr>
                       <div class="row">
                         <div class="col-sm-3">
-                          <h6 class="mb-0">Phone</h6>
+                          <h6 class="mb-0">Requirements</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.phone_number}}
+                          {{job.requirements}}
                         </div>
                       </div>
                       <hr>
@@ -65,7 +85,7 @@
                           <h6 class="mb-0">City</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.city}}
+                          {{job.city}}
                         </div>
                       </div>
                       <hr>
@@ -74,7 +94,7 @@
                           <h6 class="mb-0">State</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.state}}
+                          {{job.state}}
                         </div>
                       </div>
                       <hr>
@@ -83,16 +103,7 @@
                           <h6 class="mb-0">Country</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.country}}
-                        </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Address</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.address}}
+                          {{job.country.name}}
                         </div>
                       </div>
                       <hr/>
@@ -107,7 +118,7 @@
                           <h6 class="mb-0">Company Name</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.recruiter.company_name}}
+                          {{job.recruiter.company_name}}
                         </div>
                       </div>
                       <hr/>
@@ -116,7 +127,7 @@
                           <h6 class="mb-0">Phone Number</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.recruiter.company_phone_number}}
+                          {{job.recruiter.company_phone_number}}
                         </div>
                       </div>
                       <hr/>
@@ -125,14 +136,27 @@
                           <h6 class="mb-0">Address</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.recruiter.company_address}}
+                          {{job.recruiter.company_address}}
                         </div>
                       </div>
                       <hr/>
-                    {% if owner %}
+                    {% if is_owner %}
                         <div class="text-center">
-                            <a href="/recruiter/profile/update" class="btn btn-primary">Update Profile</a>
+                            <a href="./update/{{ job.id }}" class="btn btn-primary">Update Job</a>
                         </div>
+                    {% endif %}
+                    {% if is_student and not already_applied%}
+                    <div>
+                      <form class="form-control" method="post">
+                          {% csrf_token %}
+                          <button class="btn btn-md btn-success btn-block" name="yes" type="submit">
+                              Interested
+                          </button>
+                          <button class="btn btn-md btn-dark btn-block" name="no" type="submit">
+                              Not Interested
+                          </button>
+                      </form>
+                    </div>
                     {% endif %}
                     </div>
                   </div>

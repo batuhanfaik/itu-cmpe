@@ -19,10 +19,10 @@ deletemigrationfiles() {
 }
 
 startdb() {
-  cd apps/company
+  cd apps/recruiter
   deletemigrationfiles
 
-  cd ../jobs
+  cd ../job
   deletemigrationfiles
 
   cd ../pladat

@@ -26,7 +26,7 @@ SECRET_KEY = '^7gw(rtm7r^^h)b(qh6euoccwm+6jm_zghmd4@31*t7tw*r&_f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['swe.fatihaltinpinar.com', "localhost"]
+ALLOWED_HOSTS = ['swe.fatihaltinpinar.com', "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.company',
-    'apps.jobs',
+    'apps.recruiter',
+    'apps.job',
     'apps.pladat',
     'apps.student',
     'django_countries',

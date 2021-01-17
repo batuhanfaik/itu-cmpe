@@ -10,122 +10,72 @@
 
 {% block content %}
 <div class="container">
-<div class="row gutters">
-	<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-		<div class="card h-100">
-			<div class="card-body">
-				<div class="account-settings">
-					<div class="user-profile">
-						<div class="user-avatar">
-							<img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="Maxwell Admin">
-						</div>
-						<h5 class="user-name">Yuki Hayashi</h5>
-						<h6 class="user-email">yuki@Maxwell.com</h6>
-					</div>
-					<div class="about">
-						<h5 class="mb-2 text-primary">About</h5>
-						<p>I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human experiences.</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+<div class="row gutters-sm">
+        <div class="col-md-4 mb-3 ">
+            <div class="card sticky-top" style="top: 4.3rem;">
+                <div class="card-body">
+                    <div class="d-flex flex-column align-items-center text-center">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
+                        <div class="mt-3">
+                          <h4>{{user.pladatuser.first_name}} {{user.pladatuser.last_name}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	<div class="col-md-8">
 		<div class="card h-100">
 			<div class="card-body">
 				<div class="col-12">
-					<div class="row">
-						<h6 class="mb-3 text-primary">General Info</h6>
-					</div>
-					<div class="row">
-						<div class="form-group col-12">
-							<label for="firstname">First Name</label>
-							<input type="text" class="form-control" id="firstname" placeholder="Enter First Name">
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General Info</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="background-tab" data-toggle="tab" href="#background" role="tab" aria-controls="background" aria-selected="false">Background Info</a>
+					</li>
+				</ul>
+				<div class="tab-content" id="myTabContent">
+					<div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+						<br/>
+							<form action='/student/profile/update' method='post'>
+											{% csrf_token %}
+											{% for field in form1 %}
+												<div class="row">
+												<div class="form-group col-12">
+													<label for={{field.id_for_label}}>{{field.help_text}}</label> {{ field.errors }}
+													{{field}}
+												</div>
+											</div>
+											{% endfor %}
+											<div class="text-right">
+												<button type="submit" id="btnform1" name="btnform1" class="btn btn-primary">Update</button>
+											</div>
+							</form>
 						</div>
-					</div>
-					<div class="row">
-						<div class="form-group col-12">
-							<label for="lastname">Last Name</label>
-							<input type="text" class="form-control" id="lastname" placeholder="Enter Last Name">
-						</div>
-					</div>
-					<div class="row">
-						<div class="form-group col-12">
-							<label for="eMail">Email</label>
-							<input type="email" class="form-control" id="eMail" placeholder="Enter email">
-						</div>
-					</div>
-					<div class="row">
-						<div class="form-group col-12">
-							<label for="phone">Phone</label>
-							<input type="text" class="form-control" id="phone" placeholder="Enter phone number">
-						</div>
-					</div>
-					<div class="row">
-						<div class="form-group col-12">
-							<label for="City">City</label>
-							<input type="text" class="form-control" id="City" placeholder="City">
-						</div>
-					</div>
-				 	<div class="row">
-						<div class="form-group col-12">
-							<label for="State">State</label>
-							<input type="text" class="form-control" id="State" placeholder="State">
-						</div>
-					</div>
-				 	<div class="row">
-						<div class="form-group col-12">
-							<label for="Country">Country</label>
-							<input type="text" class="form-control" id="Country" placeholder="This will be select">
-						</div>
-					</div>
-					<div class="row">
-						<div class="form-group col-12">
-							<label for="Address">Address</label>
-							<input type="text" class="form-control" id="Address" placeholder="Address">
-						</div>
+					<div class="tab-pane fade" id="background" role="tabpanel" aria-labelledby="background-tab">
+						<br/>
+							<form action='/student/profile/update' method='post'>
+											{% csrf_token %}
+											{% for field in form2 %}
+												<div class="row">
+												<div class="form-group col-12">
+													<label for={{field.id_for_label}}>{{field.help_text}}</label> {{ field.errors }}
+													{{field}}
+												</div>
+											</div>
+											{% endfor %}
+											<div class="text-right">
+												<button type="submit" id="btnform2" name="btnform2" class="btn btn-primary">Update</button>
+											</div>
+							</form>
 					</div>
 				</div>
-				<div class="col-12">
-					<div class="row">
-						<h6 class="mb-3 text-primary">Background</h6>
-					</div>
-					<div class="row">
-						<div class="form-group col-12">
-							<label for="University">University</label>
-							<input type="text" class="form-control" id="University" placeholder="This will be select">
-						</div>
-					</div>
-					<div class="row">
-						<div class="form-group col-12">
-							<label for="Major">Major</label>
-							<input type="text" class="form-control" id="Major" placeholder="Enter Major? will this select??">
-						</div>
-					</div>
-					<div class="row">
-						<div class="form-group col-12">
-							<label for="Skills">Skills</label>
-							<select class="selectpicker form-control" multiple title="Select Skills" data-live-search="true">
-								<option>C</option>
-								<option>C++</option>
-								<option>Java</option>
-								<option>Javascript</option>
-								<option>Python</option>
-							  </select>
-						</div>
-					</div>
-				</div>
-				<div class="row gutters">
-					<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-						<div class="text-right">
-							<button type="button" id="submit" name="submit" class="btn btn-secondary">Cancel</button>
-							<button type="button" id="submit" name="submit" class="btn btn-primary">Update</button>
-						</div>
-					</div>
-				</div>
+
 			</div>
 		</div>
 	</div>
+</div>
 </div>
 </div>
 {% endblock content %}
