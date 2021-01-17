@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['swe.fatihaltinpinar.com', "localhost", "127.0.0.1"]
 
+LOGIN_URL = '/login'
+
 
 # Application definition
 

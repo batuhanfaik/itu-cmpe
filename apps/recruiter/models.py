@@ -13,4 +13,10 @@ class Recruiter(models.Model):
     company_phone_number = PhoneNumberField(
         help_text="Company Phone Number", null=True)  # https://pypi.org/project/django-phonenumber-field/
 
+    @property
+    def full_name(self):
+        return "%s" % (pladatuser.full_name,)
+
+    def __str__(self):
+        return "Recruiter %s working for company %s" % (self.full_name, self.company_name)
 

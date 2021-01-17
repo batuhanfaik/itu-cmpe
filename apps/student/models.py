@@ -29,8 +29,5 @@ class Student(models.Model):
         ("koc", "Koc University"),
     ]
     university = models.CharField(max_length=8, choices=UNIVERSITIES, null = True, help_text="University")
-    
-    # number_of_previous_work_experience = models.IntegerField(default=0, help_text="Number of Previous Work Experience")
     years_worked = models.PositiveIntegerField(default=0, help_text="Years Worked")
-    # is_currently_employed = models.BooleanField(default=False, help_text="Currently Employed")
 

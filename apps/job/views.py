@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from apps.pladat.models import PladatUser
 from apps.pladat.models import User
 from apps.job.models import Job, AppliedJob
@@ -13,14 +13,17 @@ def find_job_view(request):
     pass
 
 def job_find_student_view(request):
-    if request.method != 'GET':
-        return redirect('/')
-    if not request.user.is_authenticated:
-        return redirect('/')
-    if request.user.pladatuser.user_type == PladatUser.UserType.STUDENT:
-        return redirect('/')
-    recruiter = request.user.pladatuser.recruiter
-    pass
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            # Student can not access this page
+            if request.user.pladatuser.is_student():
+                return HttpResponseForbidden('Invalid user')
+            recruiter = request.user.pladatuser.recruiter
+            return HttpResponse(recruiter)
+        else:
+            return redirect('/login')
+    else:
+        HttpResponseForbidden('Forbidden method')
 
 def job_list_view(request):
     if request.method != 'GET':

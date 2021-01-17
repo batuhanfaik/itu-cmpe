@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import get_object_or_404
 
@@ -9,8 +10,8 @@ from .models import Student
 
 from .forms import UpdatePladatUserForm, UpdateStudentForm
 
+@login_required
 def profile_update_view(request):
-
     if request.method == 'GET':
         pladatuser = get_object_or_404(PladatUser, user=request.user)
         form1 = UpdatePladatUserForm(instance = pladatuser)
@@ -18,11 +19,6 @@ def profile_update_view(request):
         form2 = UpdateStudentForm(instance=student)
 
         ctx = {'form1': form1, 'form2': form2}
-
-        if not request.user.is_authenticated:
-            # User not logged in but trying to access profile update page
-            # Redirect to the main page
-            return redirect('/')
 
         return render(request, 'student_profile_update.html', context=ctx)
 

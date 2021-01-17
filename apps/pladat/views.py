@@ -71,7 +71,8 @@ def login_page_view(request):
 
 
 def register_user(data):
-    # Add a PladatUser
+    # TODO: Add email validation (Baris)
+
     user_dct = {
         'username': data['email'],
         'email': data['email'],
