@@ -30,7 +30,7 @@ def profile_update_view(request):
         form1 = UpdatePladatUserForm(request.POST, instance=pladatuser)
         if form1.is_valid():
             form1.save()
-            return redirect('/recruiter/profile/' + str(request.user.id))
+            return redirect('/profile/' + str(request.user.id))
         else:
             recruiter = get_object_or_404(Recruiter, pladatuser=pladatuser)
             form2 = UpdateRecruiterForm(instance=recruiter)
@@ -43,7 +43,7 @@ def profile_update_view(request):
         form2 = UpdateRecruiterForm(request.POST, instance=recruiter)
         if form2.is_valid():
             form2.save()
-            return redirect('/recruiter/profile/' + str(request.user.id))
+            return redirect('/profile/' + str(request.user.id))
         else:
             form1 = UpdatePladatUserForm(instance=pladatuser)
             ctx = {'form1': form1, 'form2': form2}
