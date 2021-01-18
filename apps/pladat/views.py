@@ -1,22 +1,21 @@
-from django.shortcuts import render
-
-from django.http import HttpResponse, HttpResponseForbidden
-from django.shortcuts import render, redirect
-
 from django.contrib.auth import authenticate, login, logout
-
-from .forms import RegistrationForm, LoginForm
-
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import PladatUser
+from django.http import HttpResponse, HttpResponseForbidden
+from django.shortcuts import get_object_or_404, redirect, render
 
-from apps.student.models import Student
 from apps.recruiter.models import Recruiter
-from django.shortcuts import get_object_or_404
+from apps.student.models import Student
+
+from .forms import LoginForm, RegistrationForm
+from .models import PladatUser
+from apps.job.models import AppliedJob, Job, Response
+
 
 def main_page_view(request):
     ctx = {}
     return render(request, 'main_page.html', context=ctx)
+
 
 def login_page_view(request):
     # TODO: Redirect back to the page it came from (Baris)
@@ -68,7 +67,7 @@ def register_user(data):
         user = User.objects.create_user(**user_dct)
 
         fields = ['first_name', 'last_name', 'phone_number', 'address', 'city', 'state', 'country',
-                'user_type']
+                  'user_type']
         pladatuser_dct = {key: data[key] for key in fields}
         pladatuser_dct['user'] = user
 
@@ -136,15 +135,36 @@ def logout_page_view(request):
     return redirect('/')
 
 
+@login_required
 def profile_view(request, id):
-    user = get_object_or_404(User, id=id)
+    profile_user = get_object_or_404(User, id=id)
 
     ctx = {
         'owner': id == request.user.id,
-        'profile_user': user,
+        'profile_user': profile_user,
+        'matched': True
     }
 
-    if user.pladatuser.is_student():
-        return render(request, 'student_profile.html', context=ctx)
+    current_user = request.user
+
+    if ctx['owner']:
+        if profile_user.pladatuser.is_student():
+            return render(request, 'student_profile.html', context=ctx)
+        else:
+            return render(request, 'recruiter_profile.html', context=ctx)
     else:
-        return render(request, 'recruiter_profile.html', context=ctx)
+        if current_user.pladatuser.is_student():
+            return HttpResponseForbidden("Cannot See Profile")
+        elif not profile_user.pladatuser.is_student():
+            return HttpResponseForbidden("Cannot See Profile")
+        else:
+            my_jobs = Job.objects.filter(recruiter=current_user.pladatuser.recruiter)
+            students = set()
+
+            matches = AppliedJob.objects.filter(job__in=my_jobs, applicant=profile_user.pladatuser.student,
+                                                student_status=Response.INTERESTED,
+                                                recruiter_status=Response.INTERESTED)
+            for match in matches:
+                students.add(match.applicant.pladatuser.pk)
+        ctx['matched'] = profile_user.pladatuser.pk in students
+        return render(request, 'student_profile.html', context=ctx)

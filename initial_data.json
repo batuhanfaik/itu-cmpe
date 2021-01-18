@@ -6,10 +6,10 @@
         "password": "pbkdf2_sha256$216000$Av2l8zHBjgkg$g571db3rSlXKgAjjf0wZjN4o0oPxo3PWaa5Qd7sM2Xk=",
         "last_login": null,
         "is_superuser": false,
-        "username": "test1@test1.com",
+        "username": "recruiter1@company.org",
         "first_name": "",
         "last_name": "",
-        "email": "test1@test1.com",
+        "email": "recruiter1@company.org",
         "is_staff": false,
         "is_active": true,
         "date_joined": "2021-01-17T15:53:28.787Z",
@@ -24,10 +24,10 @@
         "password": "pbkdf2_sha256$216000$jSn7LLdeuy7u$qhmjsZ+FDxz8Bai/Qr2h00Qua/gLy9MDJFiCCT7j/Xs=",
         "last_login": null,
         "is_superuser": false,
-        "username": "test0@test0.com",
+        "username": "student1@school.edu",
         "first_name": "",
         "last_name": "",
-        "email": "test0@test0.com",
+        "email": "student1@school.edu",
         "is_staff": false,
         "is_active": true,
         "date_joined": "2021-01-17T15:53:56.847Z",
@@ -135,21 +135,21 @@
     "model": "recruiter.recruiter",
     "pk": 1,
     "fields": {
-        "company_name": "ITU Rektorluk A.Ş",
+        "company_name": "Testing Company Inc.",
         "company_address": "Maslak Ayazaga",
-        "company_phone_number": "+447911123456"
+        "company_phone_number": "+902124440911"
     }
 },
 {
     "model": "pladat.pladatuser",
     "pk": 1,
     "fields": {
-        "first_name": "Isim2",
-        "last_name": "Soyisim2",
-        "phone_number": "+447911123456",
+        "first_name": "Kadir",
+        "last_name": "Okay",
+        "phone_number": "+905352464497",
         "address": "Maslak Ayazaga",
         "city": "Istanbul",
-        "state": "Pennsylvania",
+        "state": null,
         "country": "TR",
         "user_type": 1
     }
@@ -158,12 +158,12 @@
     "model": "pladat.pladatuser",
     "pk": 2,
     "fields": {
-        "first_name": "Isim2",
-        "last_name": "Soyisim2",
-        "phone_number": "+447911123456",
+        "first_name": "Ekber",
+        "last_name": "Erduran",
+        "phone_number": "+905449238585",
         "address": "Maslak Ayazaga",
         "city": "Istanbul",
-        "state": "Pennsylvania",
+        "state": null,
         "country": "TR",
         "user_type": 0
     }

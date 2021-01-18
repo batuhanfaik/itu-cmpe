@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
-    <a class="navbar-brand" href="#">PlaDat</a>
+    <a class="navbar-brand" href="/">PlaDat</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -8,9 +8,22 @@
         <li class="nav-item active">
           <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Contact</a>
-        </li>
+      </ul>
+    <ul class="navbar-nav ml-auto justify-content-center" >
+      {% if user.is_authenticated %}
+          {% if user.pladatuser.is_student %}
+            <li class="nav-item">
+                <a class="btn btn-info mr-1 mt-1" href="/job/find_job">Find Job</a>
+            </li>
+        {% else %}
+              <li class="nav-item">
+            <a class="btn btn-info mr-1 mt-1"  href="/job/create">Create Job</a>
+              </li>
+              <li class="nav-item">
+            <a class="btn btn-info mr-1 mt-1"  href="/job/list">Job List</a>
+              </li>
+          {% endif %}
+      {% endif %}
       </ul>
     <ul class="navbar-nav ml-auto justify-content-end" >
       {% if not user.is_authenticated %}
@@ -22,7 +35,7 @@
         </li>
       {% else %}
         <li class="nav-item">
-            <a class="btn btn-info mr-1 mt-1"  href="/profile/{{user.pk}}">My Profile: {{user}} / {{user.pk}}</a>
+            <a class="btn btn-info mr-1 mt-1"  href="/profile/{{user.pk}}">My Profile: {{user.pladatuser.full_name}}</a>
         </li>   
         <li class="nav-item">
             <a class="btn btn-info mr-1 mt-1"  href="/logout">Logout</a>

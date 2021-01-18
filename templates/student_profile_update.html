@@ -1,81 +1,75 @@
-{% extends "base.html" %} 
-
-{% block title %} Main Page {% endblock title %} 
+{% extends "base.html" %}
 
 {% block stylesheet %}
-{% load static %}
-<link href=" {% static 'pladat/profile_update.css' %}"  rel="stylesheet">
-  {{block.super}} 
-{% endblock stylesheet %} 
+    {% load static %}
+    <link href=" {% static 'pladat/profile_update.css' %}" rel="stylesheet">
+    {{ block.super }}
+{% endblock stylesheet %}
 
 {% block content %}
-<div class="container">
-<div class="row gutters-sm">
-        <div class="col-md-4 mb-3 ">
-            <div class="card sticky-top" style="top: 4.3rem;">
-                <div class="card-body">
-                    <div class="d-flex flex-column align-items-center text-center">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
-                        <div class="mt-3">
-                          <h4>{{user.pladatuser.first_name}} {{user.pladatuser.last_name}}</h4>
+    <div class="container">
+        <div class="row gutters-sm">
+            {% include 'profile_update_image_card.html' %}
+            <div class="col-md-8">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="col-12">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general"
+                                       role="tab" aria-controls="general" aria-selected="true">General Info</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="background-tab" data-toggle="tab" href="#background"
+                                       role="tab" aria-controls="background" aria-selected="false">Background Info</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="general" role="tabpanel"
+                                     aria-labelledby="general-tab">
+                                    <br/>
+                                    <form action='/student/profile/update' method='post'>
+                                        {% csrf_token %}
+                                        {% for field in form1 %}
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for={{ field.id_for_label }}>{{ field.help_text }}</label> {{ field.errors }}
+                                                    {{ field }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        <div class="text-right">
+                                            <button type="submit" id="btnform1" name="btnform1" class="btn btn-primary">
+                                                Update
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade" id="background" role="tabpanel"
+                                     aria-labelledby="background-tab">
+                                    <br/>
+                                    <form action='/student/profile/update' method='post'>
+                                        {% csrf_token %}
+                                        {% for field in form2 %}
+                                            <div class="row">
+                                                <div class="form-group col-12">
+                                                    <label for={{ field.id_for_label }}>{{ field.help_text }}</label> {{ field.errors }}
+                                                    {{ field }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        <div class="text-right">
+                                            <button type="submit" id="btnform2" name="btnform2" class="btn btn-primary">
+                                                Update
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-	<div class="col-md-8">
-		<div class="card h-100">
-			<div class="card-body">
-				<div class="col-12">
-				<ul class="nav nav-tabs" id="myTab" role="tablist">
-					<li class="nav-item">
-						<a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">General Info</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" id="background-tab" data-toggle="tab" href="#background" role="tab" aria-controls="background" aria-selected="false">Background Info</a>
-					</li>
-				</ul>
-				<div class="tab-content" id="myTabContent">
-					<div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
-						<br/>
-							<form action='/student/profile/update' method='post'>
-											{% csrf_token %}
-											{% for field in form1 %}
-												<div class="row">
-												<div class="form-group col-12">
-													<label for={{field.id_for_label}}>{{field.help_text}}</label> {{ field.errors }}
-													{{field}}
-												</div>
-											</div>
-											{% endfor %}
-											<div class="text-right">
-												<button type="submit" id="btnform1" name="btnform1" class="btn btn-primary">Update</button>
-											</div>
-							</form>
-						</div>
-					<div class="tab-pane fade" id="background" role="tabpanel" aria-labelledby="background-tab">
-						<br/>
-							<form action='/student/profile/update' method='post'>
-											{% csrf_token %}
-											{% for field in form2 %}
-												<div class="row">
-												<div class="form-group col-12">
-													<label for={{field.id_for_label}}>{{field.help_text}}</label> {{ field.errors }}
-													{{field}}
-												</div>
-											</div>
-											{% endfor %}
-											<div class="text-right">
-												<button type="submit" id="btnform2" name="btnform2" class="btn btn-primary">Update</button>
-											</div>
-							</form>
-					</div>
-				</div>
-
-			</div>
-		</div>
-	</div>
-</div>
-</div>
-</div>
+    </div>
 {% endblock content %}

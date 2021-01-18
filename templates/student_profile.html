@@ -1,163 +1,152 @@
-{% extends "base.html" %} 
-
-{% block title %} Main Page {% endblock title %} 
+{% extends "base.html" %}
 
 {% block stylesheet %}
-  {% load static %}
-<link href= "{% static 'pladat/profile.css'%}"  rel="stylesheet">
-  {{block.super}} 
-{% endblock stylesheet %} 
+    {% load static %}
+    <link href="{% static 'pladat/profile.css' %}" rel="stylesheet">
+    {{ block.super }}
+{% endblock stylesheet %}
 
 {% block content %}
     <div class="container">
         <div class="main-body">
-              <div class="row gutters-sm">
-                <div class="col-md-4 mb-3 ">
-                  <div class="card sticky-top" style="top: 4.3rem;">
-                    <div class="card-body">
-                      <div class="d-flex flex-column align-items-center text-center">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
-                        <div class="mt-3">
-                          <h4>{{profile_user.pladatuser.first_name}} {{profile_user.pladatuser.last_name}}</h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <div class="row gutters-sm">
+                {% include "profile_image_card.html" %}
                 <div class="col-md-8">
-                  <div class="card mb-3">
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col-sm-12">
-                          <h4 class="mb-0 text-center">General Info</h4>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h4 class="mb-0 text-center">General Info</h4>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Full Name</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.first_name }} {{ profile_user.pladatuser.last_name }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">City</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.city }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">State</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.state }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Country</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.country.name }}
+                                </div>
+                            </div>
+                            <hr>
+                        {% if matched %}
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Address</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.address }}
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Email</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.user.email }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Phone</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.phone_number }}
+                                </div>
+                            </div>
+                            <hr>
+                        {% endif %}
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h4 class="mb-0 text-center">Background</h4>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">University</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.student.get_university_display }}
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Major</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.student.get_major_display }}
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Degree</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.student.get_degree_display }}
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Skills</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {% for skill in profile_user.pladatuser.student.skills.all %}
+                                        {{ skill }}{% if not forloop.last %},&nbsp;{% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Years Worked</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.student.years_worked }}
+                                </div>
+                            </div>
+                            <hr/>
+                            {% if owner %}
+                                <div class="text-center">
+                                    <a href="/student/profile/update" class="btn btn-primary">Update Profile</a>
+                                </div>
+                            {% endif %}
                         </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Full Name</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.first_name}} {{profile_user.pladatuser.last_name}}
-                        </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Email</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{user.email}}
-                        </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Phone</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.phone_number}}
-                        </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">City</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.city}}
-                        </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">State</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.state}}
-                        </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Country</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.country.name}}
-                        </div>
-                      </div>
-                      <hr>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Address</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.address}}
-                        </div>
-                      </div>
-                      <hr/>
-                      <div class="row">
-                        <div class="col-sm-12">
-                          <h4 class="mb-0 text-center">Background</h4>
-                        </div>
-                      </div>
-                      <hr/>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">University</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.student.get_university_display}}
-                        </div>
-                      </div>
-                      <hr/>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Major</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.student.get_major_display}}
-                        </div>
-                      </div>
-                      <hr/>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Degree</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.student.get_degree_display}}
-                        </div>
-                      </div>
-                      <hr/>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Skills</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {% for skill in profile_user.pladatuser.student.skills.all %}
-                              {{skill}}{% if not forloop.last%},&nbsp;{% endif%}
-                          {% endfor %}
-                        </div>
-                      </div>
-                      <hr/>
-                      <div class="row">
-                        <div class="col-sm-3">
-                          <h6 class="mb-0">Years Worked</h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                          {{profile_user.pladatuser.student.years_worked}}
-                        </div>
-                      </div>
-                      <hr/>
-                    {% if owner %}
-                        <div class="text-center">
-                            <a href="/student/profile/update" class="btn btn-primary">Update Profile</a>
-                        </div>
-                    {% endif %}
                     </div>
-                  </div>
                 </div>
-              </div>
             </div>
         </div>
+    </div>
 {% endblock content %}

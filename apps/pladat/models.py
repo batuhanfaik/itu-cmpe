@@ -1,8 +1,7 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
-
-from django.contrib.auth.models import User
 
 
 class PladatUser(models.Model):
@@ -16,6 +15,9 @@ class PladatUser(models.Model):
     city = models.CharField(max_length=128, help_text="City")
     state = models.CharField(max_length=128, null=True, help_text="State")
     country = CountryField(blank_label="Country", help_text="Country")  # https://pypi.org/project/django-countries/
+
+    image = models.ImageField(upload_to='profile_image', blank=True)
+
 
     class UserType(models.IntegerChoices):
         STUDENT = 0, 'Student account'
@@ -34,7 +36,8 @@ class PladatUser(models.Model):
 
 def random_str(len):
     # Returns a random string of length len
-    import random, string
+    import random
+    import string
     return ''.join(random.choice(string.ascii_letters) for _ in range(len))
 
 

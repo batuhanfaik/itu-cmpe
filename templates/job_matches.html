@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-
-
 {% block stylesheet %}
     {% load static %}
     <link href="{% static 'pladat/profile.css' %}" rel="stylesheet">
@@ -17,11 +15,6 @@
                         <div class="card-body">
                             <div class="d-flex flex-column align-items-center text-center">
                                 <div class="mt-3">
-                                    {% if job.title %}
-                                        <h3>Job Title</h3>
-                                        <h4>{{ job.title }}</h4>
-                                    {% endif %}
-                                    <h5>Create Job as</h5>
                                     {% if user.pladatuser.image %}
                                         <img src="/media/{{ user.pladatuser.image }}" alt="Image"
                                              class="rounded-circle" width="150" height="150">
@@ -29,7 +22,7 @@
                                         <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image"
                                              class="rounded-circle" width="150" height="150">
                                     {% endif %}
-                                    <h6>{{ user.pladatuser.full_name }}</h6>
+                                    <h6>{{ user.pladatuser.first_name }} {{ user.pladatuser.last_name }}</h6>
                                 </div>
                             </div>
                         </div>
@@ -40,30 +33,34 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <h4 class="mb-0 text-center">General Info</h4>
+                                    <h4 class="mb-0 text-center">Matches for {{ job.title }}</h4>
                                 </div>
                             </div>
-                            <form method='post'>
-                                {% csrf_token %}
-                                {% for field in form %}
-                                    <hr>
-                                    <div class="row">
-                                        <div class="form-group col-12">
-                                            <label for={{ field.id_for_label }}>{{ field.help_text }}</label> {{ field.errors }}
-                                            {{ field }}
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                <div class="text-center">
-                                    <button type="submit" id="submit" name="submit" class="btn btn-primary">
-                                        {% if job.title %}
-                                            Update
-                                        {% else %}
-                                            Create
-                                        {% endif %}
-                                    </button>
-                                </div>
-                            </form>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <th>Full Name</th>
+                                    <th>Match rate</th>
+                                    <th class="text-center">Profile</th>
+                                    </thead>
+                                    <tbody>
+                                    {% for application in applications %}
+                                        <tr>
+                                            <td>{{ application.applicant.pladatuser.full_name }}</td>
+                                            <td>
+                                                {{ application.match_rate }}%
+                                            </td>
+                                            <td>
+                                                <div class="text-center">
+                                                    <a href="/profile/{{ application.applicant.pladatuser.pk }}"
+                                                       class="btn btn-sm btn-primary">Profile</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
