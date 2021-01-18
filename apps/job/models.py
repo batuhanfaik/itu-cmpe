@@ -7,6 +7,11 @@ from apps.recruiter.models import Recruiter
 from apps.student.models import Student
 
 
+class Response(models.IntegerChoices):
+    NO_RESPONSE = 0, 'No response'
+    INTERESTED = 1, 'Interested in this application'
+    NOT_INTERESTED = 2, 'Not interested in this application'
+
 class Job(models.Model):
     title = models.CharField(max_length=128, help_text='Title')
     description = models.TextField(max_length=512, help_text='Description')
@@ -26,11 +31,15 @@ class Job(models.Model):
             return appliedjob[0]
         else:
             return None
+    
+    def is_applied(self, student):
+        appliedjob = self.appliedjob(student)
+        if appliedjob is None:
+            return False
+        if appliedjob.student_status == Response.NO_RESPONSE:
+            return False
+        return True
 
-class Response(models.IntegerChoices):
-    NO_RESPONSE = 0, 'No response'
-    INTERESTED = 1, 'Interested in this application'
-    NOT_INTERESTED = 2, 'Not interested in this application'
 
 class AppliedJob(models.Model):
     applicant = models.ForeignKey(Student, on_delete=models.CASCADE, related_name = 'applications')
@@ -41,6 +50,8 @@ class AppliedJob(models.Model):
 
     student_status  = models.IntegerField(choices=Response.choices, default=Response.NO_RESPONSE, help_text="Recruiter Response")
     recruiter_status = models.IntegerField(choices=Response.choices, default=Response.NO_RESPONSE, help_text="Recruiter Response")
+
+    match_rate = models.IntegerField(null = True, help_text = 'Match rate')
 
     @property
     def is_student_interested(self):

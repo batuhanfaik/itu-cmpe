@@ -145,30 +145,41 @@
                             <a href="./update/{{ job.id }}" class="btn btn-primary">Update Job</a>
                         </div>
                     {% endif %}
-                    {% if is_student and not appliedjob%}
+                    {% if is_student %}
+
+
                     <div>
                       <form class="form-control" method="post">
                           {% csrf_token %}
-                          <button class="btn btn-md btn-success btn-block" name="yes" type="submit">
+                          <input id="jobid" name="jobid" value={{job.pk}} type="hidden" />
+                          {% if 'index' in request.GET %}
+                            <input id="index" name="index" value={{request.GET.index}} type="hidden" />
+                          {% endif %}
+
+                          <div class="row">
+                            <div class="col-sm-4">
+                            <button class="btn btn-md btn-success btn-block" name="yes" type="submit">
                               Interested
                           </button>
-                          <button class="btn btn-md btn-dark btn-block" name="no" type="submit">
+                        </div>
+                        <div class="col-sm-4">
+                          <button class="btn btn-md btn-danger btn-block" name="no" type="submit">
                               Not Interested
                           </button>
+                        </div>
                       </form>
-                    </div>
-                    {% elif is_student %}
-                    <div>
-                        {% if appliedjob.is_student_interested%}
-                        <button class="btn btn-md btn-success btn-block disabled" name="yes" type="submit">
-                            Interested
-                        </button>
-                        {% else %}
-                        <button class="btn btn-md btn-dark btn-block disabled" name="no" type="submit">
-                            Not interested
-                        </button>
-                        {% endif %}
-                    </div>
+                        <div class="col-sm-4">
+                          {% if 'index' in request.GET %}
+                          <a href="{{request.path}}?index={{request.GET.index|add:'1'}}" class="btn btn-md btn-warning btn-block" name="skip" type="submit">
+                            Skip
+                          </a>
+                          {% else %}
+                          <a href="{{request.path}}?index={{1}}" class="btn btn-md btn-warning btn-block" name="skip" type="submit">
+                            Skip
+                          </a>
+                          {% endif %}
+                        </div>
+                      </div>
                     {% endif %}
                     </div>
                   </div>

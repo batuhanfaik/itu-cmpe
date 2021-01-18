@@ -30,40 +30,28 @@
                     <div class="card-body">
                       <div class="row">
                         <div class="col-sm-12">
-                          <h4 class="mb-0 text-center">Job Applications You Created</h4>
+                          <h4 class="mb-0 text-center">Matches</h4>
                         </div>
                       </div>
                     <div class="table-responsive">
                         <table class="table">
                         <thead>
-                        <th>Title</th>
-                        <th>City</th>
-                        <th>Country</th>
-                        <th>Details</th>
-                        <th>Find Student</th>
-                        <th>Matches</th>
+                        <th>Full Name</th>
+                        <th>Match rate</th>
+                        <th>Profile</th>
                         </thead>
                         <tbody>
-                          {% for job in job_list %}
+                          {% for application in applications %}
                             <tr>
-                                <td>{{job.title}}</td>
-                                <td>{{job.city}}</td>
-                                <td> {{job.country}}</td>
+                                <td>{{application.applicant.pladatuser.full_name}}</td>
                                 <td>
-                                    <div class="text-center">
-                                        <a href="/job/{{ job.id }}" class="btn btn-sm btn-primary">Details</a>
-                                    </div>
-                                </td>
-                                 <td>
-                                    <div class="text-center">
-                                        <a href="/job/{{ job.id }}/find_student" class="btn btn-sm btn-primary">Find Student</a>
-                                    </div>
+                                  {{application.match_rate}}%
                                 </td>
                                 <td>
-                                  <div class="text-center">
-                                    <a href="/job/{{ job.id }}/matches" class="btn btn-sm btn-primary">Matches</a>
-                                </div>
-                              </td>
+                                    <div class="text-center">
+                                        <a href="/profile/{{application.applicant.pladatuser.pk}}" class="btn btn-sm btn-primary">Profile</a>
+                                    </div>
+                                </td>
                             </tr>
                           {% endfor %}
                         </tbody>
