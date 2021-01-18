@@ -16,22 +16,32 @@ class Job(models.Model):
     state = models.CharField(max_length=128, null=True, help_text='State')
     country = CountryField(help_text='Country')  # https://pypi.org/project/django-countries/
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
-    # Company info also required buy can be derived from recruiter
+
+    @property
+    def company_name(self):
+        return self.recruiter.company_name
+    
+    def is_applied(self, student):
+        appliedjob = AppliedJob.objects.filter(job = self.job, applicant = student)
+        return appliedjob.exists()
 
 
 class AppliedJob(models.Model):
-    applicant = models.ForeignKey(Student, on_delete=models.CASCADE)
-    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    applicant = models.ForeignKey(Student, on_delete=models.CASCADE, related_name = 'applications')
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name = 'applications')
 
     class Meta:
         unique_together = (("applicant", "job"))
+
     class StudentInterest(models.IntegerChoices):
         INTERESTED = 1, 'Student is interested with the job'
         NOT_INTERESTED = 0, 'Student is not interested with the job'
+    
     is_student_interested  = models.IntegerField(choices=StudentInterest.choices, help_text="Recruiter Response")
 
     class RecruiterResponse(models.IntegerChoices):
         NO_RESPONSE = 0, 'No response from recruiter'
         INTERESTED = 1, 'Recruiter is interested with this student'
         NOT_INTERESTED = 2, 'Recruiter is not interested with this student'
+    
     recruiter_response = models.IntegerField(choices=RecruiterResponse.choices, default=RecruiterResponse.NO_RESPONSE, help_text="Recruiter Response")

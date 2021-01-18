@@ -1,31 +1,32 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from apps.pladat.models import PladatUser
 from apps.pladat.models import User
 from apps.job.models import Job, AppliedJob
 from apps.recruiter.models import Recruiter
 from apps.job.forms import UpdateJobForm
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def find_job_view(request):
     student = request.user.pladatuser.student
     pass
 
+@login_required
 def job_find_student_view(request):
-    if request.method != 'GET':
-        return redirect('/')
-    if not request.user.is_authenticated:
-        return redirect('/')
-    if request.user.pladatuser.user_type == PladatUser.UserType.STUDENT:
-        return redirect('/')
-    recruiter = request.user.pladatuser.recruiter
-    pass
+    if request.method == 'GET':
+        # Student can not access this page
+        if request.user.pladatuser.is_student():
+            return HttpResponseForbidden('Invalid user')
+        recruiter = request.user.pladatuser.recruiter
+        return HttpResponse(recruiter)
+    else:
+        HttpResponseForbidden('Forbidden method')
 
+@login_required
 def job_list_view(request):
     if request.method != 'GET':
-        return redirect('/')
-    if not request.user.is_authenticated:
         return redirect('/')
     if request.user.pladatuser.user_type == PladatUser.UserType.STUDENT:
         return redirect('/')
@@ -36,10 +37,8 @@ def job_list_view(request):
     }
     return render(request, 'job_list.html', context=ctx)
 
-
+@login_required
 def job_update_view(request, id):
-    if not request.user.is_authenticated:
-        return redirect('/')
     if request.user.pladatuser.user_type == PladatUser.UserType.STUDENT:
         return redirect('/')
     job = get_object_or_404(Job, id=id)
@@ -64,10 +63,8 @@ def job_update_view(request, id):
             return render(request, 'job_update.html', context=ctx)
     return render(request, 'job_update.html', context=ctx)
 
-
+@login_required
 def job_create_view(request):
-    if not request.user.is_authenticated:
-        return redirect('/')
     if request.user.pladatuser.user_type == PladatUser.UserType.STUDENT:
         return redirect('/')
 
@@ -92,26 +89,32 @@ def job_create_view(request):
             return render(request, 'job_update.html', context=ctx)
     return render(request, 'job_update.html', context=ctx)
 
+def calculate_match_rate(student, job):
+    # TODO: Add this after ML (Baris)
+    return 100
 
+@login_required
 def job_view(request, id):
-    if not request.user.is_authenticated:
-        return redirect('/')
     job = get_object_or_404(Job, id=id)
+    
     ctx = {
         'job': job,
-        'is_student': request.user.pladatuser.user_type == PladatUser.UserType.STUDENT,
-        'match_rate': 100,  # TODO: pass match_rate
+        'is_student': request.user.pladatuser.is_student(),
         'already_applied': False
     }
+    
     if ctx["is_student"]:
+        student = request.user.pladatuser.student
         ctx['is_owner'] = False
-        applied = AppliedJob.objects.filter(job=job, applicant=request.user.pladatuser.student)
-        ctx['already_applied'] = bool(applied)
+        ctx['already_applied'] = job.is_applied(student)
+        ctx['match_rate'] = calculate_match_rate(student, job)
+
     else:
         ctx['is_owner'] = request.user.pladatuser.recruiter == job.recruiter
 
     if request.method == 'GET':
         return render(request, 'job.html', context=ctx)
+
     if request.method == 'POST' and ctx["is_student"]:
         application = AppliedJob(
             applicant=request.user.pladatuser.student,
@@ -122,25 +125,30 @@ def job_view(request, id):
         elif 'no' in request.POST:
             application.is_student_interested = AppliedJob.StudentInterest.NOT_INTERESTED
         application.save()
+
         return render(request, 'job.html', context=ctx)
 
-    return HttpResponse("You should not be here")
+@login_required
+def applicant_profile(request, applied_job_id):
+    application = get_object_or_404(AppliedJob, applied_job_id)
 
-
-# TODO i did not look here yet _osman
-def applicant_profile(request):
-    user = User.objects.get(email='test@pladat.com')
-    applicant = PladatUser.objects.get(user=user)
-    # TODO: check if student applied for this job!
-    # TODO: check if job belongs to the recruiter(current user)
-    ctx = {
-        'applicant': applicant}  # This should contain the PladatUser of the student
     if request.method == 'GET':
-        print(ctx)
+        applicant_pladatuser = application.applicant.pladatuser
+        ctx = {'applicant': applicant_pladatuser}
         return render(request, 'applicant_profile.html', context=ctx)
+    
     if request.method == 'POST':
+        recruiter_response = None
+        
         if 'yes' in request.POST:  # interested button is clicked
-            print('yes')
+            recruiter_response = AppliedJob.RecruiterResponse.INTERESTED
+        
         elif 'no' in request.POST:  # not interested button is clicked
-            print('no')
+            recruiter_response = AppliedJob.RecruiterResponse.NOT_INTERESTED
+        
+        appliedjob.recruiter_response = recruiter_response
+        appliedjob.save()
+
         return render(request, 'applicant_profile.html', context=ctx)
+    
+    return HttpResponseForbidden('Forbidden method')

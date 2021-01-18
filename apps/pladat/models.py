@@ -23,3 +23,59 @@ class PladatUser(models.Model):
         __empty__ = 'User type'
 
     user_type = models.IntegerField(choices=UserType.choices, help_text="User type")
+
+    def is_student(self):
+        return self.user_type == self.UserType.STUDENT
+
+    @property
+    def full_name(self):
+        return "%s %s" % (self.first_name, self.last_name)
+
+
+def random_str(len):
+    # Returns a random string of length len
+    import random, string
+    return ''.join(random.choice(string.ascii_letters) for _ in range(len))
+
+
+def create_mock_pladatuser(email = None, password = None, user_type = None, user = None):
+    dct = {
+        "first_name": "Isim2",
+        "last_name": "Soyisim2",
+        "phone_number": "+447911123456",
+        "address": "Maslak Ayazaga",
+        "city": "Istanbul",
+        "state": "Pennsylvania",
+        "country": "TR",
+    }
+
+    if not email:
+        email = "%s@hotmail.com" % (random_str(7), )
+    
+    if not password:
+        password = random_str(5)
+
+    if user_type:
+        dct['user_type'] = user_type
+    else:
+        dct['user_type'] = 0
+
+    if user:
+        dct['user'] = user
+    else:
+        user_dct = {
+            'username': email,
+            'email': email,
+            'password': password,
+        }
+        user = User.objects.create_user(**user_dct)
+        user.save()
+        dct['user'] = user
+    
+    pladatuser = PladatUser.objects.create(**dct)
+    
+    return pladatuser
+
+
+
+

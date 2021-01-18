@@ -3,7 +3,7 @@ from django.db import models
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
-from apps.pladat.models import PladatUser
+from apps.pladat.models import PladatUser, create_mock_pladatuser
 
 class Skill(models.Model):
     name = models.CharField(max_length = 8, null = False, blank = False)
@@ -29,8 +29,16 @@ class Student(models.Model):
         ("koc", "Koc University"),
     ]
     university = models.CharField(max_length=8, choices=UNIVERSITIES, null = True, help_text="University")
-    
-    # number_of_previous_work_experience = models.IntegerField(default=0, help_text="Number of Previous Work Experience")
     years_worked = models.PositiveIntegerField(default=0, help_text="Years Worked")
-    # is_currently_employed = models.BooleanField(default=False, help_text="Currently Employed")
 
+def create_mock_student(email = None, password = None):
+    pladatuser = create_mock_pladatuser(email = email, password = password, user_type = PladatUser.UserType.STUDENT)
+    dct = {
+        "pladatuser": pladatuser,
+        "degree": "bsc",
+        "major": "cmpe",
+        "university": "itu",
+        "years_worked": 0
+    }
+    student = Student.objects.create(**dct)
+    return student
