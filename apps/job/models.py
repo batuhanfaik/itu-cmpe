@@ -20,6 +20,9 @@ class Job(models.Model):
     state = models.CharField(max_length=128, null=True, help_text='State')
     country = CountryField(help_text='Country')  # https://pypi.org/project/django-countries/
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
+    # Company info also required buy can be derived from recruiter
+    def __str__(self):
+        return self.title
 
     @property
     def company_name(self):
@@ -31,7 +34,7 @@ class Job(models.Model):
             return appliedjob[0]
         else:
             return None
-    
+
     def is_applied(self, student):
         appliedjob = self.appliedjob(student)
         if appliedjob is None:
@@ -56,7 +59,7 @@ class AppliedJob(models.Model):
     @property
     def is_student_interested(self):
         return self.student_status == Response.INTERESTED
-    
+
     @property
     def is_student_no_response(self):
         return self.student_status == Response.NO_RESPONSE
@@ -64,7 +67,7 @@ class AppliedJob(models.Model):
     @property
     def is_recruiter_interested(self):
         return self.recruiter_status == Response.INTERESTED
-    
+
     @property
     def is_recruiter_no_response(self):
         return self.recruiter_status == Response.NO_RESPONSE

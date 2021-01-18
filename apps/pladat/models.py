@@ -33,6 +33,8 @@ class PladatUser(models.Model):
     def full_name(self):
         return "%s %s" % (self.first_name, self.last_name)
 
+    def __str__(self):
+        return self.first_name
 
 def random_str(len):
     # Returns a random string of length len
@@ -54,7 +56,7 @@ def create_mock_pladatuser(email = None, password = None, user_type = None, user
 
     if not email:
         email = "%s@hotmail.com" % (random_str(7), )
-    
+
     if not password:
         password = random_str(5)
 
@@ -74,10 +76,12 @@ def create_mock_pladatuser(email = None, password = None, user_type = None, user
         user = User.objects.create_user(**user_dct)
         user.save()
         dct['user'] = user
-    
+
     pladatuser = PladatUser.objects.create(**dct)
-    
+
     return pladatuser
+
+
 
 
 
