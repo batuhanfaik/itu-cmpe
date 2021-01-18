@@ -12,12 +12,14 @@ class Recruiter(models.Model):
     company_phone_number = PhoneNumberField(
         help_text="Company Phone Number", null=True)  # https://pypi.org/project/django-phonenumber-field/
 
+    def __str__(self):
+    	return self.pladatuser.first_name
+
+
     @property
     def full_name(self):
         return "%s" % (self.pladatuser.full_name,)
 
-    def __str__(self):
-        return "Recruiter %s working for company %s" % (self.full_name, self.company_name)
 
 def create_mock_recruiter(email = None, password = None):
     pladatuser = create_mock_pladatuser(email = email, password = password, user_type = PladatUser.UserType.RECRUITER)
