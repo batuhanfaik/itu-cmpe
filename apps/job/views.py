@@ -93,25 +93,23 @@ def find_job(student, index):
 
 @login_required
 def find_student_view(request, id):
+
+    if request.user.pladatuser.is_student():
+        return HttpResponseForbidden("Invalid user")
+
     if request.method == "GET":
-
-        if request.user.pladatuser.is_student():
-            return HttpResponseForbidden("Invalid user")
-
         index = int(request.GET.get("index", "0"))
-
-        recruiter = request.user.pladatuser.recruiter
-
         job = get_object_or_404(Job, pk=id)
+        recruiter = request.user.pladatuser.recruiter
+        if recruiter != job.recruiter:
+            return HttpResponseForbidden("Invalid User")  # TODO
 
         student = find_student(job, index)
-
         if student is None:
             # TODO: Return some page...
             return HttpResponse("No student found")
 
         ctx = {"job": job, "student": student[0], "match_rate": student[1]}
-
         return render(request, "find_student.html", context=ctx)
 
     if request.method == "POST":
@@ -119,7 +117,10 @@ def find_student_view(request, id):
 
         index = int(data.get("index", "0"))
 
-        job = get_object_or_404(Job, id=id)
+        job = get_object_or_404(Job, pk=id)
+        recruiter = request.user.pladatuser.recruiter
+        if recruiter != job.recruiter:
+            return HttpResponseForbidden("Invalid user")  # TODO
 
         studentid = int(data["studentid"])
         pladatuser = get_object_or_404(PladatUser, pk=studentid)
@@ -147,7 +148,7 @@ def find_student_view(request, id):
 
         return redirect(f"/job/{id}/find_student?index={index}")
 
-    HttpResponseForbidden("Forbidden method")
+    return HttpResponseForbidden("Forbidden method")
 
 
 @login_required
@@ -164,7 +165,6 @@ def find_job_view(request):
         index = int(request.GET.get("index", "0"))
 
         student = request.user.pladatuser.student
-
         job = find_job(student, index)
 
         if job is None:
@@ -179,13 +179,9 @@ def find_job_view(request):
     if request.method == "POST":
 
         data = request.POST
-
         index = int(data.get("index", "0"))
-
         jobid = int(request.POST["jobid"])
-
         job = get_object_or_404(Job, id=jobid)
-
         student = request.user.pladatuser.student
 
         # Check if applied before
@@ -217,11 +213,12 @@ def job_matches(request, id):
     if request.method == "GET":
 
         if request.user.pladatuser.is_student():
-            return HttpResponseForbidden("Invalid user")
-
-        recruiter = request.user.pladatuser.recruiter
+            return HttpResponseForbidden("Invalid user")  # TODO
 
         job = get_object_or_404(Job, pk=id)
+        recruiter = request.user.pladatuser.recruiter
+        if recruiter != job.recruiter:
+            return HttpResponseForbidden("Invalid user")  # TODO
 
         applications = AppliedJob.objects.filter(
             job=job,
@@ -229,7 +226,10 @@ def job_matches(request, id):
             recruiter_status=Response.INTERESTED,
         ).order_by("-match_rate")
 
-        ctx = {"applications": applications}
+        ctx = {
+            "applications": applications,
+            "job": job,
+        }
 
         return render(request, "job_matches.html", context=ctx)
 
@@ -256,12 +256,12 @@ def job_update_view(request, id):
     if request.user.pladatuser.is_student():
         return redirect("/")
     job = get_object_or_404(Job, id=id)
+
     recruiter = request.user.pladatuser.recruiter
-    if recruiter != job.recruiter:  # job is another recruiters job
-        return redirect("/")  # TODO redirect where?
+    if recruiter != job.recruiter:
+        return HttpResponseForbidden("Invalid user") # TODO "Where"
     ctx = {
         "job": job,
-        "recruiter": recruiter,  # TODO it is unnecessary, job.recruiter exist
     }
     if request.method == "GET":
         form = UpdateJobForm(instance=job)
@@ -313,6 +313,9 @@ def job_view(request, id):
         return HttpResponseForbidden("Invalid user")
 
     job = get_object_or_404(Job, id=id)
+    recruiter = request.user.pladatuser.recruiter
+    if recruiter != job.recruiter:
+        return HttpResponseForbidden("Invalid User")  # TODO
 
     ctx = {
         "job": job,
