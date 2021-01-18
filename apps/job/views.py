@@ -21,8 +21,8 @@ def calculate_match_rate(student, job):
 def match_rate(student, job):
     appliedjob = AppliedJob.objects.filter(job=job, applicant=student)
 
-    if appliedjob is None:
-        return -1
+    if len(appliedjob) is 0:
+        return calculate_match_rate(student, job)
 
     appliedjob = appliedjob[0]
 

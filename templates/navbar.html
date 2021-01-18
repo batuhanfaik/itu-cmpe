@@ -12,6 +12,22 @@
           <a class="nav-link" href="#">Contact</a>
         </li>
       </ul>
+    <ul class="navbar-nav ml-auto justify-content-center" >
+      {% if user.is_authenticated %}
+          {% if user.pladatuser.is_student %}
+            <li class="nav-item">
+                <a class="btn btn-info mr-1 mt-1" href="/job/find_job">Find Job</a>
+            </li>
+        {% else %}
+              <li class="nav-item">
+            <a class="btn btn-info mr-1 mt-1"  href="/job/create">Create Job</a>
+              </li>
+              <li class="nav-item">
+            <a class="btn btn-info mr-1 mt-1"  href="/job/list">Job List</a>
+              </li>
+          {% endif %}
+      {% endif %}
+      </ul>
     <ul class="navbar-nav ml-auto justify-content-end" >
       {% if not user.is_authenticated %}
         <li class="nav-item active">
@@ -22,7 +38,7 @@
         </li>
       {% else %}
         <li class="nav-item">
-            <a class="btn btn-info mr-1 mt-1"  href="/profile/{{user.pk}}">My Profile: {{user}} / {{user.pk}}</a>
+            <a class="btn btn-info mr-1 mt-1"  href="/profile/{{user.pk}}">My Profile: {{user.pladatuser.full_name}}</a>
         </li>   
         <li class="nav-item">
             <a class="btn btn-info mr-1 mt-1"  href="/logout">Logout</a>
