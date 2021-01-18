@@ -14,7 +14,7 @@ class RegistrationForm(forms.ModelForm):
     class Meta:
         model = PladatUser
         fields = '__all__'
-        exclude = ('pladatuser', 'user')
+        exclude = ('pladatuser', 'user', 'image')
 
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
@@ -37,6 +37,21 @@ class LoginForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
+        for k, v in self.fields.items():
+            # HTML attributes to the form fields can be added here
+            v.widget.attrs['class'] = 'form-control'
+            v.widget.attrs['placeholder'] = v.help_text
+
+
+class UpdateImageForm(forms.ModelForm):
+    class Meta:
+        model = PladatUser
+        fields = ('image',)
+        widgets = {
+            'image': forms.widgets.FileInput
+        }
+    def __init__(self, *args, **kwargs):
+        super(UpdateImageForm, self).__init__(*args, **kwargs)
         for k, v in self.fields.items():
             # HTML attributes to the form fields can be added here
             v.widget.attrs['class'] = 'form-control'

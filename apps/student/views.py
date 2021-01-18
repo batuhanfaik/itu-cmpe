@@ -7,7 +7,7 @@ from apps.pladat.models import PladatUser
 
 from .forms import UpdatePladatUserForm, UpdateStudentForm
 from .models import Student
-
+from apps.pladat.forms import UpdateImageForm
 
 @login_required
 def profile_update_view(request):
@@ -16,21 +16,23 @@ def profile_update_view(request):
         form1 = UpdatePladatUserForm(instance = pladatuser)
         student = get_object_or_404(Student, pladatuser=pladatuser)
         form2 = UpdateStudentForm(instance=student)
+        imageForm = UpdateImageForm()
 
-        ctx = {'form1': form1, 'form2': form2}
+        ctx = {'form1': form1, 'form2': form2, 'imageForm': imageForm}
 
         return render(request, 'student_profile_update.html', context=ctx)
 
     if request.method == 'POST' and 'btnform1' in request.POST:
         pladatuser = get_object_or_404(PladatUser, user = request.user)
+        student = get_object_or_404(Student, pladatuser=pladatuser)
         form1 = UpdatePladatUserForm(request.POST, instance = pladatuser)
         if form1.is_valid():
             form1.save()
             return redirect('/profile/' + str(request.user.id))
         else:
-            student = get_object_or_404(Student, pladatuser = pladatuser)
             form2 = UpdateStudentForm(instance = student)
-            ctx = {'form1': form1, 'form2': form2}
+            imageForm = UpdateImageForm(request.POST)
+            ctx = {'form1': form1, 'form2': form2, 'imageForm': imageForm}
             return render(request, 'student_profile_update.html', context=ctx)
 
     if request.method == 'POST' and 'btnform2' in request.POST:
@@ -42,7 +44,24 @@ def profile_update_view(request):
             return redirect('/profile/' + str(request.user.id))
         else:
             form1 = UpdatePladatUserForm(instance = pladatuser)
-            ctx = {'form1': form1, 'form2': form2}
+            imageForm = UpdateImageForm(request.POST)
+            ctx = {'form1': form1, 'form2': form2, 'imageForm': imageForm}
             return render(request, 'student_profile_update.html', context=ctx)
+
+    if request.method == 'POST' and 'btnimageform' in request.POST:
+            print("HERE")
+            pladatuser = get_object_or_404(PladatUser, user=request.user)
+            student = get_object_or_404(Student, pladatuser=pladatuser)
+            imageForm = UpdateImageForm(request.POST, request.FILES)
+            if imageForm.is_valid():
+                img = imageForm.cleaned_data.get("image")
+                pladatuser.image = img
+                pladatuser.save()
+                return redirect('/profile/' + str(request.user.id))
+            else:
+                form1 = UpdatePladatUserForm(instance=pladatuser)
+                form2 = UpdateStudentForm(instance=student)
+                ctx = {'form1': form1, 'form2': form2, 'imageForm': imageForm}
+                return render(request, 'student_profile_update.html', context=ctx)
 
     return HttpResponse('What are you looking for?')

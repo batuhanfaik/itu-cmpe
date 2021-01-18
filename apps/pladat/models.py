@@ -16,6 +16,9 @@ class PladatUser(models.Model):
     state = models.CharField(max_length=128, null=True, help_text="State")
     country = CountryField(blank_label="Country", help_text="Country")  # https://pypi.org/project/django-countries/
 
+    image = models.ImageField(upload_to='profile_image', blank=True)
+
+
     class UserType(models.IntegerChoices):
         STUDENT = 0, 'Student account'
         RECRUITER = 1, 'Recruiter account'
