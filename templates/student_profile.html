@@ -31,24 +31,6 @@
                             <hr>
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <h6 class="mb-0">Email</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    {{ profile_user.pladatuser.user.email }}
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <h6 class="mb-0">Phone</h6>
-                                </div>
-                                <div class="col-sm-9 text-secondary">
-                                    {{ profile_user.pladatuser.phone_number }}
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-sm-3">
                                     <h6 class="mb-0">City</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
@@ -74,6 +56,7 @@
                                 </div>
                             </div>
                             <hr>
+                        {% if matched %}
                             <div class="row">
                                 <div class="col-sm-3">
                                     <h6 class="mb-0">Address</h6>
@@ -83,6 +66,25 @@
                                 </div>
                             </div>
                             <hr/>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Email</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.user.email }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Phone</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ profile_user.pladatuser.phone_number }}
+                                </div>
+                            </div>
+                            <hr>
+                        {% endif %}
                             <div class="row">
                                 <div class="col-sm-12">
                                     <h4 class="mb-0 text-center">Background</h4>

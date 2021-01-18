@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -9,12 +10,10 @@ from .models import Recruiter
 from apps.pladat.forms import UpdateImageForm, UpdatePladatUserForm
 
 
+@login_required
 def profile_update_view(request):
     if request.method == 'GET':
-        if not request.user.is_authenticated \
-                or request.user.pladatuser.user_type == PladatUser.UserType.STUDENT:
-            # User not logged in but trying to access profile update page
-            # Redirect to the main page
+        if request.user.pladatuser.is_student():
             return redirect('/')
 
         pladatuser = request.user.pladatuser
