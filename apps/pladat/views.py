@@ -57,7 +57,6 @@ def login_page_view(request):
 
 
 def register_user(data):
-    # TODO: Add email validation (Baris)
     try:
         user_dct = {
             'username': data['email'],
@@ -85,6 +84,12 @@ def register_user(data):
         return False
 
 
+def check_student_email(email):
+    # Email is validated before calling this function
+    domain = email.split('@')[1]
+    domain_ext = domain.split('.')[1]
+    return domain_ext == "edu"
+
 def registration_view(request):
     ctx = {}
 
@@ -110,17 +115,24 @@ def registration_view(request):
                 registration_form.add_error('email', 'Email is already in use')
                 ctx['form'] = registration_form
                 return render(request, 'user_register.html', context=ctx)
+            if int(registration_form.data['user_type']) == PladatUser.UserType.STUDENT and not check_student_email(email):
+                registration_form.add_error('email', 'Student email should belong to an educational instution')
+                ctx['form'] = registration_form
+                return render(request, 'user_register.html', context=ctx)
             else:
-                register_user(registration_form.data)
-                return HttpResponse('''
-                Registered successfully
-                <script>
-                    function redirect(){
-                    window.location.href = "/";
-                    }
-                    setTimeout(redirect, 1000);
-                </script>
-                    ''')
+                registered = register_user(registration_form.data)
+                if registered:
+                    return HttpResponse('''
+                    Registered successfully
+                    <script>
+                        function redirect(){
+                        window.location.href = "/";
+                        }
+                        setTimeout(redirect, 1000);
+                    </script>
+                        ''')
+                else:
+                    return HttpResponseForbidden('Registration failed')
         else:
             # Something wrong with form
             ctx['form'] = registration_form
