@@ -5,9 +5,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.pladat.models import PladatUser
 
-from .forms import UpdatePladatUserForm, UpdateStudentForm
+from .forms import UpdateStudentForm
 from .models import Student
-from apps.pladat.forms import UpdateImageForm
+from apps.pladat.forms import UpdateImageForm, UpdatePladatUserForm
 
 @login_required
 def profile_update_view(request):
@@ -49,7 +49,6 @@ def profile_update_view(request):
             return render(request, 'student_profile_update.html', context=ctx)
 
     if request.method == 'POST' and 'btnimageform' in request.POST:
-            print("HERE")
             pladatuser = get_object_or_404(PladatUser, user=request.user)
             student = get_object_or_404(Student, pladatuser=pladatuser)
             imageForm = UpdateImageForm(request.POST, request.FILES)
