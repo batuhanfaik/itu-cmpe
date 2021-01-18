@@ -1,8 +1,7 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
-
-from django.contrib.auth.models import User
 
 
 class PladatUser(models.Model):
@@ -34,7 +33,8 @@ class PladatUser(models.Model):
 
 def random_str(len):
     # Returns a random string of length len
-    import random, string
+    import random
+    import string
     return ''.join(random.choice(string.ascii_letters) for _ in range(len))
 
 

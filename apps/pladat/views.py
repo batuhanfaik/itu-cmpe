@@ -1,18 +1,14 @@
-from django.shortcuts import render
-
-from django.http import HttpResponse, HttpResponseForbidden
-from django.shortcuts import render, redirect
-
 from django.contrib.auth import authenticate, login, logout
-
-from .forms import RegistrationForm, LoginForm
-
 from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseForbidden
+from django.shortcuts import get_object_or_404, redirect, render
+
+from apps.recruiter.models import Recruiter
+from apps.student.models import Student
+
+from .forms import LoginForm, RegistrationForm
 from .models import PladatUser
 
-from apps.student.models import Student
-from apps.recruiter.models import Recruiter
-from django.shortcuts import get_object_or_404
 
 def main_page_view(request):
     ctx = {}

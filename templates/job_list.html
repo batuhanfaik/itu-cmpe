@@ -49,18 +49,18 @@
                         <th>Title</th>
                         <th>City</th>
                         <th>Country</th>
-                        <th>Update</th>
+                        <th>Details</th>
                         <th>Find Student</th>
                         </thead>
                         <tbody>
                           {% for job in job_list %}
                             <tr>
-                                <td>{{  job.title }}</td>
-                                <td>{{ job.city }}</td>
-                                <td> {{ job.country }} </td>
+                                <td>{{job.title}}</td>
+                                <td>{{job.city}}</td>
+                                <td> {{job.country}}</td>
                                 <td>
                                     <div class="text-center">
-                                        <a href="/job/update/{{ job.id }}" class="btn btn-sm btn-primary">Update</a>
+                                        <a href="/job/{{ job.id }}" class="btn btn-sm btn-primary">Details</a>
                                     </div>
                                 </td>
                                  <td>

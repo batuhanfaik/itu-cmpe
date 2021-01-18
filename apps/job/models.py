@@ -1,5 +1,4 @@
 from django.db import models
-
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -20,11 +19,18 @@ class Job(models.Model):
     @property
     def company_name(self):
         return self.recruiter.company_name
-    
-    def is_applied(self, student):
-        appliedjob = AppliedJob.objects.filter(job = self.job, applicant = student)
-        return appliedjob.exists()
 
+    def appliedjob(self, student):
+        appliedjob = AppliedJob.objects.filter(job = self, applicant = student)
+        if len(appliedjob) > 0:
+            return appliedjob[0]
+        else:
+            return None
+
+class Response(models.IntegerChoices):
+    NO_RESPONSE = 0, 'No response'
+    INTERESTED = 1, 'Interested in this application'
+    NOT_INTERESTED = 2, 'Not interested in this application'
 
 class AppliedJob(models.Model):
     applicant = models.ForeignKey(Student, on_delete=models.CASCADE, related_name = 'applications')
@@ -33,15 +39,21 @@ class AppliedJob(models.Model):
     class Meta:
         unique_together = (("applicant", "job"))
 
-    class StudentInterest(models.IntegerChoices):
-        INTERESTED = 1, 'Student is interested with the job'
-        NOT_INTERESTED = 0, 'Student is not interested with the job'
-    
-    is_student_interested  = models.IntegerField(choices=StudentInterest.choices, help_text="Recruiter Response")
+    student_status  = models.IntegerField(choices=Response.choices, default=Response.NO_RESPONSE, help_text="Recruiter Response")
+    recruiter_status = models.IntegerField(choices=Response.choices, default=Response.NO_RESPONSE, help_text="Recruiter Response")
 
-    class RecruiterResponse(models.IntegerChoices):
-        NO_RESPONSE = 0, 'No response from recruiter'
-        INTERESTED = 1, 'Recruiter is interested with this student'
-        NOT_INTERESTED = 2, 'Recruiter is not interested with this student'
+    @property
+    def is_student_interested(self):
+        return self.student_status == Response.INTERESTED
     
-    recruiter_response = models.IntegerField(choices=RecruiterResponse.choices, default=RecruiterResponse.NO_RESPONSE, help_text="Recruiter Response")
+    @property
+    def is_student_no_response(self):
+        return self.student_status == Response.NO_RESPONSE
+
+    @property
+    def is_recruiter_interested(self):
+        return self.recruiter_status == Response.INTERESTED
+    
+    @property
+    def is_recruiter_no_response(self):
+        return self.recruiter_status == Response.NO_RESPONSE

@@ -1,5 +1,7 @@
-from .models import Job
 from django import forms
+
+from .models import Job
+
 
 class UpdateJobForm(forms.ModelForm):
     class Meta:

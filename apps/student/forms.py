@@ -1,6 +1,8 @@
-from .models import Student
-from apps.pladat.models import PladatUser
 from django import forms
+
+from apps.pladat.models import PladatUser
+
+from .models import Student
 
 
 class UpdatePladatUserForm(forms.ModelForm):

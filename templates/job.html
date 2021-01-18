@@ -145,7 +145,7 @@
                             <a href="./update/{{ job.id }}" class="btn btn-primary">Update Job</a>
                         </div>
                     {% endif %}
-                    {% if is_student and not already_applied%}
+                    {% if is_student and not appliedjob%}
                     <div>
                       <form class="form-control" method="post">
                           {% csrf_token %}
@@ -156,6 +156,18 @@
                               Not Interested
                           </button>
                       </form>
+                    </div>
+                    {% elif is_student %}
+                    <div>
+                        {% if appliedjob.is_student_interested%}
+                        <button class="btn btn-md btn-success btn-block disabled" name="yes" type="submit">
+                            Interested
+                        </button>
+                        {% else %}
+                        <button class="btn btn-md btn-dark btn-block disabled" name="no" type="submit">
+                            Not interested
+                        </button>
+                        {% endif %}
                     </div>
                     {% endif %}
                     </div>

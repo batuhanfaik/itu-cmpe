@@ -1,5 +1,6 @@
-from .models import PladatUser
 from django import forms
+
+from .models import PladatUser
 
 
 class RegistrationForm(forms.ModelForm):

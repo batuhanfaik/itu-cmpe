@@ -1,13 +1,11 @@
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.pladat.models import PladatUser
-from .models import Recruiter
 
 from .forms import UpdatePladatUserForm, UpdateRecruiterForm
+from .models import Recruiter
 
 
 def profile_update_view(request):

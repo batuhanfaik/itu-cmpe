@@ -1,10 +1,7 @@
 from django.urls import path
 
-from .views import (main_page_view,
-    registration_view,
-    login_page_view,
-    logout_page_view,
-    profile_view)
+from .views import (login_page_view, logout_page_view, main_page_view,
+                    profile_view, registration_view)
 
 urlpatterns = [
     path('', main_page_view, name="main_page_view"),

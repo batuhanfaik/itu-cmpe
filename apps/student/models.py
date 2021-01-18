@@ -1,9 +1,9 @@
 from django.db import models
-
 from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.pladat.models import PladatUser, create_mock_pladatuser
+
 
 class Skill(models.Model):
     name = models.CharField(max_length = 8, null = False, blank = False)

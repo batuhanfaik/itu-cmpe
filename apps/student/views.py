@@ -1,14 +1,13 @@
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.pladat.models import PladatUser
-from .models import Student
 
 from .forms import UpdatePladatUserForm, UpdateStudentForm
+from .models import Student
+
 
 @login_required
 def profile_update_view(request):

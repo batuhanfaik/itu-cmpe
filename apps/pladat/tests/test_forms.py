@@ -1,4 +1,5 @@
 from django.test import SimpleTestCase
+
 from apps.pladat.forms import *
 
 

@@ -1,7 +1,9 @@
 
-from .models import Recruiter
-from apps.pladat.models import PladatUser
 from django import forms
+
+from apps.pladat.models import PladatUser
+
+from .models import Recruiter
 
 
 class UpdatePladatUserForm(forms.ModelForm):
