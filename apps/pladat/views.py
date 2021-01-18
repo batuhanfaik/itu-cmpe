@@ -160,11 +160,11 @@ def profile_view(request, id):
         else:
             my_jobs = Job.objects.filter(recruiter=current_user.pladatuser.recruiter)
             students = set()
-            for job in my_jobs:
-                matches = AppliedJob.objects.filter(job=job, applicant=profile_user.pladatuser.student,
-                                                    student_status=Response.INTERESTED,
-                                                    recruiter_status=Response.INTERESTED)
-                for match in matches:
-                    students.add(match.applicant.pladatuser.pk)
-            ctx['matched'] = profile_user.pladatuser.pk in students
-            return render(request, 'student_profile.html', context=ctx)
+
+            matches = AppliedJob.objects.filter(job__in=my_jobs, applicant=profile_user.pladatuser.student,
+                                                student_status=Response.INTERESTED,
+                                                recruiter_status=Response.INTERESTED)
+            for match in matches:
+                students.add(match.applicant.pladatuser.pk)
+        ctx['matched'] = profile_user.pladatuser.pk in students
+        return render(request, 'student_profile.html', context=ctx)
