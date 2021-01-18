@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
@@ -132,6 +133,7 @@ def logout_page_view(request):
     return redirect('/')
 
 
+@login_required
 def profile_view(request, id):
     user = get_object_or_404(User, id=id)
 
