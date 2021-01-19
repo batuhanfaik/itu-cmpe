@@ -6,6 +6,8 @@ import pickle
 from apps.student.models import Student
 from apps.job.models import AppliedJob, Job
 
+embeddings = None
+
 def doc2vec(inp, embeddings):
     """
     Inputs:
@@ -33,11 +35,12 @@ def create_features(student, job):
     Inputs: student and job object from the database
     Outputs: Feature vector that can work with the ML model
     """
-    embeddings = None
-    print("a1")
-    with open("apps/recommend/embeddings.p", "rb") as f:
-        embeddings = pickle.load(f)
-    print("a2")
+    global embeddings
+    if embeddings is None:
+        print("a1")
+        with open("apps/recommend/embeddings.p", "rb") as f:
+            embeddings = pickle.load(f)
+        print("a2")
 
     features = np.zeros((1  , 113)) # Total feature length 113
 
