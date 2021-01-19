@@ -142,12 +142,15 @@ def find_student_view(request, id):
 
         if "yes" in request.POST:
             appliedjob.recruiter_status = Response.INTERESTED
+            appliedjob.save()
+            JobNotification.objects.create(appliedjob=appliedjob)
 
 
         elif "no" in request.POST:
             appliedjob.recruiter_status = Response.NOT_INTERESTED
+            appliedjob.save()
 
-        appliedjob.save()
+
 
         return redirect(f"/job/{id}/find_student?index={index}")
 
@@ -200,7 +203,6 @@ def find_job_view(request):
         if "yes" in request.POST:
             application.student_status = Response.INTERESTED
             application.save()
-            JobNotification.objects.create(appliedjob=application)
 
         elif "no" in request.POST:
             application.student_status = Response.NOT_INTERESTED
