@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.job.forms import UpdateJobForm
-from apps.job.models import AppliedJob, Job
+from apps.job.models import AppliedJob, Job, JobNotification
 from apps.pladat.models import PladatUser
 from apps.recruiter.models import Recruiter
 from apps.student.models import Student
@@ -141,6 +141,7 @@ def find_student_view(request, id):
         if "yes" in request.POST:
             appliedjob.recruiter_status = Response.INTERESTED
 
+
         elif "no" in request.POST:
             appliedjob.recruiter_status = Response.NOT_INTERESTED
 
@@ -196,6 +197,7 @@ def find_job_view(request):
         )
         if "yes" in request.POST:
             application.student_status = Response.INTERESTED
+            JobNotification.objects.create(appliedjob=application)
 
         elif "no" in request.POST:
             application.student_status = Response.NOT_INTERESTED
