@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "password": "pbkdf2_sha256$216000$IhGi4sMYNbIE$EXKsmocTdFchSx+iNjCUCubGTGWTRLWql9S8xCESmyE=",
-      "last_login": "2021-01-19T01:37:17.220Z",
+      "last_login": "2021-01-19T08:38:17.597Z",
       "is_superuser": false,
       "username": "student1@itu.edu.tr",
       "first_name": "",
@@ -22,7 +22,7 @@
     "pk": 2,
     "fields": {
       "password": "pbkdf2_sha256$216000$OFt0U8IeKCLV$tQGO2rV34ahECQ7GsNSAkwMIsk2w2gy3xzHG+0p2f3g=",
-      "last_login": "2021-01-19T01:46:10.489Z",
+      "last_login": "2021-01-19T08:41:20.945Z",
       "is_superuser": false,
       "username": "recruiter1@company.com",
       "first_name": "",
@@ -299,6 +299,18 @@
       "title": "Machine Learning/AI",
       "description": "Understanding and modeling human behavior is essential for driving safely through crowded environments. This position investigates how inverse reinforcement learning (IRL) can be used to model the behavior of other agents. The focus will be placed on efficiently identifying and modeling a diverse set of driving styles. You are expected to:\r\n\r\n    Implement state-of-the-art IRL and Model Predictive Control (MPC) algorithms\r\n    Research and develop diverse behavior models conditioned on differences in human personality\r\n\r\nQualifications:\r\n\r\n    MS or Ph.D. candidate computer science, or related STEM field\r\n    Strong familiarity and research experience in RL, IRL, and control of robotic systems\r\n    Highly proficient in software engineering using C++ and/or Python\r\n\r\nBonus Qualifications:\r\n\r\n    Experience with deep learning software like TensorFlow or PyTorch\r\n    Familiarity with ROS\r\n    Hands-on experience with robotic control\r\n\r\nDuration: 3+ months",
       "city": "Istanbul",
+      "state": null,
+      "country": "TR",
+      "recruiter": 3
+    }
+  },
+  {
+    "model": "job.job",
+    "pk": 6,
+    "fields": {
+      "title": "Human Behavior Understand and Prediction",
+      "description": "The title includes multiple positions, which focus on developing computer vision and machine learning algorithms for analysis, prediction, and understanding of human behavior in various domains to support ongoing research on next-generation intelligent mobility systems. You are expected to work on:\r\n\r\n    Behavior reasoning\r\n    Social interaction modeling\r\n    Trajectory prediction\r\n    Uncertainty estimation and quantification\r\n    Relational inference\r\n    Creation of a benchmark dataset for various applications\r\n\r\nQualifications:\r\n\r\n    Ph.D. or highly qualified M.S. candidate in computer science, electrical engineering, or related field\r\n    Strong research experience in computer vision, machine learning, robotics\r\n    Experience in open-source deep learning frameworks such as TensorFlow or PyTorch\r\n\r\nBonus Qualifications:\r\n\r\n    Hands-on experience in one or more of the following: graph neural networks, graph convolutional networks, probabilistic neural networks, deep generative models (GAN/VAE), reinforcement learning\r\n    Publications in top-tier conferences (CVPR, ICCV, ECCV, ICML, NeurIPS, ICLR, ICRA, IROS, etc.)\r\n\r\nDuration: 3 months",
+      "city": "Ankara",
       "state": null,
       "country": "TR",
       "recruiter": 3
