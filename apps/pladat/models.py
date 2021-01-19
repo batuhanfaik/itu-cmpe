@@ -25,7 +25,7 @@ class PladatUser(models.Model):
         __empty__ = 'User type'
 
     user_type = models.IntegerField(choices=UserType.choices, help_text="User type")
-
+    
     def is_student(self):
         return self.user_type == self.UserType.STUDENT
 
