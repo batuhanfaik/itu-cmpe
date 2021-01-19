@@ -22,10 +22,9 @@ def main_page_view(request):
             student = pladatuser.student
             notifications = JobNotification.objects.filter(appliedjob__applicant = student, shown = False)
             ctx = {'notifications': notifications}
-        else:
-            recruiter = pladatuser.recruiter
-            notifications = JobNotification.objects.filter(appliedjob__job__recruiter = recruiter, shown = False)
-            ctx = {'notifications': notifications}
+            for notification in notifications:
+                notification.shown = True
+                notification.save()
 
     return render(request, 'main_page.html', context=ctx)
 

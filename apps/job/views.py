@@ -107,7 +107,7 @@ def find_student_view(request, id):
         student = find_student(job, index)
         if student is None:
             # TODO: Return some page...
-            return HttpResponse("No student found")
+            return redirect('/job/list')
 
         ctx = {"job": job, "student": student[0], "match_rate": student[1]}
         return render(request, "find_student.html", context=ctx)
@@ -197,12 +197,12 @@ def find_job_view(request):
         )
         if "yes" in request.POST:
             application.student_status = Response.INTERESTED
+            application.save()
             JobNotification.objects.create(appliedjob=application)
 
         elif "no" in request.POST:
             application.student_status = Response.NOT_INTERESTED
-
-        application.save()
+            application.save()
 
         return redirect(f"/job/find_job?index={index}")
 
