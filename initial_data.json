@@ -37,7 +37,7 @@
 },
 {
     "model": "contenttypes.contenttype",
-    "pk": 1,
+    "id": 1,
     "fields": {
         "app_label": "admin",
         "model": "logentry"
@@ -45,7 +45,7 @@
 },
 {
     "model": "contenttypes.contenttype",
-    "pk": 2,
+    "id": 2,
     "fields": {
         "app_label": "auth",
         "model": "permission"
@@ -53,7 +53,7 @@
 },
 {
     "model": "contenttypes.contenttype",
-    "pk": 3,
+    "id": 3,
     "fields": {
         "app_label": "auth",
         "model": "group"
@@ -61,7 +61,7 @@
 },
 {
     "model": "contenttypes.contenttype",
-    "pk": 4,
+    "id": 4,
     "fields": {
         "app_label": "auth",
         "model": "user"
@@ -69,7 +69,7 @@
 },
 {
     "model": "contenttypes.contenttype",
-    "pk": 5,
+    "id": 5,
     "fields": {
         "app_label": "contenttypes",
         "model": "contenttype"
@@ -77,7 +77,7 @@
 },
 {
     "model": "contenttypes.contenttype",
-    "pk": 6,
+    "id": 6,
     "fields": {
         "app_label": "sessions",
         "model": "session"
@@ -85,7 +85,7 @@
 },
 {
     "model": "contenttypes.contenttype",
-    "pk": 7,
+    "id": 7,
     "fields": {
         "app_label": "recruiter",
         "model": "recruiter"
@@ -93,7 +93,7 @@
 },
 {
     "model": "contenttypes.contenttype",
-    "pk": 8,
+    "id": 8,
     "fields": {
         "app_label": "job",
         "model": "appliedjob"
@@ -101,7 +101,7 @@
 },
 {
     "model": "contenttypes.contenttype",
-    "pk": 9,
+    "id": 9,
     "fields": {
         "app_label": "job",
         "model": "job"
@@ -109,7 +109,7 @@
 },
 {
     "model": "contenttypes.contenttype",
-    "pk": 10,
+    "id": 10,
     "fields": {
         "app_label": "pladat",
         "model": "pladatuser"
@@ -117,7 +117,7 @@
 },
 {
     "model": "contenttypes.contenttype",
-    "pk": 11,
+    "id": 11,
     "fields": {
         "app_label": "student",
         "model": "skill"
@@ -125,7 +125,7 @@
 },
 {
     "model": "contenttypes.contenttype",
-    "pk": 12,
+    "id": 12,
     "fields": {
         "app_label": "student",
         "model": "student"

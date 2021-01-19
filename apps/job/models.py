@@ -70,3 +70,7 @@ class AppliedJob(models.Model):
     @property
     def is_recruiter_no_response(self):
         return self.recruiter_status == Response.NO_RESPONSE
+
+class JobNotification(models.Model):
+    appliedjob = models.ForeignKey(AppliedJob, on_delete=models.CASCADE, related_name='jobnotification')
+    shown = models.BooleanField(default = False)
