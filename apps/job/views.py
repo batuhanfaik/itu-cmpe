@@ -60,7 +60,7 @@ def find_student(job, index):
 
     from functools import cmp_to_key
 
-    sorted(student_list, key=cmp_to_key(compare))
+    student_list = sorted(student_list, key=cmp_to_key(compare))
 
     return student_list[index % len(student_list)]
 
@@ -88,7 +88,7 @@ def find_job(student, index):
 
     from functools import cmp_to_key
 
-    sorted(job_list_scored, key=cmp_to_key(compare))
+    job_list_scored = sorted(job_list_scored, key=cmp_to_key(compare))
 
     return job_list_scored[index % len(job_list_scored)]
 
