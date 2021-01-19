@@ -1,5 +1,6 @@
 import pickle
 import lightgbm as lgb
+import numpy as np
 
 def predict(query):
 	"""
@@ -12,4 +13,16 @@ def predict(query):
 	model = None
 	with open("samples/model.p", "rb") as f:
 		model = pickle.load(f)
-	return model.predict(query)
+
+	retval = model.predict(query)
+	retval = retval * 25
+	retval = retval + 50
+	retval = retval[0]
+	if(retval > 100):
+		retval = 100
+	if(retval < 0):
+		retval = 0
+
+	retval = round(retval)
+
+	return retval

@@ -45,13 +45,13 @@ def create_features(student, job):
             features[0, i] = 1
 
     # Other fields are easier
-    if student.degree == "Master of Science":
+    if student.degree.get_degree_display == "Master of Science":
         features[skill_len + 1] = 1
-    if student.major == "Mathematics":
+    if student.major.get_major_display == "Mathematics":
         features[skill_len + 2] = 1
-    if student.university == "Bogazici University":
+    if student.university.get_university_display == "Bogazici University":
         features[skill_len + 3] = 1
-    elif student.university == "Koc University":
+    elif student.university.get_university_display == "Koc University":
         features[skill_len + 3] = 2
 
     features[skill_len + 4] = student.years_worked

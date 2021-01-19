@@ -16,6 +16,7 @@ from apps.recommend.rec_model import predict
 
 def calculate_match_rate(student, job):
     query = create_features(student, job)
+
     return predict(query)
 
 
