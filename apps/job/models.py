@@ -14,10 +14,9 @@ class Response(models.IntegerChoices):
 
 class Job(models.Model):
     title = models.CharField(max_length=128, help_text='Title')
-    description = models.TextField(max_length=512, help_text='Description')
-    requirements = models.TextField(max_length=512, help_text='Requirements')
+    description = models.TextField(max_length=5000, help_text='Description')
     city = models.CharField(max_length=128, help_text='City')
-    state = models.CharField(max_length=128, null=True, help_text='State')
+    state = models.CharField(max_length=128, null=True, help_text='State', blank=True)
     country = CountryField(help_text='Country')  # https://pypi.org/project/django-countries/
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
     # Company info also required buy can be derived from recruiter
