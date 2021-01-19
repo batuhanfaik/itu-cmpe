@@ -11,7 +11,7 @@ def predict(query):
 	if len(query.shape) == 1:
 		query = query[np.newaxis, :]
 	model = None
-	with open("samples/model.p", "rb") as f:
+	with open("apps/recommend/samples/model.p", "rb") as f:
 		model = pickle.load(f)
 
 	retval = model.predict(query)
