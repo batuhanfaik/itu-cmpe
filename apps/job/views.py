@@ -10,12 +10,13 @@ from apps.student.models import Student
 
 from .models import Response
 
-# Create your views here.
+from apps.recommend.rec_utils import create_features 
+from apps.recommend.rec_model import predict
 
 
 def calculate_match_rate(student, job):
-    # TODO: Add this after ML (Baris)
-    return 100
+    query = create_features(student, job)
+    return predict(query)
 
 
 def match_rate(student, job):
