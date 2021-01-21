@@ -5,7 +5,7 @@ from apps.pladat.forms import *
 
 class TestRegistrationForm(SimpleTestCase):
     def test_registration_form_valid_data(self):
-        form = LoginForm(data={
+        form = RegistrationForm(data={
             'email':'test@test.com',
             'password':'password',
             'first_name':'unit',
@@ -15,7 +15,7 @@ class TestRegistrationForm(SimpleTestCase):
             'city':'aksaray',
             'state':'wat',
             'country':'Turkey',
-            'user_type':'0'
+            'user_type':'0',
         })
         self.assertTrue(form.is_valid())
 
@@ -23,7 +23,7 @@ class TestRegistrationForm(SimpleTestCase):
         form = RegistrationForm(data={})
 
         self.assertFalse(form.is_valid())
-        self.assertEqual(len(form.errors), 10)
+        self.assertEqual(len(form.errors), 9)
 
     def test_registration_no_email(self):
         form = LoginForm(data={
