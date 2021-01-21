@@ -3,6 +3,7 @@ from django.test import TestCase
 from apps.recruiter.models import *
 from apps.pladat.models import *
 
+
 class TestModels(TestCase):
     def setUp(self):
         self.test_user = User.objects.create_user(
