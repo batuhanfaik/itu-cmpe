@@ -14,7 +14,7 @@ class TestRegistrationForm(SimpleTestCase):
             'address':'my house is right on top of the world',
             'city':'aksaray',
             'state':'wat',
-            'country':'Turkey',
+            'country':'TR',
             'user_type':'0',
         })
         self.assertTrue(form.is_valid())
@@ -35,7 +35,7 @@ class TestRegistrationForm(SimpleTestCase):
             'address': 'my house is right on top of the world',
             'city': 'aksaray',
             'state': 'wat',
-            'country': 'Turkey',
+            'country': 'TR',
             'user_type': '0'
         })
         self.assertFalse(form.is_valid())
@@ -51,7 +51,7 @@ class TestRegistrationForm(SimpleTestCase):
             'address': 'my house is right on top of the world',
             'city': 'aksaray',
             'state': 'wat',
-            'country': 'Turkey',
+            'country': 'TR',
             'user_type': '0'
         })
         self.assertFalse(form.is_valid())
@@ -67,7 +67,7 @@ class TestRegistrationForm(SimpleTestCase):
             'address': 'my house is right on top of the world',
             'city': 'aksaray',
             'state': 'wat',
-            'country': 'Turkey',
+            'country': 'TR',
             'user_type': '0'
         })
         self.assertFalse(form.is_valid())
@@ -83,7 +83,7 @@ class TestRegistrationForm(SimpleTestCase):
             'address': 'my house is right on top of the world',
             'city': 'aksaray',
             'state': 'wat',
-            'country': 'Turkey',
+            'country': 'TR',
             'user_type': '0'
         })
         self.assertFalse(form.is_valid())
