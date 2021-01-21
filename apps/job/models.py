@@ -12,6 +12,7 @@ class Response(models.IntegerChoices):
     INTERESTED = 1, 'Interested in this application'
     NOT_INTERESTED = 2, 'Not interested in this application'
 
+
 class Job(models.Model):
     title = models.CharField(max_length=128, help_text='Title')
     description = models.TextField(max_length=5000, help_text='Description')

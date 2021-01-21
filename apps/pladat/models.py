@@ -18,7 +18,6 @@ class PladatUser(models.Model):
 
     image = models.ImageField(upload_to='profile_image', blank=True)
 
-
     class UserType(models.IntegerChoices):
         STUDENT = 0, 'Student account'
         RECRUITER = 1, 'Recruiter account'
