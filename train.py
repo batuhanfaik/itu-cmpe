@@ -78,11 +78,15 @@ numworkers = 1
 multi_class = True
 oversample = True
 
-train_loader = torch.utils.data.DataLoader(DataReader(mode='train',path="folds/fold_1.csv", oversample=oversample, multi_class=multi_class), batch_size=BATCH_SIZE, shuffle=True,
-										   num_workers=numworkers)
+train_loader = torch.utils.data.DataLoader(
+    DataReader(mode='train', path="folds/fold_1.csv", oversample=oversample,
+               multi_class=multi_class), batch_size=BATCH_SIZE, shuffle=True,
+    num_workers=numworkers)
 
-val_loader = torch.utils.data.DataLoader(DataReader(mode='val', path="folds/fold_1.csv", oversample=oversample, multi_class=multi_class), batch_size=BATCH_SIZE, shuffle=True,
-										   num_workers=numworkers)                                           
+val_loader = torch.utils.data.DataLoader(
+    DataReader(mode='val', path="folds/fold_1.csv", oversample=oversample, multi_class=multi_class),
+    batch_size=BATCH_SIZE, shuffle=True,
+    num_workers=numworkers)
 
 experiment_name = prepare_experiment()
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
@@ -96,7 +100,6 @@ for i in range(len(all_python_files)):
 num_classes = 5
 num_epochs = 100
 
-
 model = torch.hub.load('pytorch/vision:v0.6.0', 'densenet121', pretrained=True)
 num_features_dense = model.classifier.in_features
 
@@ -108,9 +111,9 @@ else:
 model = model.to(device)
 
 lr = 1e-3
-#base_optimizer = torch.optim.SGD
+# base_optimizer = torch.optim.SGD
 base_optimizer = torch.optim.Adam
-#optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-4, nesterov=True)
+# optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-4, nesterov=True)
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 scheduler = ReduceLROnPlateau(optimizer, 'min', factor=0.1, patience=5, min_lr=1e-10)
 
@@ -118,7 +121,6 @@ if multi_class == True:
     loss = torch.nn.CrossEntropyLoss().to(device)
 else:
     loss = torch.nn.BCEWithLogitsLoss().to(device)
-
 
 all_tr_losses = torch.zeros(num_epochs, 1)
 all_tr_accuracies = np.zeros((num_epochs, 1))
@@ -138,12 +140,11 @@ for epoch_id in range(1, num_epochs + 1):
         img_class = data['label']
         img = torch.Tensor(img.float())
         if multi_class == False:
-            
             img_class = torch.Tensor(img_class.float())
-        
+
         img = img.to(device)
         img.requires_grad = True
-        
+
         img_class = img_class.to(device)
         img_class.requires_grad = False
         optimizer.zero_grad()
@@ -154,12 +155,12 @@ for epoch_id in range(1, num_epochs + 1):
             loss_value = loss(output, img_class)
         else:
             temp_output = output.clone()
-            temp_output[ temp_output > 0.5] = 1
-            temp_output[ temp_output <= 0.5] = 0
+            temp_output[temp_output > 0.5] = 1
+            temp_output[temp_output <= 0.5] = 0
             prediction = temp_output.clone()
-            loss_value = loss(output, img_class.unsqueeze(1))#if multiclass false
+            loss_value = loss(output, img_class.unsqueeze(1))  # if multiclass false
 
-        #loss_value = loss(output, img_class.unsqueeze(1))#if multiclass false
+        # loss_value = loss(output, img_class.unsqueeze(1))#if multiclass false
         loss_value.backward()
         optimizer.step()
 
@@ -207,30 +208,30 @@ for epoch_id in range(1, num_epochs + 1):
             if multi_class == False:
                 img_class = torch.Tensor(img_class.float())
             img.requires_grad = False
-            #img_class = torch.Tensor(img_class.float())
+            # img_class = torch.Tensor(img_class.float())
             img_class = img_class.to(device)
             img_class.requires_grad = False
             output = model(img)
-            
-            
+
             if multi_class == True:
 
                 temp_list = []
-                temp_list = torch.cat([output[:, 0:1].sum(dim=1, keepdim=True), output[:, 1:4].sum(dim=1, keepdim=True)],dim=1) 
+                temp_list = torch.cat([output[:, 0:1].sum(dim=1, keepdim=True),
+                                       output[:, 1:4].sum(dim=1, keepdim=True)], dim=1)
                 new_output = temp_list
 
-                img_class[img_class > 0] = 1    
+                img_class[img_class > 0] = 1
                 _, prediction = torch.max(new_output.data, 1)
                 val_loss = loss(new_output, img_class)
             else:
 
                 temp_output = output.clone()
-                temp_output[ temp_output > 0.5] = 1
-                temp_output[ temp_output <= 0.5] = 0
+                temp_output[temp_output > 0.5] = 1
+                temp_output[temp_output <= 0.5] = 0
                 prediction = temp_output.clone()
-                val_loss = loss(output, img_class.unsqueeze(1))#if multiclass false
+                val_loss = loss(output, img_class.unsqueeze(1))  # if multiclass false
 
-            #val_loss = loss(output, img_class))#if multiclass false
+            # val_loss = loss(output, img_class))#if multiclass false
             val_losses += val_loss
             total_loss += val_loss.data
             total_true += torch.sum(prediction == img_class.data)
