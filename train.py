@@ -23,12 +23,13 @@ def conf_matrix(cmat):
     fp = 0.0
     fn = 0.0
     for i in range(arr.shape[0]):
-        tp += arr[i,i]
-        tn += arr.sum() - arr[:,i].sum() - arr[i,:].sum() + arr[i,i]
-        fp += arr[i,:].sum() - arr[i,i]
-        fn += arr[:,i].sum()- arr[i,i]
+        tp += arr[i, i]
+        tn += arr.sum() - arr[:, i].sum() - arr[i, :].sum() + arr[i, i]
+        fp += arr[i, :].sum() - arr[i, i]
+        fn += arr[:, i].sum() - arr[i, i]
 
     return tn, fp, fn, tp
+
 
 def save_res(epoch_id, total_loss, loader_len, acc, time_start, res_name, mode):
     with open(res_name, "a") as f:
@@ -111,18 +112,19 @@ binary classificaiton:
 multi_to_multi = True
 multi_class = True
 
-oversample = True 
+oversample = True
 #####################################################
-
-
+dataset_path = "/mnt/sdb1/datasets/Coronahack-Chest-XRay-Dataset/Coronahack-Chest-XRay-Dataset"
+split_path = "splits/split_0.8-0.2.csv"
 
 train_loader = torch.utils.data.DataLoader(
-    DataReader(mode='train', path="splits/split_0.8-0.2.csv", oversample=oversample,
+    DataReader(mode='train', path=split_path, dataset_path=dataset_path, oversample=oversample,
                multi_class=multi_class), batch_size=BATCH_SIZE, shuffle=True,
     num_workers=numworkers)
 
 val_loader = torch.utils.data.DataLoader(
-    DataReader(mode='val', path="splits/split_0.8-0.2.csv", oversample=oversample, multi_class=multi_class),
+    DataReader(mode='val', path=split_path, dataset_path=dataset_path, oversample=oversample,
+               multi_class=multi_class),
     batch_size=BATCH_SIZE, shuffle=True,
     num_workers=numworkers)
 
@@ -206,7 +208,6 @@ for epoch_id in range(1, num_epochs + 1):
         total_loss += loss_value.data
         total_true += torch.sum(prediction == img_class.data)
         total_false += torch.sum(prediction != img_class.data)
-        
 
         if (i + 1) % 100 == 0:
             print("Pre-report Epoch:", epoch_id)
@@ -261,15 +262,16 @@ for epoch_id in range(1, num_epochs + 1):
             if multi_to_multi == True:
                 _, prediction = torch.max(output.data, 1)
                 val_loss = loss(output, img_class)
-                arr = confusion_matrix(prediction.cpu().numpy(), img_class.cpu().numpy(), labels=[0,1,2,3])
-                
+                arr = confusion_matrix(prediction.cpu().numpy(), img_class.cpu().numpy(),
+                                       labels=[0, 1, 2, 3])
+
                 tn, fp, fn, tp = conf_matrix(arr)
-                
+
                 total_tn += tn
                 total_fp += fp
                 total_fn += fn
-                total_tp += tp              
-            elif multi_class == True:#multi to binary
+                total_tp += tp
+            elif multi_class == True:  # multi to binary
 
                 temp_list = []
                 temp_list = torch.cat([output[:, 0:1].sum(dim=1, keepdim=True),
@@ -277,29 +279,31 @@ for epoch_id in range(1, num_epochs + 1):
                 new_output = temp_list
 
                 img_class[img_class > 0] = 1
-                
-                #new_output[new_output > 0.5] = 1
-                #new_output[new_output <= 0.5] = 0
-                #prediction = new_output.clone()
+
+                # new_output[new_output > 0.5] = 1
+                # new_output[new_output <= 0.5] = 0
+                # prediction = new_output.clone()
                 _, prediction = torch.max(new_output.data, 1)
-                #_, prediction = torch.max(new_output.data, 1)
-                #val_loss = loss(new_output, img_class)
+                # _, prediction = torch.max(new_output.data, 1)
+                # val_loss = loss(new_output, img_class)
                 val_loss = loss(new_output, img_class)
-                
-                #tn, fp, fn, tp = confusion_matrix(y_true,y_pred).ravel
-                tn, fp, fn, tp = confusion_matrix(prediction.cpu().numpy(), img_class.cpu().numpy()).ravel()
+
+                # tn, fp, fn, tp = confusion_matrix(y_true,y_pred).ravel
+                tn, fp, fn, tp = confusion_matrix(prediction.cpu().numpy(),
+                                                  img_class.cpu().numpy()).ravel()
                 total_tn += tn
                 total_fp += fp
                 total_fn += fn
-                total_tp += tp              
-            else:#binary
+                total_tp += tp
+            else:  # binary
 
                 temp_output = output.clone()
                 temp_output[temp_output > 0.5] = 1
                 temp_output[temp_output <= 0.5] = 0
                 prediction = temp_output.clone()
                 val_loss = loss(output, img_class.unsqueeze(1))  # if multiclass false
-                tn, fp, fn, tp = confusion_matrix(prediction.cpu().numpy(), img_class.cpu().numpy()).ravel()
+                tn, fp, fn, tp = confusion_matrix(prediction.cpu().numpy(),
+                                                  img_class.cpu().numpy()).ravel()
                 total_tn += tn
                 total_fp += fp
                 total_fn += fn
@@ -318,13 +322,13 @@ for epoch_id in range(1, num_epochs + 1):
         print("Test:", datetime.datetime.now())
         print("Val %d scores:" % epoch_id)
         print("Loss %f" % (total_loss / len(val_loader)))
-        #print("Accuracy %f" % acc)
-        
-        temp_acc = (total_tp + total_tn)/(total_tp + total_tn + total_fp + total_fn)
+        # print("Accuracy %f" % acc)
+
+        temp_acc = (total_tp + total_tn) / (total_tp + total_tn + total_fp + total_fn)
         print("Accuracy %f" % temp_acc)
-        
-        print("Sensitivity %f" % (total_tp/(total_tp+total_fn)))
-        print("Specificity %f" % (total_tn/(total_tn+total_fp)))
+
+        print("Sensitivity %f" % (total_tp / (total_tp + total_fn)))
+        print("Specificity %f" % (total_tn / (total_tn + total_fp)))
         print("Time (s): " + str(time.time() - time_start))
         print("--------------------------------------")
 
