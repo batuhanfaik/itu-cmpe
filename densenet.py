@@ -142,7 +142,6 @@ class _Transition(nn.Sequential):
 class DenseNet(nn.Module):
     r"""Densenet-BC model class, based on
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_.
-
     Args:
         growth_rate (int) - how many filters to add each layer (`k` in paper)
         block_config (list of 4 ints) - how many layers in each pooling block
@@ -170,8 +169,7 @@ class DenseNet(nn.Module):
 
         # First convolution
         self.features = nn.Sequential(OrderedDict([
-            ('conv0', nn.Conv2d(3, num_init_features, kernel_size=7, stride=2,
-                                padding=3, bias=False)),
+            ('conv0', nn.Conv2d(1, num_init_features, kernel_size=7, stride=2, padding=3, bias=False)),
             ('norm0', nn.BatchNorm2d(num_init_features)),
             ('relu0', nn.ReLU(inplace=True)),
             ('pool0', nn.MaxPool2d(kernel_size=3, stride=2, padding=1)),
@@ -257,7 +255,6 @@ def _densenet(
 def densenet121(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> DenseNet:
     r"""Densenet-121 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_.
-
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
@@ -271,7 +268,6 @@ def densenet121(pretrained: bool = False, progress: bool = True, **kwargs: Any) 
 def densenet161(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> DenseNet:
     r"""Densenet-161 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_.
-
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
@@ -285,7 +281,6 @@ def densenet161(pretrained: bool = False, progress: bool = True, **kwargs: Any) 
 def densenet169(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> DenseNet:
     r"""Densenet-169 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_.
-
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
@@ -299,7 +294,6 @@ def densenet169(pretrained: bool = False, progress: bool = True, **kwargs: Any) 
 def densenet201(pretrained: bool = False, progress: bool = True, **kwargs: Any) -> DenseNet:
     r"""Densenet-201 model from
     `"Densely Connected Convolutional Networks" <https://arxiv.org/pdf/1608.06993.pdf>`_.
-
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
