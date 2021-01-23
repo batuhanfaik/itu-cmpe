@@ -11,8 +11,8 @@ np.random.seed(1773)
 
 
 def load_input_img(filepath):
-    img = Image.open(filepath).convert('RGB')
-    # img = Image.open(filepath).convert('LA')
+    #img = Image.open(filepath).convert('RGB')
+    img = Image.open(filepath).convert('L')
     return img
 
 
@@ -43,24 +43,24 @@ class DataReader(torch.utils.data.Dataset):
                 transforms.Resize(size=(224, 224), interpolation=Image.BILINEAR),
                 transforms.RandomPerspective(distortion_scale=0.1, interpolation=Image.BILINEAR),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=(0.5, 0.5, 0.5),
-                                     std=(0.5, 0.5, 0.5))
+                #transforms.Normalize(mean=(0.5, 0.5, 0.5),
+                                     #std=(0.5, 0.5, 0.5))
             ])
         # TODO
         elif mode == 'val':
             self.input_transform = transforms.Compose([
                 transforms.Resize(size=(224, 224), interpolation=Image.BILINEAR),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=(0.5, 0.5, 0.5),
-                                     std=(0.5, 0.5, 0.5))
+                #transforms.Normalize(mean=(0.5, 0.5, 0.5),
+                                     #std=(0.5, 0.5, 0.5))
             ])
         # TODO
         elif mode == 'test':
             self.input_transform = transforms.Compose([
                 transforms.Resize(size=(224, 224), interpolation=Image.BILINEAR),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=(0.5, 0.5, 0.5),
-                                     std=(0.5, 0.5, 0.5))
+                #transforms.Normalize(mean=(0.5, 0.5, 0.5),
+                                     #std=(0.5, 0.5, 0.5))
             ])
 
         if mode == 'train':
