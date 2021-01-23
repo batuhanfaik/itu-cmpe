@@ -11,6 +11,7 @@ np.random.seed(1773)
 
 def load_input_img(filepath):
 	img = Image.open(filepath).convert('RGB')
+	#img = Image.open(filepath).convert('LA')
 	return img
 
 class DataReader(torch.utils.data.Dataset):
@@ -37,7 +38,7 @@ class DataReader(torch.utils.data.Dataset):
 
 		if mode == 'train':
 			self.input_transform = transforms.Compose([
-				transforms.RandomHorizontalFlip(),
+				#transforms.RandomHorizontalFlip(),
 				transforms.Resize(size=(224, 224), interpolation=Image.BILINEAR),
 				transforms.RandomPerspective(distortion_scale = 0.1, interpolation=Image.BILINEAR),
 				transforms.ToTensor(),
@@ -111,7 +112,8 @@ class DataReader(torch.utils.data.Dataset):
 					
 		elif mode == 'val':
 
-			val_input_folder = os.listdir("train")
+			#val_input_folder = os.listdir("train")
+			val_input_folder = df['X_ray_image_name']
 			val_input_folder = sorted(val_input_folder)
 
 			normal_counter = 0
@@ -145,7 +147,8 @@ class DataReader(torch.utils.data.Dataset):
 							self.input_label.append(1)
 					
 		elif mode == 'test':
-			test_input_folder = os.listdir("test")
+			#test_input_folder = os.listdir("test")
+			test_input_folder = df['X_ray_image_name']
 			test_input_folder = sorted(test_input_folder)
 
 			normal_counter = 0
