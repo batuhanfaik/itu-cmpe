@@ -14,7 +14,7 @@ import torch.optim as optim
 from torchvision import datasets, models, transforms
 from collections import OrderedDict
 from sklearn.metrics import confusion_matrix
-
+from densenet import densenet121
 
 def conf_matrix(cmat):
     arr = cmat.copy()
@@ -140,7 +140,10 @@ for i in range(len(all_python_files)):
 num_classes = 5
 num_epochs = 100
 
-model = torch.hub.load('pytorch/vision:v0.6.0', 'densenet121', pretrained=True)
+#model = torch.hub.load('pytorch/vision:v0.6.0', 'densenet121', pretrained=True)
+
+model = densenet121(pretrained=False)
+#model = a.densenet121()
 num_features_dense = model.classifier.in_features
 
 if multi_class == True:
