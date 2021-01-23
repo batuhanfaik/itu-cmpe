@@ -39,6 +39,7 @@ class DataReader(torch.utils.data.Dataset):
 			self.input_transform = transforms.Compose([
 				transforms.RandomHorizontalFlip(),
 				transforms.Resize(size=(224, 224), interpolation=Image.BILINEAR),
+				transforms.RandomPerspective(distortion_scale = 0.1, interpolation=Image.BILINEAR),
 				transforms.ToTensor(),
 				transforms.Normalize(mean=(0.5, 0.5, 0.5),
 									 std=(0.5, 0.5, 0.5))
@@ -63,7 +64,8 @@ class DataReader(torch.utils.data.Dataset):
 
 		if mode == 'train':
 					
-			train_input_folder = os.listdir("train")
+			#train_input_folder = os.listdir("train")
+			train_input_folder = df['X_ray_image_name']
 			train_input_folder = sorted(train_input_folder)
 			
 			normal_counter = 0
