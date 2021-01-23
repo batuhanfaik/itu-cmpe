@@ -3,7 +3,6 @@ import dlib
 import cv2
 import pyautogui
 import time
-import matplotlib.pyplot as plt
 
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor('/Users/ata/Desktop/vision/BLG453/term project/part2/shape_predictor_68_face_landmarks.dat')
@@ -51,18 +50,8 @@ def empty_check(direction):
     val = im[y,x]
 
     return False if (val > 230 )^( val <50) else True
-time.sleep(3)
-# move('D',step=1,s=0.18)
-# move('W')
-# move('W')
-# move('D')
-# move('W')
-# move('D')
 
 
-# im = pyautogui.screenshot(region=(823,165, 270, 270))#face coord
-# plt.imshow(im)
-# plt.show()
 def revert_direction(direction):
     if direction == 'A':
         return 'D'
@@ -72,9 +61,9 @@ def revert_direction(direction):
         return 'S'
     else :
         return 'W'
-def check_move(direction):
+def check_move(direction,grid,ind):
     move(direction, step=1, s=0.17)
-    time.sleep(0.1)
+    time.sleep(0.5)
     face = face_detect()
     time.sleep(0.1)
     empty = empty_check(direction)
@@ -91,45 +80,47 @@ def check_move(direction):
         r = revert_direction(direction)
         move(r, step=1, s=0.17)
         time.sleep(0.5)
+        grid[ind[0],ind[1]]=2
         return False
 
 time.sleep(2)
-grid = np.zeros((100,100))
+grid = np.zeros((100,100))# 1 for seen 2 for blocked
 ind = [50,50]#x y
-grid[ind]= 1
+grid[50,50]= 1
+stack = []
 while True :
     prev_ind = ind
-    if grid[ind[0],ind[1]+1]==0 and check_move('W'):
+    if grid[ind[0],ind[1]+1]==0 and check_move('W',grid,[ind[0],ind[1]+1]):
+        stack.append(ind)
         ind[1] += 1
-        grid[ind] = 1
-    elif grid[ind[0]+1,ind[1]]==0 and check_move('D'):
+        grid[ind[0],ind[1]] = 1
+    elif grid[ind[0]+1,ind[1]]==0 and check_move('D',grid,[ind[0]+1,ind[1]]):
+        stack.append(ind)
         ind[0] += 1
-        grid[ind] = 1
-
-    elif grid[ind[0]-1,ind[1]]==0 and check_move('A'):
+        grid[ind[0],ind[1]] = 1
+    elif grid[ind[0]-1,ind[1]]==0 and check_move('A',grid,[ind[0]-1,ind[1]]):
         ind[0] -= 1
-        grid[ind] = 1
-
-    elif grid[ind[0],ind[1]-1]==0 and check_move('S'):
+        grid[ind[0],ind[1]] = 1
+        stack.append(ind)
+    elif grid[ind[0],ind[1]-1]==0 and check_move('S',grid,[ind[0],ind[1]-1]):
         ind[1] -= 1
-        grid[ind] = 1
-
-    if [ind[0],ind[1]+1]== prev_ind and check_move('W'):
+        grid[ind[0],ind[1]] = 1
+        stack.append(ind)
+    elif [ind[0],ind[1]+1]== [stack[-1][0],stack[-1][1]] and check_move('W',grid,[ind[0],ind[1]+1]):
+        grid[ind[0],ind[1]] = 2
+        stack.pop()
         ind[1] += 1
-        grid[ind] = 1
-        grid[prev_ind]= 0
-    elif grid[ind[0]+1,ind[1]]==0 and check_move('D'):
+    elif [ind[0]+1,ind[1]]==[stack[-1][0],stack[-1][1]] and check_move('D',grid,[ind[0]+1,ind[1]]):
+        grid[ind[0],ind[1]] = 2
+        stack.pop()
         ind[0] += 1
-        grid[ind] = 1
-        grid[prev_ind] = 0
-    elif grid[ind[0]-1,ind[1]]==0 and check_move('A'):
+    elif [ind[0]-1,ind[1]]==[stack[-1][0],stack[-1][1]] and check_move('A',grid,[ind[0]-1,ind[1]]):
+        grid[ind[0],ind[1]] = 2
+        stack.pop()
         ind[0] -= 1
-        grid[ind] = 1
-        grid[prev_ind] = 0
-    elif grid[ind[0],ind[1]-1]==0 and check_move('S'):
+    elif [ind[0],ind[1]-1]==[stack[-1][0],stack[-1][1]] and check_move('S',grid,[ind[0],ind[1]-1]):
+        grid[ind[0],ind[1]] = 2
+        stack.pop()
         ind[1] -= 1
-        grid[ind] = 1
-        grid[prev_ind] = 0
-# direction = 'W'
-# move1(direction, step=270, s=0.15)
-# # move(direction, step=1, s=0.57)WwwWWWWWWWwwwwwWW
+
+#TODO 1. MERKEZI KALIBRE ET 2. BITIS NOKTASI ATA
