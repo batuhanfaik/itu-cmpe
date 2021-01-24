@@ -5,19 +5,36 @@ from PIL import Image
 from torchvision import transforms
 import numpy as np
 import random
+import cv2
+from skimage import exposure
 import pandas as pd
 
 np.random.seed(1773)
 
 
-def load_input_img(filepath):
-    #img = Image.open(filepath).convert('RGB')
-    img = Image.open(filepath).convert('L')
+def load_input_img(filepath, crx_norm):
+    # Apply CRX normalization
+    if crx_norm:
+        # Read grayscale
+        img = cv2.imread(filepath, cv2.IMREAD_GRAYSCALE)
+        # Adaptive Histogram Equalization
+        clahe = cv2.createCLAHE(clipLimit=crx_norm["clip_limit"], tileGridSize=crx_norm["tile_grid_size"])
+        img = clahe.apply(img)
+        # Median Filtering
+        img = cv2.medianBlur(img, crx_norm["median_filter_size"])
+        # Contrast Stretching
+        lower_percentile = np.percentile(img, crx_norm["percentiles"][0])
+        upper_percentile = np.percentile(img, crx_norm["percentiles"][1])
+        img = exposure.rescale_intensity(img, in_range=(lower_percentile, upper_percentile))
+        # Back to PIL
+        img = Image.fromarray(img)
+    else:
+        img = Image.open(filepath).convert('L')
     return img
 
 
 class DataReader(torch.utils.data.Dataset):
-    def __init__(self, mode, path, oversample, multi_class, dataset_path=None):
+    def __init__(self, mode, path, oversample, multi_class, dataset_path=None, crx_norm=None):
         super(DataReader, self).__init__()
 
         self.input_img_paths = []
@@ -25,6 +42,7 @@ class DataReader(torch.utils.data.Dataset):
         self.mode = mode
         self.multi_class = multi_class
         self.dataset_path = dataset_path
+        self.crx_norm = crx_norm
 
         df = pd.read_csv(path)
         df = df.fillna(0)
@@ -124,6 +142,8 @@ class DataReader(torch.utils.data.Dataset):
             for i in range(len(val_input_folder)):
                 if self.dataset_type[val_input_folder[i]] == "VAL":
                     temp_path = "train/" + val_input_folder[i]  # input image's path
+                    if self.dataset_path:
+                        temp_path = os.path.join(self.dataset_path, temp_path)
                     self.input_img_paths.append(temp_path)
 
                     if multi_class == True:
@@ -159,6 +179,8 @@ class DataReader(torch.utils.data.Dataset):
             for i in range(len(test_input_folder)):
                 if self.dataset_type[test_input_folder[i]] == "TEST":
                     temp_path = "test/" + test_input_folder[i]  # input image's path
+                    if self.dataset_path:
+                        temp_path = os.path.join(self.dataset_path, temp_path)
                     self.input_img_paths.append(temp_path)
 
                     if multi_class == True:
@@ -185,7 +207,7 @@ class DataReader(torch.utils.data.Dataset):
 
     def __getitem__(self, index):
         if self.mode == 'train':
-            img = load_input_img(self.input_img_paths[index])
+            img = load_input_img(self.input_img_paths[index], self.crx_norm)
             label = self.input_label[index]
 
             img = self.input_transform(img)
@@ -195,7 +217,7 @@ class DataReader(torch.utils.data.Dataset):
             return data
 
         elif self.mode == 'val':
-            img = load_input_img(self.input_img_paths[index])
+            img = load_input_img(self.input_img_paths[index], self.crx_norm)
             label = self.input_label[index]
 
             img = self.input_transform(img)
@@ -205,7 +227,7 @@ class DataReader(torch.utils.data.Dataset):
             return data
 
         elif self.mode == 'test':
-            img = load_input_img(self.input_img_paths[index])
+            img = load_input_img(self.input_img_paths[index], self.crx_norm)
             label = self.input_label[index]
 
             img = self.input_transform(img)

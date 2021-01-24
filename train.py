@@ -16,6 +16,7 @@ from collections import OrderedDict
 from sklearn.metrics import confusion_matrix
 from densenet import densenet121
 
+
 def conf_matrix(cmat):
     arr = cmat.copy()
     tp = 0.0
@@ -88,8 +89,8 @@ def get_lr(optimizer):
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-BATCH_SIZE = 32
-numworkers = 1
+BATCH_SIZE = 64
+num_workers = 1
 
 '''
 multi class classificaiton:
@@ -109,6 +110,17 @@ binary classificaiton:
 
 '''
 #####################################################
+# CRX Normalization parameters
+#####################################################
+crx_norm = {
+    "clip_limit": 3.0,
+    "tile_grid_size": (10, 10),
+    "median_filter_size": 5,
+    "percentiles": (2, 98)
+}
+#####################################################
+
+#####################################################
 multi_to_multi = True
 multi_class = True
 
@@ -119,14 +131,14 @@ split_path = "splits/split_0.8-0.2.csv"
 
 train_loader = torch.utils.data.DataLoader(
     DataReader(mode='train', path=split_path, dataset_path=dataset_path, oversample=oversample,
-               multi_class=multi_class), batch_size=BATCH_SIZE, shuffle=True,
-    num_workers=numworkers)
+               multi_class=multi_class, crx_norm=crx_norm), batch_size=BATCH_SIZE, shuffle=True,
+    num_workers=num_workers)
 
 val_loader = torch.utils.data.DataLoader(
     DataReader(mode='val', path=split_path, dataset_path=dataset_path, oversample=oversample,
-               multi_class=multi_class),
+               multi_class=multi_class, crx_norm=crx_norm),
     batch_size=BATCH_SIZE, shuffle=True,
-    num_workers=numworkers)
+    num_workers=num_workers)
 
 experiment_name = prepare_experiment()
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
@@ -140,10 +152,10 @@ for i in range(len(all_python_files)):
 num_classes = 5
 num_epochs = 100
 
-#model = torch.hub.load('pytorch/vision:v0.6.0', 'densenet121', pretrained=True)
+# model = torch.hub.load('pytorch/vision:v0.6.0', 'densenet121', pretrained=True)
 
 model = densenet121(pretrained=False)
-#model = a.densenet121()
+# model = a.densenet121()
 num_features_dense = model.classifier.in_features
 
 if multi_class == True:
