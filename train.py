@@ -26,13 +26,13 @@ def conf_matrix(cmat):
     for i in range(arr.shape[0]):
         tp += arr[i, i]
         tn += arr.sum() - arr[:, i].sum() - arr[i, :].sum() + arr[i, i]
-        fp += arr[i, :].sum() - arr[i, i]
-        fn += arr[:, i].sum() - arr[i, i]
+        fn += arr[i, :].sum() - arr[i, i]
+        fp += arr[:, i].sum() - arr[i, i]
 
     return tn, fp, fn, tp
 
 
-def save_res(epoch_id, total_loss, loader_len, acc, time_start, res_name, mode):
+def save_res(epoch_id, total_loss, loader_len, acc, sens, spec, time_start, res_name, mode):
     with open(res_name, "a") as f:
         f.write(mode)
         f.write(": ")
@@ -52,6 +52,14 @@ def save_res(epoch_id, total_loss, loader_len, acc, time_start, res_name, mode):
         f.write("Acc: ")
         f.write(str(acc))
         f.write("\n")
+
+        f.write("Sensitivity: ")
+        f.write(str(sens))
+        f.write("\n")    
+
+        f.write("Specificity: ")
+        f.write(str(spec))
+        f.write("\n")            
 
         f.write("Time (s): ")
         f.write(str(time.time() - time_start))
@@ -94,20 +102,14 @@ num_workers = 1
 
 '''
 multi class classificaiton:
-
     multi_to_multi = True
     multi_class = True
-
 multi  to binary classificaiton:
-
     multi_to_multi = False
     multi_class = True
-
 binary classificaiton:
-
     multi_to_multi = False
     multi_class = False
-
 '''
 #####################################################
 # CRX Normalization parameters
@@ -121,22 +123,22 @@ crx_norm = {
 #####################################################
 
 #####################################################
-multi_to_multi = True
+multi_to_multi = False
 multi_class = True
 
-oversample = True
+oversample = False
 #####################################################
 dataset_path = "/mnt/sdb1/datasets/Coronahack-Chest-XRay-Dataset/Coronahack-Chest-XRay-Dataset"
 split_path = "splits/split_0.8-0.2.csv"
 
 train_loader = torch.utils.data.DataLoader(
-    DataReader(mode='train', path=split_path, dataset_path=dataset_path, oversample=oversample,
-               multi_class=multi_class, crx_norm=crx_norm), batch_size=BATCH_SIZE, shuffle=True,
+    DataReader(mode='train', path=split_path, dataset_path=None, oversample=oversample,
+               multi_class=multi_class, crx_norm=None), batch_size=BATCH_SIZE, shuffle=True,
     num_workers=num_workers)
 
 val_loader = torch.utils.data.DataLoader(
-    DataReader(mode='val', path=split_path, dataset_path=dataset_path, oversample=oversample,
-               multi_class=multi_class, crx_norm=crx_norm),
+    DataReader(mode='val', path=split_path, dataset_path=None, oversample=oversample,
+               multi_class=multi_class, crx_norm=None),
     batch_size=BATCH_SIZE, shuffle=True,
     num_workers=num_workers)
 
@@ -152,10 +154,7 @@ for i in range(len(all_python_files)):
 num_classes = 5
 num_epochs = 100
 
-# model = torch.hub.load('pytorch/vision:v0.6.0', 'densenet121', pretrained=True)
-
 model = densenet121(pretrained=False)
-# model = a.densenet121()
 num_features_dense = model.classifier.in_features
 
 if multi_class == True:
@@ -189,6 +188,10 @@ for epoch_id in range(1, num_epochs + 1):
     total_loss = 0
     total_true = 0
     total_false = 0
+    total_tn = 0
+    total_fp = 0
+    total_fn = 0
+    total_tp = 0
     time_start = time.time()
 
     for i, data in enumerate(train_loader):
@@ -209,20 +212,32 @@ for epoch_id in range(1, num_epochs + 1):
         if multi_class == True:
             _, prediction = torch.max(output.data, 1)
             loss_value = loss(output, img_class)
+            arr = confusion_matrix(img_class.cpu().numpy(), prediction.cpu().numpy(), labels=[0, 1, 2, 3])
+            tn, fp, fn, tp = conf_matrix(arr)
+
+            total_tn += tn
+            total_fp += fp
+            total_fn += fn
+            total_tp += tp            
         else:
             temp_output = output.clone()
             temp_output[temp_output > 0.5] = 1
             temp_output[temp_output <= 0.5] = 0
             prediction = temp_output.clone()
             loss_value = loss(output, img_class.unsqueeze(1))  # if multiclass false
+            tn, fp, fn, tp = confusion_matrix(img_class.cpu().numpy(), prediction.cpu().numpy()).ravel()
+            total_tn += tn
+            total_fp += fp
+            total_fn += fn
+            total_tp += tp
 
         # loss_value = loss(output, img_class.unsqueeze(1))#if multiclass false
         loss_value.backward()
         optimizer.step()
 
         total_loss += loss_value.data
-        total_true += torch.sum(prediction == img_class.data)
-        total_false += torch.sum(prediction != img_class.data)
+        #total_true += torch.sum(prediction == img_class.data)
+        #total_false += torch.sum(prediction != img_class.data)
 
         if (i + 1) % 100 == 0:
             print("Pre-report Epoch:", epoch_id)
@@ -230,21 +245,26 @@ for epoch_id in range(1, num_epochs + 1):
             print("Status -> %d / %d" % (i + 1, len(train_loader)))
             print("************************************")
 
-    acc = total_true.item() * 1.0 / (total_true.item() + total_false.item())
-
+    #acc = total_true.item() * 1.0 / (total_true.item() + total_false.item())
+    temp_acc = (total_tp + total_tn) / (total_tp + total_tn + total_fp + total_fn)
+    sens = (total_tp / (total_tp + total_fn))
+    spec = (total_tn / (total_tn + total_fp))
     print("Train:", datetime.datetime.now())
     print("Epoch %d scores:" % epoch_id)
     print("Loss: %f" % (total_loss / len(train_loader)))
-    print("Accuracy: %f" % acc)
+    #print("Accuracy: %f" % acc)
+    print("Accuracy %f" % temp_acc)
+    print("Sensitivity %f" % sens)
+    print("Specificity %f" % spec)    
     print("LR: %f" % get_lr(optimizer))
     print("Time (s): " + str(time.time() - time_start))
     print("--------------------------------------")
 
     # all_tr_losses[epoch_id] = total_loss.cpu()
     all_tr_losses[epoch_id] = total_loss / len(train_loader)
-    all_tr_accuracies[epoch_id] = acc
+    all_tr_accuracies[epoch_id] = temp_acc
 
-    save_res(epoch_id, total_loss, len(train_loader), acc, time_start, res_name, "train")
+    save_res(epoch_id, total_loss, len(train_loader), temp_acc, sens, spec, time_start, res_name, "train")
 
     with torch.no_grad():
 
@@ -277,9 +297,7 @@ for epoch_id in range(1, num_epochs + 1):
             if multi_to_multi == True:
                 _, prediction = torch.max(output.data, 1)
                 val_loss = loss(output, img_class)
-                arr = confusion_matrix(prediction.cpu().numpy(), img_class.cpu().numpy(),
-                                       labels=[0, 1, 2, 3])
-
+                arr = confusion_matrix(img_class.cpu().numpy(), prediction.cpu().numpy(), labels=[0, 1, 2, 3])
                 tn, fp, fn, tp = conf_matrix(arr)
 
                 total_tn += tn
@@ -299,13 +317,9 @@ for epoch_id in range(1, num_epochs + 1):
                 # new_output[new_output <= 0.5] = 0
                 # prediction = new_output.clone()
                 _, prediction = torch.max(new_output.data, 1)
-                # _, prediction = torch.max(new_output.data, 1)
-                # val_loss = loss(new_output, img_class)
                 val_loss = loss(new_output, img_class)
 
-                # tn, fp, fn, tp = confusion_matrix(y_true,y_pred).ravel
-                tn, fp, fn, tp = confusion_matrix(prediction.cpu().numpy(),
-                                                  img_class.cpu().numpy()).ravel()
+                tn, fp, fn, tp = confusion_matrix(img_class.cpu().numpy(), prediction.cpu().numpy()).ravel()
                 total_tn += tn
                 total_fp += fp
                 total_fn += fn
@@ -317,8 +331,7 @@ for epoch_id in range(1, num_epochs + 1):
                 temp_output[temp_output <= 0.5] = 0
                 prediction = temp_output.clone()
                 val_loss = loss(output, img_class.unsqueeze(1))  # if multiclass false
-                tn, fp, fn, tp = confusion_matrix(prediction.cpu().numpy(),
-                                                  img_class.cpu().numpy()).ravel()
+                tn, fp, fn, tp = confusion_matrix(img_class.cpu().numpy(), prediction.cpu().numpy()).ravel()
                 total_tn += tn
                 total_fp += fp
                 total_fn += fn
@@ -327,33 +340,34 @@ for epoch_id in range(1, num_epochs + 1):
             # val_loss = loss(output, img_class))#if multiclass false
             val_losses += val_loss
             total_loss += val_loss.data
-            total_true += torch.sum(prediction == img_class.data)
-            total_false += torch.sum(prediction != img_class.data)
+            #total_true += torch.sum(prediction == img_class.data)
+            #total_false += torch.sum(prediction != img_class.data)
 
-        acc = total_true.item() * 1.0 / (total_true.item() + total_false.item())
-        if acc > 0.65:
+        #acc = total_true.item() * 1.0 / (total_true.item() + total_false.item())
+        temp_acc = (total_tp + total_tn) / (total_tp + total_tn + total_fp + total_fn)
+        sens = (total_tp / (total_tp + total_fn))
+        spec = (total_tn / (total_tn + total_fp))
+        if temp_acc > 0.65:
             model_path = experiment_name + "/models/model_epoch_" + str(epoch_id) + '.pt'
             torch.save(model, model_path)
         print("Test:", datetime.datetime.now())
         print("Val %d scores:" % epoch_id)
         print("Loss %f" % (total_loss / len(val_loader)))
         # print("Accuracy %f" % acc)
-
-        temp_acc = (total_tp + total_tn) / (total_tp + total_tn + total_fp + total_fn)
         print("Accuracy %f" % temp_acc)
 
-        print("Sensitivity %f" % (total_tp / (total_tp + total_fn)))
-        print("Specificity %f" % (total_tn / (total_tn + total_fp)))
+        print("Sensitivity %f" % sens)
+        print("Specificity %f" % spec)
         print("Time (s): " + str(time.time() - time_start))
         print("--------------------------------------")
 
         # all_test_losses[epoch_id] = total_loss.cpu()
         all_test_losses[epoch_id] = total_loss / len(val_loader)
-        all_test_accuracies[epoch_id] = acc
+        all_test_accuracies[epoch_id] = temp_acc
 
     scheduler.step(val_losses / len(val_loader))
 
-    save_res(epoch_id, total_loss, len(val_loader), acc, time_start, res_name, "val")
+    save_res(epoch_id, total_loss, len(val_loader), temp_acc, sens, spec, time_start, res_name, "val")
 
     training_loss = all_tr_losses.numpy()
     training_loss = np.reshape(training_loss, (training_loss.shape[1] * training_loss.shape[0], -1))
@@ -370,6 +384,7 @@ for epoch_id in range(1, num_epochs + 1):
     plt.ylabel('Loss')
     plt.xlabel('# Epochs')
     plt.legend()
+    plt.grid(True)
     fig_path = experiment_name + "/graphs/train_val_loss_epoch_" + str(epoch_id) + '.png'
     plt.savefig(fig_path)
     plt.clf()
