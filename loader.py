@@ -151,7 +151,7 @@ class DataReader(torch.utils.data.Dataset):
                     if self.dataset_path:
                         temp_path = os.path.join(self.dataset_path, temp_path)
                     
-                    if multi_class == True and self.label_1[train_input_folder[i]] != "Stress-Smoking":
+                    if multi_class == True and self.label_1[val_input_folder[i]] != "Stress-Smoking":
                         self.input_img_paths.append(temp_path)
                     elif multi_class == False:
                         self.input_img_paths.append(temp_path)
