@@ -3,7 +3,7 @@
 # @ Date: 12-Dec-2020
 # @ AUTHOR: batuhanfaik
 # @ Copyright (C) 2020 Batuhan Faik Derinbay
-# @ Project: hw3
+# @ Project: VisionProject
 # @ Description: exceptions defined within the project
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 

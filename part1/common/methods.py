@@ -3,7 +3,7 @@
 # @ Date: 12-Dec-2020
 # @ AUTHOR: batuhanfaik
 # @ Copyright (C) 2020 Batuhan Faik Derinbay
-# @ Project: hw3
+# @ Project: VisionProject
 # @ Description: Useful static methods
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -77,22 +77,23 @@ def go_to_page(page_name, mode=0):
     part1_coords = (int(game_size[0] * 0.5), int(game_size[1] * 0.5))    # width, height
     part2_coords = (int(game_size[0] * 0.5), int(game_size[1] * 0.65))    # width, height
 
-    if page_name == "part1":
+    if page_name == "Part 1":
         button = part1_coords
-    elif page_name == "part2":
+    elif page_name == "Part 2":
         button = part2_coords
     else:
         raise Exception("Button is not valid")
 
     pyautogui.click(button)
-    time.sleep(0.25)  # Wait until shapes appear
+    time.sleep(0.4)  # Wait until shapes appear
 
     return game_region
 
 
 def back_to_original_state():
-    game_size = get_resolution()
-    back_coords = (int(game_size[0] * 0.97), int(game_size[1] * 0.95))
-    pyautogui.click(back_coords)
+    # game_size = get_resolution()
+    # back_coords = (int(game_size[0] * 0.97), int(game_size[1] * 0.95))
+    # pyautogui.click(back_coords)
     pyautogui.press("esc")
+    time.sleep(0.4)
     pyautogui.press("esc")
