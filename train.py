@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import torch.optim as optim
 from torchvision import datasets, models, transforms
 from collections import OrderedDict
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, classification_report
 from densenet import densenet121
 
 
@@ -32,7 +32,7 @@ def conf_matrix(cmat):
     return tn, fp, fn, tp
 
 
-def save_res(epoch_id, total_loss, loader_len, acc, sens, spec, time_start, res_name, mode):
+def save_res(epoch_id, total_loss, loader_len, report, time_start, res_name, mode, multi_class, multi_to_multi):
     with open(res_name, "a") as f:
         f.write(mode)
         f.write(": ")
@@ -40,7 +40,6 @@ def save_res(epoch_id, total_loss, loader_len, acc, sens, spec, time_start, res_
         f.write("\n")
 
         f.write("Epoch ")
-        # f.write(str(i))
         f.write(" scores: ")
         f.write(str(epoch_id))
         f.write("\n")
@@ -48,19 +47,9 @@ def save_res(epoch_id, total_loss, loader_len, acc, sens, spec, time_start, res_
         f.write("Loss: ")
         f.write(str((total_loss / loader_len)))
         f.write("\n")
-
-        f.write("Acc: ")
-        f.write(str(acc))
         f.write("\n")
-
-        f.write("Sensitivity: ")
-        f.write(str(sens))
-        f.write("\n")    
-
-        f.write("Specificity: ")
-        f.write(str(spec))
-        f.write("\n")            
-
+        f.write(report)
+        f.write("\n")
         f.write("Time (s): ")
         f.write(str(time.time() - time_start))
         f.write("\n")
@@ -123,7 +112,7 @@ crx_norm = {
 #####################################################
 
 #####################################################
-multi_to_multi = False
+multi_to_multi = True
 multi_class = True
 
 oversample = False
@@ -139,10 +128,10 @@ train_loader = torch.utils.data.DataLoader(
 val_loader = torch.utils.data.DataLoader(
     DataReader(mode='val', path=split_path, dataset_path=None, oversample=oversample,
                multi_class=multi_class, crx_norm=None),
-    batch_size=BATCH_SIZE, shuffle=True,
+    batch_size=BATCH_SIZE, shuffle=False,
     num_workers=num_workers)
 
-experiment_name = prepare_experiment()
+experiment_name = prepare_experiment(experiment_name="multi_testing")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
@@ -152,13 +141,13 @@ for i in range(len(all_python_files)):
         os.system('cp ' + all_python_files[i] + ' ' + experiment_name + '/code/')
 
 num_classes = 5
-num_epochs = 100
+num_epochs = 50
 
 model = densenet121(pretrained=False)
 num_features_dense = model.classifier.in_features
 
 if multi_class == True:
-    model.classifier = nn.Linear(num_features_dense, 4)
+    model.classifier = nn.Linear(num_features_dense, 3)
 else:
     model.classifier = nn.Linear(num_features_dense, 1)
 
@@ -177,29 +166,25 @@ if multi_class == True:
 else:
     loss = torch.nn.BCEWithLogitsLoss().to(device)
 
+
 all_tr_losses = torch.zeros(num_epochs, 1)
-all_tr_accuracies = np.zeros((num_epochs, 1))
 all_test_losses = torch.zeros(num_epochs, 1)
-all_test_accuracies = np.zeros((num_epochs, 1))
+
 
 for epoch_id in range(1, num_epochs + 1):
     model.train()
 
     total_loss = 0
-    total_true = 0
-    total_false = 0
-    total_tn = 0
-    total_fp = 0
-    total_fn = 0
-    total_tp = 0
+    y_true = None
+    y_pred = None
     time_start = time.time()
 
     for i, data in enumerate(train_loader):
         img = data['image']
         img_class = data['label']
-        img = torch.Tensor(img.float())
+        img = img.float()
         if multi_class == False:
-            img_class = torch.Tensor(img_class.float())
+            img_class = img_class.float()
 
         img = img.to(device)
         img.requires_grad = True
@@ -210,164 +195,147 @@ for epoch_id in range(1, num_epochs + 1):
 
         output = model(img)
         if multi_class == True:
-            _, prediction = torch.max(output.data, 1)
             loss_value = loss(output, img_class)
-            arr = confusion_matrix(img_class.cpu().numpy(), prediction.cpu().numpy(), labels=[0, 1, 2, 3])
-            tn, fp, fn, tp = conf_matrix(arr)
-
-            total_tn += tn
-            total_fp += fp
-            total_fn += fn
-            total_tp += tp            
+            prediction = torch.argmax(output.data, 1)
+            
         else:
-            temp_output = output.clone()
-            temp_output[temp_output > 0.5] = 1
-            temp_output[temp_output <= 0.5] = 0
-            prediction = temp_output.clone()
-            loss_value = loss(output, img_class.unsqueeze(1))  # if multiclass false
-            tn, fp, fn, tp = confusion_matrix(img_class.cpu().numpy(), prediction.cpu().numpy()).ravel()
-            total_tn += tn
-            total_fp += fp
-            total_fn += fn
-            total_tp += tp
+            loss_value = loss(output, img_class.unsqueeze(1))#if multiclass false
+            res = torch.sigmoid(output)
+            img_class = img_class.int()
+            temp_output = res
+            temp_output = (temp_output > 0.5).int()
+            prediction = temp_output
 
-        # loss_value = loss(output, img_class.unsqueeze(1))#if multiclass false
+        if y_pred is None:
+            y_pred = prediction.cpu().numpy().flatten()
+        else:
+            y_pred = np.concatenate([y_pred, prediction.cpu().numpy().flatten()])
+        
+        if y_true is None:
+            y_true = img_class.cpu().numpy().flatten()
+        else:
+            y_true = np.concatenate([y_true, img_class.cpu().numpy().flatten()])   
+
         loss_value.backward()
         optimizer.step()
 
         total_loss += loss_value.data
-        #total_true += torch.sum(prediction == img_class.data)
-        #total_false += torch.sum(prediction != img_class.data)
-
+        
         if (i + 1) % 100 == 0:
             print("Pre-report Epoch:", epoch_id)
             print("Loss: %f" % loss_value.data)
             print("Status -> %d / %d" % (i + 1, len(train_loader)))
             print("************************************")
-
-    #acc = total_true.item() * 1.0 / (total_true.item() + total_false.item())
-    temp_acc = (total_tp + total_tn) / (total_tp + total_tn + total_fp + total_fn)
-    sens = (total_tp / (total_tp + total_fn))
-    spec = (total_tn / (total_tn + total_fp))
+    
+    if multi_class == True:
+        report = classification_report(y_true, y_pred, labels = [0,1,2], output_dict=True)
+        report_to_print = classification_report(y_true, y_pred, labels = [0,1,2], output_dict=False)
+    else:
+        report = classification_report(y_true, y_pred, labels = [0,1], output_dict=False)
+        report_to_print = classification_report(y_true, y_pred, labels = [0,1], output_dict=False)
+    
     print("Train:", datetime.datetime.now())
     print("Epoch %d scores:" % epoch_id)
-    print("Loss: %f" % (total_loss / len(train_loader)))
-    #print("Accuracy: %f" % acc)
-    print("Accuracy %f" % temp_acc)
-    print("Sensitivity %f" % sens)
-    print("Specificity %f" % spec)    
+    print("Loss: %f" % (total_loss / len(train_loader))) 
+    print("Report: \n", report_to_print)
     print("LR: %f" % get_lr(optimizer))
     print("Time (s): " + str(time.time() - time_start))
     print("--------------------------------------")
 
     # all_tr_losses[epoch_id] = total_loss.cpu()
     all_tr_losses[epoch_id] = total_loss / len(train_loader)
-    all_tr_accuracies[epoch_id] = temp_acc
 
-    save_res(epoch_id, total_loss, len(train_loader), temp_acc, sens, spec, time_start, res_name, "train")
 
+    save_res(epoch_id, total_loss, len(train_loader), report_to_print, time_start, res_name, "train", multi_class, multi_to_multi)
+    
     with torch.no_grad():
 
         model.eval()
 
         val_losses = 0
         total_loss = 0
-        total_true = 0
-        total_false = 0
-        total_tn = 0
-        total_fp = 0
-        total_fn = 0
-        total_tp = 0
-        mtm_conf = []
+        y_true = None
+        y_pred = None
         time_start = time.time()
 
         for i, batch in enumerate(val_loader):
             img = batch['image']
             img_class = batch['label']
-            img = torch.Tensor(img.float())
+            img = img.float()
             img = img.to(device)
             if multi_class == False:
-                img_class = torch.Tensor(img_class.float())
-            img.requires_grad = False
-            # img_class = torch.Tensor(img_class.float())
+                img_class = img_class.float()
             img_class = img_class.to(device)
-            img_class.requires_grad = False
             output = model(img)
 
             if multi_to_multi == True:
-                _, prediction = torch.max(output.data, 1)
+                prediction = torch.argmax(output.data, 1)
                 val_loss = loss(output, img_class)
-                arr = confusion_matrix(img_class.cpu().numpy(), prediction.cpu().numpy(), labels=[0, 1, 2, 3])
-                tn, fp, fn, tp = conf_matrix(arr)
-
-                total_tn += tn
-                total_fp += fp
-                total_fn += fn
-                total_tp += tp
+                
             elif multi_class == True:  # multi to binary
+                
 
                 temp_list = []
                 temp_list = torch.cat([output[:, 0:1].sum(dim=1, keepdim=True),
-                                       output[:, 1:4].sum(dim=1, keepdim=True)], dim=1)
+                                       output[:, 1:3].sum(dim=1, keepdim=True)], dim=1)
                 new_output = temp_list
+                val_loss = loss(output, img_class)
+                res = torch.sigmoid(new_output)
 
+                #img_class = img_class.detach().cpu().numpy()
+                #img_class = img_class.flatten().astype(np.int)
                 img_class[img_class > 0] = 1
+                
 
-                # new_output[new_output > 0.5] = 1
-                # new_output[new_output <= 0.5] = 0
-                # prediction = new_output.clone()
-                _, prediction = torch.max(new_output.data, 1)
-                val_loss = loss(new_output, img_class)
-
-                tn, fp, fn, tp = confusion_matrix(img_class.cpu().numpy(), prediction.cpu().numpy()).ravel()
-                total_tn += tn
-                total_fp += fp
-                total_fn += fn
-                total_tp += tp
+                prediction = torch.argmax(new_output.data, 1)
+                
+                    
             else:  # binary
+                val_loss = loss(output, img_class.unsqueeze(1))
+                res = torch.sigmoid(output)
+                img_class = img_class.int()
+                temp_output = res
+                temp_output = (temp_output > 0.5).int()
+                prediction = temp_output
 
-                temp_output = output.clone()
-                temp_output[temp_output > 0.5] = 1
-                temp_output[temp_output <= 0.5] = 0
-                prediction = temp_output.clone()
-                val_loss = loss(output, img_class.unsqueeze(1))  # if multiclass false
-                tn, fp, fn, tp = confusion_matrix(img_class.cpu().numpy(), prediction.cpu().numpy()).ravel()
-                total_tn += tn
-                total_fp += fp
-                total_fn += fn
-                total_tp += tp
+            if y_pred is None:
+                y_pred = prediction.cpu().numpy().flatten()
+            else:
+                y_pred = np.concatenate([y_pred, prediction.cpu().numpy().flatten()])
+            
+            if y_true is None:
+                y_true = img_class.cpu().numpy().flatten()
+            else:
+                y_true = np.concatenate([y_true, img_class.cpu().numpy().flatten()])                   
 
-            # val_loss = loss(output, img_class))#if multiclass false
+
             val_losses += val_loss
             total_loss += val_loss.data
-            #total_true += torch.sum(prediction == img_class.data)
-            #total_false += torch.sum(prediction != img_class.data)
 
-        #acc = total_true.item() * 1.0 / (total_true.item() + total_false.item())
-        temp_acc = (total_tp + total_tn) / (total_tp + total_tn + total_fp + total_fn)
-        sens = (total_tp / (total_tp + total_fn))
-        spec = (total_tn / (total_tn + total_fp))
-        if temp_acc > 0.65:
-            model_path = experiment_name + "/models/model_epoch_" + str(epoch_id) + '.pt'
-            torch.save(model, model_path)
+        if multi_to_multi == True:
+            report = classification_report(y_true, y_pred, labels = [0,1,2], output_dict=True)
+            report_to_print = classification_report(y_true, y_pred, labels = [0,1,2], output_dict=False)
+        else:
+            report = classification_report(y_true, y_pred, labels = [0,1], output_dict=True)
+            report_to_print = classification_report(y_true, y_pred, labels = [0,1], output_dict=False)
+
+
+        model_path = experiment_name + "/models/model_epoch_" + str(epoch_id) + '.pt'
+        torch.save(model, model_path)            
+
         print("Test:", datetime.datetime.now())
         print("Val %d scores:" % epoch_id)
         print("Loss %f" % (total_loss / len(val_loader)))
-        # print("Accuracy %f" % acc)
-        print("Accuracy %f" % temp_acc)
-
-        print("Sensitivity %f" % sens)
-        print("Specificity %f" % spec)
+        print("Report:\n ", report_to_print)
         print("Time (s): " + str(time.time() - time_start))
         print("--------------------------------------")
 
         # all_test_losses[epoch_id] = total_loss.cpu()
         all_test_losses[epoch_id] = total_loss / len(val_loader)
-        all_test_accuracies[epoch_id] = temp_acc
 
     scheduler.step(val_losses / len(val_loader))
 
-    save_res(epoch_id, total_loss, len(val_loader), temp_acc, sens, spec, time_start, res_name, "val")
+    save_res(epoch_id, total_loss, len(train_loader), report_to_print, time_start, res_name, "train", multi_class, multi_to_multi)
 
     training_loss = all_tr_losses.numpy()
     training_loss = np.reshape(training_loss, (training_loss.shape[1] * training_loss.shape[0], -1))
