@@ -76,6 +76,7 @@ class DataReader(torch.utils.data.Dataset):
         elif mode == 'test':
             self.input_transform = transforms.Compose([
                 transforms.Resize(size=(224, 224), interpolation=Image.BILINEAR),
+                transforms.RandomPerspective(distortion_scale=0.1, interpolation=Image.BILINEAR),
                 transforms.ToTensor(),
                 #transforms.Normalize(mean=(0.5, 0.5, 0.5),
                                      #std=(0.5, 0.5, 0.5))
@@ -95,8 +96,12 @@ class DataReader(torch.utils.data.Dataset):
                     temp_path = "train/" + train_input_folder[i]  # input image's path
                     if self.dataset_path:
                         temp_path = os.path.join(self.dataset_path, temp_path)
-                    self.input_img_paths.append(temp_path)
-
+                    
+                    if multi_class == True and self.label_1[train_input_folder[i]] != "Stress-Smoking":
+                        self.input_img_paths.append(temp_path)
+                    elif multi_class == False:
+                        self.input_img_paths.append(temp_path)
+                    
                     if multi_class == True:
                         if self.label_1[train_input_folder[i]] == "Virus":
                             self.input_label.append(1)
@@ -105,8 +110,9 @@ class DataReader(torch.utils.data.Dataset):
                             self.input_label.append(2)
                             corona_counter += 1
                         elif self.label_1[train_input_folder[i]] == "Stress-Smoking":
-                            self.input_label.append(3)
-                            corona_counter += 1
+                            #self.input_label.append(3)
+                            #corona_counter += 1
+                            pass
                         else:
                             self.input_label.append(0)
                             self.healthy.append(temp_path)
@@ -144,7 +150,11 @@ class DataReader(torch.utils.data.Dataset):
                     temp_path = "train/" + val_input_folder[i]  # input image's path
                     if self.dataset_path:
                         temp_path = os.path.join(self.dataset_path, temp_path)
-                    self.input_img_paths.append(temp_path)
+                    
+                    if multi_class == True and self.label_1[train_input_folder[i]] != "Stress-Smoking":
+                        self.input_img_paths.append(temp_path)
+                    elif multi_class == False:
+                        self.input_img_paths.append(temp_path)
 
                     if multi_class == True:
                         if self.label_1[val_input_folder[i]] == "Virus":
@@ -154,8 +164,9 @@ class DataReader(torch.utils.data.Dataset):
                             self.input_label.append(2)
                             corona_counter += 1
                         elif self.label_1[val_input_folder[i]] == "Stress-Smoking":
-                            self.input_label.append(3)
-                            corona_counter += 1
+                            #self.input_label.append(3)
+                            #corona_counter += 1
+                            pass
                         else:
                             self.input_label.append(0)
                             self.healthy.append(temp_path)
@@ -164,7 +175,6 @@ class DataReader(torch.utils.data.Dataset):
                     else:
                         if self.label[val_input_folder[i]] == "Normal":
                             self.input_label.append(0)
-                            self.healthy.append(temp_path)
                         else:
                             self.input_label.append(1)
 
@@ -181,7 +191,10 @@ class DataReader(torch.utils.data.Dataset):
                     temp_path = "test/" + test_input_folder[i]  # input image's path
                     if self.dataset_path:
                         temp_path = os.path.join(self.dataset_path, temp_path)
-                    self.input_img_paths.append(temp_path)
+                    if multi_class == True and self.label_1[test_input_folder[i]] != "Stress-Smoking":
+                        self.input_img_paths.append(temp_path)
+                    elif multi_class == False:
+                        self.input_img_paths.append(temp_path)
 
                     if multi_class == True:
                         if self.label_1[test_input_folder[i]] == "Virus":
@@ -191,17 +204,16 @@ class DataReader(torch.utils.data.Dataset):
                             self.input_label.append(2)
                             corona_counter += 1
                         elif self.label_1[test_input_folder[i]] == "Stress-Smoking":
-                            self.input_label.append(3)
-                            corona_counter += 1
+                            #self.input_label.append(3)
+                            #corona_counter += 1
+                            pass
                         else:
                             self.input_label.append(0)
-                            self.healthy.append(temp_path)
                             normal_counter += 1
 
                     else:
                         if self.label[test_input_folder[i]] == "Normal":
                             self.input_label.append(0)
-                            self.healthy.append(temp_path)
                         else:
                             self.input_label.append(1)
 
