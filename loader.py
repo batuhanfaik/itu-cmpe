@@ -35,7 +35,7 @@ def load_input_img(filepath, crx_norm):
 
 
 class DataReader(torch.utils.data.Dataset):
-    def __init__(self, mode, path, oversample, multi_class, dataset_path=None, crx_norm=None):
+    def __init__(self, mode, path, oversample, multi_class, dataset_path=None, mean=123, std=57, crx_norm=None):
         super(DataReader, self).__init__()
 
         self.input_img_paths = []
@@ -54,17 +54,18 @@ class DataReader(torch.utils.data.Dataset):
         self.label_1 = df_to_dict['Label_1_Virus_category']
         self.label_2 = df_to_dict['Label_2_Virus_category']
 
+        self.mean = mean
+        self.std = std
+
         self.healthy = []
 
         if mode == 'train':
             self.input_transform = transforms.Compose([
-                # transforms.RandomHorizontalFlip(),
                 transforms.Resize(size=224, interpolation=Image.BILINEAR),
                 transforms.CenterCrop(size=(224, 224)),
                 transforms.RandomPerspective(distortion_scale=0.1, interpolation=Image.BILINEAR),
                 transforms.ToTensor(),
-                #transforms.Normalize(mean=(0.5, 0.5, 0.5),
-                                     #std=(0.5, 0.5, 0.5))
+                transforms.Normalize(mean=self.mean, std=self.std)
             ])
         # TODO
         elif mode == 'val':
@@ -72,8 +73,7 @@ class DataReader(torch.utils.data.Dataset):
                 transforms.Resize(size=224, interpolation=Image.BILINEAR),
                 transforms.CenterCrop(size=(224, 224)),
                 transforms.ToTensor(),
-                #transforms.Normalize(mean=(0.5, 0.5, 0.5),
-                                     #std=(0.5, 0.5, 0.5))
+                transforms.Normalize(mean=self.mean, std=self.std)
             ])
         # TODO
         elif mode == 'test':
@@ -81,8 +81,7 @@ class DataReader(torch.utils.data.Dataset):
                 transforms.Resize(size=224, interpolation=Image.BILINEAR),
                 transforms.CenterCrop(size=(224, 224)),
                 transforms.ToTensor(),
-                #transforms.Normalize(mean=(0.5, 0.5, 0.5),
-                                     #std=(0.5, 0.5, 0.5))
+                transforms.Normalize(mean=self.mean, std=self.std)
             ])
 
         if mode == 'train':
@@ -99,12 +98,12 @@ class DataReader(torch.utils.data.Dataset):
                     temp_path = "train/" + train_input_folder[i]  # input image's path
                     if self.dataset_path:
                         temp_path = os.path.join(self.dataset_path, temp_path)
-                    
+
                     if multi_class == True and self.label_1[train_input_folder[i]] != "Stress-Smoking":
                         self.input_img_paths.append(temp_path)
                     elif multi_class == False:
                         self.input_img_paths.append(temp_path)
-                    
+
                     if multi_class == True:
                         if self.label_1[train_input_folder[i]] == "Virus":
                             self.input_label.append(1)
@@ -153,7 +152,7 @@ class DataReader(torch.utils.data.Dataset):
                     temp_path = "train/" + val_input_folder[i]  # input image's path
                     if self.dataset_path:
                         temp_path = os.path.join(self.dataset_path, temp_path)
-                    
+
                     if multi_class == True and self.label_1[val_input_folder[i]] != "Stress-Smoking":
                         self.input_img_paths.append(temp_path)
                     elif multi_class == False:

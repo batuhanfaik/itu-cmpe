@@ -91,13 +91,13 @@ BATCH_SIZE = 64
 num_workers = 1
 
 '''
-multi class classificaiton:
+multi class classification:
     multi_to_multi = True
     multi_class = True
-multi  to binary classificaiton:
+multi to binary classification:
     multi_to_multi = False
     multi_class = True
-binary classificaiton:
+binary classification:
     multi_to_multi = False
     multi_class = False
 '''
@@ -116,7 +116,12 @@ crx_norm = {
 # Dataset Preprocessing
 #####################################################
 preprocessor = Preprocessor(dataset_path=dataset_path, crx_params=crx_norm, mode="c")
-dataset_path = preprocessor.preprocess_dataset()
+dataset_path, dataset_mean, dataset_std = preprocessor.preprocess_dataset()
+#####################################################
+# Default mean and std values
+#####################################################
+# dataset_mean = 123
+# dataset_std = 57
 #####################################################
 multi_to_multi = True
 multi_class = True
@@ -126,14 +131,13 @@ oversample = False
 
 train_loader = torch.utils.data.DataLoader(
     DataReader(mode='train', path=split_path, dataset_path=dataset_path, oversample=oversample,
-               multi_class=multi_class, crx_norm=None), batch_size=BATCH_SIZE, shuffle=True,
-    num_workers=num_workers)
+               multi_class=multi_class, mean=dataset_mean, std=dataset_std, crx_norm=None),
+    batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers)
 
 val_loader = torch.utils.data.DataLoader(
     DataReader(mode='val', path=split_path, dataset_path=dataset_path, oversample=oversample,
-               multi_class=multi_class, crx_norm=None),
-    batch_size=BATCH_SIZE, shuffle=False,
-    num_workers=num_workers)
+               multi_class=multi_class, mean=dataset_mean, std=dataset_std, crx_norm=None),
+    batch_size=BATCH_SIZE, shuffle=False, num_workers=num_workers)
 
 experiment_name = prepare_experiment(experiment_name="multi_multi_baseline")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
