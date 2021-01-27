@@ -1,5 +1,6 @@
 import torch
-import glob, os
+import glob
+import os
 import torch.utils.data
 from PIL import Image
 from torchvision import transforms

@@ -15,6 +15,7 @@ from torchvision import datasets, models, transforms
 from collections import OrderedDict
 from sklearn.metrics import confusion_matrix, classification_report
 from densenet import densenet121
+from preprocessor import Preprocessor
 
 
 def conf_matrix(cmat):
@@ -100,38 +101,41 @@ binary classificaiton:
     multi_to_multi = False
     multi_class = False
 '''
+dataset_path = "/mnt/sdb1/datasets/Coronahack-Chest-XRay-Dataset/Coronahack-Chest-XRay-Dataset"
+split_path = "splits/split_0.8-0.2.csv"
 #####################################################
 # CRX Normalization parameters
 #####################################################
 crx_norm = {
-    "clip_limit": 3.0,
-    "tile_grid_size": (10, 10),
+    "clip_limit": 2.0,
+    "tile_grid_size": (8, 8),
     "median_filter_size": 5,
     "percentiles": (2, 98)
 }
 #####################################################
-
+# Dataset Preprocessing
+#####################################################
+preprocessor = Preprocessor(dataset_path=dataset_path, crx_params=crx_norm, mode="c")
+dataset_path = preprocessor.preprocess_dataset()
 #####################################################
 multi_to_multi = True
 multi_class = True
 
 oversample = False
 #####################################################
-dataset_path = "/mnt/sdb1/datasets/Coronahack-Chest-XRay-Dataset/Coronahack-Chest-XRay-Dataset"
-split_path = "splits/split_0.8-0.2.csv"
 
 train_loader = torch.utils.data.DataLoader(
-    DataReader(mode='train', path=split_path, dataset_path=None, oversample=oversample,
+    DataReader(mode='train', path=split_path, dataset_path=dataset_path, oversample=oversample,
                multi_class=multi_class, crx_norm=None), batch_size=BATCH_SIZE, shuffle=True,
     num_workers=num_workers)
 
 val_loader = torch.utils.data.DataLoader(
-    DataReader(mode='val', path=split_path, dataset_path=None, oversample=oversample,
+    DataReader(mode='val', path=split_path, dataset_path=dataset_path, oversample=oversample,
                multi_class=multi_class, crx_norm=None),
     batch_size=BATCH_SIZE, shuffle=False,
     num_workers=num_workers)
 
-experiment_name = prepare_experiment(experiment_name="multi_testing")
+experiment_name = prepare_experiment(experiment_name="multi_multi_baseline")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
