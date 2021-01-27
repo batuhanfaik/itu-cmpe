@@ -102,6 +102,7 @@ binary classification:
     multi_class = False
 '''
 dataset_path = "/mnt/sdb1/datasets/Coronahack-Chest-XRay-Dataset/Coronahack-Chest-XRay-Dataset"
+preprocessed_dataset_path = "/mnt/sdb1/datasets/Coronahack-Chest-XRay-Dataset/preprocessed_dataset"
 split_path = "splits/split_0.8-0.2.csv"
 #####################################################
 # CRX Normalization parameters
@@ -115,13 +116,19 @@ crx_norm = {
 #####################################################
 # Dataset Preprocessing
 #####################################################
-preprocessor = Preprocessor(dataset_path=dataset_path, crx_params=crx_norm, mode="c")
-dataset_path, dataset_mean, dataset_std = preprocessor.preprocess_dataset()
+# preprocessor = Preprocessor(dataset_path=dataset_path, crx_params=crx_norm, mode="c")
+# dataset_path, dataset_mean, dataset_std = preprocessor.preprocess_dataset()
 #####################################################
 # Default mean and std values
 #####################################################
 # dataset_mean = 123
 # dataset_std = 57
+#####################################################
+# Preprocessed mean and std values
+#####################################################
+dataset_mean = 143
+dataset_std = 72
+dataset_path = preprocessed_dataset_path
 #####################################################
 multi_to_multi = True
 multi_class = True
@@ -139,7 +146,7 @@ val_loader = torch.utils.data.DataLoader(
                multi_class=multi_class, mean=dataset_mean, std=dataset_std, crx_norm=None),
     batch_size=BATCH_SIZE, shuffle=False, num_workers=num_workers)
 
-experiment_name = prepare_experiment(experiment_name="multi_multi_baseline")
+experiment_name = prepare_experiment(experiment_name="norm_binary_crx")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')

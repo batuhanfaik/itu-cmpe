@@ -54,8 +54,8 @@ class DataReader(torch.utils.data.Dataset):
         self.label_1 = df_to_dict['Label_1_Virus_category']
         self.label_2 = df_to_dict['Label_2_Virus_category']
 
-        self.mean = mean
-        self.std = std
+        self.mean = mean / 255
+        self.std = std / 255
 
         self.healthy = []
 
