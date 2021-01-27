@@ -16,7 +16,7 @@ def _is_image(file):
 
 
 class Preprocessor:
-    def __init__(self, dataset_path, crx_params, mode="c"):
+    def __init__(self, dataset_path, crx_params, mode="c", new_dataset_name="preprocessed_dataset"):
         assert type(dataset_path) == str
         assert type(crx_params) == dict
         assert type(mode) == str and len(mode) == 1, \
@@ -24,6 +24,7 @@ class Preprocessor:
         self.dataset_path = dataset_path
         self.crx_params = crx_params
         self.mode = mode
+        self.new_dataset_name = new_dataset_name
 
     def _image_process(self, file, root):
         full_path = os.path.join(root, file)
@@ -42,11 +43,10 @@ class Preprocessor:
         return img
 
     def preprocess_dataset(self):
-        new_dataset_name = "preprocessed_dataset"
         dataset_root = re.search(r".*\/", self.dataset_path)[0]
         new_dataset_path = self.dataset_path
         if self.mode == "c":
-            new_dataset_path = os.path.join(dataset_root, new_dataset_name)
+            new_dataset_path = os.path.join(dataset_root, self.new_dataset_name)
 
         # Get all files and preprocess
         for root, dirs, files in os.walk(self.dataset_path):
@@ -56,9 +56,9 @@ class Preprocessor:
                     img = self._image_process(file, root)
 
                     if self.mode == "c":
-                        if not os.path.exists(os.path.join(dataset_root, new_dataset_name, set_folder)):
-                            os.makedirs(os.path.join(dataset_root, new_dataset_name, set_folder))
-                        save_dir = os.path.join(dataset_root, new_dataset_name, set_folder, file)
+                        if not os.path.exists(os.path.join(dataset_root, self.new_dataset_name, set_folder)):
+                            os.makedirs(os.path.join(dataset_root, self.new_dataset_name, set_folder))
+                        save_dir = os.path.join(dataset_root, self.new_dataset_name, set_folder, file)
                     elif self.mode == "o":
                         save_dir = os.path.join(self.dataset_path, set_folder, file)
                     else:
@@ -67,9 +67,9 @@ class Preprocessor:
 
                     cv2.imwrite(save_dir, img)
                 elif self.mode == "c":     # Copy files beside images
-                    if not os.path.exists(os.path.join(dataset_root, new_dataset_name, set_folder)):
-                        os.makedirs(os.path.join(dataset_root, new_dataset_name, set_folder))
-                    save_dir = os.path.join(dataset_root, new_dataset_name, set_folder, file)
+                    if not os.path.exists(os.path.join(dataset_root, self.new_dataset_name, set_folder)):
+                        os.makedirs(os.path.join(dataset_root, self.new_dataset_name, set_folder))
+                    save_dir = os.path.join(dataset_root, self.new_dataset_name, set_folder, file)
                     shutil.copy(os.path.join(root, file), save_dir)
 
         return new_dataset_path
