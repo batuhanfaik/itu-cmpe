@@ -59,7 +59,8 @@ class DataReader(torch.utils.data.Dataset):
         if mode == 'train':
             self.input_transform = transforms.Compose([
                 # transforms.RandomHorizontalFlip(),
-                transforms.Resize(size=(224, 224), interpolation=Image.BILINEAR),
+                transforms.Resize(size=224, interpolation=Image.BILINEAR),
+                transforms.CenterCrop(size=(224, 224)),
                 transforms.RandomPerspective(distortion_scale=0.1, interpolation=Image.BILINEAR),
                 transforms.ToTensor(),
                 #transforms.Normalize(mean=(0.5, 0.5, 0.5),
@@ -68,7 +69,8 @@ class DataReader(torch.utils.data.Dataset):
         # TODO
         elif mode == 'val':
             self.input_transform = transforms.Compose([
-                transforms.Resize(size=(224, 224), interpolation=Image.BILINEAR),
+                transforms.Resize(size=224, interpolation=Image.BILINEAR),
+                transforms.CenterCrop(size=(224, 224)),
                 transforms.ToTensor(),
                 #transforms.Normalize(mean=(0.5, 0.5, 0.5),
                                      #std=(0.5, 0.5, 0.5))
@@ -76,8 +78,8 @@ class DataReader(torch.utils.data.Dataset):
         # TODO
         elif mode == 'test':
             self.input_transform = transforms.Compose([
-                transforms.Resize(size=(224, 224), interpolation=Image.BILINEAR),
-                transforms.RandomPerspective(distortion_scale=0.1, interpolation=Image.BILINEAR),
+                transforms.Resize(size=224, interpolation=Image.BILINEAR),
+                transforms.CenterCrop(size=(224, 224)),
                 transforms.ToTensor(),
                 #transforms.Normalize(mean=(0.5, 0.5, 0.5),
                                      #std=(0.5, 0.5, 0.5))
