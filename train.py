@@ -15,6 +15,7 @@ from torchvision import datasets, models, transforms
 from collections import OrderedDict
 from sklearn.metrics import confusion_matrix, classification_report
 from densenet import densenet121
+import resnet
 from preprocessor import Preprocessor
 
 
@@ -130,8 +131,8 @@ dataset_mean = 143
 dataset_std = 72
 dataset_path = preprocessed_dataset_path
 #####################################################
-multi_to_multi = True
-multi_class = True
+multi_to_multi = False
+multi_class = False
 
 oversample = False
 #####################################################
@@ -158,13 +159,13 @@ for i in range(len(all_python_files)):
 num_classes = 5
 num_epochs = 50
 
-model = densenet121(pretrained=False)
-num_features_dense = model.classifier.in_features
+model = resnet.resnet101(pretrained=False)
+num_features_resnet = model.in_features
 
 if multi_class == True:
-    model.classifier = nn.Linear(num_features_dense, 3)
+    model.fc = nn.Linear(num_features_resnet, 3)
 else:
-    model.classifier = nn.Linear(num_features_dense, 1)
+    model.fc = nn.Linear(num_features_resnet, 1)
 
 model = model.to(device)
 
@@ -258,7 +259,7 @@ for epoch_id in range(1, num_epochs + 1):
     print("--------------------------------------")
 
     # all_tr_losses[epoch_id] = total_loss.cpu()
-    all_tr_losses[epoch_id] = total_loss / len(train_loader)
+    all_tr_losses[epoch_id-1] = total_loss / len(train_loader)
 
 
     save_res(epoch_id, total_loss, len(train_loader), report_to_print, time_start, res_name, "train", multi_class, multi_to_multi)
@@ -346,7 +347,7 @@ for epoch_id in range(1, num_epochs + 1):
         print("--------------------------------------")
 
         # all_test_losses[epoch_id] = total_loss.cpu()
-        all_test_losses[epoch_id] = total_loss / len(val_loader)
+        all_test_losses[epoch_id-1] = total_loss / len(val_loader)
 
     scheduler.step(val_losses / len(val_loader))
 
