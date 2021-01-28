@@ -146,7 +146,7 @@ val_loader = torch.utils.data.DataLoader(
                multi_class=multi_class, mean=dataset_mean, std=dataset_std, crx_norm=None),
     batch_size=BATCH_SIZE, shuffle=False, num_workers=num_workers)
 
-experiment_name = prepare_experiment(experiment_name="norm_binary_crx")
+experiment_name = prepare_experiment(experiment_name="resnet_multi_multi_crx_no_oversample")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
@@ -258,7 +258,7 @@ for epoch_id in range(1, num_epochs + 1):
     print("--------------------------------------")
 
     # all_tr_losses[epoch_id] = total_loss.cpu()
-    all_tr_losses[epoch_id] = total_loss / len(train_loader)
+    all_tr_losses[epoch_id-1] = total_loss / len(train_loader)
 
 
     save_res(epoch_id, total_loss, len(train_loader), report_to_print, time_start, res_name, "train", multi_class, multi_to_multi)
@@ -346,7 +346,7 @@ for epoch_id in range(1, num_epochs + 1):
         print("--------------------------------------")
 
         # all_test_losses[epoch_id] = total_loss.cpu()
-        all_test_losses[epoch_id] = total_loss / len(val_loader)
+        all_test_losses[epoch_id-1] = total_loss / len(val_loader)
 
     scheduler.step(val_losses / len(val_loader))
 
