@@ -134,7 +134,7 @@ dataset_path = preprocessed_dataset_path
 multi_to_multi = False
 multi_class = False
 
-oversample = False
+oversample = True
 #####################################################
 
 train_loader = torch.utils.data.DataLoader(
