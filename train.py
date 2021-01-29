@@ -17,6 +17,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 from densenet import densenet121
 import resnet
 from preprocessor import Preprocessor
+from sam import SAM
 
 
 def conf_matrix(cmat):
@@ -147,7 +148,7 @@ val_loader = torch.utils.data.DataLoader(
                multi_class=multi_class, mean=dataset_mean, std=dataset_std, crx_norm=None),
     batch_size=BATCH_SIZE, shuffle=False, num_workers=num_workers)
 
-experiment_name = prepare_experiment(experiment_name="norm_binary_crx")
+experiment_name = prepare_experiment(experiment_name="resnet_binary_crx_oversample_sam")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
@@ -170,10 +171,10 @@ else:
 model = model.to(device)
 
 lr = 1e-3
-# base_optimizer = torch.optim.SGD
-base_optimizer = torch.optim.Adam
+base_optimizer = torch.optim.SGD
+# base_optimizer = torch.optim.Adam
 # optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-4, nesterov=True)
-optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+optimizer = SAM(model.parameters(), base_optimizer, lr=0.1, momentum=0.9, weight_decay=1e-4, nesterov=True)
 scheduler = ReduceLROnPlateau(optimizer, 'min', factor=0.1, patience=5, min_lr=1e-10)
 
 if multi_class == True:
@@ -207,7 +208,6 @@ for epoch_id in range(1, num_epochs + 1):
 
         img_class = img_class.to(device)
         img_class.requires_grad = False
-        optimizer.zero_grad()
 
         output = model(img)
         if multi_class == True:
@@ -215,7 +215,7 @@ for epoch_id in range(1, num_epochs + 1):
             prediction = torch.argmax(output.data, 1)
             
         else:
-            loss_value = loss(output, img_class.unsqueeze(1))#if multiclass false
+            loss_value = loss(output, img_class.unsqueeze(1))    # if multiclass false
             res = torch.sigmoid(output)
             img_class = img_class.int()
             temp_output = res
@@ -233,7 +233,16 @@ for epoch_id in range(1, num_epochs + 1):
             y_true = np.concatenate([y_true, img_class.cpu().numpy().flatten()])   
 
         loss_value.backward()
-        optimizer.step()
+        optimizer.first_step(zero_grad=True)
+        # Second pass
+        if multi_class == True:
+            loss_value = loss(model(img), img_class)
+        else:
+            img_class = img_class.float()
+            loss_value = loss(model(img), img_class.unsqueeze(1))
+            img_class = img_class.int()
+        loss_value.backward()
+        optimizer.second_step(zero_grad=True)
 
         total_loss += loss_value.data
         

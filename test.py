@@ -76,21 +76,21 @@ crx_norm = {
 #####################################################
 # Default mean and std values
 #####################################################
-dataset_mean = 123
-dataset_std = 57
+# dataset_mean = 123
+# dataset_std = 57
 #####################################################
 # Preprocessed mean and std values
 #####################################################
-# dataset_mean = 143
-# dataset_std = 72
-# dataset_path = preprocessed_dataset_path
+dataset_mean = 143
+dataset_std = 72
+dataset_path = preprocessed_dataset_path
 #####################################################
 
 #####################################################
-multi_to_multi = False
-multi_class = False
+multi_to_multi = True
+multi_class = True
 
-oversample = False
+oversample = True
 #####################################################
 
 test_loader = torch.utils.data.DataLoader(
@@ -98,7 +98,7 @@ test_loader = torch.utils.data.DataLoader(
                multi_class=multi_class, mean=dataset_mean, std=dataset_std, crx_norm=None),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers)
 
-models_name = "densenet_binary_baseline_no_oversample"
+models_name = "resnet_multi_multi_crx_oversample"
 models_root = "/mnt/sdb1/datasets/Coronahack-Chest-XRay-Dataset/results"
 models_path = os.path.join(models_root, models_name)
 
