@@ -87,8 +87,8 @@ dataset_path = preprocessed_dataset_path
 #####################################################
 
 #####################################################
-multi_to_multi = True
-multi_class = True
+multi_to_multi = False
+multi_class = False
 
 oversample = True
 #####################################################
@@ -98,7 +98,7 @@ test_loader = torch.utils.data.DataLoader(
                multi_class=multi_class, mean=dataset_mean, std=dataset_std, crx_norm=None),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers)
 
-models_name = "resnet_multi_multi_crx_oversample"
+models_name = "resnet_binary_crx_oversample_sam"
 models_root = "/mnt/sdb1/datasets/Coronahack-Chest-XRay-Dataset/results"
 models_path = os.path.join(models_root, models_name)
 

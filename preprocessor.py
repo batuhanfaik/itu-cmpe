@@ -57,9 +57,11 @@ class Preprocessor:
                 set_folder = root.split("/")[-1]
                 if _is_image(file):
                     img = self._image_process(file, root)
-                    mean, std = cv2.meanStdDev(img)
-                    self.means.append(mean[0][0])
-                    self.stds.append(std[0][0])
+                    # Do not peek into the test folder
+                    if set_folder is not "test":
+                        mean, std = cv2.meanStdDev(img)
+                        self.means.append(mean[0][0])
+                        self.stds.append(std[0][0])
 
                     if self.mode == "c":
                         if not os.path.exists(os.path.join(dataset_root, self.new_dataset_name, set_folder)):
