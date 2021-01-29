@@ -148,7 +148,7 @@ val_loader = torch.utils.data.DataLoader(
                multi_class=multi_class, mean=dataset_mean, std=dataset_std, crx_norm=None),
     batch_size=BATCH_SIZE, shuffle=False, num_workers=num_workers)
 
-experiment_name = prepare_experiment(experiment_name="resnet_binary_crx_oversample_sam")
+experiment_name = prepare_experiment(experiment_name="densenet_binary_crx_oversample_sam")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
@@ -160,13 +160,21 @@ for i in range(len(all_python_files)):
 num_classes = 5
 num_epochs = 50
 
-model = resnet.resnet101(pretrained=False)
-num_features_resnet = model.in_features
+# model = resnet.resnet101(pretrained=False)
+# num_features_resnet = model.in_features
+#
+# if multi_class == True:
+#     model.fc = nn.Linear(num_features_resnet, 3)
+# else:
+#     model.fc = nn.Linear(num_features_resnet, 1)
+
+model = densenet121(pretrained=False)
+num_features_dense = model.classifier.in_features
 
 if multi_class == True:
-    model.fc = nn.Linear(num_features_resnet, 3)
+    model.classifier = nn.Linear(num_features_dense, 3)
 else:
-    model.fc = nn.Linear(num_features_resnet, 1)
+    model.classifier = nn.Linear(num_features_dense, 1)
 
 model = model.to(device)
 
