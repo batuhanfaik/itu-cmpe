@@ -16,6 +16,7 @@ import torch.optim as optim
 from torchvision import datasets, models, transforms
 from collections import OrderedDict
 from sklearn.metrics import confusion_matrix, classification_report
+from mlxtend.plotting import plot_confusion_matrix
 from preprocessor import Preprocessor
 
 # torch.backends.cudnn.deterministic = True
@@ -87,8 +88,8 @@ dataset_path = preprocessed_dataset_path
 #####################################################
 
 #####################################################
-multi_to_multi = False
-multi_class = False
+multi_to_multi = True
+multi_class = True
 
 oversample = True
 #####################################################
@@ -98,7 +99,7 @@ test_loader = torch.utils.data.DataLoader(
                multi_class=multi_class, mean=dataset_mean, std=dataset_std, crx_norm=None),
     batch_size=BATCH_SIZE, shuffle=True, num_workers=num_workers)
 
-models_name = "resnet_binary_crx_oversample_sam"
+models_name = "resnet_multi_multi_crx_oversample_sam"
 models_root = "/mnt/sdb1/datasets/Coronahack-Chest-XRay-Dataset/results"
 models_path = os.path.join(models_root, models_name)
 
@@ -187,6 +188,15 @@ for m_path, m_name in model_list:
         if multi_to_multi == True:
             report = classification_report(y_true, y_pred, labels=[0, 1, 2], output_dict=True)
             print(classification_report(y_true, y_pred, labels=[0, 1, 2], output_dict=False))
+
+            fig_name = "resnet_multi_multi_crx_oversample_sam.png"
+            c_mat = confusion_matrix(y_true, y_pred)
+            fig, ax = plot_confusion_matrix(conf_mat=c_mat,
+                                            colorbar=True,
+                                            show_absolute=False,
+                                            show_normed=True)
+            ax.set_title("Confusion Matrix")
+            plt.savefig(os.path.join(models_root, fig_name))
         else:
             report = classification_report(y_true, y_pred, labels=[0, 1], output_dict=True)
             print(classification_report(y_true, y_pred, labels=[0, 1], output_dict=False))

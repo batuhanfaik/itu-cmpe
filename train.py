@@ -132,8 +132,8 @@ dataset_mean = 143
 dataset_std = 72
 dataset_path = preprocessed_dataset_path
 #####################################################
-multi_to_multi = False
-multi_class = False
+multi_to_multi = True
+multi_class = True
 
 oversample = True
 #####################################################
@@ -148,7 +148,7 @@ val_loader = torch.utils.data.DataLoader(
                multi_class=multi_class, mean=dataset_mean, std=dataset_std, crx_norm=None),
     batch_size=BATCH_SIZE, shuffle=False, num_workers=num_workers)
 
-experiment_name = prepare_experiment(experiment_name="densenet_binary_crx_oversample_sam")
+experiment_name = prepare_experiment(experiment_name="densenet_multi_multi_crx_oversample_sam")
 res_name = experiment_name + "/" + experiment_name + "_res.txt"
 
 all_python_files = os.listdir('.')
@@ -158,7 +158,7 @@ for i in range(len(all_python_files)):
         os.system('cp ' + all_python_files[i] + ' ' + experiment_name + '/code/')
 
 num_classes = 5
-num_epochs = 50
+num_epochs = 25
 
 # model = resnet.resnet101(pretrained=False)
 # num_features_resnet = model.in_features
