@@ -5,7 +5,7 @@
 * @ Copyright (C) 2020 Batuhan Faik Derinbay
 * @ Project: hw3
 * @ Description: Read all players and create tree (driver code)
-* @ Compiling: g++ -o 150180705.out main.cpp
+* @ Compiling: g++ -o 150180705.out --std=c++11 main.cpp
 * @ Running: ./150180705.out <csv_file> (E.g., ./150180705.out sample.csv)
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 #include <iostream>
@@ -418,7 +418,7 @@ void PlayerDatabase::print_season_bests(const string& season) {
     cout << "End of the " << season << " Season" << endl;
     cout << "Max Points: " << max_point << " - Player Name: " << max_point_name << endl
          << "Max Assists: " << max_assist << " - Player Name: " << max_assist_name << endl
-         << "Max Rebounds: " << max_rebound << " - Player Name: " << max_rebound_name << endl;
+         << "Max Rebs: " << max_rebound << " - Player Name: " << max_rebound_name << endl;
 }
 
 void PlayerDatabase::postorder_delete(Player* player_in) {
