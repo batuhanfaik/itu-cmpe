@@ -15,7 +15,7 @@ class BTree {
 public:
     BTree(int);
 
-    void traverse();
+    void print();
 
     BNode *search(int);
 

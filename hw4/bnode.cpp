@@ -75,16 +75,25 @@ void BNode::split_child(int idx, BNode *bnode) {
     n_key++;
 }
 
+//void BNode::traverse() {
+//    int i;
+//    for (i = 0; i < n_key; i++) {
+//        nodes[i]->print();
+//    }
+//    cout << endl;
+//
+//    if (!leaf) {
+//        child[i]->traverse();
+//    }
+//}
 void BNode::traverse() {
     int i;
     for (i = 0; i < n_key; i++) {
-        if (!leaf) {
-            child[i]->traverse();
-        }
-//        cout << " " << keys[i];
         nodes[i]->print();
+        if (!leaf)
+            child[i]->traverse();
     }
-//    cout << "*" << endl;
+    cout << endl;
 
     if (!leaf) {
         child[i]->traverse();

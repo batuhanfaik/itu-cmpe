@@ -10,7 +10,7 @@ BTree::BTree(int min_degree) {
     this->min_degree = min_degree;
 }
 
-void BTree::traverse() {
+void BTree::print() {
     if (root != nullptr) {
         root->traverse();
     }

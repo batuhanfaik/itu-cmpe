@@ -44,7 +44,7 @@ int main() {
     }
 
 //    cout << endl << node_count << " " << tree_degree << " " << sorting_key << endl;
-    btree.traverse();
+    btree.print();
 
     file.close();
     return 0;
