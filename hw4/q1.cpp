@@ -11,11 +11,13 @@
 #include <fstream>
 #include <string>
 
+#include "btree.h"
+
 using namespace std;
 
 int main() {
     ifstream file;
-    file.open("sample1.txt");
+    file.open("sample2.txt");
 
     if (!file) {
         cerr << "File cannot be opened!";
@@ -30,13 +32,19 @@ int main() {
     file >> sorting_key;
     getline(file, line, '\n');
 
+    BTree btree(tree_degree);
+
     for (int i = 0; i < node_count; ++i) {
         file >> key_x >> key_y >> key_z;
         getline(file, line, '\n');
-        cout << key_x << " " << key_y << " " << key_z << endl;
+//        cout << key_x << " " << key_y << " " << key_z << endl;
+
+        Node *node_tmp = new Node(key_x, key_y, key_z, sorting_key);
+        btree.insert(node_tmp->get_key(), node_tmp);
     }
 
-    cout << endl << node_count << " " << tree_degree << " " << sorting_key << endl;
+//    cout << endl << node_count << " " << tree_degree << " " << sorting_key << endl;
+    btree.traverse();
 
     file.close();
     return 0;

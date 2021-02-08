@@ -10,6 +10,15 @@ class Node {
     int x;
     int y;
     char z;
+    int k;
+public:
+    Node();
+
+    Node(int, int, char, char);
+
+    int get_key() const;
+
+    void print() const;
 };
 
 

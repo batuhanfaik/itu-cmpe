@@ -13,7 +13,13 @@ class BTree {
     BNode *root;
     int min_degree;
 public:
-    BTree();
+    BTree(int);
+
+    void traverse();
+
+    BNode *search(int);
+
+    void insert(int, Node*);
 };
 
 

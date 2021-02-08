@@ -10,13 +10,22 @@
 using namespace std;
 
 class BNode {
-    Node *nodes;
+    int *keys;
+    Node **nodes;
     BNode **child;
     int min_degree;
     int n_key;
     bool leaf;
 public:
-    BNode();
+    BNode(int, bool);
+
+    void insert_nonfull(int, Node *);
+
+    void split_child(int, BNode *);
+
+    void traverse();
+
+    BNode *search(int);
 
     friend class BTree;
 };
