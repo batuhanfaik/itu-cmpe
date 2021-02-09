@@ -37,9 +37,9 @@ void BTree::insert(int key, Node *node_ptr) {
             bnode->split_child(0, root);
 
             if (bnode->keys[0] < key){
-                bnode->child[0]->insert_nonfull(key, node_ptr);
-            } else {
                 bnode->child[1]->insert_nonfull(key, node_ptr);
+            } else {
+                bnode->child[0]->insert_nonfull(key, node_ptr);
             }
 
             root = bnode;

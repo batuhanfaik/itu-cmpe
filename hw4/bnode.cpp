@@ -49,7 +49,7 @@ void BNode::split_child(int idx, BNode *bnode) {
     BNode *bnode_new = new BNode(bnode->min_degree, bnode->leaf);
     bnode_new->n_key = min_degree - 1;
 
-    for (int i = 0; i < bnode_new->n_key; i++) {
+    for (int i = 0; i < min_degree - 1; i++) {
         bnode_new->keys[i] = bnode->keys[i + min_degree];
         bnode_new->nodes[i] = bnode->nodes[i + min_degree];
     }
@@ -88,13 +88,15 @@ void BNode::split_child(int idx, BNode *bnode) {
 //}
 void BNode::traverse() {
     int i;
-    for (i = 0; i < n_key; i++) {
-        nodes[i]->print();
-        if (!leaf)
-            child[i]->traverse();
+    for (int j = 0; j < n_key; ++j) {
+        nodes[j]->print();
     }
     cout << endl;
-
+    for (i = 0; i < n_key; i++) {
+        if (!leaf) {
+            child[i]->traverse();
+        }
+    }
     if (!leaf) {
         child[i]->traverse();
     }
