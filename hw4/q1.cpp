@@ -16,36 +16,22 @@
 using namespace std;
 
 int main() {
-    ifstream file;
-    file.open("sample2.txt");
-
-    if (!file) {
-        cerr << "File cannot be opened!";
-        exit(1);
-    }
-
     int node_count, tree_degree, key_x, key_y;
     char sorting_key, key_z;
     string line;
-    file >> node_count;
-    file >> tree_degree;
-    file >> sorting_key;
-    getline(file, line, '\n');
+    cin >> node_count;
+    cin >> tree_degree;
+    cin >> sorting_key;
 
     BTree btree(tree_degree);
 
     for (int i = 0; i < node_count; ++i) {
-        file >> key_x >> key_y >> key_z;
-        getline(file, line, '\n');
-//        cout << key_x << " " << key_y << " " << key_z << endl;
+        cin >> key_x >> key_y >> key_z;
 
         Node *node_tmp = new Node(key_x, key_y, key_z, sorting_key);
         btree.insert(node_tmp->get_key(), node_tmp);
     }
 
-//    cout << endl << node_count << " " << tree_degree << " " << sorting_key << endl;
     btree.print();
-
-    file.close();
     return 0;
 }
