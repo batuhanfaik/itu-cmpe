@@ -28,8 +28,6 @@ Node::Node(int x, int y, char z, char key) {
         case 'z':
             this->k = (int)(u_char) z;
             break;
-        default:
-            cout << "Given key " << key << " is not valid!" << endl;
     }
 }
 

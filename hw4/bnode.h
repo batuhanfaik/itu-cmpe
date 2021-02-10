@@ -27,6 +27,26 @@ public:
 
     BNode *search(int);
 
+    int find_key(int);
+
+    void remove(int);
+
+    void remove_from_leaf(int);
+
+    void remove_from_nonleaf(int);
+
+    int get_predecessor(int);
+
+    int get_successor(int);
+
+    void fill(int);
+
+    void borrow_from_prev(int);
+
+    void borrow_from_next(int);
+
+    void merge(int);
+
     friend class BTree;
 };
 

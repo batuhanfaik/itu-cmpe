@@ -20,6 +20,8 @@ public:
     BNode *search(int);
 
     void insert(int, Node*);
+
+    void remove(int);
 };
 
 

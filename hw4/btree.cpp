@@ -49,3 +49,19 @@ void BTree::insert(int key, Node *node_ptr) {
     }
 }
 
+void BTree::remove(int key) {
+    if (!root) {
+        return;
+    }
+    root->remove(key);
+    if (root->n_key == 0) {
+        BNode *tmp = root;
+        if (root->leaf) {
+            root = nullptr;
+        } else {
+            root = root->child[0];
+        }
+        delete(tmp);
+    }
+}
+
