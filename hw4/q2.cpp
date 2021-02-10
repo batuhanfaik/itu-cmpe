@@ -1,11 +1,11 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * /
-* @ Filename: q1
+* @ Filename: q2
 * @ Date: 07-Feb-2021
 * @ AUTHOR: batuhanfaik
 * @ Copyright (C) 2020 Batuhan Faik Derinbay
 * @ Project: hw4
-* @ Description: B Tree Creation and Insertion
-* @ Compiling: g++ -o a.out q1.cpp
+* @ Description: B Tree Node Removal
+* @ Compiling: g++ -o a.out q2.cpp
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 #include <iostream>
 #include <fstream>
@@ -17,7 +17,7 @@ using namespace std;
 
 int main() {
     ifstream file;
-    file.open("sample2_deletion.txt");
+    file.open("sample1_deletion.txt");
 
     if (!file) {
         cerr << "File cannot be opened!";
@@ -37,7 +37,6 @@ int main() {
     for (int i = 0; i < node_count; ++i) {
         file >> key_x >> key_y >> key_z;
         getline(file, line, '\n');
-//        cout << key_x << " " << key_y << " " << key_z << endl;
 
         Node *node_tmp = new Node(key_x, key_y, key_z, sorting_key);
         btree.insert(node_tmp->get_key(), node_tmp);
@@ -52,7 +51,6 @@ int main() {
         file >> deletion_key;
     }
 
-    cout << endl << node_count << " " << tree_degree << " " << sorting_key << " " << deletion_key << endl;
     btree.remove(deletion_key);
     btree.print();
 

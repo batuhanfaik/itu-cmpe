@@ -160,6 +160,7 @@ void BNode::remove(int key) {
 void BNode::remove_from_leaf(int idx) {
     for (int i = 0; i < n_key; ++i) {
         keys[i - 1] = keys[i];
+        nodes[i - 1] = nodes[i];
     }
     n_key--;
 }
@@ -169,10 +170,12 @@ void BNode::remove_from_nonleaf(int idx) {
     if (child[idx]->n_key >= min_degree) {
         int predecessor = get_predecessor(idx);
         keys[idx] = predecessor;
+        nodes[idx] = get_predecessor_node(idx);
         child[idx]->remove(predecessor);
     } else if (child[idx + 1]->n_key >= min_degree) {
         int successor = get_successor(idx);
         keys[idx] = successor;
+        nodes[idx] = get_successor_node(idx);
         child[idx + 1]->remove(successor);
     } else {
         merge(idx);
@@ -188,12 +191,28 @@ int BNode::get_predecessor(int idx) {
     return current->keys[current->n_key - 1];
 }
 
+Node *BNode::get_predecessor_node(int idx) {
+    BNode *current = child[idx];
+    while (!current->leaf) {
+        current = current->child[current->n_key];
+    }
+    return current->nodes[current->n_key - 1];
+}
+
 int BNode::get_successor(int idx) {
     BNode *current = child[idx + 1];
     while (!current->leaf) {
         current = current->child[0];
     }
     return current->keys[0];
+}
+
+Node *BNode::get_successor_node(int idx) {
+    BNode *current = child[idx + 1];
+    while (!current->leaf) {
+        current = current->child[0];
+    }
+    return current->nodes[0];
 }
 
 void BNode::fill(int idx) {
@@ -255,6 +274,7 @@ void BNode::borrow_from_next(int idx) {
 
     for (int i = 1; i < sibling_tmp->n_key; ++i) {
         sibling_tmp->keys[i - 1] = sibling_tmp->keys[i];
+        sibling_tmp->nodes[i - 1] = sibling_tmp->nodes[i];
     }
 
     if (!sibling_tmp->leaf) {

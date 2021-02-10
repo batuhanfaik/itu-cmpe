@@ -39,6 +39,10 @@ public:
 
     int get_successor(int);
 
+    Node *get_predecessor_node(int);
+
+    Node *get_successor_node(int);
+
     void fill(int);
 
     void borrow_from_prev(int);
