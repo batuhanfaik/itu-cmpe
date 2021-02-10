@@ -9,7 +9,6 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 #include <iostream>
 #include <string>
-#include <fstream>
 
 using namespace std;
 
@@ -94,27 +93,10 @@ int main() {
     cin >> tree_degree;
     cin >> sorting_key;
 
-//    ifstream file;
-//    file.open("sample2_deletion.txt");
-//
-//    if (!file) {
-//        cerr << "File cannot be opened!";
-//        exit(1);
-//    }
-//
-//    int node_count, tree_degree, key_x, key_y;
-//    char sorting_key, key_z;
-//    string line;
-//    file >> node_count;
-//    file >> tree_degree;
-//    file >> sorting_key;
-//    getline(file, line, '\n');
-
     BTree btree(tree_degree);
 
     for (int i = 0; i < node_count; ++i) {
         cin >> key_x >> key_y >> key_z;
-//        file >> key_x >> key_y >> key_z;
 
         Node *node_tmp = new Node(key_x, key_y, key_z, sorting_key);
         btree.insert(node_tmp->get_key(), node_tmp);
@@ -124,11 +106,9 @@ int main() {
     if (sorting_key == 'z') {
         char tmp_key;
         cin >> tmp_key;
-//        file >> tmp_key;
         deletion_key = (int) (u_char) tmp_key;
     } else {
         cin >> deletion_key;
-//        file >> deletion_key;
     }
 
     btree.remove(deletion_key);
