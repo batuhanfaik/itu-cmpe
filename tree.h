@@ -1,13 +1,18 @@
-//
-// Created by batuhanfaik on 31/03/2021.
-//
-
 #ifndef HW1_TREE_H
 #define HW1_TREE_H
+#include "node.h"
+#include <string>
 
+using namespace std;
 
-class tree {
+class Tree {
+  Node* root;
+  string letters;
+  void populate(int, Node*);
+public:
+  Tree(string);
 
+  void print();
 };
 
 

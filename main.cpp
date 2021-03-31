@@ -9,12 +9,16 @@
 
 #include <iostream>
 #include <string>
+#include <bits/stdc++.h>
 #include <vector>
 #include <chrono>   // Required to measure time
+
+#include "tree.h"
 
 using namespace std;
 
 int main(int argc, char **argv) {
+  // Get command line arguments
   string algorithm, operand1, operand2, result, output_file_name;
   if (argc == 6) {
     algorithm = argv[1];
@@ -27,7 +31,21 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  cout << algorithm << operand1 << operand2 << result << output_file_name << endl;
+  // Concatenate operands and the result
+  string concat = operand1 + operand2 + result;
+  transform(concat.begin(), concat.end(), concat.begin(), ::toupper); // Uppercase
+  // Find distinct letters
+  string letters;
+  for (char i : concat) {
+    if (letters.find(i) == string::npos) {
+      letters += i;
+    }
+  }
+
+  // Create the tree
+  Tree *cryptarithmetic_tree = new Tree(letters);
+
+  cout << letters << endl;
 
   return 0;
 }
