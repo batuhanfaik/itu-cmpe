@@ -9,7 +9,6 @@
 
 #include <iostream>
 #include <string>
-#include <bits/stdc++.h>
 #include <vector>
 #include <chrono>   // Required to measure time
 
@@ -31,21 +30,16 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  // Concatenate operands and the result
-  string concat = operand1 + operand2 + result;
-  transform(concat.begin(), concat.end(), concat.begin(), ::toupper); // Uppercase
-  // Find distinct letters
-  string letters;
-  for (char i : concat) {
-    if (letters.find(i) == string::npos) {
-      letters += i;
-    }
-  }
+  // Get the current time
+  auto start_time = chrono::high_resolution_clock::now();
 
   // Create the tree
-  Tree *cryptarithmetic_tree = new Tree(letters);
+  Tree *cryptarithmetic_tree = new Tree(operand1, operand2, result);
 
-  cout << letters << endl;
+  // Searching ends
+  auto stop_time = chrono::high_resolution_clock::now();
+  auto duration = chrono::duration_cast<chrono::microseconds>(stop_time - start_time);
+  cout << "* Elapsed time of execution: " << duration.count() << " microseconds" << endl;
 
   return 0;
 }

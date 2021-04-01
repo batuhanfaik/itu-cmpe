@@ -17,6 +17,8 @@ public:
 
   void set_children(vector<Node*>);
 
+  vector<vector<int>> get_data();
+
   void print();
 };
 

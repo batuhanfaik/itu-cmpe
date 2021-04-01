@@ -8,9 +8,14 @@ using namespace std;
 class Tree {
   Node* root;
   string letters;
+  string operand1, operand2, result;
+  vector<int> operand1_map, operand2_map, result_map;
+  string get_distinct_letters();
+  vector<int> map_operand(string);
   void populate(int, Node*);
-public:
-  Tree(string);
+  bool satisfies_constraints(Node&);
+ public:
+  Tree(const string&, const string&, const string&);
 
   void print();
 };

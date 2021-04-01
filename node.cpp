@@ -41,3 +41,6 @@ void Node::print() {
   }
   cout << endl << endl;
 }
+vector<vector<int>> Node::get_data() {
+  return data;
+}
