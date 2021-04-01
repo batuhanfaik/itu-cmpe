@@ -54,6 +54,7 @@ void Tree::populate(int level, Node *parent) {
     // Create all ten children and push them
     for (int i = 0; i < 10; i++) {
       Node *child = new Node(letters.length(), parent, level, i);
+      check_solution(*child);
       children.push_back(child);
     }
     parent->set_children(children);
@@ -86,3 +87,22 @@ bool Tree::satisfies_constraints(Node& node) {
   // Constraints satisfied, return true
   return true;
 }
+bool Tree::check_solution(Node &node) {
+  // Make a copy of the data matrix
+  vector<vector<int>> data = node.get_data();
+  // Make sure a number is assigned to a letter (node is leaf)
+  int sum = 0;
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < letters.length(); j++) {
+      sum += data[j][i];
+    }
+  }
+  if (sum != letters.length()) {
+    return false;
+  }
+
+  // TODO: Check the summation constraint
+
+  return true;
+}
+

@@ -14,6 +14,7 @@ class Tree {
   vector<int> map_operand(string);
   void populate(int, Node*);
   bool satisfies_constraints(Node&);
+  bool check_solution(Node&);
  public:
   Tree(const string&, const string&, const string&);
 

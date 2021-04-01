@@ -20,8 +20,16 @@ Node::Node(int dla, Node* parent, int row, int col) {
   this->data[row][col] = 1;
 }
 
-void Node::set_children(vector<Node*> children) {
-  this->children = children;
+vector<Node *> Node::get_children() const {
+  return children;
+}
+
+void Node::set_children(vector<Node*> c) {
+  this->children = c;
+}
+
+vector<vector<int>> Node::get_data() {
+  return data;
 }
 
 void Node::print() {
@@ -40,7 +48,4 @@ void Node::print() {
     cout << endl;
   }
   cout << endl << endl;
-}
-vector<vector<int>> Node::get_data() {
-  return data;
 }

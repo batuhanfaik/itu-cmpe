@@ -15,6 +15,8 @@ public:
 
   Node(int, Node*, int, int);
 
+  vector<Node*> get_children() const;
+
   void set_children(vector<Node*>);
 
   vector<vector<int>> get_data();
