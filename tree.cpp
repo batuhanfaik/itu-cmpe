@@ -90,7 +90,7 @@ bool Tree::satisfies_constraints(Node& node) {
 bool Tree::check_solution(Node &node) {
   // Make a copy of the data matrix
   vector<vector<int>> data = node.get_data();
-  // Make sure a number is assigned to a letter (node is leaf)
+  // Make sure a number is assigned to every letter (node is leaf)
   int sum = 0;
   for (int i = 0; i < 10; i++) {
     for (int j = 0; j < letters.length(); j++) {
@@ -101,8 +101,65 @@ bool Tree::check_solution(Node &node) {
     return false;
   }
 
-  // TODO: Check the summation constraint
+  // Get the values of the letters of the node
+  vector<int> letter_values = vector<int>(letters.length());
+  for (int i = 0; i < letters.length(); i++) {
+    int j = 0;
+    while (j < 10) {
+      if (data[i][j] == 1) {
+        letter_values[i] = j;
+        j = 9;  // I could use break here but what the heck
+      }
+      j++;
+    }
+  }
 
+  // Create the carry vector
+  int carry_length, shorter_operand, shorter_operand_length;
+  // Find the length of the carry array
+  if (operand1.length() > operand2.length()) {
+    carry_length = operand1.length();
+    shorter_operand = 2;
+    shorter_operand_length = operand2.length();
+  } else {
+    carry_length = operand2.length();
+    shorter_operand = 1;
+    shorter_operand_length = operand1.length();
+  }
+  vector<int> carry = vector<int>(carry_length, 0);
+
+  // Calculate carries
+  for (int i = 0; i < shorter_operand_length; i++) {
+    if (i == 0)
+      carry[i] = (letter_values[operand1_map[i]] + letter_values[operand2_map[i]]) / 10;
+    else
+      carry[i] = (letter_values[operand1_map[i]] + letter_values[operand2_map[i]] + carry[i - 1]) / 10;
+  }
+  // Handle the case where operands are not the same length
+  for (int i = shorter_operand_length; i < carry_length; i++) {
+    if (shorter_operand == 2) {
+      carry[i] = (letter_values[operand1_map[i]] + carry[i - 1]) / 10;
+    } else {
+      carry[i] = (letter_values[operand2_map[i]] + carry[i - 1]) / 10;
+    }
+  }
+  // Finally check the summation
+  if (letter_values.back() != carry.back()) // Last carry is not equal to the result's highest order
+    return false;
+  for (int i = 0; i < shorter_operand_length; i++) {
+    if (letter_values[operand1_map[i]] + letter_values[operand2_map[i]] != letter_values[result_map[i]] + carry[i]*10)
+      return false;
+  }
+  for (int i = shorter_operand_length; i < carry_length; i++) {
+    if (shorter_operand == 2) {
+      if (letter_values[operand1_map[i]] != letter_values[result_map[i]] + carry[i]*10)
+        return false;
+    } else {
+      if (letter_values[operand2_map[i]] != letter_values[result_map[i]] + carry[i]*10)
+        return false;
+    }
+  }
+  // Solution found!
   return true;
 }
 
