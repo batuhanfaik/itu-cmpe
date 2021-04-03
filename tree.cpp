@@ -79,7 +79,7 @@ void Tree::populate(int level, Node *parent) {
 // Check if the node satisfies constraints of a possible solution
 bool Tree::satisfies_constraints(Node &node) {
   // Make a copy of the data matrix
-  vector<vector<bool>> data = node.get_data();
+  vector<vector<uint8_t>> data = node.get_data();
 
   // constraint 1 - first letters of operands are not zero
   if (data[operand1_map[0]][0] || data[operand2_map[0]][0] || data[result_map[0]][0])
@@ -89,7 +89,7 @@ bool Tree::satisfies_constraints(Node &node) {
   for (int i = 0; i < 10; i++) {
     int sum = 0;
     for (int j = 0; j < letters.length(); j++) {
-      sum += int(data[j][i]);
+      sum += data[j][i];
       if (sum > 1) {
         return false;
       }
@@ -101,7 +101,7 @@ bool Tree::satisfies_constraints(Node &node) {
 
 bool Tree::check_solution(Node &node) {
   // Make a copy of the data matrix
-  vector<vector<bool>> data = node.get_data();
+  vector<vector<uint8_t>> data = node.get_data();
   // Make sure a number is assigned to every letter (node is leaf)
   if (!node.leaf()) {
     return false;
@@ -112,7 +112,7 @@ bool Tree::check_solution(Node &node) {
   for (int i = 0; i < letters.length(); i++) {
     int j = 0;
     while (j < 10) {
-      if (data[i][j]) {
+      if (data[i][j] == 1) {
         letter_values[i] = j;
         j = 9;  // I could use break here but what the heck
       }
