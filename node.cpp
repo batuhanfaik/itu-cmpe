@@ -6,11 +6,11 @@ Node::Node(int dla) {
   this->index = 0;
   this->is_leaf = false;
   this->children = vector<Node*>(10);
-  this->data = vector<vector<int>>(dla);
+  this->data = vector<vector<bool>>(dla);
 
-  // Zero out the data matrix
+  // Falsify the data matrix
   for (int i = 0; i < dla; i++) {
-    data[i] = vector<int>(10, 0);
+    data[i] = vector<bool>(10, false);
   }
 }
 
@@ -21,7 +21,7 @@ Node::Node(int dla, Node* parent, int row, int col) {
   this->is_leaf = (row == dla - 1);
   this->children = vector<Node*>(10);
   this->data = parent->data;
-  this->data[row][col] = 1;
+  this->data[row][col] = true;
 }
 
 vector<Node *> Node::get_children() const {
@@ -32,7 +32,7 @@ void Node::set_children(vector<Node*> c) {
   this->children = c;
 }
 
-vector<vector<int>> Node::get_data() {
+vector<vector<bool>> Node::get_data() {
   return data;
 }
 

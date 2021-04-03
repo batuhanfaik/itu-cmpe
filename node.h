@@ -9,7 +9,7 @@ class Node {
   int distinct_letter_amount;
   int index;
   bool is_leaf;
-  vector<vector<int>> data;
+  vector<vector<bool>> data;
   Node *parent;
   vector<Node*> children;
 public:
@@ -25,7 +25,7 @@ public:
 
   bool leaf() const;
 
-  vector<vector<int>> get_data();
+  vector<vector<bool>> get_data();
 
   void print();
 };
