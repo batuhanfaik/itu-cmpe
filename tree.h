@@ -7,10 +7,13 @@ using namespace std;
 
 class Tree {
   int node_amount;
+  int nodes_in_memory;
   Node* root;
   string letters;
   string operand1, operand2, result;
   vector<int> operand1_map, operand2_map, result_map;
+  string solution, solution_to_file;
+
   string get_distinct_letters();
   vector<int> map_operand(string);
   void populate(int, Node*);
@@ -19,9 +22,15 @@ class Tree {
  public:
   Tree(const string&, const string&, const string&);
 
-  void bfs();
+  int bfs();
 
-  void print();
+  int dfs();
+
+  int get_nodes_in_memory() const;
+
+  string get_solution() const;
+
+  string get_solution_to_file() const;
 };
 
 

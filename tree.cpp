@@ -6,6 +6,8 @@ Tree::Tree(const string &o1, const string &o2, const string &r) {
   this->operand1 = o1;
   this->operand2 = o2;
   this->result = r;
+  this->solution = "Solution not found!";
+  this->solution_to_file = "Solution not found!\n";
   this->letters = get_distinct_letters();
 
   this->node_amount = 0;
@@ -21,6 +23,7 @@ Tree::Tree(const string &o1, const string &o2, const string &r) {
   // Get distinct letter amount
   int dla = letters.length();
   this->root = new Node(dla);
+  this->nodes_in_memory = 1;
 
   // Fill the tree
   populate(0, root);
@@ -60,6 +63,7 @@ void Tree::populate(int level, Node *parent) {
     // Create all ten children and push them
     for (int i = 0; i < 10; i++) {
       Node *child = new Node(letters.length(), parent, level, i);
+      nodes_in_memory++;
       children.push_back(child);
     }
     parent->set_children(children);
@@ -136,37 +140,59 @@ bool Tree::check_solution(Node &node) {
     result_value += letter_values[result_map[i]] * int(pow(10, result.length()-i-1));
   }
 
-  return (operand1_value + operand2_value == result_value);
+  if (operand1_value + operand2_value == result_value) {
+    // Construct the solution string
+    solution = "";
+    for (int i = 0; i < letters.length(); i++) {
+      if (i+1 == letters.length())
+        solution += string(1, letters[i]) + ": " + to_string(letter_values[i]);
+      else
+        solution += string(1, letters[i]) + ": " + to_string(letter_values[i]) + ", ";
+    }
+
+    // Construct the solution to the file string
+    solution_to_file = "\t";
+    for (int i = 0; i < 10; i++)
+      solution_to_file += to_string(i) + "\t";
+    solution_to_file += "\n";
+    for (int i = 0; i < letters.length(); i++) {
+      solution_to_file += string(1, tolower(letters[i])) + "\t";
+      for (int j = 0; j < 10; j++) {
+        if (j == 9) {
+          if (data[i][j])
+            solution_to_file += "1\n";
+          else
+            solution_to_file += ".\n";
+        } else if (data[i][j]) {
+          solution_to_file += "1\t";
+        } else {
+          solution_to_file += ".\t";
+        }
+      }
+    }
+    // Remove the new line at the end
+    solution_to_file.pop_back();
+
+    return true;
+  } else {
+    return false;
+  }
 }
 
-void Tree::bfs() {
+int Tree::bfs() {
   queue<Node *> q;
   vector<bool> visited = vector<bool>(node_amount, false);
   q.push(root);
   visited[root->get_index()] = true;
+  int visited_nodes = 1;
   bool solution_found = false;
 
   while (!q.empty() && !solution_found) {
     Node *node = q.front();
     q.pop();
 
-//    vector<vector<int>> solution = {{0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-//                                    {0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-//                                    {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-//                                    {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-//                                    {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-//                                    {0, 0, 0, 0, 0, 0, 0, 0, 1, 0}};
-//    int solution_index = 845279;
-//    if (node->get_index() == solution_index) {
-//      node->print();
-//      cout << "gotcha bitch" << endl;
-//    }
-
     if (node->leaf()) {
         solution_found = check_solution(*node);
-        if (solution_found) {
-          node->print();
-        }
     } else {
       // Add children to the queue that satisfies the constraints
       vector<Node *> children = node->get_children();
@@ -174,9 +200,53 @@ void Tree::bfs() {
         if (!visited[children[i]->get_index()] && satisfies_constraints(*children[i])) {
           q.push(children[i]);
           visited[children[i]->get_index()] = true;
+          visited_nodes++;
         }
       }
     }
   }
+
+  return visited_nodes;
 }
 
+int Tree::dfs() {
+  stack<Node *> s;
+  vector<bool> visited = vector<bool>(node_amount, false);
+  s.push(root);
+  visited[root->get_index()] = true;
+  int visited_nodes = 1;
+  bool solution_found = false;
+
+  while (!s.empty() && !solution_found) {
+    Node *node = s.top();
+    s.pop();
+
+    if (node->leaf()) {
+        solution_found = check_solution(*node);
+    } else {
+      // Add children to the stack that satisfies the constraints
+      vector<Node *> children = node->get_children();
+      for (int i = 0; i < 10; i++) {
+        if (!visited[children[i]->get_index()] && satisfies_constraints(*children[i])) {
+          s.push(children[i]);
+          visited[children[i]->get_index()] = true;
+          visited_nodes++;
+        }
+      }
+    }
+  }
+
+  return visited_nodes;
+}
+
+int Tree::get_nodes_in_memory() const {
+  return nodes_in_memory;
+}
+
+string Tree::get_solution() const {
+  return solution;
+}
+
+string Tree::get_solution_to_file() const {
+  return solution_to_file;
+}

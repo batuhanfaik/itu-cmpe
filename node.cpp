@@ -20,7 +20,7 @@ Node::Node(int dla, Node* parent, int row, int col) {
   this->index = parent->index * 10 + col + 1;
   this->is_leaf = (row == dla - 1);
   this->children = vector<Node*>(10);
-  this->data = parent->data;
+  this->data = this->parent->data;
   this->data[row][col] = 1;
 }
 
