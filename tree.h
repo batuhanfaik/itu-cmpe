@@ -6,6 +6,7 @@
 using namespace std;
 
 class Tree {
+  int node_amount;
   Node* root;
   string letters;
   string operand1, operand2, result;
@@ -17,6 +18,8 @@ class Tree {
   bool check_solution(Node&);
  public:
   Tree(const string&, const string&, const string&);
+
+  void bfs();
 
   void print();
 };

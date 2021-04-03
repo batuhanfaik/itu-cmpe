@@ -34,7 +34,8 @@ int main(int argc, char **argv) {
   auto start_time = chrono::high_resolution_clock::now();
 
   // Create the tree
-  Tree *cryptarithmetic_tree = new Tree(operand1, operand2, result);
+  Tree cryptarithmetic_tree = Tree(operand1, operand2, result);
+  cryptarithmetic_tree.bfs();
 
   // Searching ends
   auto stop_time = chrono::high_resolution_clock::now();

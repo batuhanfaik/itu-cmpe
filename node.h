@@ -7,6 +7,8 @@ using namespace std;
 
 class Node {
   int distinct_letter_amount;
+  int index;
+  bool is_leaf;
   vector<vector<int>> data;
   Node *parent;
   vector<Node*> children;
@@ -18,6 +20,10 @@ public:
   vector<Node*> get_children() const;
 
   void set_children(vector<Node*>);
+
+  int get_index() const;
+
+  bool leaf() const;
 
   vector<vector<int>> get_data();
 

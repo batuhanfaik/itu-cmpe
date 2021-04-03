@@ -1,11 +1,17 @@
 #include "tree.h"
 #include <bits/stdc++.h>
+#include <math.h>
 
-Tree::Tree(const string& o1, const string& o2, const string& r) {
+Tree::Tree(const string &o1, const string &o2, const string &r) {
   this->operand1 = o1;
   this->operand2 = o2;
   this->result = r;
   this->letters = get_distinct_letters();
+
+  this->node_amount = 0;
+  for (int i = 0; i < letters.length() + 1; i++) {
+    this->node_amount += pow(10, i);
+  }
 
   // Map the operands
   this->operand1_map = map_operand(operand1);
@@ -50,11 +56,10 @@ vector<int> Tree::map_operand(string op) {
 // Populate the tree with all possible permutations
 void Tree::populate(int level, Node *parent) {
   if (level < letters.length()) {
-    vector<Node*> children;
+    vector<Node *> children;
     // Create all ten children and push them
     for (int i = 0; i < 10; i++) {
       Node *child = new Node(letters.length(), parent, level, i);
-      check_solution(*child);
       children.push_back(child);
     }
     parent->set_children(children);
@@ -65,7 +70,7 @@ void Tree::populate(int level, Node *parent) {
 }
 
 // Check if the node satisfies constraints of a possible solution
-bool Tree::satisfies_constraints(Node& node) {
+bool Tree::satisfies_constraints(Node &node) {
   // Make a copy of the data matrix
   vector<vector<int>> data = node.get_data();
 
@@ -83,10 +88,10 @@ bool Tree::satisfies_constraints(Node& node) {
       }
     }
   }
-
-  // Constraints satisfied, return true
+  // Constraints satisfied!
   return true;
 }
+
 bool Tree::check_solution(Node &node) {
   // Make a copy of the data matrix
   vector<vector<int>> data = node.get_data();
@@ -127,7 +132,6 @@ bool Tree::check_solution(Node &node) {
     shorter_operand_length = operand1.length();
   }
   vector<int> carry = vector<int>(carry_length, 0);
-
   // Calculate carries
   for (int i = 0; i < shorter_operand_length; i++) {
     if (i == 0)
@@ -147,19 +151,58 @@ bool Tree::check_solution(Node &node) {
   if (letter_values.back() != carry.back()) // Last carry is not equal to the result's highest order
     return false;
   for (int i = 0; i < shorter_operand_length; i++) {
-    if (letter_values[operand1_map[i]] + letter_values[operand2_map[i]] != letter_values[result_map[i]] + carry[i]*10)
+    if (letter_values[operand1_map[i]] + letter_values[operand2_map[i]] != letter_values[result_map[i]] + carry[i] * 10)
       return false;
   }
   for (int i = shorter_operand_length; i < carry_length; i++) {
     if (shorter_operand == 2) {
-      if (letter_values[operand1_map[i]] != letter_values[result_map[i]] + carry[i]*10)
+      if (letter_values[operand1_map[i]] != letter_values[result_map[i]] + carry[i] * 10)
         return false;
     } else {
-      if (letter_values[operand2_map[i]] != letter_values[result_map[i]] + carry[i]*10)
+      if (letter_values[operand2_map[i]] != letter_values[result_map[i]] + carry[i] * 10)
         return false;
     }
   }
   // Solution found!
   return true;
+}
+
+void Tree::bfs() {
+  queue<Node *> q;
+  vector<bool> visited = vector<bool>(node_amount, false);
+  q.push(root);
+  visited[root->get_index()] = true;
+  bool solution_found = false;
+
+  while (!q.empty() && !solution_found) {
+    Node *node = q.front();
+    q.pop();
+
+    vector<vector<int>> solution = {{0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+                                    {0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+                                    {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+                                    {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+                                    {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+                                    {0, 0, 0, 0, 0, 0, 0, 0, 1, 0}};
+    int solution_index = 845279;
+    if (node->get_data() == solution || node->get_index() == solution_index) {
+      cout << "gotcha bitch" << endl;
+    }
+
+    if (node->leaf()) {
+      solution_found = check_solution(*node);
+    } else {
+      // Add children to the queue that satisfies the constraints
+      vector<Node *> children = node->get_children();
+      if (!children.empty()) {
+        for (int i = 0; i < 10; i++) {
+          if (!visited[children[i]->get_index()] && satisfies_constraints(*children[i])) {
+            q.push(children[i]);
+            visited[children[i]->get_index()] = true;
+          }
+        }
+      }
+    }
+  }
 }
 
