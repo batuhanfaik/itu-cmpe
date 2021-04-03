@@ -96,13 +96,16 @@ bool Tree::check_solution(Node &node) {
   // Make a copy of the data matrix
   vector<vector<int>> data = node.get_data();
   // Make sure a number is assigned to every letter (node is leaf)
-  int sum = 0;
-  for (int i = 0; i < 10; i++) {
-    for (int j = 0; j < letters.length(); j++) {
-      sum += data[j][i];
-    }
-  }
-  if (sum != letters.length()) {
+//  int sum = 0;
+//  for (int i = 0; i < 10; i++) {
+//    for (int j = 0; j < letters.length(); j++) {
+//      sum += data[j][i];
+//    }
+//  }
+//  if (sum != letters.length()) {
+//    return false;
+//  }
+  if (!node.leaf()) {
     return false;
   }
 
@@ -133,14 +136,14 @@ bool Tree::check_solution(Node &node) {
   }
   vector<int> carry = vector<int>(carry_length, 0);
   // Calculate carries
-  for (int i = 0; i < shorter_operand_length; i++) {
-    if (i == 0)
+  for (int i = shorter_operand_length; i > 0; i--) {
+    if (i == shorter_operand_length)
       carry[i] = (letter_values[operand1_map[i]] + letter_values[operand2_map[i]]) / 10;
     else
       carry[i] = (letter_values[operand1_map[i]] + letter_values[operand2_map[i]] + carry[i - 1]) / 10;
   }
   // Handle the case where operands are not the same length
-  for (int i = shorter_operand_length; i < carry_length; i++) {
+  for (int i = carry_length; i > shorter_operand_length; i--) {
     if (shorter_operand == 2) {
       carry[i] = (letter_values[operand1_map[i]] + carry[i - 1]) / 10;
     } else {
@@ -150,11 +153,11 @@ bool Tree::check_solution(Node &node) {
   // Finally check the summation
   if (letter_values.back() != carry.back()) // Last carry is not equal to the result's highest order
     return false;
-  for (int i = 0; i < shorter_operand_length; i++) {
+  for (int i = shorter_operand_length; i > 0; i--) {
     if (letter_values[operand1_map[i]] + letter_values[operand2_map[i]] != letter_values[result_map[i]] + carry[i] * 10)
       return false;
   }
-  for (int i = shorter_operand_length; i < carry_length; i++) {
+  for (int i = carry_length; i > shorter_operand_length; i--) {
     if (shorter_operand == 2) {
       if (letter_values[operand1_map[i]] != letter_values[result_map[i]] + carry[i] * 10)
         return false;
@@ -185,21 +188,21 @@ void Tree::bfs() {
                                     {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
                                     {0, 0, 0, 0, 0, 0, 0, 0, 1, 0}};
     int solution_index = 845279;
-    if (node->get_data() == solution || node->get_index() == solution_index) {
+    if (node->get_index() == solution_index) {
+      node->print();
       cout << "gotcha bitch" << endl;
     }
 
     if (node->leaf()) {
-      solution_found = check_solution(*node);
+        check_solution(*node);
+        solution_found = false;
     } else {
       // Add children to the queue that satisfies the constraints
       vector<Node *> children = node->get_children();
-      if (!children.empty()) {
-        for (int i = 0; i < 10; i++) {
-          if (!visited[children[i]->get_index()] && satisfies_constraints(*children[i])) {
-            q.push(children[i]);
-            visited[children[i]->get_index()] = true;
-          }
+      for (int i = 0; i < 10; i++) {
+        if (!visited[children[i]->get_index()] && satisfies_constraints(*children[i])) {
+          q.push(children[i]);
+          visited[children[i]->get_index()] = true;
         }
       }
     }
