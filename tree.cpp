@@ -44,7 +44,7 @@ string Tree::get_distinct_letters() {
 // Map operands to the letters
 vector<int> Tree::map_operand(string op) {
   vector<int> op_map = vector<int>(op.length());
-  for (int i = 0; i < operand1.length(); i++) {
+  for (int i = 0; i < op.length(); i++) {
     for (int j = 0; j < letters.length(); j++) {
       if (op[i] == letters[j])
         op_map[i] = j;
@@ -64,7 +64,14 @@ void Tree::populate(int level, Node *parent) {
     }
     parent->set_children(children);
     for (int i = 0; i < 10; i++) {
-      populate(level + 1, children[i]);
+      // Create the whole tree only if there are less than 7 characters
+      if (letters.length() > 6){
+        if (satisfies_constraints(*children[i])){
+          populate(level + 1, children[i]);
+        }
+      } else {
+        populate(level + 1, children[i]);
+      }
     }
   }
 }
@@ -96,15 +103,6 @@ bool Tree::check_solution(Node &node) {
   // Make a copy of the data matrix
   vector<vector<int>> data = node.get_data();
   // Make sure a number is assigned to every letter (node is leaf)
-//  int sum = 0;
-//  for (int i = 0; i < 10; i++) {
-//    for (int j = 0; j < letters.length(); j++) {
-//      sum += data[j][i];
-//    }
-//  }
-//  if (sum != letters.length()) {
-//    return false;
-//  }
   if (!node.leaf()) {
     return false;
   }
@@ -122,52 +120,23 @@ bool Tree::check_solution(Node &node) {
     }
   }
 
-  // Create the carry vector
-  int carry_length, shorter_operand, shorter_operand_length;
-  // Find the length of the carry array
-  if (operand1.length() > operand2.length()) {
-    carry_length = operand1.length();
-    shorter_operand = 2;
-    shorter_operand_length = operand2.length();
-  } else {
-    carry_length = operand2.length();
-    shorter_operand = 1;
-    shorter_operand_length = operand1.length();
+  // Get the operand 1 value
+  int operand1_value = 0;
+  for (int i = 0; i < operand1.length(); i++) {
+    operand1_value += letter_values[operand1_map[i]] * int(pow(10, operand1.length()-i-1));
   }
-  vector<int> carry = vector<int>(carry_length, 0);
-  // Calculate carries
-  for (int i = shorter_operand_length; i > 0; i--) {
-    if (i == shorter_operand_length)
-      carry[i] = (letter_values[operand1_map[i]] + letter_values[operand2_map[i]]) / 10;
-    else
-      carry[i] = (letter_values[operand1_map[i]] + letter_values[operand2_map[i]] + carry[i - 1]) / 10;
+  // Get the operand 2 value
+  int operand2_value = 0;
+  for (int i = 0; i < operand2.length(); i++) {
+    operand2_value += letter_values[operand2_map[i]] * int(pow(10, operand2.length()-i-1));
   }
-  // Handle the case where operands are not the same length
-  for (int i = carry_length; i > shorter_operand_length; i--) {
-    if (shorter_operand == 2) {
-      carry[i] = (letter_values[operand1_map[i]] + carry[i - 1]) / 10;
-    } else {
-      carry[i] = (letter_values[operand2_map[i]] + carry[i - 1]) / 10;
-    }
+  // Get the result's value
+  int result_value = 0;
+  for (int i = 0; i < result.length(); i++) {
+    result_value += letter_values[result_map[i]] * int(pow(10, result.length()-i-1));
   }
-  // Finally check the summation
-  if (letter_values.back() != carry.back()) // Last carry is not equal to the result's highest order
-    return false;
-  for (int i = shorter_operand_length; i > 0; i--) {
-    if (letter_values[operand1_map[i]] + letter_values[operand2_map[i]] != letter_values[result_map[i]] + carry[i] * 10)
-      return false;
-  }
-  for (int i = carry_length; i > shorter_operand_length; i--) {
-    if (shorter_operand == 2) {
-      if (letter_values[operand1_map[i]] != letter_values[result_map[i]] + carry[i] * 10)
-        return false;
-    } else {
-      if (letter_values[operand2_map[i]] != letter_values[result_map[i]] + carry[i] * 10)
-        return false;
-    }
-  }
-  // Solution found!
-  return true;
+
+  return (operand1_value + operand2_value == result_value);
 }
 
 void Tree::bfs() {
@@ -181,21 +150,23 @@ void Tree::bfs() {
     Node *node = q.front();
     q.pop();
 
-    vector<vector<int>> solution = {{0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-                                    {0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-                                    {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                                    {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-                                    {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-                                    {0, 0, 0, 0, 0, 0, 0, 0, 1, 0}};
-    int solution_index = 845279;
-    if (node->get_index() == solution_index) {
-      node->print();
-      cout << "gotcha bitch" << endl;
-    }
+//    vector<vector<int>> solution = {{0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+//                                    {0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+//                                    {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+//                                    {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+//                                    {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+//                                    {0, 0, 0, 0, 0, 0, 0, 0, 1, 0}};
+//    int solution_index = 845279;
+//    if (node->get_index() == solution_index) {
+//      node->print();
+//      cout << "gotcha bitch" << endl;
+//    }
 
     if (node->leaf()) {
-        check_solution(*node);
-        solution_found = false;
+        solution_found = check_solution(*node);
+        if (solution_found) {
+          node->print();
+        }
     } else {
       // Add children to the queue that satisfies the constraints
       vector<Node *> children = node->get_children();
