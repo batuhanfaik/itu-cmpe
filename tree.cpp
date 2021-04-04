@@ -181,9 +181,7 @@ bool Tree::check_solution(Node &node) {
 
 int Tree::bfs() {
   vector<Node *> q;
-  vector<bool> visited = vector<bool>(node_amount, false);
   q.push_back(root);
-  visited[root->get_index()] = true;
   int visited_nodes = 1;
   bool solution_found = false;
 
@@ -197,9 +195,8 @@ int Tree::bfs() {
       // Add children to the queue that satisfies the constraints
       vector<Node *> children = node->get_children();
       for (int i = 0; i < 10; i++) {
-        if (!visited[children[i]->get_index()] && satisfies_constraints(*children[i])) {
+        if (satisfies_constraints(*children[i])) {
           q.push_back(children[i]);
-          visited[children[i]->get_index()] = true;
           visited_nodes++;
         }
       }
@@ -211,9 +208,7 @@ int Tree::bfs() {
 
 int Tree::dfs() {
   vector<Node *> s;
-  vector<bool> visited = vector<bool>(node_amount, false);
   s.push_back(root);
-  visited[root->get_index()] = true;
   int visited_nodes = 1;
   bool solution_found = false;
 
@@ -227,9 +222,8 @@ int Tree::dfs() {
       // Add children to the stack that satisfies the constraints
       vector<Node *> children = node->get_children();
       for (int i = 0; i < 10; i++) {
-        if (!visited[children[i]->get_index()] && satisfies_constraints(*children[i])) {
+        if (satisfies_constraints(*children[i])) {
           s.push_back(children[i]);
-          visited[children[i]->get_index()] = true;
           visited_nodes++;
         }
       }
