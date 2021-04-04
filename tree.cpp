@@ -180,14 +180,16 @@ bool Tree::check_solution(Node &node) {
 }
 
 int Tree::bfs() {
-  vector<Node *> q;
-  q.push_back(root);
+  queue<Node *> q;
+  vector<bool> visited = vector<bool>(node_amount, false);
+  q.push(root);
+  visited[root->get_index()] = true;
   int visited_nodes = 1;
   bool solution_found = false;
 
   while (!q.empty() && !solution_found) {
     Node *node = q.front();
-    q.erase(q.begin());
+    q.pop();
 
     if (node->leaf()) {
         solution_found = check_solution(*node);
@@ -195,8 +197,9 @@ int Tree::bfs() {
       // Add children to the queue that satisfies the constraints
       vector<Node *> children = node->get_children();
       for (int i = 0; i < 10; i++) {
-        if (satisfies_constraints(*children[i])) {
-          q.push_back(children[i]);
+        if (!visited[children[i]->get_index()] && satisfies_constraints(*children[i])) {
+          q.push(children[i]);
+          visited[children[i]->get_index()] = true;
           visited_nodes++;
         }
       }
@@ -207,14 +210,16 @@ int Tree::bfs() {
 }
 
 int Tree::dfs() {
-  vector<Node *> s;
-  s.push_back(root);
+  stack<Node *> s;
+  vector<bool> visited = vector<bool>(node_amount, false);
+  s.push(root);
+  visited[root->get_index()] = true;
   int visited_nodes = 1;
   bool solution_found = false;
 
   while (!s.empty() && !solution_found) {
-    Node *node = s.back();
-    s.pop_back();
+    Node *node = s.top();
+    s.pop();
 
     if (node->leaf()) {
         solution_found = check_solution(*node);
@@ -222,8 +227,9 @@ int Tree::dfs() {
       // Add children to the stack that satisfies the constraints
       vector<Node *> children = node->get_children();
       for (int i = 0; i < 10; i++) {
-        if (satisfies_constraints(*children[i])) {
-          s.push_back(children[i]);
+        if (!visited[children[i]->get_index()] && satisfies_constraints(*children[i])) {
+          s.push(children[i]);
+          visited[children[i]->get_index()] = true;
           visited_nodes++;
         }
       }
