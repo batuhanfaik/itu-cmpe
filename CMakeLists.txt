@@ -6,8 +6,4 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(.)
 
 add_executable(hw1
-        main.cpp
-        node.cpp
-        node.h
-        tree.cpp
-        tree.h)
+        main.cpp)
