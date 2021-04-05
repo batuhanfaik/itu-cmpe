@@ -60,9 +60,9 @@ class Tree {
  public:
   Tree(const string&, const string&, const string&);
 
-  int bfs();
+  int* bfs();
 
-  int dfs();
+  int* dfs();
 
   int get_nodes_in_memory() const;
 
@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  int visited_nodes;
+  int* algo_results;
   // Create the tree
   Tree cryptarithmetic_tree = Tree(operand1, operand2, result);
 
@@ -95,9 +95,9 @@ int main(int argc, char **argv) {
 
   // Run the search
   if (algorithm == "DFS")
-    visited_nodes = cryptarithmetic_tree.dfs();
+    algo_results = cryptarithmetic_tree.dfs();
   else
-    visited_nodes = cryptarithmetic_tree.bfs();
+    algo_results = cryptarithmetic_tree.bfs();
 
   // Searching ends
   auto stop_time = chrono::high_resolution_clock::now();
@@ -110,11 +110,13 @@ int main(int argc, char **argv) {
   file.close();
 
   cout << "Algorithm: " << algorithm << endl <<
-          "Number of visited nodes: " << visited_nodes << endl <<
-          "Maximum number of nodes kept in the memory: " << cryptarithmetic_tree.get_nodes_in_memory() << endl <<
+          "Number of visited nodes: " << algo_results[0] << endl <<
+          "Maximum number of nodes kept in the queue/stack: " << algo_results[1] << endl <<
+          "Number of nodes kept in the memory: " << cryptarithmetic_tree.get_nodes_in_memory() << endl <<
           "Running time: " << duration.count() / 1000000.0 << " seconds" << endl <<
           "Solution: " << cryptarithmetic_tree.get_solution() << endl;
 
+  delete(algo_results);
   return 0;
 }
 
@@ -358,17 +360,23 @@ bool Tree::check_solution(Node &node) {
   }
 }
 
-int Tree::bfs() {
+int* Tree::bfs() {
   vector<Node *> q;
   vector<bool> visited = vector<bool>(node_amount, false);
   q.push_back(root);
   visited[root->get_index()] = true;
   int visited_nodes = 1;
+  int queue_size = 1;
+  int max_queue_size = queue_size;
   bool solution_found = false;
 
   while (!q.empty() && !solution_found) {
+    if (queue_size > max_queue_size)
+      max_queue_size = queue_size;
+
     Node *node = q.front();
     q.erase(q.begin());
+    queue_size--;
 
     if (node->leaf()) {
       solution_found = check_solution(*node);
@@ -378,27 +386,36 @@ int Tree::bfs() {
       for (int i = 0; i < 10; i++) {
         if (!visited[children[i]->get_index()] && satisfies_constraints(*children[i])) {
           q.push_back(children[i]);
+          queue_size++;
           visited[children[i]->get_index()] = true;
           visited_nodes++;
         }
       }
     }
   }
-
-  return visited_nodes;
+  int* to_return = new int[2];
+  to_return[0] = visited_nodes;
+  to_return[1] = max_queue_size;
+  return to_return;
 }
 
-int Tree::dfs() {
+int* Tree::dfs() {
   vector<Node *> s;
   vector<bool> visited = vector<bool>(node_amount, false);
   s.push_back(root);
   visited[root->get_index()] = true;
   int visited_nodes = 1;
+  int stack_size = 1;
+  int max_stack_size = stack_size;
   bool solution_found = false;
 
   while (!s.empty() && !solution_found) {
+    if (stack_size > max_stack_size)
+      max_stack_size = stack_size;
+
     Node *node = s.back();
     s.pop_back();
+    stack_size--;
 
     if (node->leaf()) {
       solution_found = check_solution(*node);
@@ -408,14 +425,17 @@ int Tree::dfs() {
       for (int i = 0; i < 10; i++) {
         if (!visited[children[i]->get_index()] && satisfies_constraints(*children[i])) {
           s.push_back(children[i]);
+          stack_size++;
           visited[children[i]->get_index()] = true;
           visited_nodes++;
         }
       }
     }
   }
-
-  return visited_nodes;
+  int* to_return = new int[2];
+  to_return[0] = visited_nodes;
+  to_return[1] = max_stack_size;
+  return to_return;
 }
 
 int Tree::get_nodes_in_memory() const {
