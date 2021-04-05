@@ -87,11 +87,11 @@ int main(int argc, char **argv) {
   }
 
   int visited_nodes;
-  // Get the current time
-  auto start_time = chrono::high_resolution_clock::now();
-
   // Create the tree
   Tree cryptarithmetic_tree = Tree(operand1, operand2, result);
+
+  // Get the current time
+  auto start_time = chrono::high_resolution_clock::now();
 
   // Run the search
   if (algorithm == "DFS")
