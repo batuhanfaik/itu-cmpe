@@ -187,7 +187,9 @@ void Graph::kruskals_mst() {
 
 int main() {
   // Open the file
-  ifstream q1_file("city_plan_1.txt");    // input.txt has integers, one per line
+  string filename;
+  cin >> filename;
+  ifstream q1_file(filename);    // input.txt has integers, one per line
   if (!q1_file) {
     cerr << "File cannot be opened!";
     exit(1);
