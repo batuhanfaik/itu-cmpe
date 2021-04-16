@@ -22,12 +22,38 @@ class Edge {
   pair<string, int> start_node, end_node;
   int weight;
   Edge(const pair<string, int> &, const pair<string, int> &, int);
+  bool connects_gp_hipp();
+  bool connects_gp_ch();
+  bool connects_hipp_bas();
+  bool connects_hp_hp();
 };
 
 Edge::Edge(const pair<string, int> &sn, const pair<string, int> &en, int wt) {
   start_node = sn;
   end_node = en;
   weight = wt;
+}
+
+bool Edge::connects_gp_hipp() {
+  bool gp_to_hipp = (start_node.first == "GP") && (end_node.first == "Hipp");
+  bool hipp_to_gp = (start_node.first == "Hipp") && (end_node.first == "GP");
+  return gp_to_hipp || hipp_to_gp;
+}
+
+bool Edge::connects_gp_ch() {
+  bool gp_to_ch = (start_node.first == "GP") && (end_node.first.find("Ch") != string::npos);
+  bool ch_to_gp = (start_node.first.find("Ch") != string::npos) && (end_node.first == "GP");
+  return gp_to_ch || ch_to_gp;
+}
+
+bool Edge::connects_hipp_bas() {
+  bool hipp_to_bas = (start_node.first == "Hipp") && (end_node.first.find("Bas") != string::npos);
+  bool bas_to_hipp = (start_node.first.find("Bas") != string::npos) && (end_node.first == "Hipp");
+  return hipp_to_bas || bas_to_hipp;
+}
+
+bool Edge::connects_hp_hp() {
+  return (start_node.first.find("Hp") != string::npos) && (end_node.first.find("Hp") != string::npos);
 }
 
 class Graph {
@@ -67,14 +93,13 @@ bool Graph::compare_weight(const Edge &a, const Edge &b) {
   return a.weight < b.weight;
 }
 
-void Graph :: print_mst() {
+void Graph::print_mst() {
   int cost = 0;
-  cout << "Edges of minimum spanning tree : ";
-  for(auto& e : mst) {
-    cout << "[" << e.start_node.first << "-" << e.end_node.first << "](" << e.weight << ") ";
+  for (auto &e : mst) {
+    cout << e.start_node.first << " " << e.end_node.first << " " << e.weight << endl;
     cost += e.weight;
   }
-  cout << endl << "Cost of minimum spanning tree : " << cost << endl;
+  cout << cost << endl;
 }
 
 void Graph::kruskals_mst() {
@@ -89,6 +114,57 @@ void Graph::kruskals_mst() {
   // Implementation using union-set structure
   // Note that rather than creating a separate class for the disjoint set union data structure
   // I prefer to implement it within the Kruskal's algorithm.
+
+  // Start by satisfying constraints
+  auto it = edges.begin();
+  int idx = 0;
+  bool hipp_connected = false;
+  bool ch_connected = false;
+  while (!(hipp_connected && ch_connected) && it != edges.end()) {
+    if (!ch_connected) {
+      // Check if the edge is between GP and Ch
+      if (edges[idx].connects_gp_ch()) {
+        pair<string, int> root1 = get_parent(edges[idx].start_node);
+        pair<string, int> root2 = get_parent(edges[idx].end_node);
+
+        if (root1 != root2) {
+          mst.push_back(edges[idx]);
+          if (rank[root1.second] < rank[root2.second]) {
+            parent[root1.second] = root2;
+            rank[root1.second]++;
+          } else {
+            parent[root2.second] = root1;
+            rank[root2.second]++;
+          }
+        }
+        ch_connected = true;
+      }
+    }
+
+    if (!hipp_connected) {
+      // Check if the edge is between GP and Hipp
+      if (edges[idx].connects_gp_hipp()) {
+        pair<string, int> root1 = get_parent(edges[idx].start_node);
+        pair<string, int> root2 = get_parent(edges[idx].end_node);
+
+        if (root1 != root2) {
+          mst.push_back(edges[idx]);
+          if (rank[root1.second] < rank[root2.second]) {
+            parent[root1.second] = root2;
+            rank[root1.second]++;
+          } else {
+            parent[root2.second] = root1;
+            rank[root2.second]++;
+          }
+        }
+        hipp_connected = true;
+      }
+    }
+
+    it++, idx++;
+  }
+
+  // Use Kruskal's algorithm for all edges
   for (auto &edge: edges) {
     pair<string, int> root1 = get_parent(edge.start_node);
     pair<string, int> root2 = get_parent(edge.end_node);
@@ -104,6 +180,9 @@ void Graph::kruskals_mst() {
       }
     }
   }
+
+  // Sort mst edges in ascending order
+  sort(mst.begin(), mst.end(), compare_weight);
 }
 
 int main() {
@@ -137,7 +216,9 @@ int main() {
     }
 
     Edge e = Edge(pair<string, int>(v1, g_v[v1]), pair<string, int>(v2, g_v[v2]), weight);
-    edges.push_back(e);
+    // Don't add edges that don't satisfy the constraints
+    if (!e.connects_hipp_bas() && !e.connects_hp_hp())
+      edges.push_back(e);
   }
 
   Graph monstantinople = Graph(g_v.size());
