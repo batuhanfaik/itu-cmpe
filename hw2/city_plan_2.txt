@@ -1,0 +1,8 @@
+GP,Hipp,15
+GP,Ch1,9
+GP,Ch2,10
+GP,Hp1,1
+Ch1,Hp1,2
+Ch1,Hp2,3
+Ch2,Hp1,100
+Ch2,Hp2,100
