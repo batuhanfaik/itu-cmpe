@@ -1,7 +1,9 @@
-Ma,E1,1
-Ma,S1,2
+Ma,E1,6
+Ma,S1,7
 E1,S2,1
 S1,S2,2
 S1,R1,5
+S1,S3,3
+S3,Mo,4
 S2,Mo,3
 R1,Mo,6

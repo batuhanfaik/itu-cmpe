@@ -75,7 +75,9 @@ void Graph::dijkstras_sp(spot s_v) {
   while (!p_queue.empty()) {
     spot u = p_queue.top().first;
     p_queue.pop();
-    if (u.first.find("E") == string::npos){
+    bool enemy_spot = (u.first.find("E") != string::npos);
+    bool close_to_enemy = (u.second == -1);
+    if (!enemy_spot && !close_to_enemy){
       visited.push_back(u);
 
       for (int i = 0; i < adjacency[u.second].size(); i++) {
@@ -84,6 +86,9 @@ void Graph::dijkstras_sp(spot s_v) {
 
         // if the distance to v is shorter by going through u
         if (distances[v.second] > distances[u.second] + w) {
+          if (v.second == num_nodes - 2){
+            cout << u.first << " " << endl;
+          }
           distances[v.second] = distances[u.second] + w;
           p_queue.push(make_pair(v, distances[v.second]));
         }
@@ -106,7 +111,7 @@ int main() {
   // Open the file
   string filename;
 //  cin >> filename;
-  filename = "path_info_1.txt";
+  filename = "path_info_2.txt";
   ifstream q2_file(filename);
   if (!q2_file) {
     cerr << "File cannot be opened!";
@@ -120,6 +125,7 @@ int main() {
   int weight, n_vertices;
   n_vertices = 0;
   vector<Edge> edges;
+  vector<int> blacklist;
 
   // Read the file
   while (!q2_file.eof()) {
@@ -140,8 +146,13 @@ int main() {
 
     Edge e = Edge(pair<string, int>(v1, g_v[v1]), pair<string, int>(v2, g_v[v2]), weight);
     // Don't add edges that don't satisfy the constraints
-    if (!e.close_to_enemy())
-      edges.push_back(e);
+    if (e.close_to_enemy()) {
+      blacklist.push_back(g_v[v1]);
+      blacklist.push_back(g_v[v2]);
+    } else {
+      if (!count(blacklist.begin(), blacklist.end(), g_v[v1]) && !count(blacklist.begin(), blacklist.end(), g_v[v2]))
+        edges.push_back(e);
+    }
   }
 
   int mankara = g_v["Ma"];
