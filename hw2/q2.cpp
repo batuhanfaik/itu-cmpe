@@ -48,16 +48,21 @@ bool Edge::close_to_enemy(){
 
 class Graph {
   int num_nodes;
+  map<string, int> g_v;
+  map<int, string> g_vi;
   vector<vector<weighted_spot>> adjacency;
   vector<int> distances;
+  vector<int> visited;
  public:
-  Graph(int);
+  Graph(int, map<string, int>, map<int, string>);
   void add_edge(Edge &);
   void dijkstras_sp(spot);
-  void print_shortest_path(spot);
+  void print_path(int);
+  void print_shortest_path(int);
 };
 
-Graph::Graph(int n): num_nodes(n), adjacency(n, vector<weighted_spot>(n)), distances(n, INF){}
+Graph::Graph(int n, map<string, int> g_v, map<int, string> g_vi): num_nodes(n),
+  adjacency(n, vector<weighted_spot>(n)), distances(n, INF), visited(n, -1), g_v(g_v), g_vi(g_vi){}
 
 void Graph::add_edge(Edge& edge) {
   adjacency[edge.spot1.second].push_back(make_pair(edge.spot2, edge.weight));
@@ -66,7 +71,6 @@ void Graph::add_edge(Edge& edge) {
 
 void Graph::dijkstras_sp(spot s_v) {
   // s_v = starting vertex (spot) - Ma
-  vector<spot> visited;
   priority_queue<weighted_spot, vector<weighted_spot>, greater<>> p_queue;
 
   p_queue.push(make_pair(s_v, 0));
@@ -75,36 +79,37 @@ void Graph::dijkstras_sp(spot s_v) {
   while (!p_queue.empty()) {
     spot u = p_queue.top().first;
     p_queue.pop();
+
     bool enemy_spot = (u.first.find("E") != string::npos);
     bool close_to_enemy = (u.second == -1);
     if (!enemy_spot && !close_to_enemy){
-      visited.push_back(u);
-
       for (int i = 0; i < adjacency[u.second].size(); i++) {
         spot v = adjacency[u.second][i].first;
         int w = adjacency[u.second][i].second;
 
         // if the distance to v is shorter by going through u
         if (distances[v.second] > distances[u.second] + w) {
-          if (v.second == num_nodes - 2){
-            cout << u.first << " " << endl;
-          }
+          visited[v.second] = u.second;
           distances[v.second] = distances[u.second] + w;
           p_queue.push(make_pair(v, distances[v.second]));
         }
       }
     }
   }
-
-  for (int i = 0; i < visited.size(); i++) {
-//    cout << i << " " << distances[i] << endl;
-    cout << i << " " << visited[i].first << "\t" << visited[i].second << "\t" << distances[visited[i].second] << endl;
-  }
 }
 
-void Graph::print_shortest_path(spot d_v) {
-  // d_v = destination vertex (spot) - Mo
-  cout << distances[d_v.second] << endl;
+void Graph::print_path(int in) {
+  if (visited[in] == -1) {
+    return;
+  }
+  print_path(visited[in]);
+  cout << g_vi[in] << " ";
+}
+
+void Graph::print_shortest_path(int end_vertex_index) {
+  cout << "Ma ";
+  print_path(end_vertex_index);
+  cout << distances[end_vertex_index] << endl;
 }
 
 int main() {
@@ -158,12 +163,12 @@ int main() {
   int mankara = g_v["Ma"];
   int monstantinople = g_v["Mo"];
 
-  Graph conquerors_path = Graph(g_vi.size());
+  Graph conquerors_path = Graph(g_v.size(), g_v, g_vi);
   for (auto &e : edges) {
     conquerors_path.add_edge(e);
   }
   conquerors_path.dijkstras_sp(make_pair("Ma", mankara));
-  conquerors_path.print_shortest_path(make_pair("Mo", monstantinople));
+  conquerors_path.print_shortest_path(monstantinople);
 
   q2_file.close();
   return 0;
