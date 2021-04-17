@@ -20,15 +20,17 @@
 
 using namespace std;
 
+// Vertex name and index
 typedef pair<string, int> spot;
+// Vertex (spot) and weight
 typedef pair<spot, int> weighted_spot;
-typedef pair<int, int> index_pair;
 
 class Edge {
  public:
   spot spot1, spot2;
   int weight;
   Edge(const spot &, const spot &, int);
+  bool close_to_enemy();
 };
 
 Edge::Edge(const spot &s1, const spot &s2, int wt) {
@@ -37,54 +39,67 @@ Edge::Edge(const spot &s1, const spot &s2, int wt) {
   weight = wt;
 }
 
-class Graph {
-  int num_nodes;
-  list<weighted_spot>* adjacency;
- public:
-  Graph(int);
-  void add_edge(Edge&);
-  void dijkstras_sp(spot);
-//  ~Graph();
-};
-
-Graph::Graph(int n) {
-  num_nodes = n;
-  adjacency = new list<weighted_spot>[n];
+bool Edge::close_to_enemy(){
+  if ((spot1.first.find("E") != string::npos) || (spot2.first.find("E") != string::npos))
+    return weight < 5;
+  else
+    return false;
 }
 
+class Graph {
+  int num_nodes;
+  vector<vector<weighted_spot>> adjacency;
+  vector<int> distances;
+ public:
+  Graph(int);
+  void add_edge(Edge &);
+  void dijkstras_sp(spot);
+  void print_shortest_path(spot);
+};
+
+Graph::Graph(int n): num_nodes(n), adjacency(n, vector<weighted_spot>(n)), distances(n, INF){}
+
 void Graph::add_edge(Edge& edge) {
-  weighted_spot s1_w = make_pair(edge.spot1, edge.weight);
-  weighted_spot s2_w = make_pair(edge.spot2, edge.weight);
-  adjacency[edge.spot1.second].push_back(s2_w);
-  adjacency[edge.spot2.second].push_back(s1_w);
+  adjacency[edge.spot1.second].push_back(make_pair(edge.spot2, edge.weight));
+  adjacency[edge.spot2.second].push_back(make_pair(edge.spot1, edge.weight));
 }
 
 void Graph::dijkstras_sp(spot s_v) {
-  // s_v = starting vertex
-  priority_queue<index_pair, vector<index_pair>, greater<>> queue;
-  vector<weighted_spot> distance(num_nodes, make_pair(s_v, INF));
-  queue.push(make_pair(0, s_v.second));
-  distance[s_v.second] = make_pair(s_v, 0);
+  // s_v = starting vertex (spot) - Ma
+  vector<spot> visited;
+  priority_queue<weighted_spot, vector<weighted_spot>, greater<>> p_queue;
 
-  while (!queue.empty()) {
-    int u = queue.top().second;
-    queue.pop();
+  p_queue.push(make_pair(s_v, 0));
+  distances[s_v.second] = 0;
 
-    list<weighted_spot>::iterator it;
-    for (it = adjacency[u].begin(); it != adjacency[u].end(); it++){
-      int v = (*it).first.second;
-      int weight = (*it).second;
+  while (!p_queue.empty()) {
+    spot u = p_queue.top().first;
+    p_queue.pop();
+    if (u.first.find("E") == string::npos){
+      visited.push_back(u);
 
-      if (distance[v].second > distance[u].second + weight){
-        distance[v].second = distance[u].second + weight;
-        queue.push(make_pair(distance[v].second, v));
+      for (int i = 0; i < adjacency[u.second].size(); i++) {
+        spot v = adjacency[u.second][i].first;
+        int w = adjacency[u.second][i].second;
+
+        // if the distance to v is shorter by going through u
+        if (distances[v.second] > distances[u.second] + w) {
+          distances[v.second] = distances[u.second] + w;
+          p_queue.push(make_pair(v, distances[v.second]));
+        }
       }
     }
   }
-  // Print shortest distances stored in dist[]
-  printf("Vertex   Distance from Source\n");
-  for (int i = 0; i < num_nodes; ++i)
-    printf("%d \t\t %d\n", i, distance[i].second);
+
+  for (int i = 0; i < visited.size(); i++) {
+//    cout << i << " " << distances[i] << endl;
+    cout << i << " " << visited[i].first << "\t" << visited[i].second << "\t" << distances[visited[i].second] << endl;
+  }
+}
+
+void Graph::print_shortest_path(spot d_v) {
+  // d_v = destination vertex (spot) - Mo
+  cout << distances[d_v.second] << endl;
 }
 
 int main() {
@@ -100,6 +115,7 @@ int main() {
 
   // Declare variables
   map<string, int> g_v;
+  map<int, string> g_vi;
   string v1, v2, linebreak;
   int weight, n_vertices;
   n_vertices = 0;
@@ -113,24 +129,30 @@ int main() {
     getline(q2_file, linebreak, '\n'); //this is for reading the \n character into dummy variable
 
     // if vertices are not in the map, add them
-    if (g_v.find(v1) == g_v.end()) {
-      g_v.insert(pair<string, int>(v1, n_vertices++));
+    if (g_v.find(v1) == g_v.end()){
+      g_v.insert(pair<string, int>(v1, n_vertices));
+      g_vi.insert(pair<int, string>(n_vertices++, v1));
     }
-    if (g_v.find(v2) == g_v.end()) {
-      g_v.insert(pair<string, int>(v2, n_vertices++));
+    if (g_v.find(v2) == g_v.end()){
+      g_v.insert(pair<string, int>(v2, n_vertices));
+      g_vi.insert(pair<int, string>(n_vertices++, v2));
     }
 
     Edge e = Edge(pair<string, int>(v1, g_v[v1]), pair<string, int>(v2, g_v[v2]), weight);
     // Don't add edges that don't satisfy the constraints
-//    if (!e.connects_hipp_bas() && !e.connects_hp_hp())
-    edges.push_back(e);
+    if (!e.close_to_enemy())
+      edges.push_back(e);
   }
 
-  Graph conquerors_path = Graph(g_v.size());
-  for (auto& e : edges) {
+  int mankara = g_v["Ma"];
+  int monstantinople = g_v["Mo"];
+
+  Graph conquerors_path = Graph(g_vi.size());
+  for (auto &e : edges) {
     conquerors_path.add_edge(e);
   }
-  conquerors_path.dijkstras_sp(edges[0].spot1);
+  conquerors_path.dijkstras_sp(make_pair("Ma", mankara));
+  conquerors_path.print_shortest_path(make_pair("Mo", monstantinople));
 
   q2_file.close();
   return 0;
