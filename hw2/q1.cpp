@@ -12,7 +12,7 @@
 #include <map>
 #include <utility>
 #include <vector>
-#include<algorithm>
+#include <algorithm>
 #include <iterator>
 
 using namespace std;
@@ -189,7 +189,7 @@ int main() {
   // Open the file
   string filename;
   cin >> filename;
-  ifstream q1_file(filename);    // input.txt has integers, one per line
+  ifstream q1_file(filename);
   if (!q1_file) {
     cerr << "File cannot be opened!";
     exit(1);
