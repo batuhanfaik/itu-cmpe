@@ -1,19 +1,17 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * /
-* @ Filename: q1
+* @ Filename: q2
 * @ Date: 16-Apr-2021
 * @ AUTHOR: batuhanfaik
 * @ Copyright (C) 2021 Batuhan Faik Derinbay
 * @ Project: hw2
-* @ Description: Kruskal's Algorithm for HW2
+* @ Description: Dijkstra's Algorithm for HW2
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include <iostream>
-#include <fstream>
 #include <map>
 #include <utility>
 #include <vector>
 #include <algorithm>
-#include <iterator>
 #include <bits/stdc++.h>
 
 #define INF 0x7FFFFFFF
@@ -30,7 +28,7 @@ class Edge {
   spot spot1, spot2;
   int weight;
   Edge(const spot &, const spot &, int);
-  bool close_to_enemy();
+  bool close_to_enemy() const;
 };
 
 Edge::Edge(const spot &s1, const spot &s2, int wt) {
@@ -39,7 +37,7 @@ Edge::Edge(const spot &s1, const spot &s2, int wt) {
   weight = wt;
 }
 
-bool Edge::close_to_enemy(){
+bool Edge::close_to_enemy() const{
   if ((spot1.first.find("E") != string::npos) || (spot2.first.find("E") != string::npos))
     return weight < 5;
   else
@@ -48,11 +46,11 @@ bool Edge::close_to_enemy(){
 
 class Graph {
   int num_nodes;
-  map<string, int> g_v;
-  map<int, string> g_vi;
   vector<vector<weighted_spot>> adjacency;
   vector<int> distances;
   vector<int> visited;
+  map<string, int> g_v;
+  map<int, string> g_vi;
  public:
   Graph(int, map<string, int>, map<int, string>);
   void add_edge(Edge &);
@@ -71,7 +69,7 @@ void Graph::add_edge(Edge& edge) {
 
 void Graph::dijkstras_sp(spot s_v) {
   // s_v = starting vertex (spot) - Ma
-  priority_queue<weighted_spot, vector<weighted_spot>, greater<>> p_queue;
+  priority_queue<weighted_spot, vector<weighted_spot>, greater<weighted_spot>> p_queue;
 
   p_queue.push(make_pair(s_v, 0));
   distances[s_v.second] = 0;
@@ -83,7 +81,8 @@ void Graph::dijkstras_sp(spot s_v) {
     bool enemy_spot = (u.first.find("E") != string::npos);
     bool close_to_enemy = (u.second == -1);
     if (!enemy_spot && !close_to_enemy){
-      for (int i = 0; i < adjacency[u.second].size(); i++) {
+      int adj_size = adjacency[u.second].size();
+      for (int i = 0; i < adj_size; i++) {
         spot v = adjacency[u.second][i].first;
         int w = adjacency[u.second][i].second;
 
@@ -115,8 +114,8 @@ void Graph::print_shortest_path(int end_vertex_index) {
 int main() {
   // Open the file
   string filename;
-//  cin >> filename;
-  filename = "path_info_2.txt";
+  cin >> filename;
+//  filename = "path_info_2.txt";
   ifstream q2_file(filename);
   if (!q2_file) {
     cerr << "File cannot be opened!";
