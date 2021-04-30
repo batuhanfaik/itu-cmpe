@@ -2,6 +2,7 @@ module Main where
 import System.Environment(getArgs)
 import Data.Char(intToDigit, digitToInt)
 
+-- Function to parse input arguments
 parseArgs :: [String] -> [Char]
 parseArgs args
     | head args == "d2c" = digitsToChars (read $ args !! 1) (read $ args !! 2)
