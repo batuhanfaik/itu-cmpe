@@ -2,14 +2,9 @@ module Main where
 import System.Environment(getArgs)
 import Data.Char(intToDigit, digitToInt)
 
--- checkArgs a b (c:cs) 
-checkArgs :: [[Char]] -> [Char]
-checkArgs [] = []
-checkArgs _ = error "At least three input arguments required"
-
-parseArgs :: [Char] -> Int -> Int -> Char
-parseArgs mode base vals
-    | mode == "d2c" = digitsToChars base vals
+parseArgs :: [String] -> Char
+parseArgs args
+    | head args == "d2c" = digitsToChars (read (args !! 1)) (read (args !! 2))
     | otherwise = error "Other"
 
 digitsToChars :: Int -> Int -> Char
@@ -27,13 +22,6 @@ mapDecToHex x
     | x == 14 = 'E'
     | x == 15 = 'F'
 
--- intToDigit x = show x
-
--- charsToDigits [mode, base, vals] = putStrLn (mode ++ " " ++ base ++ " " ++ vals)
-
 main = do
     args <- getArgs
-    checkArgs args
-
--- main = do
---     putStrLn [digitsToChars 16 14]
+    putStrLn [parseArgs args]
