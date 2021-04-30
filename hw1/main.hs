@@ -6,7 +6,8 @@ parseArgs :: [String] -> [Char]
 parseArgs args
     | head args == "d2c" = digitsToChars (read $ args !! 1) (read $ args !! 2)
     | head args == "c2d" = charsToDigits (read $ args !! 1) (args !! 2)
-    | head args == "n2l" = show (reverse $ numberToList (read $ args !! 1) (read $ args !! 2))
+    | head args == "n2l" = show $ reverse $ numberToList (read $ args !! 1) (read $ args !! 2)
+    | head args == "l2n" = show $ listToNumber (read $ args !! 1) (map read $ (tail . tail) args)
     | otherwise = error "Unrecognized operation!"
 
 digitsToChars :: Int -> Int -> [Char]
@@ -43,6 +44,15 @@ numberToList :: Int -> Int -> [Int]
 numberToList base num
     | base <= 0 || num <= 0 = []
     | otherwise = mod num base:numberToList base (div num base)
+
+listToNumber :: Int -> [Int] -> Int
+listToNumber base nums
+    | base <= 0 = 0
+    | otherwise = baseConverter base nums (length nums - 1)
+        where 
+            baseConverter :: Int -> [Int] -> Int -> Int
+            baseConverter _ _ (-1) = 0
+            baseConverter base (x:xs) pow = x*base^pow + baseConverter base xs (pow - 1)
 
 main :: IO ()
 main = do
