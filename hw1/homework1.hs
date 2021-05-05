@@ -14,7 +14,7 @@ parseArgs args
 
 digitsToChars :: Int -> Int -> [Char]
 digitsToChars base dVal
-    | base <= dVal = "Invalid digit!"
+    | base <= dVal = error ": invalid digit"
     | otherwise = show $ mapDecToHex dVal
 
 mapDecToHex :: Int -> Char
@@ -30,7 +30,7 @@ mapDecToHex x
 
 charsToDigits :: Int -> [Char] -> [Char]
 charsToDigits base cVal
-    | base <= read (mapHexToDec cVal) = error "Invalid digit!"
+    | base <= read (mapHexToDec cVal) = error ": invalid digit"
     | otherwise = mapHexToDec cVal
 
 mapHexToDec :: [Char] -> [Char]
@@ -67,7 +67,7 @@ addDecimals :: Int -> Int -> Int -> [Char]
 addDecimals base num1 num2 =
     getNumberToList base num1 ++ "\n\"" ++ reverse (map mapDecToHex (numberToList base num1)) ++ "\"\n" ++
     getNumberToList base num2 ++ "\n\"" ++ reverse (map mapDecToHex (numberToList base num2)) ++ "\"\n" ++
-    show (num1 + num2)
+    getNumberToList base (num1 + num2) ++ "\n" ++ show (num1 + num2)
 
 main :: IO ()
 main = do
