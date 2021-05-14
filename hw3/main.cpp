@@ -21,6 +21,7 @@ using namespace std;
 
 int score(const char&, const char&);
 vector<vector<int>> similarity_matrix(const string&, const string&);
+void print_similarity_matrix(const vector<vector<int>>&);
 
 int main() {
   ifstream file;
@@ -34,25 +35,23 @@ int main() {
   vector<string> lines;
   string line;
   // Read first N lines
-//  while (!file.eof()) {
-//    // Read strings from file
-//    getline(file, line, '\n'); //line (string)
-//    lines.push_back(line); // Add line to the lines
-//  }
-
-  vector<vector<int>> sm = similarity_matrix("information", "funimatio");
-  for (const auto& i: sm) {
-    for (const auto& j: i) {
-      cout << j << "\t";
-    }
-    cout << endl;
+  while (!file.eof()) {
+    // Read strings from file
+    getline(file, line, '\n'); //line (string)
+    line.erase(remove(line.begin(), line.end(), '\r'), line.end());
+    lines.push_back(line); // Add line to the lines
   }
 
-  // Print lines
-//  for (const auto& e: lines) {
-//    cout << e << endl;
-//  }
+for (uint wi=0; wi < lines.size(); wi++) {
+  for (uint wj=wi+1; wj < lines.size(); wj++) {
+    cout << lines[wi];
+    cout << " vs " << lines[wj] << endl;
+    vector<vector<int>> sm = similarity_matrix(lines[wi], lines[wj]);
+//    print_similarity_matrix(sm);
+  }
+}
 
+  // Close the file
   file.close();
 }
 
@@ -79,4 +78,13 @@ vector<vector<int>> similarity_matrix(const string& w1, const string& w2) {
   }
 
   return matrix;
+}
+
+void print_similarity_matrix(const vector<vector<int>>& sm) {
+  for (const auto& i: sm) {
+    for (const auto& j: i) {
+      cout << j << "\t";
+    }
+    cout << endl;
+  }
 }
