@@ -14,16 +14,16 @@
 #include <algorithm>
 
 #define MATCH 1
-#define MISMATCH -2
-#define GAP -4
+#define MISMATCH -5
+#define GAP -10
 
 using namespace std;
 
 int score(const char &, const char &);
 vector<vector<int>> similarity_matrix(const string &, const string &);
 vector<pair<int, int>> max_similarity_indices(const vector<vector<int>> &);
-string traceback_iterative(vector<vector<int>> &, int, int, string);
-string traceback_recursive(vector<vector<int>> &, int, int, string, string);
+string traceback_iterative(const vector<vector<int>> &, int, int, string);
+string traceback_recursive(const vector<vector<int>> &, int, int, string, string);
 void print_similarity_matrix(const vector<vector<int>> &);
 
 int main() {
@@ -111,10 +111,10 @@ vector<vector<int>> similarity_matrix(const string &w1, const string &w2) {
 
 vector<pair<int, int>> max_similarity_indices(const vector<vector<int>> &sm) {
   vector<pair<int, int>> max_indices;
-  int max = 1;
+  int max = MATCH;
 
-  for (uint i = 0; i < sm.size(); i++) {
-    for (uint j = 0; j < sm[i].size(); j++) {
+  for (uint i = 1; i < sm.size(); i++) {
+    for (uint j = 1; j < sm[i].size(); j++) {
       if (sm[i][j] > max) {
         max = sm[i][j];
         max_indices.clear();
@@ -128,7 +128,7 @@ vector<pair<int, int>> max_similarity_indices(const vector<vector<int>> &sm) {
   return max_indices;
 }
 
-string traceback_iterative(vector<vector<int>> &sm, int i, int j, string w1) {
+string traceback_iterative(const vector<vector<int>> &sm, int i, int j, string w1) {
   string substr = "";
   while (sm[i][j]) {
     substr = w1[i - 1] + substr;
