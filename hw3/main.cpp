@@ -14,8 +14,8 @@
 #include <algorithm>
 
 #define MATCH 1
-#define MISMATCH -5
-#define GAP -10
+#define MISMATCH -2
+#define GAP -4
 
 using namespace std;
 
@@ -27,10 +27,10 @@ string traceback_recursive(vector<vector<int>> &, int, int, string, string);
 void print_similarity_matrix(const vector<vector<int>> &);
 
 int main() {
-  ifstream file;
-  file.open("strings.txt");
+  ifstream infile;
+  infile.open("strings.txt");
 
-  if (!file) {
+  if (!infile) {
     cerr << "File cannot be opened!";
     exit(1);
   }
@@ -38,21 +38,26 @@ int main() {
   vector<string> lines;
   string line;
   // Read first N lines
-  while (!file.eof()) {
-    // Read strings from file
-    getline(file, line, '\n'); //line (string)
+  while (!infile.eof()) {
+    // Read strings from infile
+    getline(infile, line, '\n'); //line (string)
     line.erase(remove(line.begin(), line.end(), '\r'), line.end());
     lines.push_back(line); // Add line to the lines
   }
 
-  // Sort lines read from the file
+  // Close the infile
+  infile.close();
+  // Open the output file
+  ofstream outfile;
+  outfile.open("output.txt");
+  // Sort lines read from the infile
   sort(lines.begin(), lines.end());
 
   // Compare strings to one another
   for (uint wi = 0; wi < lines.size(); wi++) {
     for (uint wj = wi + 1; wj < lines.size(); wj++) {
-      cout << lines[wi];
-      cout << " - " << lines[wj] << endl;
+      outfile << lines[wi];
+      outfile << " - " << lines[wj] << endl;
       vector<vector<int>> sm = similarity_matrix(lines[wi], lines[wj]);
 //      print_similarity_matrix(sm);
       vector<string> sequences;
@@ -61,22 +66,22 @@ int main() {
       }
 
       if (sequences.empty()) {
-        cout << "Score: 0 Sequence(s):" << endl;
+        outfile << "Score: 0 Sequence(s):" << endl;
       } else {
         // Sort sequences
         sort(sequences.begin(), sequences.end());
         // Delete duplicate sequences
         sequences.erase(unique(sequences.begin(), sequences.end()), sequences.end());
-        cout << "Score: " << sequences[0].length() << " Sequence(s):";
-        for (auto const &i : sequences)
-          cout << " \"" << i << "\"";
-        cout << endl;
+        outfile << "Score: " << sequences[0].length() << " Sequence(s):";
+        for (auto const &i : sequences) {
+          outfile << " \"" << i << "\"";
+        }
+        outfile << endl;
       }
     }
   }
-
-  // Close the file
-  file.close();
+  // Close the outfile
+  outfile.close();
 }
 
 int score(const char &c1, const char &c2) {
