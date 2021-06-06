@@ -44,7 +44,11 @@ maxElement' (Leaf v) = Just v
 maxElement' (Branch (Just v, (Just l, Nothing))) = max (Just v) (maxElement' l)
 maxElement' (Branch (Just v, (Just l, Just r))) = max (Just v) (max (maxElement' l) (maxElement' r))
 
--- delete' :: Ord n => n -> Heap n -> Heap n
+delete' :: Ord n => n -> Heap n -> Heap n
+delete' n heap = if lookup' n heap == 1 then deleteElement' n heap else heap
+    where
+        deleteElement' n heap = heap    -- Fix here and implement element deletion
+        
 
 -- Extract the value of the branch vertex
 extract' :: Ord n => Heap n -> Maybe n
@@ -65,7 +69,7 @@ isValidMinHeap' (Branch (v, (Just l, Just r))) = if v < lVal && v < rVal then mi
 
 main :: IO ()
 main = do
-    print $ Branch (Just 1,(Just (Branch (Just 3,(Just (Leaf 5),Just (Leaf 4)))),Just (Branch (Just 2,(Just (Leaf 6),Nothing)))))
+    print $ Branch (Just 1,(Just (Branch (Just 3,(Just (Leaf 5),Just (Leaf 4)))),Just (Branch (Just 2,(Just (Leaf 6),Nothing)))))   -- Homework example heap
     let myHeap = fromList' [5, 1, 2, 4, 3, 6]
     print myHeap    -- Expect to be the same with the previous print statement
 
@@ -83,3 +87,6 @@ main = do
     print $ isValidMinHeap' $ Branch (Just 2, (Nothing, Nothing))   -- Expect 0
     print $ isValidMinHeap' $ Branch (Just 2, (Nothing, Just (Leaf 3)))   -- Expect 0
     print $ isValidMinHeap' $ Branch (Just 2, (Just (Leaf 1), Nothing))   -- Expect 0
+
+    print $ delete' 4 myHeap   -- Expect Branch (Just 1,(Just (Branch (Just 4,(Just (Leaf 5),Nothing))),Just (Branch (Just 2,(Just (Leaf 6),Nothing)))))
+    print $ delete' 10 myHeap   -- Expect myHeap untouched
