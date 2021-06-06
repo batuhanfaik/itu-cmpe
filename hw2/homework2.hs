@@ -46,12 +46,40 @@ maxElement' (Branch (Just v, (Just l, Just r))) = max (Just v) (max (maxElement'
 
 -- delete' :: Ord n => n -> Heap n -> Heap n
 
--- isValidMinHeap' :: Ord n => Heap n -> Int
+-- Extract the value of the branch vertex
+extract' :: Ord n => Heap n -> Maybe n
+extract' (Branch (v, (Just _, Just _))) = v
+extract' (Branch (v, (Just _, Nothing))) = v
 
+isValidMinHeap' :: Ord n => Heap n -> Int
+isValidMinHeap' (Branch (Nothing, (Nothing, Nothing))) = 1
+isValidMinHeap' (Leaf _) = 1
+isValidMinHeap' (Branch (_, (Nothing, Nothing))) = 0    -- This is a leaf. A branch cant have two nothings
+isValidMinHeap' (Branch (_, (Nothing, Just _))) = 0 -- Left justified heap cant have right elements before left
+isValidMinHeap' (Branch (Just v, (Just (Leaf l), Nothing))) = if v < l then 1 else 0
+isValidMinHeap' (Branch (Just v, (Just (Leaf l), Just (Leaf r)))) = if v < l && v < r then 1 else 0
+isValidMinHeap' (Branch (v, (Just l, Just r))) = if v < lVal && v < rVal then min (isValidMinHeap' l) (isValidMinHeap' r) else 0
+    where
+        lVal = extract' l
+        rVal = extract' r
 
 main :: IO ()
 main = do
+    print $ Branch (Just 1,(Just (Branch (Just 3,(Just (Leaf 5),Just (Leaf 4)))),Just (Branch (Just 2,(Just (Leaf 6),Nothing)))))
     let myHeap = fromList' [5, 1, 2, 4, 3, 6]
-    print myHeap
-    print $ lookup' 10 myHeap
-    -- print $ maxElement' (Branch (Nothing, (Nothing, Nothing)))
+    print myHeap    -- Expect to be the same with the previous print statement
+
+    print $ lookup' 4 myHeap    -- Expect 1
+    print $ lookup' 10 myHeap   -- Expect 0
+    print $ lookup' 10 empty'   -- Expect 0
+
+    print $ maxElement' myHeap  -- Expect Just 6
+    -- print $ maxElement' empty'  -- Expect Nothing but error during compilation
+
+    print $ isValidMinHeap' myHeap  -- Expect 1
+    -- print $ isValidMinHeap' empty' -- Expect 1 but error during compilation
+    print $ isValidMinHeap' $ Branch (Just 2, (Just (Leaf 3), Just (Leaf 1)))   -- Expect 0
+    print $ isValidMinHeap' $ Branch (Just 1,(Just (Branch (Just 0,(Just (Leaf 5),Just (Leaf 4)))),Just (Branch (Just 2,(Just (Leaf 6),Nothing))))) -- Expect 0
+    print $ isValidMinHeap' $ Branch (Just 2, (Nothing, Nothing))   -- Expect 0
+    print $ isValidMinHeap' $ Branch (Just 2, (Nothing, Just (Leaf 3)))   -- Expect 0
+    print $ isValidMinHeap' $ Branch (Just 2, (Just (Leaf 1), Nothing))   -- Expect 0
