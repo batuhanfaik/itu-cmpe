@@ -32,9 +32,17 @@ insert' (Leaf v) nv
 fromList' :: Ord n => [n] -> Heap n
 fromList' = foldl insert' empty'
 
--- lookup' :: Ord n => n -> Heap n -> Int
+lookup' :: Ord n => n -> Heap n -> Int
+lookup' _ (Branch (Nothing, (Nothing, Nothing))) = 0
+lookup' n (Leaf v) = if n==v then 1 else 0
+lookup' n (Branch (Just v, (Just l, Nothing))) = if n==v then 1 else lookup' n l
+lookup' n (Branch (Just v, (Just l, Just r))) = if n==v then 1 else lookup' n l + lookup' n r
 
--- maxElement' Ord n => Heap n -> Maybe n
+maxElement' :: Ord n => Heap n -> Maybe n
+maxElement' (Branch (Nothing, (Nothing, Nothing))) = Nothing
+maxElement' (Leaf v) = Just v
+maxElement' (Branch (Just v, (Just l, Nothing))) = max (Just v) (maxElement' l)
+maxElement' (Branch (Just v, (Just l, Just r))) = max (Just v) (max (maxElement' l) (maxElement' r))
 
 -- delete' :: Ord n => n -> Heap n -> Heap n
 
@@ -43,10 +51,7 @@ fromList' = foldl insert' empty'
 
 main :: IO ()
 main = do
-    let myHeap = Branch
-                (Just 1, (
-                Just $ Branch (Just 3, (Just $ Leaf 5, Just $ Leaf 4)),
-                Just $ Branch (Just 2, (Just $ Leaf 6, Nothing))
-                ))
+    let myHeap = fromList' [5, 1, 2, 4, 3, 6]
     print myHeap
-    print $ fromList' [5, 1, 2, 4, 3, 6]
+    print $ lookup' 10 myHeap
+    -- print $ maxElement' (Branch (Nothing, (Nothing, Nothing)))
