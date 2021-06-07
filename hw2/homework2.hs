@@ -1,4 +1,4 @@
--- Definition of the left justified heap tree
+-- Definition of the leftist heap tree
 data Heap n = Leaf n | Branch (Maybe n, (Maybe (Heap n), Maybe (Heap n)))
               deriving Show
 
@@ -44,17 +44,33 @@ maxElement' (Leaf v) = Just v
 maxElement' (Branch (Just v, (Just l, Nothing))) = max (Just v) (maxElement' l)
 maxElement' (Branch (Just v, (Just l, Just r))) = max (Just v) (max (maxElement' l) (maxElement' r))
 
+farRight' :: Ord n => Heap n -> Maybe n
+farRight' (Leaf v) = Just v
+farRight' (Branch (Just v, (Just l, Nothing))) = farRight' l
+farRight' (Branch (Just v, (Just l, Just r)))
+    | length' l > length' r = farRight' l
+    | otherwise = farRight' r
+
+deleteNode :: Ord n => n -> Heap n -> Heap n
+deleteNode _ (Leaf v) = Leaf v  -- Not sure, might cause problems
+deleteNode n (Branch (Just v, (Just l, Just r)))
+    | n == v = deleteNode' (Branch (Just v, (Just l, Just r)))
+    | otherwise = if lookup' n l == 1 then Branch (Just v, (Just (deleteNode' l), Just r)) else Branch (Just v, (Just l, Just (deleteNode' r)))
+
+deleteNode' :: Ord n => Heap n -> Heap n
+deleteNode' (Branch (Just v, (Just l, Nothing))) = l
+deleteNode' k@(Branch (Just v, (Just l, Just r))) = Branch (Just $ farRight' k, (Just l, Just r))
+
 delete' :: Ord n => n -> Heap n -> Heap n
-delete' n heap = if lookup' n heap == 1 then deleteElement' n heap else heap
-    where
-        deleteElement' n heap = heap    -- Fix here and implement element deletion
-        
+delete' n heap = if lookup' n heap == 1 then deleteNode n heap else heap
 
 -- Extract the value of the branch vertex
 extract' :: Ord n => Heap n -> Maybe n
+extract' (Leaf v) = Just v
 extract' (Branch (v, (Just _, Just _))) = v
 extract' (Branch (v, (Just _, Nothing))) = v
 
+-- Check if the heap is a valid minimum heap or not
 isValidMinHeap' :: Ord n => Heap n -> Int
 isValidMinHeap' (Branch (Nothing, (Nothing, Nothing))) = 1
 isValidMinHeap' (Leaf _) = 1
@@ -70,8 +86,10 @@ isValidMinHeap' (Branch (v, (Just l, Just r))) = if v < lVal && v < rVal then mi
 main :: IO ()
 main = do
     print $ Branch (Just 1,(Just (Branch (Just 3,(Just (Leaf 5),Just (Leaf 4)))),Just (Branch (Just 2,(Just (Leaf 6),Nothing)))))   -- Homework example heap
-    let myHeap = fromList' [5, 1, 2, 4, 3, 6]
+    -- let myHeap = fromList' [5, 1, 2, 4, 3, 6]
+    let myHeap = fromList' [8, 1, 9, 11, 15, 21, 6, 5, 17]
     print myHeap    -- Expect to be the same with the previous print statement
+    print $ farRight' myHeap
 
     print $ lookup' 4 myHeap    -- Expect 1
     print $ lookup' 10 myHeap   -- Expect 0
