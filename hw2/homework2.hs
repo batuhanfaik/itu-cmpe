@@ -51,15 +51,20 @@ farRight' (Branch (Just v, (Just l, Just r)))
     | length' l > length' r = farRight' l
     | otherwise = farRight' r
 
+-- A function to find the node to be deleted
 deleteNode :: Ord n => n -> Heap n -> Heap n
-deleteNode _ (Leaf v) = Leaf v  -- Not sure, might cause problems
-deleteNode n (Branch (Just v, (Just l, Just r)))
-    | n == v = deleteNode' (Branch (Just v, (Just l, Just r)))
-    | otherwise = if lookup' n l == 1 then Branch (Just v, (Just (deleteNode' l), Just r)) else Branch (Just v, (Just l, Just (deleteNode' r)))
+deleteNode _ (Leaf v) = empty'  -- This is so wrong :(
+deleteNode n k@(Branch (Just v, (Just l, Nothing)))
+    | n == v = deleteNode' k
+    | otherwise = Branch (Just v, (Just $ deleteNode n l, Nothing))
+deleteNode n k@(Branch (Just v, (Just l, Just r)))
+    | n == v = deleteNode' k
+    | otherwise = if lookup' n l == 1 then Branch (Just v, (Just $ deleteNode n l, Just r)) else Branch (Just v, (Just l, Just $ deleteNode n r))
 
 deleteNode' :: Ord n => Heap n -> Heap n
+deleteNode' (Leaf v) = empty'   -- This is so wrong :(
 deleteNode' (Branch (Just v, (Just l, Nothing))) = l
-deleteNode' k@(Branch (Just v, (Just l, Just r))) = Branch (Just $ farRight' k, (Just l, Just r))
+deleteNode' k@(Branch (Just v, (Just l, Just r))) = Branch (farRight' k, (Just l, Just r))
 
 delete' :: Ord n => n -> Heap n -> Heap n
 delete' n heap = if lookup' n heap == 1 then deleteNode n heap else heap
@@ -86,8 +91,8 @@ isValidMinHeap' (Branch (v, (Just l, Just r))) = if v < lVal && v < rVal then mi
 main :: IO ()
 main = do
     print $ Branch (Just 1,(Just (Branch (Just 3,(Just (Leaf 5),Just (Leaf 4)))),Just (Branch (Just 2,(Just (Leaf 6),Nothing)))))   -- Homework example heap
-    -- let myHeap = fromList' [5, 1, 2, 4, 3, 6]
-    let myHeap = fromList' [8, 1, 9, 11, 15, 21, 6, 5, 17]
+    let myHeap = fromList' [5, 1, 2, 4, 3, 6]
+    -- let myHeap = fromList' [8, 1, 9, 11, 15, 21, 6, 5, 17]
     print myHeap    -- Expect to be the same with the previous print statement
     print $ farRight' myHeap
 
@@ -106,5 +111,5 @@ main = do
     print $ isValidMinHeap' $ Branch (Just 2, (Nothing, Just (Leaf 3)))   -- Expect 0
     print $ isValidMinHeap' $ Branch (Just 2, (Just (Leaf 1), Nothing))   -- Expect 0
 
-    print $ delete' 4 myHeap   -- Expect Branch (Just 1,(Just (Branch (Just 4,(Just (Leaf 5),Nothing))),Just (Branch (Just 2,(Just (Leaf 6),Nothing)))))
+    print $ delete' 3 myHeap   -- Expect Branch (Just 1,(Just (Branch (Just 4,(Just (Leaf 5),Nothing))),Just (Branch (Just 2,(Just (Leaf 6),Nothing)))))
     print $ delete' 10 myHeap   -- Expect myHeap untouched
