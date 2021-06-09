@@ -39,6 +39,17 @@ insert' (Leaf v) nv
 fromList' :: Ord n => [n] -> Heap n
 fromList' = foldl insert' empty'
 
+toList' :: Ord n => Heap n -> [n]
+toList' (Leaf v) = [v]
+toList' k@(Branch (Nothing, (_, _))) = []
+toList' k@(Branch (Just v, (_, _))) = v:toList' (deleteMin' k)
+
+removeFromList' :: Ord n => n -> [n] -> [n]
+removeFromList' _ [] = []
+removeFromList' x (y:ys)
+    | x == y = removeFromList' x ys
+    | otherwise = y:removeFromList' x ys
+
 lookup' :: Ord n => n -> Heap n -> Int
 lookup' _ (Branch (Nothing, (Nothing, Nothing))) = 0
 lookup' n (Leaf v) = if n==v then 1 else 0
@@ -51,28 +62,26 @@ maxElement' (Leaf v) = Just v
 maxElement' (Branch (Just v, (Just l, Nothing))) = max (Just v) (maxElement' l)
 maxElement' (Branch (Just v, (Just l, Just r))) = max (Just v) (max (maxElement' l) (maxElement' r))
 
-farRight' :: Ord n => Heap n -> Maybe n
-farRight' (Leaf v) = Just v
-farRight' (Branch (Just v, (Just l, Nothing))) = farRight' l
-farRight' (Branch (Just v, (Just l, Just r)))
-    | depth' l > depth' r = farRight' l
-    | otherwise = farRight' r
-
--- Return the node (branch or leaf) in the heap
-getNode' :: Ord n => n -> Heap n -> Heap n
-getNode' _ k@(Leaf _) = k
-getNode' x k@(Branch (Just v, (Just l, Nothing)))
-    | x == v = k
-    | otherwise = getNode' x l
-getNode' x k@(Branch (Just v, (Just l, Just r)))
-    | x == v = k
-    | lookup' x l == 1 = getNode' x l
-    | otherwise = getNode' x r
+botRight' :: Ord n => Heap n -> Heap n
+botRight' k@(Leaf v) = k
+botRight' (Branch (Just v, (Just l, Nothing))) = botRight' l
+botRight' (Branch (Just v, (Just l, Just r)))
+    | depth' l > depth' r = botRight' l
+    | otherwise = botRight' r
 
 -- k1: heap 1, k2: heap 2
 merge' :: Ord n => Heap n -> Heap n -> Heap n
 merge' k1 (Leaf v) = insert' k1 v
 merge' (Leaf v) k2 = insert' k2 v
+merge' k1@(Branch (Just v1, (Just l1, Nothing))) k2@(Branch (Just v2, (Just l2, Nothing)))
+    | v2 > v1 = join' v2 l2 (merge' k1 empty')
+    | otherwise = join' v1 l1 (merge' empty' k2)
+merge' k1@(Branch (Just v1, (Just l1, Just r1))) k2@(Branch (Just v2, (Just l2, Nothing)))
+    | v2 > v1 = join' v2 l2 (merge' k1 empty')
+    | otherwise = join' v1 l1 (merge' r1 k2)
+merge' k1@(Branch (Just v1, (Just l1, Nothing))) k2@(Branch (Just v2, (Just l2, Just r2)))
+    | v2 > v1 = join' v2 l2 (merge' k1 r2)
+    | otherwise = join' v1 l1 (merge' empty' k2)
 merge' k1@(Branch (Just v1, (Just l1, Just r1))) k2@(Branch (Just v2, (Just l2, Just r2)))
     | v2 > v1 = join' v2 l2 (merge' k1 r2)
     | otherwise = join' v1 l1 (merge' r1 k2)
@@ -80,15 +89,30 @@ merge' k1@(Branch (Just v1, (Just l1, Just r1))) k2@(Branch (Just v2, (Just l2, 
 -- Join two heaps with a node
 join' :: Ord n => n -> Heap n -> Heap n -> Heap n
 join' v k1 k2
-    | length' k2 < length' k1 = Branch (Just v, (Just k2, Just k1))
+    | depth' k2 < depth' k1 = Branch (Just v, (Just k2, Just k1))
     | otherwise = Branch (Just v, (Just k1, Just k2))
 
 deleteMin' :: Ord n => Heap n -> Heap n
 deleteMin' (Leaf _) = empty'
-deleteMin' (Branch (Just v, (Just l, Just r))) = merge' r l
+deleteMin' (Branch (Just v, (Just l, Nothing))) = deleteMin' l
+deleteMin' (Branch (Just v, (Just l, Just r))) = merge' l r
+
+-- Return the node (branch or leaf) in the heap
+getNode' :: Ord n => n -> Heap n -> Heap n
+getNode' _ k@(Leaf _) = deleteMin' k
+getNode' x k@(Branch (Just v, (Just l, Nothing)))
+    | x == v = deleteMin' k
+    | otherwise = getNode' x l
+getNode' x k@(Branch (Just v, (Just l, Just r)))
+    | x == v = deleteMin' k
+    | lookup' x l == 1 = getNode' x l
+    | otherwise = getNode' x r
+
+deleteList' :: Ord n => n -> Heap n -> Heap n
+deleteList' n heap = fromList' $ removeFromList' n (toList' heap)
 
 delete' :: Ord n => n -> Heap n -> Heap n
-delete' n heap = if lookup' n heap == 1 then getNode' n heap else heap
+delete' n heap = if lookup' n heap == 1 then deleteList' n heap else heap
 
 -- Extract the value (Maybe n) of the branch vertex
 extract' :: Ord n => Heap n -> Maybe n
@@ -119,7 +143,7 @@ main = do
     let myHeap = fromList' [5, 1, 2, 4, 3, 6]
     -- let myHeap = fromList' [8, 1, 9, 11, 15, 21, 6, 5, 17]
     print myHeap    -- Expect to be the same with the previous print statement
-    print $ farRight' myHeap
+    print $ botRight' myHeap
 
     print $ lookup' 4 myHeap    -- Expect 1
     print $ lookup' 10 myHeap   -- Expect 0
