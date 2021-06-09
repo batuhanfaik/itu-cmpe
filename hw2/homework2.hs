@@ -117,7 +117,7 @@ main = do
     print $ lookup' 10 empty'   -- Expect 0
 
     print $ maxElement' myHeap  -- Expect Just 6
-    -- print $ maxElement' empty'  -- Expect Nothing but error during compilation
+    -- print $ maxElement' (Branch (Nothing, (Nothing, Nothing)))   -- Expect Nothing but error during compilation
 
     print $ isValidMinHeap' myHeap  -- Expect 1
     -- print $ isValidMinHeap' empty' -- Expect 1 but error during compilation
