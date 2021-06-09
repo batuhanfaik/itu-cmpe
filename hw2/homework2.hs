@@ -17,8 +17,8 @@ length' (Branch (Just _, (Just l, Just r))) = 1 + max (length' l) (length' r)
 depth' :: Ord n => Heap n -> Int
 depth' (Leaf _) = 1
 depth' (Branch (Nothing, (Nothing, Nothing))) = 0
-depth' (Branch (Just _, (Just l, Nothing))) = 1   -- Subtract 1 because heap is not full
-depth' (Branch (Just _, (Just l, Just r))) = 1 + max (length' l) (length' r)
+depth' (Branch (Just _, (Just l, Nothing))) = 1 + depth' l  -- Subtract 1 because heap is not full
+depth' (Branch (Just _, (Just l, Just r))) = 1 + max (depth' l) (depth' r)
 
 -- v: vertex, nv: new vertex, l: left, r: right
 insert' :: Ord n => Heap n -> n -> Heap n
