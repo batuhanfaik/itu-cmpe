@@ -58,28 +58,37 @@ farRight' (Branch (Just v, (Just l, Just r)))
     | depth' l > depth' r = farRight' l
     | otherwise = farRight' r
 
--- A function to find the node to be deleted
-deleteNode :: Ord n => Heap n -> n -> Heap n -> Heap n
-deleteNode origHeap _ (Leaf _) = Leaf nv    -- Replace the value of a leaf with far right
-    where
-        nv = extractPure' $ farRight' origHeap  -- This is so wrong :(
-deleteNode origHeap n k@(Branch (Just v, (Just l, Nothing)))
-    | n == v = deleteNode' origHeap k
-    | otherwise = Branch (Just v, (Just $ deleteNode origHeap n l, Nothing))
-deleteNode origHeap n k@(Branch (Just v, (Just l, Just r)))
-    | n == v = deleteNode' origHeap k
-    | otherwise = if lookup' n l == 1 then Branch (Just v, (Just $ deleteNode origHeap n l, Just r)) else Branch (Just v, (Just l, Just $ deleteNode origHeap n r))
+-- Return the node (branch or leaf) in the heap
+getNode' :: Ord n => n -> Heap n -> Heap n
+getNode' _ k@(Leaf _) = k
+getNode' x k@(Branch (Just v, (Just l, Nothing)))
+    | x == v = k
+    | otherwise = getNode' x l
+getNode' x k@(Branch (Just v, (Just l, Just r)))
+    | x == v = k
+    | lookup' x l == 1 = getNode' x l
+    | otherwise = getNode' x r
 
--- A function to delete the node and replace it with the far right
-deleteNode' :: Ord n => Heap n -> Heap n -> Heap n
-deleteNode' _ (Leaf v) = empty'   -- This is so wrong :(
-deleteNode' _ (Branch (Just v, (Just l, Nothing))) = l
-deleteNode' origHeap (Branch (Just v, (Just l, Just r)))
-    | farRight' origHeap == extract' r = Branch (farRight' origHeap, (Just l, Nothing))
-    | otherwise = Branch (farRight' origHeap, (Just l, Just r))
+-- k1: heap 1, k2: heap 2
+merge' :: Ord n => Heap n -> Heap n -> Heap n
+merge' k1 (Leaf v) = insert' k1 v
+merge' (Leaf v) k2 = insert' k2 v
+merge' k1@(Branch (Just v1, (Just l1, Just r1))) k2@(Branch (Just v2, (Just l2, Just r2)))
+    | v2 > v1 = join' v2 l2 (merge' k1 r2)
+    | otherwise = join' v1 l1 (merge' r1 k2)
+
+-- Join two heaps with a node
+join' :: Ord n => n -> Heap n -> Heap n -> Heap n
+join' v k1 k2
+    | length' k2 < length' k1 = Branch (Just v, (Just k2, Just k1))
+    | otherwise = Branch (Just v, (Just k1, Just k2))
+
+deleteMin' :: Ord n => Heap n -> Heap n
+deleteMin' (Leaf _) = empty'
+deleteMin' (Branch (Just v, (Just l, Just r))) = merge' r l
 
 delete' :: Ord n => n -> Heap n -> Heap n
-delete' n heap = if lookup' n heap == 1 then deleteNode heap n heap else heap
+delete' n heap = if lookup' n heap == 1 then getNode' n heap else heap
 
 -- Extract the value (Maybe n) of the branch vertex
 extract' :: Ord n => Heap n -> Maybe n
