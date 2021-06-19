@@ -2,7 +2,7 @@
 * q3_maxProfit_skeleton.cpp
 *
 * Created on: June 14th, 2021
-*     Author: Uður Önal
+*     Author: Ugur Unal
 */
 
 #include <iostream>
