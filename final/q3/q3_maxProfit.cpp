@@ -51,7 +51,7 @@ pair<int, set<int>> MaxProfit(int numOfCrystals, vector<int> profits, vector<int
     i--;
   }
 
-  cout << "Dynamic Programming Table" << endl;
+  cout << "Dynaming Programming Table" << endl;
   for (i = 0; i <= numOfCities; i++) {
     for (j = 0; j <= numOfCrystals; j++) {
       cout << right << setw(3) << matrix[i][j];

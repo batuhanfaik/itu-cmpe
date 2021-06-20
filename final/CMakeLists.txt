@@ -4,4 +4,4 @@ project(final)
 set(CMAKE_CXX_STANDARD 11)
 add_compile_options(-Wall -Werror)
 
-add_executable(final q2/q2.cpp)
+add_executable(final q3/q3_maxProfit.cpp)
