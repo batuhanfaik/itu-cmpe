@@ -3,4 +3,4 @@ project(final)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(final q2/q2.cpp)
+add_executable(final q4/q4.cpp)
