@@ -79,8 +79,10 @@ class PointSpace {
     int pSize = int(p.size());
     for (int i = 0; i < pSize; i++) {
       for (int j = i+1; j < pSize; j++) {
-        if (distance(p[i], p[j]) < min)
+        if (distance(p[i], p[j]) < min) {
           minPair = make_pair(p[i], p[j]);
+          min = distance(p[i], p[j]);
+        }
       }
     }
     return minPair;
