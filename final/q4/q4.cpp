@@ -20,7 +20,7 @@ class Solution {
   // NONE = 0, BLACK = 1, WHITE = 2
   enum Color { NONE, BLACK, WHITE };
 
-  void colorDFS(vector<vector<int>>& graph, vector<int>& colored, int idx, Color a, Color b, bool& isBipartite) {
+  void colorDFS(vector<vector<int>> &graph, vector<int> &colored, int idx, Color a, Color b, bool &isBipartite) {
     // Stop as soon as no longer bipartite property is satisfied
     if (!isBipartite)
       return;
@@ -62,8 +62,8 @@ class Solution {
 
 // This function is provided to check if your graph data is stored well or not
 void printv(vector<vector<int> > v) {
-  for (int i = 0; i < v.size(); i++) {
-    for (int j = 0; j < v[i].size(); j++)
+  for (size_t i = 0; i < v.size(); i++) {
+    for (size_t j = 0; j < v[i].size(); j++)
       cout << v[i][j] << " ";
     cout << endl;
   }
@@ -110,7 +110,7 @@ int main() {
   // D O   N O T   P R I N T   T H E   G R A P H   I N   Y O U R   S O L U T I O N
   // The expected output only includes a True or a False not the graph data itself
   // Do not uncomment this line
-  printv(graph);
+  // printv(graph);
 
   // Save the return value of the function
   bool answer = s.isBipartite(graph);
