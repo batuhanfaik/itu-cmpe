@@ -127,7 +127,7 @@ class PointSpace {
     sort(sy.begin(), sy.end(), compareY);
     pair<Point, Point> sPair = pairwiseDistance(sy);
 
-    if (distance(sPair) < delta)
+    if (distance(sPair) < delta && sy.size() > 1)
       return sPair;
     else if (distance(qPair) < distance(rPair))
       return qPair;
