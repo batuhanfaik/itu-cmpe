@@ -57,7 +57,12 @@ class Preprocessor:
                 set_folder = root.split("/")[-1]
                 if _is_image(file):
                     img = self._image_process(file, root)
+<<<<<<< HEAD
                     if set_folder is not "test":
+=======
+                    # Do not peek into the test folder
+                    if set_folder != "test":
+>>>>>>> dl-final-project/sam
                         mean, std = cv2.meanStdDev(img)
                         self.means.append(mean[0][0])
                         self.stds.append(std[0][0])
