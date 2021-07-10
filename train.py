@@ -15,6 +15,7 @@ from torchvision import datasets, models, transforms
 from collections import OrderedDict
 from sklearn.metrics import confusion_matrix, classification_report
 from densenet import densenet121
+import resnet
 from preprocessor import Preprocessor
 
 
@@ -130,10 +131,10 @@ dataset_mean = 143
 dataset_std = 72
 dataset_path = preprocessed_dataset_path
 #####################################################
-multi_to_multi = True
-multi_class = True
+multi_to_multi = False
+multi_class = False
 
-oversample = False
+oversample = True
 #####################################################
 
 train_loader = torch.utils.data.DataLoader(
@@ -158,13 +159,13 @@ for i in range(len(all_python_files)):
 num_classes = 5
 num_epochs = 50
 
-model = densenet121(pretrained=False)
-num_features_dense = model.classifier.in_features
+model = resnet.resnet101(pretrained=False)
+num_features_resnet = model.in_features
 
 if multi_class == True:
-    model.classifier = nn.Linear(num_features_dense, 3)
+    model.fc = nn.Linear(num_features_resnet, 3)
 else:
-    model.classifier = nn.Linear(num_features_dense, 1)
+    model.fc = nn.Linear(num_features_resnet, 1)
 
 model = model.to(device)
 

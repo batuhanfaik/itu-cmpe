@@ -9,7 +9,7 @@ from skimage import exposure
 
 def _is_image(file):
     file = file.lower()
-    if file.endswith((".jpeg", ".png", "jpg")):
+    if file.endswith((".jpeg", ".png", ".jpg")):
         return True
     else:
         return False
