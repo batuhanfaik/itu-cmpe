@@ -1,0 +1,12 @@
+Table1
+2
+2 massala chicken
+1 coke
+Table2
+3
+1 mughai chicken
+1 fanta
+1 tea
+Table3
+1
+3 bbq salad
