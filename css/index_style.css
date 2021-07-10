@@ -1,0 +1,115 @@
+body {
+    margin: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-image: url("../img/backgrounds/bg4_v2.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Work Sans', sans-serif;
+}
+
+.navbar{
+  width: 90%;
+  margin: 0 auto;
+  font-weight: normal;
+}
+
+header{
+  background: #ffe1bf;
+  height: 56px;
+  padding-left: 0px;
+}
+
+/* Fix disappering header */
+header::after{
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* Resize logo */
+.logo{
+  float: left;
+  max-height: 50px;
+  height: auto;
+  padding: 3px 0px;
+}
+
+/* Navbar correction */
+nav{
+  float: right;
+  position: relative;
+  min-height: 56px; /* This line is the one  that defines the min height, which we overrid in the code above */
+  margin-bottom: 20px;
+}
+
+nav ul{
+  margin: 0;
+  padding: 0;
+  list-style: none; /* Removes dots */
+  background: #ffe1bf;
+  height: 56px;
+}
+
+nav li{
+  display: inline-block;
+  margin: 0px 30px;
+  padding-top: 18px;
+  position: relative; /* Absolute positioning relative to li element */
+}
+
+nav a{
+  color: #444;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+nav a:hover{
+  color: #0a0aa3;
+}
+
+nav a::before{
+  content: '';
+  display: block;
+  height: 8px;
+  background-color: #0a0aa3;
+  position: absolute; /* Absolute positioning of black bars */
+  top: 0;
+  width: 0%;
+  transition: all ease-in-out 180ms;
+}
+
+nav a:hover::before{
+  width: 100%;
+}
+/* Navbar styling ends here */
+
+ol{
+  border-style: none;
+  border-width: medium;
+  width: 70%;
+}
+
+.image{
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  max-width: 100%;
+  height: auto;
+  margin: 0px 10px 5px 15px;
+  float: right;
+}
+
+.is_this img{
+  width: 48px;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 2px;
+  max-width: 100%;
+  height: auto;
+  margin: 0px 10px 5px 15px;
+  float: right;
+}
