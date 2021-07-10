@@ -13,6 +13,7 @@ Finally, I would like to thank all the contributors of this repository including
 - [Cihat Akkiraz](https://github.com/cakkiraz)
 - [Fatih Altınpınar](https://github.com/fatihaltinpinar)
 - [Osman Karaketir](https://github.com/karaketir16)
+- [Sinan Şar](https://github.com/sinansar123)
 - [Ufuk Demir](https://github.com/demiruf17)
 - [Uğur Ali Kaplan](https://github.com/UgurKap)
 
