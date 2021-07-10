@@ -1,0 +1,343 @@
+\documentclass[pdftex,12pt,a4paper]{article}
+
+\usepackage{graphicx}  
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{breakcites}
+\usepackage{indentfirst}
+\usepackage{pgfgantt}
+\usepackage{pdflscape}
+\usepackage{float}
+\usepackage{epsfig}
+\usepackage{epstopdf}
+\usepackage[cmex10]{amsmath}
+\usepackage{stfloats}
+\usepackage{multirow}
+
+\renewcommand{\refname}{REFERENCES}
+\linespread{1.3}
+
+% REQUIRED FOR INSETYING SOME SHITASS ASSEMBLY CODE INTO TO LATEX BIATCH fuck this retarded thing, science my ass
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolthe}{rgb}{0.95,0.95,0.92}
+\definecolor{CommentGreen}{rgb}{0,.6,0}
+% bu salak seyin son satiri bosluk olunca calismiyor kendimi sikcem simdi
+% Icine comment de konmuyor
+
+\lstset{
+    numbers=left,
+    basicstyle=\small\ttfamily,
+    numberstyle=\tiny,
+    keywordstyle=\color{blue}\bfseries,
+    keywordsprefix=B,
+    language={[x86masm]Assembler},
+    breaklines=true,
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    keywordstyle=[2]\color{orange},
+    keywordstyle=[3]\color{codegray},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    showtabs=false,
+    frame=single,
+    keepspaces,
+    escapechar=@,
+}
+
+
+
+\usepackage{mathtools}
+%\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\thispagestyle{empty}
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\textbf{}\\
+\textbf{\Large{ISTANBUL TECHNICAL UNIVERSITY}}\\
+\vspace{0.5cm}
+\textbf{\Large{COMPUTER ENGINEERING DEPARTMENT}}\\
+\vspace{2cm}
+\textbf{\Large{BLG 351E\\ MICROCOMPUTER LABORATORY\\ EXPERIMENT REPORT}}\\
+\vspace{2.8cm}
+\begin{table}[ht]
+\centering
+\Large{
+\begin{tabular}{lcl}
+\textbf{EXPERIMENT NO}  & : & 2 \\
+\textbf{EXPERIMENT DATE}  & : & 09.10.2019 \\
+\textbf{LAB SESSION}  & : & WEDNESDAY - 13.30 \\
+\textbf{GROUP NO}  & : & G10 \\
+\end{tabular}}
+\end{table}
+\vspace{1cm}
+\textbf{\Large{GROUP MEMBERS:}}\\
+\begin{table}[ht]
+\centering
+\Large{
+\begin{tabular}{rcl}
+150170062  & : & Mehmet Fatih YILDIRIM \\
+150180704  & : & Cihat AKK\.{I}RAZ \\
+150180705  & : & Batuhan Faik DER\.{I}NBAY \\
+150180707  & : & Fatih ALTINPINAR \\
+\end{tabular}}
+\end{table}
+\vspace{2.8cm}
+\textbf{\Large{FALL 2019-2020}}
+
+\end{center}
+
+\end{titlepage}
+
+\newpage
+
+
+\thispagestyle{empty}
+\addtocontents{toc}{\contentsline {section}{\numberline {}FRONT COVER}{}}
+\addtocontents{toc}{\contentsline {section}{\numberline {}CONTENTS}{}}
+\setcounter{tocdepth}{4}
+\tableofcontents
+\clearpage
+
+\setcounter{page}{1}
+
+
+\section{INTRODUCTION}
+
+Microcontrollers are connected to other electronical devices such as sensors, diodes, displays and System-On-Chip modules for many purposes. One of the interface for communicating with other things is GPIO. GPIO stands for General Purpose Input Output and refers to the fact that the pins can support both output and input functionalities.
+
+\section{MATERIALS AND METHODS}
+
+This experiment is conducted via using MSP430G2553 microprocessor. This microprocessor is programmed using Code Composer Studio according to desired tasks on the experiment handout. During coding below sources are used:
+
+\begin{itemize}
+    \item MSP430 Education Board Manual \cite{ref2}
+    \item MSP430 Architecture Chapter 4 \cite{ref3}
+    \item MSP430 Instruction Set \cite{ref4}
+    \item Supplementary Chapter 6 General Purpose IO \cite{ref5}
+\end{itemize}
+
+\subsection{Part 1}
+
+\newline{}
+In the first part of the experiment, a new CCS Project is created as choosing "MSP430G2553" as the target and "Empty Assembly Project" as the project template. Then, the codes are examined given on the experiment booklet \cite{booklet}.
+\newline{}
+With the following two instructions(see Figure \ref{code:part1.1}) P1.2 is set as a switch and will branch according to status of the button.
+%\begin{lstlisting}[language={[x86masm]Assembler}, numbers=left]
+
+\begin{figure}[H]
+    \centering
+    \begin{lstlisting}[label={code:part1.1}]
+;read the switch at P1.2 and set flags
+bit.b   #00000100b, &P1IN 
+jnz     ON		 
+    \end{lstlisting}
+    \label{code:part1.1}
+    \caption{Assembly Code of Part 1.1}
+\end{figure}
+Then, with the instructions on the Figure \ref{code:part1.2}, LED 5 is cleared because we random value isn't wanted on it and then it was set.
+\begin{figure}[H]
+    \centering
+    \begin{lstlisting}[label={code:part1.2}]
+;read the switch at P1.2 and set flags 
+bic.b   #00010000b,&P1OUT; clear P1.4 
+bis.b   #00010000b,&P1OUT; set P1.4		 
+    \end{lstlisting}
+    \label{code:part1.2}
+    \caption{Assembly Code of Part 1.2}
+\end{figure}
+
+\subsection{Part 2}
+In the second part of the experiment, the microprocessor was programmed to flash one of the third and fourth LEDs on the second column and change which is lit by the push of a button, i.e. P1.5.
+
+
+In order to implement the given task, team created following piece of code given in Figure \ref{code:part2}
+
+\begin{figure}[H]
+    \centering
+    \begin{lstlisting}[language={[x86masm]Assembler}]
+SetupLED	mov.b	#000Ch,		&P2DIR
+		bic.b	#0020h,		&P1DIR
+		mov.b	#00000100b,	&P2OUT
+ButtonLoop	bit.b	#00100000b,	&P1IN
+		jz	ButtonLoop
+		xor.b	#001100b,	&P2OUT
+PressLoop	bit.b	#00100000b,	&P1IN
+		jnz	PressLoop
+Wait		mov.w	#250000,	R15
+L1		dec.w	R15
+		jnz	L1
+		jmp	ButtonLoop
+    
+    \end{lstlisting}
+    \label{code:part2}
+    \caption{Assembly Code of Part 2}
+\end{figure}
+
+For better understanding, further examination of the code, line by line if necessary, is required:
+
+\begin{itemize}
+    \item Line 1: The second column of LEDs are set up. Notice that only third and fourth LEDs in the second column will be needed. Therefore $(0x0C)$ is moved to the absolute address $P2DIR$ in order to activate third and fourth LEDs in the second column.
+
+\item Line 2: P1.5 which will be used as the button is cleared (set to $0$). It is done by clearing the bits (in this case, there is one bit) in $P1DIR$ corresponding to the ones in the binary number $00100000_2\;(0x20)$.
+
+\item Line 3: Initially, either P2.2 or P2.3 should be lit because that should be the case in any given instant as mentioned in the experiment paper. Therefore $00000100_2$ is moved to the absolute address $P2OUT$ to light P2.2.
+
+\item Line 4-5: These are the lines that program constantly iterates through until P1.5 is pressed. In line 4, bit test instruction does a bitwise AND operation between $00100000_2$ and the value in $P1IN$ which indicates which buttons in the first column are pressed down at that moment. In order for this operation to yield non-zero, the sixth least significant bit of the value in $P1IN$ must be 1 which is when P1.5 is pressed down. Therefore, unless P1.5 is pressed down, zero flag will be raised and in line 5, program will jump to line 4 again. If P1.5 is pressed down, thus, zero flag is not raised, program will continue from line 6.
+
+\item Line 6: Now that P1.5 is pressed, P2.2 and P2.3 should be changed. In line 6, an XOR operation is applied to revert the state of third and fourth LEDs. Note that an XOR operation with 1 results in the reverse of the other operand, namely, $1 \oplus 0 = 1$ and $1 \oplus 1 = 0$.
+
+\item Line 7-8: The very same way with lines 4 and 5, this time the program will iterate through these 2 lines till P1.5 is released because this time if P1.5 is at down position, namely, zero flag is raised, it jumps to line 7.
+
+\item Line 9-11: This is the Wait function that will be executed in order for the button to work properly and as expected. In line 9, the value $250000_{10}$ is moved to register 15 and in line 10, it is decreased. In line 11, until the zero flag is raised the program jumps back to $10^th$ line to decrease the value in R15. When the value in R15 hits $0_{10}$, the zero flag is raised and the program skips to the next line.
+
+\item Line 12: After Wait function, it jumps back to ButtonLoop to wait for the next press of P1.5.
+\end{itemize}
+
+\newpage
+\subsection{Part 3}
+In the part 3 of the second experiment an Assembly program that counts how many times the push button P2.1 is pressed is written.
+
+
+
+\newline{}
+In order to achieve the given task the team decided on the following piece of code given in Figure \ref{code:part3}.
+
+\begin{figure}[H]
+    \centering
+\begin{lstlisting}[language={[x86masm]Assembler}, numbers=left]
+SetupLED	mov.b	#00FFh,		&P1DIR
+		bic.b	#0002h,		&P2DIR
+		mov.b	#00000000b,	&P1OUT
+ButtonLoop	bit.b	#00000010b,	&P2IN
+		jz	ButtonLoop
+		inc.b	Counter
+		mov.b	Counter,	&P1OUT
+PressLoop	bit.b	#00000010b,	&P2IN
+		jnz	PressLoop
+Wait		mov.w	#250000,	R15
+L1		dec.w	R15
+		jnz	L1
+		jmp	ButtonLoop
+
+		.data
+Counter		.word	0
+\end{lstlisting}
+    \caption{Assembly Code of Part 3}
+    \label{code:part3}
+\end{figure}
+
+For better understanding, further examination the code, line by line if necessary, is required:
+\begin{itemize}
+    \item Line 1: The first column of LEDs are set up. Notice that all LEDs in the first column will be needed in order to show as great number as possible because that number will represent how many times P2.1 is pressed. $(0xFF)$ is moved to the absolute address $P1DIR$ in order to activate all LEDs in the first column.
+
+\item Line 2: P2.1 which will be used as the button is cleared (set to $0$). It is done by clearing the bits (in this case, there is one bit) in $P2DIR$ corresponding to the ones in the binary number $00000010_2\;(0x02)$.
+
+\item Line 3: $(0x00)$ is moved to the absolute address $P1OUT$ in order to reset all LEDs in first column to unlit state.
+
+\item Line 4-5: These are the lines that program constantly iterates through until P2.1 is pressed. In line 4, bit test instruction does a bitwise AND operation between $00000010_2$ and the value in $P2IN$ which indicates which buttons in the second column are pressed down at that moment. In order for this operation to yield non-zero, the second least significant bit of the value in $P2IN$ must be 1 which is when P2.1 is pressed down. Therefore, unless P2.1 is pressed down, zero flag will be raised and in line 5, program will jump to line 4 again. If P2.1 is pressed down, thus, zero flag is not raised, program will continue from line 6.
+
+\item Line 6-7: Now that P2.1 is pressed, counter should be incremented. In line 6, the variable Counter which is defined in line 16 is incremented and in line 7, this new value is moved to $P1OUT$ so that it will show up in the first column of LEDs.
+
+\item Line 8-9: The very same way with lines 4 and 5, this time the program will iterate through these 2 lines till P2.1 is released because this time if P2.1 is at down position, namely, zero flag is raised, it jumps to line 8.
+
+\item Line 10-12: This is the Wait function that will be executed in order for the button to work properly and as expected. In line 10, the value $250000_{10}$ is moved to register 15 and in line 11, it is decreased. In line 12, until the zero flag is raised the program jumps back to $11^th$ line to decrease the value in R15. When the value in R15 hits $0_{10}$, the zero flag is raised and the program skips to the next line.
+
+\item Line 13: After Wait function, it jumps back to ButtonLoop to wait for the next press of P2.1.
+
+\item Line 15: This line indicates that the data segment has started.
+
+\item Line 16: This line defines a variable that has the name Counter and the size of a word.
+\end{itemize}
+
+\subsection{Part 4}
+
+\paragraph{}
+In the final part of the experiment, one's complement of the counter value had to be taken by pushing a button. With the extra time, a bonus functionality, resetting the counter has been added with the same technique used in Part 3 of the experiment. The whole assembly code can be seen in Figure \ref{code:part4}.
+\paragraph{}
+To provide these functionalities several lines required to be altered and a few more had to be added to the code given in Figure \ref{code:part3}. For better understanding; modified and new lines in Figure \ref{code:part4} can be explained such:
+\begin{itemize}
+    \item Line 2: In order to provide 2: 3$^{rd}$ and 4$^{th}$ buttons are enabled.
+    \item Line 6-7: Checking if 3$^{rd}$ button is pressed or not by using the same method described in Part 3. If pressed jump to $Complement$ label.
+    \item Line 8-9: Checking if 4$^{th}$ button is pressed or not. If pressed jump to $Reset$ label.
+    \item Line 11-13: Setting all bits to 0 in both $P1OUT$ and $Counter$ which completes the Reset functionality.
+    \item Line 14-16: In these lines complement functionality of the program is implemented. An XOR operation is applied to the $Counter$ by the value $0xFF$ which inverts all the bits. This accomplishes One's complement operation. New value of $Counter$ is moved to $P1OUT$ in or to be observed from the lights in $P1$ column.
+    \item Line 21-24: Same technique is used to prevent repeated calls of $Complement$ and $Reset$.
+\end{itemize}
+
+\newline{}
+
+\begin{figure}[H]
+    \centering
+\begin{lstlisting}[language={[x86masm]Assembler}, label={code:part4}, caption={}]
+SetupLED	mov.b	#00FFh,		&P1DIR
+		bic.b	#00001110b,	&P2DIR
+		mov.b	#00000000b,	&P1OUT
+ButtonLoop	bit.b	#00000010b,	&P2IN
+		jnz	Increment
+		bit.b	#00000100b,	&P2IN
+		jnz	Complement
+		bit.b	#00001000b,	&P2IN
+		jnz	Reset
+		jz	ButtonLoop
+Reset		mov.b	#0000h,		&P1OUT
+		mov.b	#0000h,		Counter
+		jmp	PressLoop
+Complement	xor.b	#0FFh,		Counter
+		mov.b	Counter,	&P1OUT
+		jmp	PressLoop
+Increment	inc.b	Counter
+		mov.b	Counter,	&P1OUT
+PressLoop	bit.b	#00000100b,	&P2IN
+		jnz	PressLoop
+		bit.b	#00000010b,	&P2IN
+		jnz	PressLoop
+		bit.b	#00001000b,	&P2IN
+		jnz	PressLoop
+Wait		mov.w	#250000,	R15
+L1		dec.w	R15
+		jnz	L1
+		jmp	ButtonLoop
+
+			.data
+Counter		.word	0
+	 
+\end{lstlisting}
+    \caption{Assembly Code of Part 4}
+    \label{code:part4}
+\end{figure}
+
+
+\section{RESULTS}%conc kısmı niye benim cümlelerim sen kimsin 
+In the second part of the experiment, when the button that is connected to P1.5 pushed down, only one of the the third and fourth LEDS on the second column was ON and other one was OFF and pushing to the button results a change in the state of the LEDs.
+
+\paragraph{}
+In the third part of the experiment, when the button that is connected to P2.1 is pushed, counter that is declared on the memory is increased by 1. The LEDs on the first column is lit according to the counter's binary value. Each push of the button changes status of LEDs on the first columns.
+\paragraph{}
+In the fourth part of the experiment, microcontroller is programmed in a way where a new button that will do 1'st complement operation in addition to incrementing a value on the memory with the push button. Our team has easily finished desired tasks and added extra functionality to the microcontroller. With the extra functionality added, LEDs can be reset when the extra button is pushed. 
+\section{DISCUSSION}
+
+\newline{}
+Our team coded all the tasks using interrupts before coming to the lab session. In the lab session, we tried to make the code run. But when the team received help from the instructer, we have realized that the desired way of doing the task is much simpler. There actually is no need to use interrupts. The code is already doing it on the background. The code on the booklet were reexamined by the team and we finished the experiment quickly afterwards with a little brainstorming.
+
+%Please explain, analyze, and interpret what have you done during the  experiment. 
+
+\section{CONCLUSION}
+%It was not difficult at all. We just nailed it goddamnit.
+
+Our team learned that it is necessary to think in a more simplistic manner while performing the desired tasks. We also saw the importance of having a good understanding of the task we are required to do and how to put it into code. We learned how to make a simple gpio application using Msp430 microcontroller and  how to use this variable in order to create a variable in memory.
+
+
+
+\nocite{overleaf}
+\nocite{reportGuide}
+\newpage
+\addcontentsline{toc}{section}{\numberline {}REFERENCES}
+
+\bibliographystyle{unsrt}
+\bibliography{reference}
+
+\end{document}
+

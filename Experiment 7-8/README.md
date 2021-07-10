@@ -1,0 +1,1 @@
+Due to a power outage in the faculty experiment on Monday in Week the 8<sup>th</sup> week could not be completed. Rather than delaying all of the experiments, instructors of the lab sessions decided to merge experiment 7 and 8.
