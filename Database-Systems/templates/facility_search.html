@@ -1,0 +1,209 @@
+{% extends "layout.html" %}
+
+
+
+{% block title %}Facility Page{% endblock %}
+{% block body %}
+
+<div class="container mt-3">
+<br>
+                  {% with messages = get_flashed_messages() %} {% if messages %}
+                  <ul class="flashes">
+                    {% for message in messages %}
+                       <div class="alert alert-warning alert-dismissible" role="alert" >
+                    <li>{{ message }}</li>
+                       </div>
+                    {% endfor %}
+
+                  </ul>
+                    <br>
+                  {% endif %} {% endwith %}
+
+<label style="border: 1px solid olive; font-family: courier;" for="facility_search">Search Facility by Facility Id:</label>
+
+<form action="" method="POST" name="search_facility">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input name="facility_id" class="searchTerm" placeholder="Enter Facility ID.." id="facility_id-id">
+    <input type="submit" class="searchButton" id="facility_search" name="facility_search" value="Search Facility">
+</form>
+<br><br>
+
+<label style="border: 1px solid olive; font-family: courier;" for="search_facility_campus">Search Facilities in a Campus by Campus Id:</label>
+
+<form action="" method="POST" name="search_facility_campus">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input name="find_campus_id" class="searchTerm" placeholder="Enter Campus ID.." id="find_campus_id">
+    <input type="submit" class="searchButton" id="search_facility_campus" name="search_facility_campus" value="Search Facilities">
+</form>
+<br><br>
+
+    {% if facility %}
+        <h1 class="mb-3">Found Facility</h1>
+                <table class="table is-striped is-fullwidth table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Facility ID</th>
+                    <th scope="col">Facility Name</th>
+                    <th scope="col">Campus ID</th>
+                    <th scope="col">Shortened Name</th>
+                    <th scope="col">Number of Workers</th>
+                    <th scope="col">Size(m^2)</th>
+                    <th scope="col">Expenses</th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+
+                <td>{{ facility.id }}</td>
+                <td>{{ facility.name }}</td>
+                <td>{{ facility.campus_id }}</td>
+                <td>{{ facility.shortened_name }}</td>
+                <td>{{ facility.number_of_workers }}</td>
+                <td>{{ facility.size }}</td>
+                <td>{{ facility.expenses }}</td>
+                </tr>
+                </tbody>
+            </table>
+    {% endif %}
+
+    {% if facilities %}
+        <h1 class="mb-3">Facilities in {{campus_name}} Campus:  </h1>
+                <table class="table is-striped is-fullwidth table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Facility ID</th>
+                    <th scope="col">Facility Name</th>
+                    <th scope="col">Campus ID</th>
+                    <th scope="col">Shortened Name</th>
+                    <th scope="col">Number of Workers</th>
+                    <th scope="col">Size(m^2)</th>
+                    <th scope="col">Expenses</th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for facility in facilities %}
+                <tr>
+
+                <td>{{ facility.id }}</td>
+                <td>{{ facility.name }}</td>
+                <td>{{ facility.campus_id }}</td>
+                <td>{{ facility.shortened_name }}</td>
+                <td>{{ facility.number_of_workers }}</td>
+                <td>{{ facility.size }}</td>
+                <td>{{ facility.expenses }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <br/>
+
+    {% endif %}
+    {% if facility %}
+
+    <br>
+<form action="" method="POST" name="delete_facility" style="display: contents">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input type="hidden" name="facility_id" value="{{facility.id}}">
+    <input class="btn btn-danger ml-auto" type="submit" id="delete_facility" name='delete_facility' value="Delete Facility">
+</form>
+<br><br>
+    <h1 class="mb-3">Update Facility</h1>
+    <form action="" method="post" name="update_facility" class="form-inline needs-validation">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+      <div class="form-group" >
+        <label for="id" class="mr-sm-2">Facility id:</label>
+        <div class="control" style="  width: 1200px; display: inline-block;">
+          <input type="number" name="id" class="form-control mb-2 mr-sm-2" required="required" id="id" />
+
+        </div>
+      </div>
+
+        <div class="form-group" >
+        <br>
+        <label for="name" class="mr-sm-2">Facility Name:</label>
+        <div class="control"  style="  width: 1200px; display: inline-block;" >
+          <input type="text" name="name" class="form-control mb-2 mr-sm-2"  maxlength="40" required="required" id="name"/>
+
+
+        </div>
+      </div>
+
+
+
+
+        <div class="form-group" >
+        <br>
+        <label for="campus_id" class="mr-sm-2">Campus id:</label>
+        <div class="control"  style="  width: 1200px; display: inline-block;" >
+          <input type="number" name="campus_id" class="form-control mb-2 mr-sm-2" required="required" id="campus_id"/>
+
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label for="shortened_name" class="mr-sm-2">Shortened Name:</label>
+        <div class="control" style="  width: 600px; display: inline-block;">
+          <input type="text" name="shortened_name" class="form-control mb-2 mr-sm-2"  maxlength="6" id="shortened_name"/>
+
+        </div>
+      </div>
+        <br><br>
+
+
+      <div class="form-group">
+        <label for="number_of_workers" class="mr-sm-2">Number of workers in this facility:</label>
+        <div class="control" style="  width: 600px; display: inline-block;">
+          <input type="number" name="number_of_workers" class="form-control mb-2 mr-sm-2" required="required" id="number_of_workers"/>
+
+        </div>
+      </div>
+        <br><br>
+
+
+      <div class="form-group">
+        <label for="size" class="mr-sm-2">Size(m^2):</label>
+        <div class="control" style="  width: 600px; display: inline-block;">
+          <input type="number" name="size" class="form-control mb-2 mr-sm-2"  id="size"/>
+
+        </div>
+
+      </div>
+        <br><br>
+
+
+      <div class="form-group">
+        <label for="expenses" class="mr-sm-2">Expenses for this Facility per month:</label>
+        <div class="control" style="  width: 1200px; display: inline-block;">
+          <input type="number" name="expenses" class="form-control mb-2 mr-sm-2" id="expenses"/>
+
+        </div>
+      </div>
+        <br><br>
+
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="btn btn-primary mb-2">Update Facility</button>
+        </div>
+      </div>
+    </form>
+
+<br><br><br>
+
+
+            <br/>
+
+
+      </div>
+    {% endif %}
+<br>
+<br><br><br>
+
+
+{% endblock %}
+    </div>

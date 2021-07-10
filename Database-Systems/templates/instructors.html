@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %} Instructors {% endblock %}
+
+{% block body %}
+    <div class="container mt-3">
+        <div class="text-center mt-1 mb-1">
+
+        <button class="button btn-success" onClick=" window.location.href = '{{url_for("add_instructor_page") }}'"> Add Instructor </button>
+        </div>
+        <table class="table mt-1 is-striped is-fullwidth table-hover table-sm">
+            <thead>
+            <tr>
+                <th scope="col">Name Surname</th>
+                <th scope="col">Department</th>
+                <th scope="col">Faculty</th>
+                <th scope="col">Room</th>
+                <th scope="col">Specialization</th>
+                <th scope="col">Bachelor's Degree</th>
+                <th scope="col">Master's Degree</th>
+                <th scope="col">Doctorate's Degree</th>
+            </tr>
+            </thead>
+            {% for instructor in instructors %}
+                <tr>
+                    <td><a href="{{ url_for('edit_instructor_page', id=instructor.id) }}">{{ instructor.name + " " + instructor.surname }}</a></td>
+                    <td>{{ instructor.departmentName }}</td>
+                    <td>{{ instructor.facultyName }}</td>
+                    <td>{{ instructor.room_id }}</td>
+                    <td>{{ instructor.specialization }}</td>
+                    <td>{{ instructor.bachelors }}</td>
+                    <td>{{ instructor.masters }}</td>
+                    <td>{{ instructor.doctorates }}</td>
+                </tr>
+
+            {% endfor %}
+    </table>
+    </div>
+{% endblock %}

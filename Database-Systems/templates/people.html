@@ -1,0 +1,239 @@
+{% extends "layout.html" %}
+
+{% block title %} People {% endblock %}
+
+{% block body %}
+
+    {# Style alert boxes so they take up less space #}
+    <style>
+        .alert {
+            margin-bottom: 1px;
+            height: 30px;
+            line-height: 30px;
+            padding: 0px 15px;
+        }
+    </style>
+
+    <div class="container mt-3">
+        <h1 class="mb-3">People List</h1>
+
+        {% if error %}
+            <div class="alert alert-danger mb-2" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        {% if values.errors %}
+            {# Autoclose alerts #}
+            <script>
+                window.setTimeout(function () {
+                    $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                        $(this).remove();
+                    });
+                }, 2000);
+            </script>
+
+            {% for key in values.errors %}
+                <div class="alert alert-danger mb-2" role="alert">
+                    {{ values.errors[key] }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form class="form-inline needs-validation" action="" method="post"
+              enctype=multipart/form-data id="form_add_person"
+              name="form_add_person">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="form-group">
+                <label for="tr_id" class="mr-sm-2">TR ID:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="tr_id"
+                       placeholder="Enter TR ID" name="tr_id" value="{{ values['tr_id'] }}"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="name" class="mr-sm-2">Name:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="name"
+                       placeholder="Enter name" name="name" value="{{ values['name'] }}" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="surname" class="mr-sm-2">Surname:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="surname"
+                       placeholder="Enter surname" name="surname" value="{{ values['surname'] }}"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="phone" class="mr-sm-2">Phone:</label>
+                <input type="tel" class="form-control mb-2 mr-sm-2" id="phone"
+                       placeholder="Enter phone" name="phone" value="{{ values['phone'] }}"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="mr-sm-2">Email:</label>
+                <input type="email" class="form-control mb-2 mr-sm-2" id="email"
+                       placeholder="Enter email" name="email" value="{{ values["email"] }}"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="pwd" class="mr-sm-2">Password:</label>
+                <input type="password" class="form-control mb-2 mr-sm-2" id="pwd"
+                       placeholder="Enter password" name="pwd" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="mfname" class="mr-sm-2">Mother's Name:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="mfname"
+                       placeholder="Enter mother name" name="mfname" value="{{ values['mfname'] }}">
+            </div>
+            <div class="form-group">
+                <label for="ffname" class="mr-sm-2">Father's Name:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="pwd"
+                       placeholder="Enter father name" name="ffname" value="{{ values['ffname'] }}">
+            </div>
+            <div class="form-group">
+                <label for="bcity" class="mr-sm-2">Birth City:</label>
+                <input type="input" class="form-control mb-2 mr-sm-2" id="bcity"
+                       placeholder="Enter birth city" name="bcity" value="{{ values['bcity'] }}">
+            </div>
+            <div class="form-group">
+                <label for="id_regcity" class="mr-sm-2">ID Registration City:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="id_regcity"
+                       placeholder="Enter registration city" name="id_regcity"
+                       value="{{ values['id_regcity'] }}" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="id_regdist" class="mr-sm-2">ID Registration District:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="id_regdist"
+                       placeholder="Enter registration district" name="id_regdist"
+                       value="{{ values['id_regdist'] }}" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="bdate" class="mr-sm-2">Birthday:</label>
+                <input type="date" class="form-control mb-2 mr-sm-2" id="bdate" name="bdate"
+                       value="{{ values['bdate'] }}"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please enter the birthday.</div>
+            </div>
+            <div class="form-group mr-2">
+                <label for="category" class="mr-sm-2">Category:</label>
+                <select class="form-control" id="category" name="category" required>
+                    <option value="0">Admin</option>
+                    <option value="1">Staff</option>
+                    <option value="2">Instructor</option>
+                    <option value="3">Doctorate Student</option>
+                    <option value="4">Master's Student</option>
+                    <option value="5">Bachelor's Student</option>
+                </select>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group mr-2">
+                <label for="gender" class="mr-sm-2">Gender:</label>
+                <select class="form-control" id="gender" name="gender">
+                    <option value=" ">Not indicated</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+            </div>
+            <div class="form-check-inline">
+                <label for="photo_check" class="mr-sm-2">Photo:</label>
+                <input type="checkbox" class="form-control mb-2 mr-sm-2" id="photo_check">
+            </div>
+            <div class="form-group" id="photo_upload">
+                <label for="photo" class="mr-sm-2"></label>
+                <input type="file" class="form-control mb-2 mr-sm-2" id="photo"
+                       placeholder="Upload photo" name="photo" accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Add New Person</button>
+        </form>
+
+        {% if people %}
+            <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">TR ID</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for tr_id, person in people %}
+                    <tr>
+                        <td scope="row"><a
+                                href="{{ url_for("person_page", tr_id=tr_id) }}">{{ tr_id }}</a>
+                        </td>
+                        <td>{{ person.name }}</td>
+                        <td>{{ person.surname }}</td>
+                        <td>{{ person.email }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+    </div>
+
+
+    <script>
+        var form = $('#form_add_person'),
+            checkbox = $('#photo_check'),
+            photoBlock = $('#photo_upload');
+
+        photoBlock.hide();
+
+        checkbox.on('click', function () {
+            if ($(this).is(':checked')) {
+                photoBlock.show();
+                photoBlock.find('input').attr('required', true);
+            } else {
+                photoBlock.hide();
+                photoBlock.find('input').attr('required', false);
+            }
+        })
+    </script>
+
+    <script>
+        // Disable form submissions if there are invalid fields
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Get the forms we want to add validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+
+    {# Prevents form submission on refresh #}
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
+
+{% endblock %}

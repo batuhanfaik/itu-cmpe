@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block body %}
+   <div class="container mt-3">
+   <h1> {{ title }}</h1>
+   <hr>
+    {% if error %}
+        <div class="text-danger hr-bold">
+            {{ error }}
+        </div>
+    {% endif %}
+    <form action="" method="post" name="edit_course" class="form-inline" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+        <table class="w-100">
+        <thead>
+            <tr>
+                <td scope="col"></td>
+                <td scope="col"></td>
+                <td scope="col"></td>
+            </tr>
+        </thead>
+        {% for field in form if field.widget.input_type != 'hidden' %}
+            <tr class="form-group" scope="row">
+                <td><label for="{{ field.id }}" class="mr-sm-2">{{ field.label }}</label></td>
+                <td>{{ field(class="form-control mb-2 mr-sm-2",
+                 id=field.id, readonly=(field.id == 'crn') and title == 'Edit Course')}}</td>
+                <td class="text-danger hr-bold">
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% if request.path == url_for('add_course_page') %}
+    <button type="submit" class="button btn-primary mb-2">Add Course</button>
+     </form>
+    {% else %}
+    <button type="submit" class="button btn-primary mb-2" value="update" name="btn">Update Course</button>
+    </form>
+    <form action="" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button type="submit" class="button btn-danger mb-2" value="delete" name="btn">Delete Course</button>
+    </form>
+    {% endif %}
+   </div>
+
+    <script>
+        let crn = document.getElementById('crn');
+        crn.addEventListener('keyup', () => {
+            if (crn.value.length > 5){
+                crn.value = crn.value.slice(0,5);
+            }
+        })
+    </script>
+{% endblock %}

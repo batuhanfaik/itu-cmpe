@@ -1,0 +1,199 @@
+{% extends "layout.html" %}
+
+
+
+{% block title %}Staff Search Page{% endblock %}
+{% block body %}
+
+<div class="container mt-3">
+<br>
+                  {% with messages = get_flashed_messages() %} {% if messages %}
+                  <ul class="flashes">
+                    {% for message in messages %}
+                       <div class="alert alert-warning alert-dismissible" role="alert" >
+                    <li>{{ message }}</li>
+                       </div>
+                    {% endfor %}
+
+                  </ul>
+                    <br>
+                  {% endif %} {% endwith %}
+
+<label style="border: 1px solid darkblue; font-family: courier;" for="search_staff">Search Staff by Id:</label>
+
+<form action="" method="POST" name="search_staff">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input name="staff-id" class="searchTerm" placeholder="Enter Staff ID.." id="staff-id">
+    <input type="submit" class="searchButton" id="search_staff" name="search_staff" value="Search Staff">
+</form>
+<br><br>
+
+
+        <h1 class="mb-3">Staff General Information</h1>
+                <table class="table is-striped is-fullwidth table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Staff id</th>
+                    <th scope="col">Manager Name</th>
+                    <th scope="col">Absences</th>
+                    <th scope="col">Hire Date</th>
+                    <th scope="col">Authority level</th>
+                    <th scope="col">Department</th>
+                    <th scope="col">Social Security Number</th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+
+                <td>{{ staff.id }}</td>
+                <td>{{ staff.manager_name }}</td>
+                <td>{{ staff.absences }}</td>
+                <td>{{ staff.hire_date }}</td>
+                <td>{{ staff.authority_lvl }}</td>
+                <td>{{ staff.department }}</td>
+                <td>{{ staff.social_sec_no }}</td>
+                </tr>
+                </tbody>
+            </table>
+    <h1 class="mb-3">Staff Personal Information</h1>
+                <table class="table is-striped is-fullwidth table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">TR ID</th>
+                    <th scope="col">Staff Name</th>
+                    <th scope="col">Staff Surname</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Category</th>
+
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                <td>{{ person_info.tr_id }}</td>
+                <td>{{ person_info.name }}</td>
+                <td>{{ person_info.surname }}</td>
+                <td>{{ person_info.phone_number }}</td>
+                <td>{{ person_info.email }}</td>
+                <td>{{ person_info.person_category }}</td>
+
+                </tr>
+                </tbody>
+            </table>
+            <br/>
+<form action="" method="POST" name="deleteStaff" style="display: contents">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+    <input type="hidden" name="staff_id" value="{{staff.id}}">
+    <input class="btn btn-danger ml-auto" type="submit" id="delete_staff" name='delete_staff' value="Delete Staff">
+</form>
+
+
+<br><br>
+        <h1 class="mb-3">More Information</h1>
+    <label>*Click on to get detailed information about this staff</label>
+    <br><br>
+            <form action="" method="POST" name="More Info" style="display: contents">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+             <input type="hidden" name="staff_id" value="{{staff.id}}">
+            <input style=" font-size: 16px; padding: 12px 25px; margin: 6px 3px;" class="btn btn-primary mb-2" type="submit" id="more_info" name='more_info' value="More Info">
+            </form>
+            <br/>
+
+<br><br>
+
+
+ <h1 class="mb-3">Update Staff</h1>
+
+
+
+    <form action="" method="post" name="update_staff" class="form-inline needs-validation">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+
+      <div class="form-group"  >
+
+
+        <br>
+        <label for="manager_name" class="mr-sm-2">Manager Name:</label>
+        <div class="control"  style="  width: 1200px; display: inline-block;" >
+          <input type="text" name="manager_name" class="form-control mb-2 mr-sm-2"  maxlength="20" required="required" id="manager_name"/>
+
+
+        </div>
+      </div>
+
+
+
+        <br><br>
+
+
+        <label for="hire_date" class="mr-sm-2">Hire date:</label>
+        <div class="form-group" style="  width: 600px; display: inline-block;">
+          <input type="date" name="hire_date" class="form-control mb-2 mr-sm-2" id="hire_date" required="required"  />
+
+        </div>
+
+        <br/><br>
+
+
+      <div class="form-group">
+        <label for="department" class="mr-sm-2">Department:</label>
+        <div class="control" style="  width: 600px; display: inline-block;">
+          <input type="text" name="department" class="form-control mb-2 mr-sm-2" id="department" maxlength="20" required="required"/>
+
+        </div>
+      </div>
+        <br><br>
+
+
+      <div class="form-group">
+        <label for="social_sec_no" class="mr-sm-2">Social Security Number:</label>
+        <div class="control" style="  width: 600px; display: inline-block;">
+          <input type="number" name="social_sec_no" class="form-control mb-2 mr-sm-2" required="required" id="social_sec_no"/>
+
+        </div>
+      </div>
+        <br><br>
+
+
+      <div class="form-group">
+        <label for="authority_lvl" class="mr-sm-2">Authority level:</label>
+        <div class="control" style="  width: 600px; display: inline-block;">
+          <input type="number" name="authority_lvl" class="form-control mb-2 mr-sm-2" required="required" id="authority_lvl"/>
+
+        </div>
+
+      </div>
+        <br><br>
+
+
+      <div class="form-group">
+        <label for="absences" class="mr-sm-2">Absences:</label>
+        <div class="control" style="  width: 1200px; display: inline-block;">
+          <input type="number" name="absences" class="form-control mb-2 mr-sm-2" id="absences" required="required"/>
+
+        </div>
+      </div>
+        <br><br>
+
+      <div class="field is-grouped">
+        <div class="control">
+            <input type="hidden" name="staff_id" value="{{staff.id}}">
+          <button class="btn btn-primary mb-2" id="update_staff" name="update_staff">Update Staff</button>
+        </div>
+      </div>
+    </form>
+
+<br><br><br>
+
+
+
+      </div>
+
+
+{% endblock %}
+    </div>

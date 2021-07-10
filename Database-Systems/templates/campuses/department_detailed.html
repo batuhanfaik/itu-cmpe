@@ -1,0 +1,246 @@
+{%extends "layout.html"%} {% block body %}
+<div class="container mt-3">
+  
+  <form name="department_edit" method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <input type="hidden" name="edit_department_form"/>
+      {% if context.error %}  
+      <div class="container" style="background:tomato;border:1px solid gray">
+          <p>{{context.error}}</p>
+      </div>
+      {% endif %}
+      <div class="row">
+          <div class="col-lg-12 col-sm-12 col-md-12">
+              <div class="form-group">
+                  <h1 class="mb-3"><p id="department_name" style="display:inline" value="{{context.Department.name}}">{{context.Department.name}}</p> <i id="department_name_edit_icon" class="far fa-edit"  style="cursor: pointer;"></i></h1>
+                  {{ context.edit_department_form.name(required=True, autofocus=True,
+                    class='form-control mb-2 mr-sm-2',
+                    placeholder='e.g. "Information Department"', style='width:80%;visibility:hidden', id='department_name_edit') }} {% for error in
+                    context.edit_department_form.name.errors %}
+                    <div class="invalid-feedback">s{{ error }}</div>
+                    {% endfor %}   
+                </div>
+          </div>
+          <hr />
+
+          <div class="col-lg-6 col-sm-12 col-md-12">
+              <div class="form-group">
+                  <h4><i class="fas fa-university"></i> Department Shortened Name:</h4>
+                  <p><p id="department_shortened_name" style="display:inline" >{{context.Department.shortened_name}}</p> <i id="department_shortened_name_edit_icon" class="far fa-edit" style="cursor: pointer;"></i></p>
+                  {{ context.edit_department_form.shortened_name(required=True, autofocus=True,
+                      class='form-control mb-2 mr-sm-2',
+                      placeholder='e.g. "Information Department"', style='width:80%;visibility:hidden', id='department_shortened_name_edit') }} {% for error in
+                      context.edit_department_form.shortened_name.errors %}
+                      <div class="invalid-feedback">s{{ error }}</div>
+                      {% endfor %}   
+                </div>
+            </div>
+      
+            <div class="col-lg-6 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <h4><i class="fas fa-id-badge"></i> Department Block Number:</h4>
+                    <p><p id="department_block_number" style="display:inline" >{{context.Department.block_number}}</p> <i id="department_block_number_edit_icon" class="far fa-edit" style="cursor: pointer;"></i></p>
+               <!---    <textarea type="text" class="form-control mb-2 mr-sm-2" style="visibility: hidden;" id="department_block_number_edit"
+                    placeholder="Address of the Department." style="width:80%;visibility: hidden;" name="block_number" value={{context.Department.block_number}} required></textarea>
+               -->
+                    {{ context.edit_department_form.block_number(type="radio",required=True, autofocus=True,
+                      placeholder='Address the New Department', style='width:80%;visibility:hidden', id='department_block_number_edit') }} {% for error in
+                      context.edit_department_form.block_number.errors %}
+                      <div class="invalid-feedback">s{{ error }}</div>
+                      {% endfor %}  
+            </div> 
+            </div>
+            <div class="col-lg-6 col-sm-12 col-md-12">
+                <div class="form-group">
+                    <h4><i class="fas fa-money-check-alt"></i> Department Budget:</h4>
+                    <p><p id="department_budget" style="display:inline" >{{context.Department.budget}}</p> <i id="department_budget_edit_icon" class="far fa-edit" style="cursor: pointer;"></i></p>
+               <!---    <textarea type="text" class="form-control mb-2 mr-sm-2" style="visibility: hidden;" id="department_budget_edit"
+                    placeholder="Address of the Department." style="width:80%;visibility: hidden;" name="budget" value={{context.Department.budget}} required></textarea>
+               -->
+                    {{ context.edit_department_form.budget(required=True, autofocus=True,
+                      class='form-control mb-2 mr-sm-2',
+                      placeholder='Address the New Department', style='width:80%;visibility:hidden', id='department_budget_edit') }} {% for error in
+                      context.edit_department_form.budget.errors %}
+                      <div class="invalid-feedback">s{{ error }}</div>
+                      {% endfor %}  
+                    </div>
+            </div>
+            <div class="col-lg-6 col-sm-12 col-md-12">
+                <div class="form-group">      
+                    <h4><i class="fas fa-phone"></i> Department Phone Number :</h4>
+                    <p><p id="department_phone_number" style="display: inline;">{{context.Department.phone_number}}</p> <i id="department_phone_number_edit_icon"class="far fa-edit"  style="cursor: pointer;"></i></p>
+                <!--    <input type="text" style="width:80%;visibility: hidden;" class="form-control mb-2 mr-sm-2" id="department_phone_number_edit"
+                    value={{context.Department.phone_number}} name="department_phone_number_edit" required>-->
+                    {{ context.edit_department_form.phone_number(required=True, autofocus=True,
+                      class='form-control mb-2 mr-sm-2',
+                      placeholder='5xxxxxxxxx', style='width:80%;visibility:hidden', maxlength="10", id="department_phone_number_edit",
+                      onkeydown="return ( event.ctrlKey || event.altKey 
+                  || (47 < event.keyCode && event.keyCode < 58 && event.shiftKey==false) 
+                  || (95 < event.keyCode && event.keyCode < 106)
+                  || (event.keyCode==8) || (event.keyCode==9) 
+                  || (event.keyCode>34 && event.keyCode < 40) 
+                  || (event.keyCode==46) )") }} {% for error in
+                      context.edit_department_form.phone_number.errors %}   
+                      <div class="invalid-feedback">{{ error }}</div>
+                      {%endfor%}
+                    </div>
+            </div>
+            <div class="col-lg-6 col-sm-12 col-md-12">
+                <div class="form-group">      
+                    <h4><i class="fas fa-calendar-alt"></i> Department Foundation Date :</h4>
+                    <p><p id="department_foundation_date" style="display: inline;">{{context.Department.foundation_date}}</p> <i id="department_foundation_date_edit_icon"class="far fa-edit"  style="cursor: pointer;"></i></p>
+                <!--    <input type="text" style="width:80%;visibility: hidden;" class="form-control mb-2 mr-sm-2" id="department_phone_number_edit"
+                    value={{context.Department.phone_number}} name="department_phone_number_edit" required>-->
+                    {{ context.edit_department_form.foundation_date(type="date",format='%Y-%m-%d',required=True, autofocus=True,
+                    class='form-control mb-2 mr-sm-2',
+                    style='width:80%;visibility:hidden;', value=context.Department.foundation_date, id='department_foundation_date_edit') }} {% for error in
+                    context.edit_department_form.foundation_date.errors %}      
+                      <div class="invalid-feedback">{{ error }}</div>
+                      {%endfor%}
+                    </div>
+              </div>
+              <div class="col-lg-6 col-sm-12 col-md-12">
+                  <div class="form-group">
+                      <div class="button-collapse">
+                      <button type="submit" id="edit_save_button" class="btn btn-success mb-2">Save all Changes</button>
+                      <button id="edit_discard_button" class="btn btn-danger mb-2" >Discard all Changes</button>
+                      </div>
+                  </div>
+              </div>
+                   
+        </div>
+      </form>
+    </div>
+        <script>
+            document.getElementById('edit_discard_button').addEventListener("click",()=>{
+              document.getElementById('department_name').innerText = "{{ context.Department.name }}";
+              document.getElementById('department_name_edit').value = document.getElementById('department_name').innerText;
+              document.getElementById('department_block_number').innerText = "{{ context.Department.block_number }}";
+              document.getElementById('department_block_number_edit').value = document.getElementById('department_block_number').innerText;
+              document.getElementById('department_budget').innerText = "{{ context.Department.budget }}";
+              document.getElementById('department_budget_edit').value = document.getElementById('department_block_number').innerText;
+              document.getElementById('department_shortened_name').innerText = "{{ context.Department.shortened_name }}";
+              document.getElementById('department_shortened_name_edit').value = document.getElementById('department_shortened_name').innerText;
+              document.getElementById('department_phone_number').innerText = "{{ context.Department.phone_number }}";
+              document.getElementById('department_phone_number_edit').value = document.getElementById('department_phone_number').innerText;});
+              document.getElementById('department_foundation_date').innerText = "{{ context.Department.foundation_date }}";
+              document.getElementById('department_foundation_date_edit').value = document.getElementById('department_foundation_date').value;
+          </script>
+<script>
+    document.getElementById('department_name_edit_icon').addEventListener("click",()=>{
+      if(document.getElementById('department_name_edit').style.visibility == "visible"){
+        document.getElementById('department_name_edit').style.visibility = "hidden";
+      }else{
+        document.getElementById('department_name_edit').value = document.getElementById('department_name').innerText;
+        document.getElementById('department_name_edit').style.visibility = "visible";
+        document.getElementById('edit_save_button').style.visibility="visible";
+      }
+    });
+
+    document.getElementById('department_budget_edit_icon').addEventListener("click",()=>{
+      if(document.getElementById('department_budget_edit').style.visibility == "visible"){
+        document.getElementById('department_budget_edit').style.visibility = "hidden";
+      }else{
+        document.getElementById('department_budget_edit').style.visibility = "visible";
+        document.getElementById('edit_save_button').style.visibility="visible";
+      }
+    });
+
+    document.getElementById('department_shortened_name_edit_icon').addEventListener("click",()=>{
+      if(document.getElementById('department_shortened_name_edit').style.visibility == "visible"){
+        document.getElementById('department_shortened_name_edit').style.visibility = "hidden";
+      }else{
+        document.getElementById('department_shortened_name_edit').value = document.getElementById('department_shortened_name').innerText;
+        document.getElementById('department_shortened_name_edit').style.visibility = "visible";
+        document.getElementById('edit_save_button').style.visibility="visible";
+      }
+    });
+
+    document.getElementById('department_block_number_edit_icon').addEventListener("click",()=>{
+      if(document.getElementById('department_block_number_edit').style.visibility == "visible"){
+        document.getElementById('department_block_number_edit').style.visibility = "hidden";
+      }else{
+        document.getElementById('department_block_number_edit').value = document.getElementById('department_block_number').innerText;
+        document.getElementById('department_block_number_edit').style.visibility = "visible";
+        document.getElementById('edit_save_button').style.visibility="visible";
+
+      }
+    });
+
+    document.getElementById('department_phone_number_edit_icon').addEventListener("click",()=>{
+      if(document.getElementById('department_phone_number_edit').style.visibility == "visible"){
+        document.getElementById('department_phone_number_edit').style.visibility = "hidden";
+      }else{
+        document.getElementById('department_phone_number_edit').value = document.getElementById('department_phone_number').innerText;
+        document.getElementById('department_phone_number_edit').style.visibility = "visible";
+        document.getElementById('edit_save_button').style.visibility="visible";
+      }
+    });
+    document.getElementById('department_foundation_date_edit_icon').addEventListener("click",()=>{
+      if(document.getElementById('department_foundation_date_edit').style.visibility == "visible"){
+        document.getElementById('department_foundation_date_edit').style.visibility = "hidden";
+      }else{
+        document.getElementById('department_foundation_date_edit').value = document.getElementById('department_foundation_date_edit').value;
+        document.getElementById('department_foundation_date_edit').style.visibility = "visible";
+        document.getElementById('edit_save_button').style.visibility="visible";
+      }
+    });      
+    document.getElementById('department_phone_number_edit').addEventListener("keydown",(event)=>{
+      document.getElementById("department_phone_number").innerText = event.target.value;
+    });
+    document.getElementById('department_name_edit').addEventListener("keydown",(event)=>{
+      document.getElementById("department_name").innerText = event.target.value;
+    });
+    document.getElementById('department_shortened_name_edit').addEventListener("keydown",(event)=>{
+      document.getElementById("department_shortened_name").innerHTML = event.target.value;
+    });  
+    document.getElementById('department_budget_edit').addEventListener("keydown",(event)=>{
+      document.getElementById("department_budget").innerHTML = event.target.value;
+    });
+    document.getElementById('department_block_number_edit').addEventListener("keydown",(event)=>{
+      document.getElementById("department_block_number").innerHTML = event.target.value;
+    });       
+    document.getElementById('department_foundation_date_edit').addEventListener("keydown",(event)=>{
+      document.getElementById("department_foundation_date").value = event.target.value;
+    });      
+  // when pushed id(department_name_edit_icon) show id(department_name_edit) hide id(department_name)
+  // when pushed id(department_city_edit_icon) show id(department_city_edit) hide id(department_city)
+  // when pushed id(department_size_edit_icon) show id(department_size_edit) hide id(department_size)
+  // when pushed id(department_address_edit_icon) show id(department_address_edit) hide id(department_address)
+  // when pushed id(department_phone_number_edit_icon) show id(department_phone_number_edit) hide id(department_phone_number)
+  // For all situations make visible id(edit_save_button)
+  </script>
+  
+<script>
+  window.onload = () =>{
+    document.getElementById('department_name').innerText = "{{ context.Department.name }}";
+    document.getElementById('department_name_edit').value = document.getElementById('department_name').innerText;
+    document.getElementById('department_budget').innerText = "{{ context.Department.budget }}";
+    document.getElementById('department_budget_edit').value = document.getElementById('department_budget').innerText;
+    document.getElementById('department_block_number').innerText = "{{ context.Department.block_number }}";
+    console.log("{{ context.Department.block_number }}");
+    switch("{{ context.Department.block_number }}"){
+      case "A":
+      document.getElementById('block_number-0').checked = true;
+        break;
+      case "B":
+      document.getElementById('block_number-1').checked = true;
+        break;
+      case "C":
+      document.getElementById('block_number-2').checked = true;
+        break;
+      case "D":
+      document.getElementById('block_number-3').checked = true;
+        break;
+    }
+  
+    document.getElementById('department_shortened_name').innerText = "{{ context.Department.shortened_name }}";
+    document.getElementById('department_shortened_name_edit').value = document.getElementById('department_shortened_name').innerText;
+    document.getElementById('department_phone_number').innerText = "{{ context.Department.phone_number }}";
+    document.getElementById('department_phone_number_edit').value = document.getElementById('department_phone_number').innerText;
+    document.getElementById('department_foundation_date').innerText = "{{ context.Department.foundation_date }}";
+    document.getElementById('department_foundation_date_edit').value = "{{ context.Department.foundation_date }}";
+  }
+</script>
+
+{% endblock %}

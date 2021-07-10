@@ -1,0 +1,28 @@
+{%extends "layout.html"%}
+
+{%block title%} Testing your ass {%endblock%}
+
+{% block body %}
+<div style="width:100%; height: 50%; text-align: center">
+{% if current_user.is_authenticated %}
+    {% if current_user.role == "admin" %}
+        <p>Only admins can see this</p>
+    {% elif current_user.role == "staff" %}
+        <p>Only staffs can see this</p>
+    {% elif current_user.role == "student" %}
+        <p>Only student can see this</p>
+    {% endif %}
+    {% if current_user.person_category < 2 %}
+        <p>You can see this message if your category number is < 2</p>
+    {% elif current_user.person_category >= 2 %}
+        <p>You can see this message if your category number is >= 2</p>
+    {% endif %}
+{% else %}
+    <p>You are not logged in</p>
+{% endif %}
+</div>
+<div style="width:100%; height: 50%">
+
+</div>
+
+{% endblock %}

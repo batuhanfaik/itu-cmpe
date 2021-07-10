@@ -1,0 +1,178 @@
+{% extends "layout.html" %}
+
+{% block title %} Students {% endblock %}
+
+{% block body %}
+
+    {# Style alert boxes so they take up less space #}
+    <style>
+        .alert {
+            margin-bottom: 1px;
+            height: 30px;
+            line-height: 30px;
+            padding: 0px 15px;
+        }
+    </style>
+
+    <div class="container mt-3">
+        <h1 class="mb-3">Students List</h1>
+
+        {% if error %}
+            <div class="alert alert-danger mb-2" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        {% if values.errors %}
+            {# Autoclose alerts #}
+            <script>
+                window.setTimeout(function () {
+                    $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                        $(this).remove();
+                    });
+                }, 2000);
+            </script>
+
+            {% for key in values.errors %}
+                <div class="alert alert-danger mb-2" role="alert">
+                    {{ values.errors[key] }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form class="form-inline needs-validation" action="" method="post" id="form_add_student"
+              name="form_add_student">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="form-group">
+                <label for="tr_id" class="mr-sm-2">TR ID:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="tr_id"
+                       placeholder="Enter TR ID" name="tr_id" value="{{ values['tr_id'] }}"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="faculty_id" class="mr-sm-2">Faculty ID:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="faculty_id"
+                       placeholder="Enter faculty ID" name="faculty_id"
+                       value="{{ values['faculty_id'] }}" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="department_id" class="mr-sm-2">Department ID:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="department_id"
+                       placeholder="Enter department ID" name="department_id"
+                       value="{{ values['department_id'] }}"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="student_id" class="mr-sm-2">Student ID:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="student_id"
+                       placeholder="Enter student ID" name="student_id"
+                       value="{{ values['student_id'] }}"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="semester" class="mr-sm-2">Semester:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="semester"
+                       placeholder="Enter semester" name="semester" value="{{ values["semester"] }}"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="grade" class="mr-sm-2">Grade:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="grade"
+                       placeholder="Enter grade" name="grade" value="{{ values["grade"] }}"
+                       required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="gpa" class="mr-sm-2">GPA:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="gpa"
+                       placeholder="Enter GPA" name="gpa" value="{{ values["gpa"] }}" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="credits_taken" class="mr-sm-2">Credits Taken:</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" id="credits_taken"
+                       placeholder="Enter credits taken" name="credits_taken"
+                       value="{{ values["credits_taken"] }}" required>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="minor" class="radio-inline mr-sm-2">Minor:
+                    <input type="radio" class="ml-1 mr-1" name="minor" id="minor_no" value="yes"
+                           checked>No
+                    <input type="radio" class="ml-1 mr-1" name="minor" id="minor_yes" value="no">Yes
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Add New Student</button>
+        </form>
+
+        {% if students %}
+            <table class="table mt-4 is-striped is-fullwidth table-hover table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">TR ID</th>
+                    <th scope="col">Department ID</th>
+                    <th scope="col">Student ID</th>
+                    <th scope="col">GPA</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for tr_id, student in students %}
+                    <tr>
+                        <td scope="row"><a
+                                href="{{ url_for("person_page", tr_id=tr_id) }}">{{ tr_id }}</a>
+                        </td>
+                        <td>{{ student.department_id }}</td>
+                        <td>
+                            <a href="{{ url_for("student_page", tr_id=tr_id) }}">{{ student.student_id }}</a>
+                        </td>
+                        <td>{{ student.gpa }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+    </div>
+
+    <script>
+        // Disable form submissions if there are invalid fields
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Get the forms we want to add validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+
+    {# Prevents form submission on refresh #}
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
+
+{% endblock %}

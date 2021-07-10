@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block body %}
+   <div class="container mt-3">
+   <h1> {{ title }}</h1>
+   <hr>
+    {% if error %}
+        <div class="text-danger hr-bold">
+            {{ error }}
+        </div>
+    {% endif %}
+    <form action="" method="post" name="edit_instructor" class="form-inline">
+    {{ form.csrf_token }}
+
+        {% for field in form if field.widget.input_type != 'hidden' %}
+           <div class="form-group">
+                <label for="{{ field.id }}" class="mr-sm-2">{{ field.label }}</label>
+                    {{ field(class="form-control mb-2 mr-sm-2") }}
+                <div class="text-danger hr-bold">
+                {% for error in field.errors %}
+                    {{ error }}
+                {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    {% if request.path == url_for('add_instructor_page') %}
+    <button type="submit" class="button btn-primary mb-2">Add Instructor</button>
+     </form>
+    {% else %}
+    <button type="submit" class="button btn-primary mb-2" value="update" name="btn" >Update Instructor</button>
+    </form>
+    <form action="" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button type="submit" class="button btn-danger mb-2" value="delete" name="btn">Delete Instructor</button>
+    </form>
+    {% endif %}
+   </div>
+{% endblock %}
