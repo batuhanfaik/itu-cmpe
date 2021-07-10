@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.recruiter.models import Recruiter
 from apps.student.models import Student
-from apps.job.models import JobNotification
 
 from .forms import LoginForm, RegistrationForm
 from .models import PladatUser
@@ -15,17 +14,6 @@ from apps.job.models import AppliedJob, Job, Response
 
 def main_page_view(request):
     ctx = {}
-
-    if request.user.is_authenticated:
-        pladatuser = request.user.pladatuser
-        if pladatuser.is_student():
-            student = pladatuser.student
-            notifications = JobNotification.objects.filter(appliedjob__applicant = student, shown = False)
-            ctx = {'notifications': notifications}
-            for notification in notifications:
-                notification.shown = True
-                notification.save()
-
     return render(request, 'main_page.html', context=ctx)
 
 

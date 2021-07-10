@@ -1,8 +1,0 @@
-db.sqlite3
-*__pycache__
-/static/
-.idea
-identifier.sqlite
-*.coverage
-/htmlcov
-/venv/

@@ -12,12 +12,12 @@ class Response(models.IntegerChoices):
     INTERESTED = 1, 'Interested in this application'
     NOT_INTERESTED = 2, 'Not interested in this application'
 
-
 class Job(models.Model):
     title = models.CharField(max_length=128, help_text='Title')
-    description = models.TextField(max_length=5000, help_text='Description')
+    description = models.TextField(max_length=512, help_text='Description')
+    requirements = models.TextField(max_length=512, help_text='Requirements')
     city = models.CharField(max_length=128, help_text='City')
-    state = models.CharField(max_length=128, null=True, help_text='State', blank=True)
+    state = models.CharField(max_length=128, null=True, help_text='State')
     country = CountryField(help_text='Country')  # https://pypi.org/project/django-countries/
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
     # Company info also required buy can be derived from recruiter
@@ -71,7 +71,3 @@ class AppliedJob(models.Model):
     @property
     def is_recruiter_no_response(self):
         return self.recruiter_status == Response.NO_RESPONSE
-
-class JobNotification(models.Model):
-    appliedjob = models.ForeignKey(AppliedJob, on_delete=models.CASCADE, related_name='jobnotification')
-    shown = models.BooleanField(default = False)

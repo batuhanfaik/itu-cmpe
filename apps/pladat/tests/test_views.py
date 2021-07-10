@@ -131,7 +131,7 @@ class TestViews(TestCase):
             'address': 'my house is right on top of the world',
             'city': 'aksaray',
             'state': 'wat',
-            'country': 'TR',
+            'country': 'Turkey',
             'user_type': '0'
         }
         response = self.client.post(self.register_page_url, register_data)

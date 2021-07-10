@@ -5,17 +5,17 @@ from apps.pladat.forms import *
 
 class TestRegistrationForm(SimpleTestCase):
     def test_registration_form_valid_data(self):
-        form = RegistrationForm(data={
-            'email': 'test@test.com',
-            'password': 'password',
-            'first_name': 'unit',
-            'last_name': 'case',
-            'phone_number': '+905555555555',
-            'address': 'my house is right on top of the world',
-            'city': 'aksaray',
-            'state': 'wat',
-            'country': 'TR',
-            'user_type': '0',
+        form = LoginForm(data={
+            'email':'test@test.com',
+            'password':'password',
+            'first_name':'unit',
+            'last_name':'case',
+            'phone_number':'+905555555555',
+            'address':'my house is right on top of the world',
+            'city':'aksaray',
+            'state':'wat',
+            'country':'Turkey',
+            'user_type':'0'
         })
         self.assertTrue(form.is_valid())
 
@@ -23,7 +23,7 @@ class TestRegistrationForm(SimpleTestCase):
         form = RegistrationForm(data={})
 
         self.assertFalse(form.is_valid())
-        self.assertEqual(len(form.errors), 9)
+        self.assertEqual(len(form.errors), 10)
 
     def test_registration_no_email(self):
         form = LoginForm(data={
@@ -35,7 +35,7 @@ class TestRegistrationForm(SimpleTestCase):
             'address': 'my house is right on top of the world',
             'city': 'aksaray',
             'state': 'wat',
-            'country': 'TR',
+            'country': 'Turkey',
             'user_type': '0'
         })
         self.assertFalse(form.is_valid())
@@ -51,7 +51,7 @@ class TestRegistrationForm(SimpleTestCase):
             'address': 'my house is right on top of the world',
             'city': 'aksaray',
             'state': 'wat',
-            'country': 'TR',
+            'country': 'Turkey',
             'user_type': '0'
         })
         self.assertFalse(form.is_valid())
@@ -67,7 +67,7 @@ class TestRegistrationForm(SimpleTestCase):
             'address': 'my house is right on top of the world',
             'city': 'aksaray',
             'state': 'wat',
-            'country': 'TR',
+            'country': 'Turkey',
             'user_type': '0'
         })
         self.assertFalse(form.is_valid())
@@ -83,11 +83,12 @@ class TestRegistrationForm(SimpleTestCase):
             'address': 'my house is right on top of the world',
             'city': 'aksaray',
             'state': 'wat',
-            'country': 'TR',
+            'country': 'Turkey',
             'user_type': '0'
         })
         self.assertFalse(form.is_valid())
         self.assertEqual(len(form.errors), 1)
+
 
 
 class TestLoginForm(SimpleTestCase):

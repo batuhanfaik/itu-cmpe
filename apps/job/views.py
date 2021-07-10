@@ -3,27 +3,25 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.job.forms import UpdateJobForm
-from apps.job.models import AppliedJob, Job, JobNotification
+from apps.job.models import AppliedJob, Job
 from apps.pladat.models import PladatUser
 from apps.recruiter.models import Recruiter
 from apps.student.models import Student
 
 from .models import Response
 
-from apps.recommend.rec_utils import create_features 
-from apps.recommend.rec_model import predict
+# Create your views here.
 
 
 def calculate_match_rate(student, job):
-    query = create_features(student, job)
-
-    return predict(query)
+    # TODO: Add this after ML (Baris)
+    return 100
 
 
 def match_rate(student, job):
     appliedjob = AppliedJob.objects.filter(job=job, applicant=student)
 
-    if len(appliedjob) == 0:
+    if len(appliedjob) is 0:
         return calculate_match_rate(student, job)
 
     appliedjob = appliedjob[0]
@@ -60,7 +58,7 @@ def find_student(job, index):
 
     from functools import cmp_to_key
 
-    student_list = sorted(student_list, key=cmp_to_key(compare))
+    sorted(student_list, key=cmp_to_key(compare))
 
     return student_list[index % len(student_list)]
 
@@ -88,7 +86,7 @@ def find_job(student, index):
 
     from functools import cmp_to_key
 
-    job_list_scored = sorted(job_list_scored, key=cmp_to_key(compare))
+    sorted(job_list_scored, key=cmp_to_key(compare))
 
     return job_list_scored[index % len(job_list_scored)]
 
@@ -109,7 +107,7 @@ def find_student_view(request, id):
         student = find_student(job, index)
         if student is None:
             # TODO: Return some page...
-            return redirect('/job/list')
+            return HttpResponse("No student found")
 
         ctx = {"job": job, "student": student[0], "match_rate": student[1]}
         return render(request, "find_student.html", context=ctx)
@@ -142,15 +140,11 @@ def find_student_view(request, id):
 
         if "yes" in request.POST:
             appliedjob.recruiter_status = Response.INTERESTED
-            appliedjob.save()
-            JobNotification.objects.create(appliedjob=appliedjob)
-
 
         elif "no" in request.POST:
             appliedjob.recruiter_status = Response.NOT_INTERESTED
-            appliedjob.save()
 
-
+        appliedjob.save()
 
         return redirect(f"/job/{id}/find_student?index={index}")
 
@@ -202,11 +196,11 @@ def find_job_view(request):
         )
         if "yes" in request.POST:
             application.student_status = Response.INTERESTED
-            application.save()
 
         elif "no" in request.POST:
             application.student_status = Response.NOT_INTERESTED
-            application.save()
+
+        application.save()
 
         return redirect(f"/job/find_job?index={index}")
 

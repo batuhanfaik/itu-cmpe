@@ -13,10 +13,11 @@ class PladatUser(models.Model):
         help_text="Phone number")  # https://pypi.org/project/django-phonenumber-field/
     address = models.CharField(max_length=128, help_text="Addresss")
     city = models.CharField(max_length=128, help_text="City")
-    state = models.CharField(max_length=128, null=True, help_text="State", blank=True)
+    state = models.CharField(max_length=128, null=True, help_text="State")
     country = CountryField(blank_label="Country", help_text="Country")  # https://pypi.org/project/django-countries/
 
     image = models.ImageField(upload_to='profile_image', blank=True)
+
 
     class UserType(models.IntegerChoices):
         STUDENT = 0, 'Student account'
@@ -24,7 +25,7 @@ class PladatUser(models.Model):
         __empty__ = 'User type'
 
     user_type = models.IntegerField(choices=UserType.choices, help_text="User type")
-    
+
     def is_student(self):
         return self.user_type == self.UserType.STUDENT
 

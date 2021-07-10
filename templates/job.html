@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% load job_tags %}
+
 
 
 {% block stylesheet %}
@@ -75,6 +75,15 @@
                                 </div>
                                 <div class="col-sm-9 text-secondary">
                                     {{ job.description }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Requirements</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ job.requirements }}
                                 </div>
                             </div>
                             <hr>
