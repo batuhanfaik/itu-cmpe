@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block stylesheet %}
+{{ block.super }}
+{% load static %}
+    <link href=" {% static 'pladat/mainpage.css' %}" rel="stylesheet">
+{% endblock stylesheet %}
+
+{% block content %}
+<div class="cover-container d-flex h-100 p-3 mx-auto flex-column text-center">
+  <main role="main" class="inner cover">
+    <h1 class="cover-heading">PlaDat</h1>
+    <p class="lead">
+      PlaDat is an AI powered website that matches students with the companies.
+      We use cutting edge machine learning algorithms to show best matched students so that companies and students save time.
+    </p>
+    <p class="lead">
+      <a href="#" class="btn btn-lg btn-secondary">Learn more</a>
+    </p>
+  </main>
+
+  <footer class="mastfoot mt-auto">
+    <div class="inner">
+      <p>Cover template for <a href="https://getbootstrap.com/">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
+    </div>
+  </footer>
+</div>{% endblock content %}
