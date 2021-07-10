@@ -1,0 +1,15 @@
+Name	 Ingredients
+massala chicken	250 gram chicken, 3 onion, 2 tomato, 1 lemon, 1 garlic, 10 ml olive oil
+mughai chicken	400 gram chicken, 4 onion, 6 garlic, 1 lemon, 10 cashew, 10 ml chili
+roast beef	500 gram beef, 3 carrot, 3 tomato, 100 ml olive oil, 50 ml mustard, 20 ml chili
+lamb curry	400 gram lamb, 1 onion, 4 tomato, 2 potato, 30 ml olive oil, 100 ml curry
+steamed salmon	400 gram salmon, 200 gram brown rice, 100 gram green bean, 1 lemon, 1 tomato, 100 ml olive oil
+baked fish	600 gram salmon, 2 red paper, 4 onion, 2 garlic, 10 ml vinegar, 50 ml chili
+ceaser salad	N/A
+bbq salad	N/A
+green salad	N/A
+coke	N/A
+fanta	N/A
+water	N/A
+coffe	N/A
+tea	N/A

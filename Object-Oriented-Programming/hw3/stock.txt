@@ -1,0 +1,28 @@
+Name	Type	ItemCount	Price
+chicken	1	750	0.05
+beef	1	750	0.44
+lamb	1	1000	0.5
+salmon	1	900	0.6
+brown rice	1	300	0.03
+green bean	1	300	0.03
+onion	2	10	2
+tomato	2	10	1
+potato	2	4	1
+garlic	2	10	0.5
+cashew	2	10	1
+carrot	2	15	0.6
+lemon	2	10	0.2
+red paper	2	5	0.3
+ceaser salad	2	5	15
+bbq salad	2	3	10
+green salad	2	3	12
+coke	2	5	3
+fanta	2	4	3
+water	2	5	2
+coffe	2	2	3
+tea	2	3	2
+olive oil	3	500	0.05
+chili	3	150	0.04
+mustard	3	200	0.03
+curry	3	200	0.03
+vinegar	3	250	0.02
