@@ -2,7 +2,7 @@
 # ITU Computer Engineering (Undergraduate)
 Coursework of Istanbul Technical University Computer Engineering Program from 2018 to 2021
 
-ITU Computer Engineering curricula's 16/56 courses, their homeworks and projects can be found in this repository. Lecture notes, presentations, course files, previous exams etc. are not to be found within this repository. For all of the other materials, you can check out my collection on [Google Drive](https://drive.google.com/drive/folders/1HK4wygmPu-v509lsBPUo4W1V7d6O0Xlo?usp=sharing) containing 48/56 courses or visit [NotKutusu](http://notkutusu.com/).
+ITU Computer Engineering curricula's 16/56 courses, their homeworks and projects can be found in this repository. Lecture notes, presentations, course files, previous exams etc. are not to be found within this repository. For all of the other materials, ~~you can check out my collection on [Google Drive](https://drive.google.com/drive/folders/1HK4wygmPu-v509lsBPUo4W1V7d6O0Xlo?usp=sharing) containing 48/56 courses or~~ visit [NotKutusu](http://notkutusu.com/).
 
 All the code provided in this repository is written within the context of a course. Individual projects do not contain any snippets from any of the contributors, however, their contributions to the group projects can be seen in the commit history.
 
